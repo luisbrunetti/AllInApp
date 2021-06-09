@@ -68,7 +68,7 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="60dp"
                     android:background="@drawable/selector"
                     android:paddingStart="15dp"
                     android:paddingTop="3dp"
@@ -90,14 +90,15 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="60dp"
                     android:layout_marginTop="15dp"
                     android:background="@drawable/selector"
                     android:paddingStart="15dp"
-                    android:paddingTop="3dp"
                     android:paddingEnd="15dp"
                     android:paddingBottom="10dp"
-                    app:boxBackgroundMode="none">
+                    app:boxBackgroundMode="none"
+                    app:passwordToggleDrawable="@android:drawable/ic_lock_lock"
+                    app:passwordToggleEnabled="true">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/passText"
