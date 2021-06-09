@@ -3,6 +3,7 @@ package com.tawa.allinapp.features
 import android.content.Context
 import android.content.Intent
 import com.tawa.allinapp.core.platform.BaseActivity
+import com.tawa.allinapp.features.auth.ui.LoginFragment
 import com.tawa.allinapp.features.movies.ui.MoviesFragment
 
 class MainActivity : BaseActivity() {
@@ -13,5 +14,5 @@ class MainActivity : BaseActivity() {
 
     override fun showToolbar() = false
 
-    override fun fragment() = MoviesFragment()
+    override fun fragment() = LoginFragment()
 }
