@@ -1,5 +1,7 @@
-package com.tawa.allinapp.data.remote
+package com.tawa.allinapp.data.remote.api
 
+import com.tawa.allinapp.data.remote.MovieDetailEntity
+import com.tawa.allinapp.data.remote.MovieEntity
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path

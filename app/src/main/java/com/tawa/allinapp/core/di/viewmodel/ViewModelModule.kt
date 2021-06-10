@@ -2,6 +2,7 @@ package com.tawa.allinapp.core.di.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.tawa.allinapp.features.auth.AuthViewModel
 import com.tawa.allinapp.features.calendar.CalendarViewModel
 import com.tawa.allinapp.features.catalog.CatalogViewModel
 import com.tawa.allinapp.features.movies.MoviesViewModel
@@ -35,5 +36,9 @@ abstract class ViewModelModule {
     @ViewModelKey(CatalogViewModel::class)
     abstract fun bindsCatalogViewModel(catalogViewModel: CatalogViewModel): ViewModel
 
+    @Binds
+    @IntoMap
+    @ViewModelKey(AuthViewModel::class)
+    abstract fun bindsAuthViewModel(authViewModel: AuthViewModel): ViewModel
 
 }
