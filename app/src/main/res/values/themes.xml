@@ -7,6 +7,12 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="SplashTheme" parent="AppTheme">
+        <!-- Customize your theme here. -->
+        <item name="android:windowBackground">@drawable/splashscreen</item>
+
+    </style>
+
     <style name="BaseToolbarStyle">
         <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
         <item name="android:theme">@style/BaseToolbarTheme</item>

@@ -89,15 +89,17 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/layoutPassword"
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
                     android:layout_marginTop="15dp"
                     android:background="@drawable/selector"
                     android:paddingStart="15dp"
+                    android:paddingTop="3dp"
                     android:paddingEnd="15dp"
                     android:paddingBottom="10dp"
                     app:boxBackgroundMode="none"
-                    app:passwordToggleDrawable="@android:drawable/ic_lock_lock"
+                    app:passwordToggleDrawable="@drawable/ic_off_vi"
                     app:passwordToggleEnabled="true">
 
                     <com.google.android.material.textfield.TextInputEditText
