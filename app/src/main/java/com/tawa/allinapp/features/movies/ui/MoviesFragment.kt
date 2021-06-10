@@ -24,15 +24,13 @@ class MoviesFragment : BaseFragment() {
 
     private lateinit var binding: FragmentMoviesBinding
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        binding = FragmentMoviesBinding.inflate(inflater)
-        return binding.root
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         appComponent.inject(this)
+    }
 
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        binding = FragmentMoviesBinding.inflate(inflater)
         moviesViewModel = viewModel(viewModelFactory) {
             observe(movies, {
                 it?.let {
@@ -45,6 +43,7 @@ class MoviesFragment : BaseFragment() {
                 }
             })
         }
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -52,10 +51,5 @@ class MoviesFragment : BaseFragment() {
 
         binding.movieList.layoutManager = StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL)
         binding.movieList.adapter = moviesAdapter
-
-        //moviesViewModel.loadData()
-
-        //moviesViewModel.loadMovie(38001)
-
     }
 }

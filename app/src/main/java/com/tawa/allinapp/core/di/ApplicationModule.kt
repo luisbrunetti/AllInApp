@@ -7,6 +7,7 @@ import com.bumptech.glide.integration.recyclerview.BuildConfig
 import com.tawa.allinapp.data.local.AllInAppDatabase
 import com.tawa.allinapp.data.local.Prefs
 import com.tawa.allinapp.data.local.dao.MovieDao
+import com.tawa.allinapp.data.repository.AuthRepository
 import com.tawa.allinapp.data.repository.MoviesRepository
 import dagger.Module
 import dagger.Provides
@@ -58,8 +59,7 @@ class ApplicationModule(private val application: Application){
         return okHttpClientBuilder.build()
     }
 
-    @Provides
-    @Singleton
-    fun provideMoviesRepository(dataSource: MoviesRepository.Network): MoviesRepository = dataSource
+    @Provides @Singleton fun provideMoviesRepository(dataSource: MoviesRepository.Network): MoviesRepository = dataSource
+    @Provides @Singleton fun provideAuthRepository(dataSource: AuthRepository.Network): AuthRepository = dataSource
 
 }

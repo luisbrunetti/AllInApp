@@ -1,5 +1,6 @@
-package com.tawa.allinapp.data.remote
+package com.tawa.allinapp.data.remote.service
 
+import com.tawa.allinapp.data.remote.api.MoviesApi
 import retrofit2.Retrofit
 import javax.inject.Inject
 import javax.inject.Singleton
