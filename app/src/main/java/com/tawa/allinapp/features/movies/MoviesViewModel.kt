@@ -1,5 +1,6 @@
 package com.tawa.allinapp.features.movies
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.tawa.allinapp.core.interactor.UseCase
 import com.tawa.allinapp.core.platform.BaseViewModel
@@ -18,7 +19,11 @@ class MoviesViewModel
     private val setData: SetData
 ) : BaseViewModel() {
 
-    var movies: MutableLiveData<List<MovieView>> = MutableLiveData()
+    private val _movies = MutableLiveData<List<MovieView>>()
+    val movies: LiveData<List<MovieView>>
+        get()= _movies
+
+    //var movies: MutableLiveData<List<MovieView>> = MutableLiveData()
     var movieDetail: MutableLiveData<MovieDetailView> = MutableLiveData()
     var sData: MutableLiveData<Boolean> = MutableLiveData()
 
@@ -31,7 +36,7 @@ class MoviesViewModel
     fun loadMovies() = getMovies(UseCase.None()) { it.either(::handleFailure, ::handleMovieList) }
 
     private fun handleMovieList(movies: List<Movie>) {
-        this.movies.value = movies.map { MovieView(it.id, it.poster) }
+        this._movies.value = movies.map { MovieView(it.id, it.poster) }
     }
 
     fun loadMovie(movieId:Int) = getMovieDetail(GetMovieDetail.Params(movieId)) { it.either(::handleFailure, ::handleMovieDetail) }
