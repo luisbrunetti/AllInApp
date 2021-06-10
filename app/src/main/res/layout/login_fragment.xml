@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:fillViewport="true"
+    android:fitsSystemWindows="true"
     android:orientation="vertical"
     tools:context=".features.auth.ui.LoginFragment">
 
@@ -13,13 +15,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="0"
+
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal|center_vertical"
-            android:layout_weight="0"
+            android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical">
 
@@ -28,7 +31,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="80dp"
-                android:layout_marginTop="70dp"
+
+                android:layout_marginTop="50dp"
                 android:layout_marginEnd="80dp"
                 android:layout_marginBottom="40dp"
 
@@ -43,8 +47,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
                 android:gravity="center"
-                android:text="Bienvenido a Allin!!"
-                android:textColor="@color/design_default_color_on_secondary"
+                android:text="@string/TextLogin"
+                android:textColor="@color/colorAccent"
                 android:textSize="25dp"
                 android:textStyle="bold" />
 
@@ -67,6 +71,7 @@
                 android:orientation="vertical">
 
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/textEmailLayout"
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
                     android:background="@drawable/selector"
@@ -74,7 +79,8 @@
                     android:paddingTop="3dp"
                     android:paddingEnd="15dp"
                     android:paddingBottom="10dp"
-                    app:boxBackgroundMode="none">
+                    app:boxBackgroundMode="none"
+                    app:boxStrokeColor="#E31919">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/emailText"
@@ -99,7 +105,7 @@
                     android:paddingEnd="15dp"
                     android:paddingBottom="10dp"
                     app:boxBackgroundMode="none"
-                    app:passwordToggleDrawable="@drawable/ic_off_vi"
+                    app:passwordToggleDrawable="@drawable/icon_selector"
                     app:passwordToggleEnabled="true">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -122,30 +128,33 @@
                     android:layout_marginTop="15dp"
                     android:text="Recuérdame" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:gravity="bottom"
-                    android:orientation="vertical">
-
-                    <Button
-                        android:id="@+id/button"
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        android:layout_marginBottom="40dp"
-                        android:layout_weight="0"
-
-                        android:background="@drawable/roundedbuttom"
-                        android:text="Ingresar"
-                        android:textAllCaps="false"
-                        android:textColor="@color/colorTextPrimary"
-                        android:textSize="16dp" />
-
-                </LinearLayout>
-
             </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_weight="1"
+            android:gravity="bottom"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/button"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="40dp"
+
+                android:layout_weight="0"
+                android:background="@drawable/roundedbuttom"
+                android:text="Ingresar"
+                android:textAllCaps="false"
+                android:textColor="@color/colorTextPrimary"
+                android:textSize="16dp" />
+
         </LinearLayout>
     </LinearLayout>
 
-</LinearLayout>
+</ScrollView>

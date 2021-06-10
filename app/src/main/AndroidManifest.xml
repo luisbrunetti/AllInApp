@@ -17,7 +17,10 @@
 
 
         <activity android:name=".features.MainActivity"
-            android:theme="@style/SplashTheme">
+
+            android:theme="@style/SplashTheme"
+
+            android:windowSoftInputMode="stateHidden|adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
