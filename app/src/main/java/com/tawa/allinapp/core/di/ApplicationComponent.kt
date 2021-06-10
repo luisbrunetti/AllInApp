@@ -4,6 +4,7 @@ import com.tawa.allinapp.AndroidApplication
 import com.tawa.allinapp.core.di.viewmodel.ViewModelModule
 import com.tawa.allinapp.features.auth.ui.LoginFragment
 import com.tawa.allinapp.features.HomeActivity
+import com.tawa.allinapp.features.auth.ui.LoginActivity
 import com.tawa.allinapp.features.calendar.CalendarFragment
 import com.tawa.allinapp.features.catalog.CatalogFragment
 import com.tawa.allinapp.features.location.LocationFragment
@@ -17,11 +18,11 @@ import javax.inject.Singleton
 interface ApplicationComponent{
     fun inject(application: AndroidApplication)
     fun inject(homeActivity: HomeActivity)
+    fun inject(loginActivity: LoginActivity)
     fun inject(moviesFragment: MoviesFragment)
     fun inject(locationFragment: LocationFragment)
     fun inject(catalogFragment: CatalogFragment)
     fun inject(calendarFragment: CalendarFragment)
     fun inject(reportsFragment: ReportsFragment)
     fun inject(loginFragment: LoginFragment)
-
 }
