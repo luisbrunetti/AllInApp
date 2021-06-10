@@ -2,6 +2,7 @@ package com.tawa.allinapp.features.auth.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.ActionBar
 import androidx.navigation.findNavController
 import com.tawa.allinapp.AndroidApplication
 import com.tawa.allinapp.R
@@ -21,7 +22,11 @@ class LoginActivity : AppCompatActivity() {
         appComponent.inject(this)
 
         binding = ActivityLoginBinding.inflate(layoutInflater)
+        theme.applyStyle(R.style.AppTheme,true)
         setContentView(binding.root)
+        getSupportActionBar()?.hide();
+
+
 
         findNavController(R.id.nav_host_auth_home)
     }
