@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">AllInApp</string>
+    <string name="TextLogin">¡Hola!</string>
 </resources>

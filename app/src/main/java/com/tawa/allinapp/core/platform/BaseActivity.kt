@@ -16,9 +16,10 @@ abstract class BaseActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(layout.activity_layout)
         if(showToolbar()){
-            toolbar.visibility = View.VISIBLE
+            toolbar.visibility = View.GONE
             setSupportActionBar(toolbar)
         } else toolbar.visibility = View.GONE
+
         addFragment(savedInstanceState)
     }
 
