@@ -22,13 +22,11 @@ class MoviesFragment : BaseFragment() {
 
     private lateinit var moviesViewModel: MoviesViewModel
 
-    private lateinit var mBinding: FragmentMoviesBinding
-
-    override fun layoutId() = R.layout.fragment_movies
+    private lateinit var binding: FragmentMoviesBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        mBinding = FragmentMoviesBinding.inflate(inflater)
-        return mBinding.root
+        binding = FragmentMoviesBinding.inflate(inflater)
+        return binding.root
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,16 +37,6 @@ class MoviesFragment : BaseFragment() {
             observe(movies, {
                 it?.let {
                     moviesAdapter.collection = it
-                }
-            })
-            observe(movieDetail,{
-                it?.let {
-
-                }
-            })
-            observe(sData,{
-                it?.let {
-                    moviesViewModel.loadMovies()
                 }
             })
             failure(failure, {
@@ -62,10 +50,10 @@ class MoviesFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        mBinding.movieList.layoutManager = StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL)
-        mBinding.movieList.adapter = moviesAdapter
+        binding.movieList.layoutManager = StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL)
+        binding.movieList.adapter = moviesAdapter
 
-        moviesViewModel.loadData()
+        //moviesViewModel.loadData()
 
         //moviesViewModel.loadMovie(38001)
 
