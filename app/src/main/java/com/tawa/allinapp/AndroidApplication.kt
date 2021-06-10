@@ -18,9 +18,12 @@ class AndroidApplication : Application() {
     }
 
     override fun onCreate() {
+
         super.onCreate()
+
         this.injectMembers()
         prefs = Prefs(applicationContext)
+
     }
 
     private fun injectMembers() = appComponent.inject(this)
