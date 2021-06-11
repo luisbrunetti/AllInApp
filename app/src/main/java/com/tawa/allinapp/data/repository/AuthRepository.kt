@@ -25,10 +25,14 @@ interface AuthRepository {
                         val response = service.login(LoginRemote.Request(username, password)).execute()
                         when (response.isSuccessful) {
                             true -> {
-                                response.body()?.data?.let {
-                                    prefs.name = username
-                                    prefs.token = it.token
-                                    Either.Right(true)
+                                response.body()?.let { body ->
+                                    if(body.success) {
+                                        prefs.name = username
+                                        prefs.token = body.data.token
+                                        Either.Right(true)
+                                    }
+                                    else
+                                        Either.Left(Failure.DefaultError(body.message))
                                 }?: Either.Left(Failure.DefaultError(""))
                             }
                             false -> Either.Left(Failure.ServerError)

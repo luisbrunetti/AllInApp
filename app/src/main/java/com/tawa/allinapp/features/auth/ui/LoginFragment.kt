@@ -29,9 +29,9 @@ class LoginFragment : BaseFragment() {
         binding = LoginFragmentBinding.inflate(inflater)
 
         authViewModel= viewModel(viewModelFactory) {
-            observe(success, {
+            observe(successLogin, {
                 it?.let {
-
+                    var a = it
                 }
             })
             failure(failure, {
@@ -60,7 +60,7 @@ class LoginFragment : BaseFragment() {
         binding.button.setOnClickListener(View.OnClickListener {
 
             Toast.makeText(context,"login",Toast.LENGTH_SHORT).show()
-            //doLogin()
+            doLogin()
         })
 
     }
