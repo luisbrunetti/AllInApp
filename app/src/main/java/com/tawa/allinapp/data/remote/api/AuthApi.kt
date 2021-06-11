@@ -8,7 +8,7 @@ import retrofit2.http.POST
 
 interface AuthApi {
 
-    @POST("https://run.mocky.io/v3/d449f442-037d-4b62-9428-0e7a2b615690")
+    @POST("https://run.mocky.io/v3/60296a92-d8b3-4d06-8b94-2e5b54176a62")
     fun login(@Body request: LoginRemote.Request): Call<BaseResponse<LoginRemote.Response>>
 
 }
