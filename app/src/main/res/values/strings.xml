@@ -1,4 +1,11 @@
 <resources>
     <string name="app_name">AllInApp</string>
     <string name="TextLogin">¡Hola!</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_home">Inicio</string>
+    <string name="title_reports">Reportes</string>
+    <string name="title_infor">Informes</string>
+    <string name="title_rutas">Rutas</string>
+    <string name="title_calendar">Calendario</string>
 </resources>

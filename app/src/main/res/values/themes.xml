@@ -30,4 +30,13 @@
         <item name="android:textColor">@color/colorTextSecondary</item>
         <item name="android:textStyle">bold</item>
     </style>
+
+
+    <style name="CustomTitleTextAppearance1" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textSize">10sp</item>
+
+
+    </style>
+
 </resources>
