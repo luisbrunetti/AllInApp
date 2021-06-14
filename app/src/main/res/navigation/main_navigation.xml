@@ -3,7 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_reports">
+    app:startDestination="@+id/navigation_home">
+
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="com.tawa.allinapp.features.home.HomeFragment"
+        android:label="@string/title_home"
+        tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/navigation_reports"
@@ -14,7 +20,7 @@
     <fragment
         android:id="@+id/navigation_catalog"
         android:name="com.tawa.allinapp.features.catalog.CatalogFragment"
-        android:label="@string/title_catalog"
+        android:label="@string/title_rutas"
         tools:layout="@layout/fragment_catalog" />
 
     <fragment
@@ -22,5 +28,6 @@
         android:name="com.tawa.allinapp.features.calendar.CalendarFragment"
         android:label="@string/title_calendar"
         tools:layout="@layout/fragment_calendar" />
+
 
 </navigation>

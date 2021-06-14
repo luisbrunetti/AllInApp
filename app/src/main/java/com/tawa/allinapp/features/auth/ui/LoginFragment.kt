@@ -1,20 +1,28 @@
 package com.tawa.allinapp.features.auth.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
+import com.tawa.allinapp.R
+import com.tawa.allinapp.core.extensions.appContext
 import com.tawa.allinapp.core.extensions.failure
 import com.tawa.allinapp.core.extensions.observe
 import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.FragmentMoviesBinding
 import com.tawa.allinapp.databinding.LoginFragmentBinding
+import com.tawa.allinapp.features.HomeActivity
 import com.tawa.allinapp.features.auth.AuthViewModel
 import com.tawa.allinapp.features.auth.usecase.DoLogin
 import com.tawa.allinapp.features.movies.MoviesViewModel
@@ -32,6 +40,7 @@ class LoginFragment : BaseFragment() {
             observe(successLogin, {
                 it?.let {
                     var a = it
+                    Toast.makeText(context,""+a,Toast.LENGTH_SHORT).show()
                 }
             })
             failure(failure, {
@@ -67,9 +76,11 @@ class LoginFragment : BaseFragment() {
 
     fun doLogin(){
 
-        authViewModel.login(
-            "asas",
-            "asas")
+
+
+       // authViewModel.login(
+        //    "asas",
+       //     "asas")
 
 
 
