@@ -3,12 +3,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".features.home.HomeFragment">
+    tools:context=".features.init.InitFragment">
 
     <data>
         <variable
             name="viewModel"
-            type="com.tawa.allinapp.features.home.HomeViewModel" />
+            type="com.tawa.allinapp.features.init.InitViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -16,7 +16,7 @@
         android:layout_height="match_parent">
 
         <TextView
-            android:id="@+id/tvHome"
+            android:id="@+id/tvInit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
