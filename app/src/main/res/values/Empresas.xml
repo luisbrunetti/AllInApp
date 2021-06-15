@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="Emp">
+        <item>Trade Marketing</item>
+
+    </string-array>
+
+    <string-array name="Pdv">
+        <item>Backus</item>
+        <item>Bayer</item>
+        <item>Molitalia</item>
+
+</string-array>
+
+
+</resources>

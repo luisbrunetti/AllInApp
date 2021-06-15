@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:text="Seleccione la empresa"
+            android:textColor="@color/design_default_color_on_secondary"
+            android:textSize="25sp"
+            android:textStyle="bold" />
+
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/spinner_emp"
+            android:dropDownWidth="match_parent"
+            android:entries="@array/Emp"
+            android:overlapAnchor="false"
+            android:paddingStart="35dp"
+            android:spinnerMode="dropdown" />
+
+        <Spinner
+            android:id="@+id/spinner2"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/spinner_pdv"
+            android:dropDownWidth="match_parent"
+            android:entries="@array/Pdv"
+            android:overlapAnchor="false"
+            android:paddingStart="35dp" />
+    </LinearLayout>
+</LinearLayout>

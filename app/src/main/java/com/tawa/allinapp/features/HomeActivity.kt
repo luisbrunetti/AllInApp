@@ -1,5 +1,8 @@
 package com.tawa.allinapp.features
 
+import android.app.AlertDialog
+import android.app.Dialog
+import android.content.DialogInterface
 import android.os.Bundle
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
@@ -11,10 +14,12 @@ import com.tawa.allinapp.AndroidApplication
 import com.tawa.allinapp.R
 import com.tawa.allinapp.core.di.ApplicationComponent
 import com.tawa.allinapp.databinding.ActivityHomeBinding
+import com.tawa.allinapp.databinding.DialogHomeBinding
 
 class HomeActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityHomeBinding
+    private lateinit var bindingDialog: DialogHomeBinding
 
     private val appComponent: ApplicationComponent by lazy(mode = LazyThreadSafetyMode.NONE) {
         (application as AndroidApplication).appComponent
@@ -26,17 +31,22 @@ class HomeActivity : AppCompatActivity() {
 
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         val navView: BottomNavigationView = binding.navView
 
         val navController = findNavController(R.id.nav_host_fragment_activity_home)
 
         val appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.navigation_init,R.id.navigation_reports, R.id.navigation_catalog, R.id.navigation_calendar
+                R.id.navigation_init,R.id.navigation_reports, R.id.navigation_informs,R.id.navigation_routes, R.id.navigation_calendar
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+
     }
+
+
+
+
 }

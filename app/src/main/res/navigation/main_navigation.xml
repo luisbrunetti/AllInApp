@@ -18,16 +18,24 @@
         tools:layout="@layout/fragment_reports" />
 
     <fragment
-        android:id="@+id/navigation_catalog"
-        android:name="com.tawa.allinapp.features.catalog.CatalogFragment"
-        android:label="@string/title_rutas"
-        tools:layout="@layout/fragment_catalog" />
+        android:id="@+id/navigation_informs"
+        android:name="com.tawa.allinapp.features.informs.InformsFragment"
+        android:label="@string/title_infor"
+        tools:layout="@layout/fragment_calendar" />
+
+
 
     <fragment
         android:id="@+id/navigation_calendar"
         android:name="com.tawa.allinapp.features.calendar.CalendarFragment"
         android:label="@string/title_calendar"
-        tools:layout="@layout/fragment_calendar" />
+        tools:layout="@layout/fragment_informs" />
+
+    <fragment
+        android:id="@+id/navigation_routes"
+        android:name="com.tawa.allinapp.features.routes.RoutesFragment"
+        android:label="@string/title_routes"
+        tools:layout="@layout/fragment_routes" />
 
 
 </navigation>

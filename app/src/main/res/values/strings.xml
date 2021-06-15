@@ -6,6 +6,6 @@
     <string name="title_home">Inicio</string>
     <string name="title_reports">Reportes</string>
     <string name="title_infor">Informes</string>
-    <string name="title_rutas">Rutas</string>
+    <string name="title_routes">Rutas</string>
     <string name="title_calendar">Calendario</string>
 </resources>

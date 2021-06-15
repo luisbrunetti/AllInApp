@@ -6,12 +6,14 @@ import com.tawa.allinapp.features.auth.ui.LoginFragment
 import com.tawa.allinapp.features.HomeActivity
 import com.tawa.allinapp.features.auth.ui.LoginActivity
 import com.tawa.allinapp.features.calendar.CalendarFragment
-import com.tawa.allinapp.features.catalog.CatalogFragment
+import com.tawa.allinapp.features.informs.InformsFragment
 import com.tawa.allinapp.features.init.InitFragment
+
 
 import com.tawa.allinapp.features.location.LocationFragment
 import com.tawa.allinapp.features.movies.ui.MoviesFragment
 import com.tawa.allinapp.features.reports.ReportsFragment
+import com.tawa.allinapp.features.routes.RoutesFragment
 import dagger.Component
 import javax.inject.Singleton
 
@@ -23,9 +25,10 @@ interface ApplicationComponent{
     fun inject(loginActivity: LoginActivity)
     fun inject(moviesFragment: MoviesFragment)
     fun inject(locationFragment: LocationFragment)
-    fun inject(catalogFragment: CatalogFragment)
+    fun inject(informsFragment: InformsFragment)
     fun inject(calendarFragment: CalendarFragment)
     fun inject(reportsFragment: ReportsFragment)
     fun inject(loginFragment: LoginFragment)
     fun inject(initFragment: InitFragment)
+    fun inject(routesFragment: RoutesFragment)
 }
