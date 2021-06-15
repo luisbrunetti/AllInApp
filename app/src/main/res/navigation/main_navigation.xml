@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@+id/navigation_init">
 
     <fragment
-        android:id="@+id/navigation_home"
-        android:name="com.tawa.allinapp.features.home.HomeFragment"
+        android:id="@+id/navigation_init"
+        android:name="com.tawa.allinapp.features.init.InitFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_init" />
 
     <fragment
         android:id="@+id/navigation_reports"

@@ -74,8 +74,10 @@ class LoginFragment : BaseFragment() {
 
     }
 
-    fun doLogin(){
+     private  fun doLogin(){
 
+        val nextScreenIntent = Intent(context, HomeActivity::class.java)
+        startActivity(nextScreenIntent)
 
 
        // authViewModel.login(
