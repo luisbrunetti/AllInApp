@@ -29,7 +29,7 @@ class LoginActivity : AppCompatActivity() {
         // antifake
         val dev = devMod()
 
-        if(dev==0) {
+        if(dev==1) {
             Toast.makeText(applicationContext, "Error", Toast.LENGTH_LONG).show()
             return
         }

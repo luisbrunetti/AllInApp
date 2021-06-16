@@ -7,8 +7,10 @@ import com.bumptech.glide.integration.recyclerview.BuildConfig
 import com.tawa.allinapp.data.local.AllInAppDatabase
 import com.tawa.allinapp.data.local.Prefs
 import com.tawa.allinapp.data.local.dao.MovieDao
+import com.tawa.allinapp.data.local.dao.ParametersDao
 import com.tawa.allinapp.data.repository.AuthRepository
 import com.tawa.allinapp.data.repository.MoviesRepository
+import com.tawa.allinapp.data.repository.ParametersRepository
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -34,12 +36,6 @@ class ApplicationModule(private val application: Application){
         return Room.databaseBuilder(application, AllInAppDatabase::class.java, "app").build()
     }
 
-    @Singleton
-    @Provides
-    fun providesMovieDao(demoDatabase:AllInAppDatabase) : MovieDao {
-        return demoDatabase.movieDao()
-    }
-
     @Provides
     @Singleton
     fun provideRetrofit(): Retrofit {
@@ -59,7 +55,11 @@ class ApplicationModule(private val application: Application){
         return okHttpClientBuilder.build()
     }
 
+    @Provides @Singleton fun providesMovieDao(demoDatabase:AllInAppDatabase) : MovieDao { return demoDatabase.movieDao() }
+    @Provides @Singleton fun providesParametersDao(demoDatabase:AllInAppDatabase) : ParametersDao { return demoDatabase.parametersDao() }
+
     @Provides @Singleton fun provideMoviesRepository(dataSource: MoviesRepository.Network): MoviesRepository = dataSource
     @Provides @Singleton fun provideAuthRepository(dataSource: AuthRepository.Network): AuthRepository = dataSource
+    @Provides @Singleton fun provideParametersRepository(dataSource: ParametersRepository.Network): ParametersRepository = dataSource
 
 }
