@@ -13,12 +13,18 @@ import com.tawa.allinapp.R
 import com.google.android.material.snackbar.Snackbar
 import com.tawa.allinapp.AndroidApplication
 import com.tawa.allinapp.core.di.ApplicationComponent
+import com.tawa.allinapp.core.dialog.MessageDialogFragment
+import com.tawa.allinapp.core.dialog.ProgressDialogFragment
 import com.tawa.allinapp.core.extensions.appContext
 import com.tawa.allinapp.core.extensions.viewContainer
+import com.tawa.allinapp.core.functional.Failure
 import kotlinx.android.synthetic.main.toolbar.*
 import javax.inject.Inject
 
 abstract class BaseFragment : Fragment() {
+
+    private var errorDialog: MessageDialogFragment? = null
+    private var progressDialog: ProgressDialogFragment? = null
 
     val appComponent: ApplicationComponent by lazy(mode = LazyThreadSafetyMode.NONE) {
         (activity?.application as AndroidApplication).appComponent
@@ -35,8 +41,47 @@ abstract class BaseFragment : Fragment() {
     internal fun hideProgress() = progressStatus(View.GONE)
 
     private fun progressStatus(viewStatus: Int) = with(activity) {
-            if (this is BaseActivity)
-                this.progress.visibility = viewStatus
+        if (this is BaseActivity) this.progress.visibility = viewStatus
+    }
+
+    internal fun showProgressDialog() {
+        progressDialog?.let {
+            progressDialog?.show(childFragmentManager, "loading")
+        } ?: run {
+            progressDialog = ProgressDialogFragment()
+            progressDialog?.show(childFragmentManager, "loading")
+        }
+    }
+
+    internal fun hideProgressDialog() {
+        progressDialog?.dismiss()
+    }
+
+    open fun showMessage(message:String?){
+        val dialog = MessageDialogFragment.newInstance(message ?:"")
+        dialog.show(childFragmentManager, "dialog")
+    }
+
+    open fun handleFailure(failure: Failure?) {
+        hideProgressDialog()
+        errorDialog = null
+        failure?.let {
+            errorDialog = when (it) {
+                is Failure.DefaultError -> {
+                    MessageDialogFragment.newInstance(it.message ?: getString(R.string.error_unknown))
+                }
+                is Failure.NetworkConnection -> {
+                    MessageDialogFragment.newInstance(getString(R.string.error_network))
+                }
+                else -> {
+                    MessageDialogFragment.newInstance(getString(R.string.error_unknown))
+                }
+            }
+            errorDialog?.listener = object : MessageDialogFragment.Callback {
+                override fun onAccept() {}
+            }
+            errorDialog?.show(childFragmentManager, "dialog")
+        }
     }
 
     internal fun notify(@StringRes message: Int) =
