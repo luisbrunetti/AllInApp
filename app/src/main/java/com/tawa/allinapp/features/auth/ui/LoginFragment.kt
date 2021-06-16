@@ -48,7 +48,7 @@ class LoginFragment : BaseFragment() {
                 }
             }})
             observe(username, { it?.let {
-
+                
             }})
             observe(password, { it?.let {
 
