@@ -17,9 +17,17 @@ class AuthViewModel
     private val getPVRemote: GetPVRemote,
 ): BaseViewModel(){
 
+    private val _startLogin = MutableLiveData(false)
+    val startLogin: LiveData<Boolean>
+        get() = _startLogin
+
     private val _successLogin = MutableLiveData(false)
     val successLogin: LiveData<Boolean>
         get() = _successLogin
+
+    private val _successEndLogin = MutableLiveData(false)
+    val successEndLogin: LiveData<Boolean>
+        get() = _successEndLogin
 
     private val _successGetCompanies = MutableLiveData(false)
     val successGetCompanies: LiveData<Boolean>
@@ -30,21 +38,20 @@ class AuthViewModel
         get() = _successGetPV
 
     private val _username = MutableLiveData("")
-    fun getUsername() = _username
+    val username = _username
 
     private val _password = MutableLiveData("")
-    fun getPassword() = _password
+    val password = _password
 
-    fun doLogin() = doLogin(DoLogin.Params(_username.value!!,_password.value!!)) {
-        it.either(::handleFailure, ::handleLogin)
+    private val _error = MutableLiveData("")
+    val error = _error
+
+    fun doLogin() {
+        _startLogin.value = true
+        doLogin(DoLogin.Params(_username.value!!,_password.value!!)) {
+            it.either(::handleFailure, ::handleLogin)
+        }
     }
-
-    /*
-    fun doLogin(username:String, password:String) = doLogin(DoLogin.Params(username,password)) {
-        it.either(::handleFailure, ::handleLogin)
-    }
-
-     */
 
     private fun handleLogin(success: Boolean) {
         this._successLogin.value = success
@@ -53,7 +60,6 @@ class AuthViewModel
     fun getCompaniesRemote() = getCompaniesRemote(UseCase.None()) {
         it.either(::handleFailure, ::handleCompaniesRemote)
     }
-
     private fun handleCompaniesRemote(success: Boolean) {
         this._successGetCompanies.value = success
     }
@@ -61,8 +67,12 @@ class AuthViewModel
     fun getPVRemote() = getPVRemote(UseCase.None()) {
         it.either(::handleFailure, ::handlePVRemote)
     }
-
     private fun handlePVRemote(success: Boolean) {
         this._successGetPV.value = success
+    }
+
+    fun endLogin(){
+        if(_successGetCompanies.value==true && _successGetPV.value==true)
+            _successEndLogin.value = true
     }
 }

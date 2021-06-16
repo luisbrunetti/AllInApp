@@ -8,4 +8,10 @@
     <string name="title_infor">Informes</string>
     <string name="title_routes">Rutas</string>
     <string name="title_calendar">Calendario</string>
+
+    <string name="error_login">Usuario y/o Contrasena incorrecta</string>
+    <string name="ok_login">Login correcto</string>
+    <string name="error_network">Error de red</string>
+    <string name="error_unknown">Ocurrio un error inesperado</string>
+    <string name="bt_accept">Entiendo</string>
 </resources>

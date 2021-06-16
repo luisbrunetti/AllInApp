@@ -4,10 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
+import com.tawa.allinapp.R
 import com.tawa.allinapp.core.extensions.failure
 import com.tawa.allinapp.core.extensions.observe
 import com.tawa.allinapp.core.extensions.viewModel
@@ -24,27 +21,39 @@ class LoginFragment : BaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         appComponent.inject(this)
-        //authViewModel = ViewModelProvider(requireActivity()).get(AuthViewModel::class.java)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = LoginFragmentBinding.inflate(inflater)
         authViewModel= viewModel(viewModelFactory) {
-            observe(successLogin, {
-                it?.let {
-                    Toast.makeText(context,"username",Toast.LENGTH_SHORT).show()
+            observe(successLogin, { it?.let {
+                if(it){
+                    authViewModel.getCompaniesRemote()
+                    authViewModel.getPVRemote()
                 }
-            })
-            observe(getUsername(), {
-                it?.let {
-                    Toast.makeText(context,"username",Toast.LENGTH_SHORT).show()
+            }})
+            observe(startLogin, { it?.let {
+                if(it) showProgressDialog()
+            }})
+            observe(successGetCompanies, { it?.let {
+                if(it) authViewModel.endLogin()
+            }})
+            observe(successGetPV, { it?.let {
+                if(it) authViewModel.endLogin()
+            }})
+            observe(successEndLogin, { it?.let {
+                if (it) {
+                    hideProgressDialog()
+                    showMessage(resources.getString(R.string.ok_login)) // TODO go to home
                 }
-            })
-            failure(failure, {
-                it?.let {
-                    Toast.makeText(context,"prueba",Toast.LENGTH_SHORT).show()
-                }
-            })
+            }})
+            observe(username, { it?.let {
+
+            }})
+            observe(password, { it?.let {
+
+            }})
+            failure(failure, ::handleFailure)
         }
         return binding.root
     }
