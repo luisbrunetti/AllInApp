@@ -16,3 +16,7 @@ fun ImageView.loadFromUrl(url: String) =
         .load(url)
         .transition(DrawableTransitionOptions.withCrossFade())
         .into(this)
+
+fun View.visible() { this.visibility = View.VISIBLE }
+
+fun View.invisible() { this.visibility = View.GONE }

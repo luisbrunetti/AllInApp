@@ -10,7 +10,7 @@ class Prefs
         const val FILENAME ="dagger"
         const val USERNAME = "name"
         const val TOKEN = "token"
-        const val AGE = "age"
+        const val SESSION = "session"
     }
 
     private val prefs  = context.getSharedPreferences(FILENAME, Context.MODE_PRIVATE)
@@ -22,7 +22,7 @@ class Prefs
         get() = prefs.getString(TOKEN,"")
         set(value) = prefs.edit().putString(TOKEN,value).apply()
 
-    var age:Int
-        get() = prefs.getInt(AGE,-1)
-        set(value) = prefs.edit().putInt(AGE,value).apply()
+    var session:Boolean
+        get() = prefs.getBoolean(SESSION,false)
+        set(value) = prefs.edit().putBoolean(SESSION,value).apply()
 }

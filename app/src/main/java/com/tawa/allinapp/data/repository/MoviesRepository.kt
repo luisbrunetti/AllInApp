@@ -36,7 +36,6 @@ interface MoviesRepository {
                         when (response.isSuccessful) {
                             true -> {
                                 response.body()?.let {
-                                    prefs.age = 30
                                     prefs.name = "Rodrigo"
                                     it.map { movieEntity ->
                                         movieDataSource.insertMovies(movieEntity.toMovie())
