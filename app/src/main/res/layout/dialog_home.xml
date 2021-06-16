@@ -7,8 +7,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
+        android:layout_marginStart="29dp"
+        android:layout_marginEnd="29dp"
         android:orientation="vertical">
 
         <TextView
@@ -19,13 +19,13 @@
             android:gravity="center"
             android:text="Seleccione la empresa"
             android:textColor="@color/design_default_color_on_secondary"
-            android:textSize="25sp"
+            android:textSize="20sp"
             android:textStyle="bold" />
 
         <Spinner
             android:id="@+id/spinner"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="40dp"
             android:layout_marginTop="20dp"
             android:background="@drawable/spinner_emp"
             android:dropDownWidth="match_parent"
@@ -37,12 +37,24 @@
         <Spinner
             android:id="@+id/spinner2"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="40dp"
             android:layout_marginTop="20dp"
             android:background="@drawable/spinner_pdv"
-            android:dropDownWidth="match_parent"
             android:entries="@array/Pdv"
             android:overlapAnchor="false"
             android:paddingStart="35dp" />
+
+        <Button
+            android:id="@+id/btnAccessHome"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="35dp"
+            android:layout_marginEnd="40dp"
+            android:layout_marginBottom="25dp"
+            android:background="@drawable/roundedbuttom"
+            android:text="Ingresar"
+            android:textAllCaps="false"
+            android:textColor="@color/colorTextPrimary" />
     </LinearLayout>
 </LinearLayout>
