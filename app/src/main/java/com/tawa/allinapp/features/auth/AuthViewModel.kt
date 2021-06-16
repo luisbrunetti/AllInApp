@@ -37,6 +37,10 @@ class AuthViewModel
     val successGetPV: LiveData<Boolean>
         get() = _successGetPV
 
+    private val _enableButton = MutableLiveData<Boolean>(false)
+    val enableButton: LiveData<Boolean>
+        get() = _enableButton
+
     private val _username = MutableLiveData("")
     val username = _username
 
@@ -52,7 +56,6 @@ class AuthViewModel
             it.either(::handleFailure, ::handleLogin)
         }
     }
-
     private fun handleLogin(success: Boolean) {
         this._successLogin.value = success
     }
@@ -69,6 +72,10 @@ class AuthViewModel
     }
     private fun handlePVRemote(success: Boolean) {
         this._successGetPV.value = success
+    }
+
+    fun validateFields() {
+        _enableButton.postValue(_username.value!!.isNotEmpty() && _password.value!!.isNotEmpty())
     }
 
     fun endLogin(){

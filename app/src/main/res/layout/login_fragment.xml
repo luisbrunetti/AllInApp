@@ -133,6 +133,7 @@
             android:layout_marginBottom="24dp"
             android:background="@drawable/roundedbuttom"
             android:text="Ingresar"
+            app:enableButton="@{viewModel.enableButton}"
             android:onClick="@{()->viewModel.doLogin()}"
             android:textAllCaps="false"
             android:textColor="@color/colorTextPrimary"

@@ -48,10 +48,10 @@ class LoginFragment : BaseFragment() {
                 }
             }})
             observe(username, { it?.let {
-                
+                authViewModel.validateFields()
             }})
             observe(password, { it?.let {
-
+                authViewModel.validateFields()
             }})
             failure(failure, ::handleFailure)
         }
