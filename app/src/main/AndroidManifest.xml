@@ -32,17 +32,19 @@
             android:value="@string/google_maps_key" />
 
         <activity android:name=".features.HomeActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
         <activity android:name=".features.auth.ui.LoginActivity"
             android:theme="@style/SplashTheme"
             android:windowSoftInputMode="stateHidden|adjustResize"
             >
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
 
         </activity>
     </application>

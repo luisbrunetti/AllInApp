@@ -32,7 +32,7 @@ class InitFragment : BaseFragment() {
         initViewModel = viewModel(viewModelFactory) {
             observe(text, {
                 it?.let {
-                    binding.tvInit.text = it
+                    //binding.tvInit.text = it
                 }
             })
         }
@@ -51,19 +51,6 @@ class InitFragment : BaseFragment() {
 
             builder.setView(inflater.inflate(R.layout.dialog_home,null))
 
-                .setPositiveButton("Aceptar",
-                    DialogInterface.OnClickListener { dialog, id ->
-
-
-                        Toast.makeText(context,"ACEPTAR",Toast.LENGTH_SHORT).show()
-
-
-                    })
-                .setNegativeButton("Cancelar",
-                    DialogInterface.OnClickListener { dialog, id ->
-                        Toast.makeText(context,"Cancelar",Toast.LENGTH_SHORT).show()
-
-                    })
             builder.create()
         } ?: throw IllegalStateException("Activity cannot be null")
     }
