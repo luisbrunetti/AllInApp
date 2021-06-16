@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.tawa.allinapp.R
+import com.tawa.allinapp.core.dialog.ProgressDialogFragment
 import com.tawa.allinapp.core.extensions.observe
 import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.platform.BaseFragment
@@ -36,10 +37,6 @@ class InitFragment : BaseFragment() {
                 }
             })
         }
-
-
-
-
         return binding.root
     }
 
