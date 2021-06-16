@@ -26,16 +26,13 @@ class InitFragment : BaseFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentInitBinding.inflate(inflater)
-
-        initViewModel = viewModel(defaultViewModelProviderFactory) {
+        initViewModel = viewModel(viewModelFactory) {
             observe(text, {
                 it?.let {
                     binding.tvInit.text = it
                 }
             })
         }
-
         return binding.root
     }
-
 }

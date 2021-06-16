@@ -1,31 +1,19 @@
 package com.tawa.allinapp.features.auth.ui
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.MutableLiveData
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.Navigation
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
-import com.tawa.allinapp.R
-import com.tawa.allinapp.core.extensions.appContext
 import com.tawa.allinapp.core.extensions.failure
 import com.tawa.allinapp.core.extensions.observe
 import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.platform.BaseFragment
-import com.tawa.allinapp.databinding.FragmentMoviesBinding
 import com.tawa.allinapp.databinding.LoginFragmentBinding
-import com.tawa.allinapp.features.HomeActivity
 import com.tawa.allinapp.features.auth.AuthViewModel
-import com.tawa.allinapp.features.auth.usecase.DoLogin
-import com.tawa.allinapp.features.movies.MoviesViewModel
 
 
 class LoginFragment : BaseFragment() {
@@ -33,14 +21,23 @@ class LoginFragment : BaseFragment() {
     private lateinit var authViewModel: AuthViewModel
     private lateinit var binding:LoginFragmentBinding
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        appComponent.inject(this)
+        //authViewModel = ViewModelProvider(requireActivity()).get(AuthViewModel::class.java)
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = LoginFragmentBinding.inflate(inflater)
-
         authViewModel= viewModel(viewModelFactory) {
             observe(successLogin, {
                 it?.let {
-                    var a = it
-                    Toast.makeText(context,""+a,Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context,"username",Toast.LENGTH_SHORT).show()
+                }
+            })
+            observe(getUsername(), {
+                it?.let {
+                    Toast.makeText(context,"username",Toast.LENGTH_SHORT).show()
                 }
             })
             failure(failure, {
@@ -49,42 +46,17 @@ class LoginFragment : BaseFragment() {
                 }
             })
         }
-
         return binding.root
-
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        appComponent.inject(this)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        binding.emailText.clearFocus()
-
-
-
-        binding.button.setOnClickListener(View.OnClickListener {
-
-            Toast.makeText(context,"login",Toast.LENGTH_SHORT).show()
-            doLogin()
-        })
-
+        setUpBinding()
     }
 
-     private  fun doLogin(){
-
-        val nextScreenIntent = Intent(context, HomeActivity::class.java)
-        startActivity(nextScreenIntent)
-
-
-       // authViewModel.login(
-        //    "asas",
-       //     "asas")
-
-
-
+    private fun setUpBinding() {
+        binding.viewModel = authViewModel
+        binding.lifecycleOwner = this
+        binding.executePendingBindings()
     }
 }

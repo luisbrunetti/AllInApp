@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.tawa.allinapp.features.auth.AuthViewModel
 import com.tawa.allinapp.features.calendar.CalendarViewModel
 import com.tawa.allinapp.features.catalog.CatalogViewModel
+import com.tawa.allinapp.features.init.InitViewModel
 import com.tawa.allinapp.features.movies.MoviesViewModel
 import com.tawa.allinapp.features.reports.ReportsViewModel
 import dagger.Binds
@@ -40,5 +41,10 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(AuthViewModel::class)
     abstract fun bindsAuthViewModel(authViewModel: AuthViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(InitViewModel::class)
+    abstract fun bindsInitViewModel(initViewModel: InitViewModel): ViewModel
 
 }
