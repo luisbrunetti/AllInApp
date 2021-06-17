@@ -44,7 +44,7 @@ class LoginFragment : BaseFragment() {
             observe(successEndLogin, { it?.let {
                 if (it) {
                     hideProgressDialog()
-                    showMessage(resources.getString(R.string.ok_login)) // TODO go to home
+                    showHome(context)
                 }
             }})
             observe(username, { it?.let {

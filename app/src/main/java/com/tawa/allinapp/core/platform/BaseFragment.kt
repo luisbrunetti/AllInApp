@@ -1,5 +1,7 @@
 package com.tawa.allinapp.core.platform
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -18,6 +20,8 @@ import com.tawa.allinapp.core.dialog.ProgressDialogFragment
 import com.tawa.allinapp.core.extensions.appContext
 import com.tawa.allinapp.core.extensions.viewContainer
 import com.tawa.allinapp.core.functional.Failure
+import com.tawa.allinapp.features.HomeActivity
+import com.tawa.allinapp.features.auth.ui.LoginActivity
 import kotlinx.android.synthetic.main.toolbar.*
 import javax.inject.Inject
 
@@ -82,6 +86,14 @@ abstract class BaseFragment : Fragment() {
             }
             errorDialog?.show(childFragmentManager, "dialog")
         }
+    }
+
+    fun showHome(context: Context?) = context?.let { it.startActivity(Intent(it, HomeActivity::class.java)) }
+
+    fun showLogin(context: Context?) = context?.let {
+        val intent = Intent(it, LoginActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+        it.startActivity(intent)
     }
 
     internal fun notify(@StringRes message: Int) =

@@ -11,6 +11,7 @@ import javax.inject.Inject
 
 interface AuthRepository {
     fun login(username: String, password: String): Either<Failure, Boolean>
+    fun userLoggedIn(): Either<Failure, Boolean>
 
     class Network
     @Inject constructor(private val networkHandler: NetworkHandler,
@@ -29,6 +30,7 @@ interface AuthRepository {
                                     if(body.success) {
                                         prefs.name = username
                                         prefs.token = body.data.token
+                                        prefs.session = true
                                         Either.Right(true)
                                     }
                                     else
@@ -45,16 +47,8 @@ interface AuthRepository {
             }
         }
 
-        private fun <T, R> request(call: Call<T>, transform: (T) -> R, default: T): Either<Failure, R> {
-            return try {
-                val response = call.execute()
-                when (response.isSuccessful) {
-                    true -> Either.Right(transform((response.body() ?: default)))
-                    false -> Either.Left(Failure.ServerError)
-                }
-            } catch (exception: Throwable) {
-                Either.Left(Failure.ServerError)
-            }
+        override fun userLoggedIn(): Either<Failure, Boolean> {
+            return Either.Right(prefs.session)
         }
     }
 }
