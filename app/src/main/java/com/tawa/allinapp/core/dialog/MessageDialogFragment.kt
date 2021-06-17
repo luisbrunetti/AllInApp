@@ -23,7 +23,7 @@ class MessageDialogFragment : DialogFragment() {
         const val BUTTON = "left"
         const val ICON = "icon"
         const val NO_ICON = -1
-        fun newInstance( message: String, title: Int = R.string.error_unknown, button: Int = R.string.bt_accept, icon: Int = R.drawable.ic_error): MessageDialogFragment {
+        fun newInstance(message: String, title: Int = R.string.error_unknown, button: Int = R.string.bt_accept, icon: Int = R.drawable.ic_error): MessageDialogFragment {
             val frag = MessageDialogFragment()
             val bundle = Bundle()
             bundle.putInt(TITLE, title)
@@ -45,7 +45,7 @@ class MessageDialogFragment : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         arguments?.let { bundle ->
-            bundle.getInt(TITLE)?.let { binding.tvTitle.text = context?.getString(it) }
+            bundle.getInt(TITLE).let { binding.tvTitle.text = context?.getString(it) }
             bundle.getString(MESSAGE)?.let { binding.tvMessage.text = it }
             bundle.getInt(BUTTON).let { binding.btAccept.text = context?.getString(it) }
             bundle.getInt(ICON).let {
