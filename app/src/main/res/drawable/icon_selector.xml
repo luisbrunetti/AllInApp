@@ -1,4 +1,4 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@drawable/ic_vi" android:state_checked="true"/>
-    <item android:drawable="@drawable/ic_off_vi"/>
+    <item android:drawable="@drawable/ic_baseline_visibility_24" android:state_checked="true"/>
+    <item android:drawable="@drawable/ic_baseline_visibility_off_24"/>
 </selector>
