@@ -1,46 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-
-
-
     <item
-
         android:id="@+id/navigation_init"
         android:icon="@drawable/ic_home"
         android:title="@string/title_home" />
-
-
-
     <item
-
-
         android:id="@+id/navigation_reports"
         android:icon="@drawable/ic_rep"
         android:title="@string/title_reports" />
-
     <item
-
-
         android:id="@+id/navigation_informs"
         android:icon="@drawable/ic_infor"
         android:title="@string/title_infor" />
-
-
     <item
-
-
         android:id="@+id/navigation_routes"
         android:icon="@drawable/ic_rutas"
         android:title="@string/title_routes" />
-
-
-
     <item
         android:id="@+id/navigation_calendar"
         android:icon="@drawable/ic_calendar"
         android:title="@string/title_calendar" />
-
-
-
 </menu>

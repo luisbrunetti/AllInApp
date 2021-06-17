@@ -9,6 +9,7 @@ import com.tawa.allinapp.features.init.InitViewModel
 import com.tawa.allinapp.features.movies.MoviesViewModel
 import com.tawa.allinapp.features.reports.ReportsViewModel
 import com.tawa.allinapp.features.routes.RoutesViewModel
+import com.tawa.allinapp.features.splash.SplashViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -52,5 +53,10 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(RoutesViewModel::class)
     abstract fun bindsRoutesViewModel(routesViewModel: RoutesViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(SplashViewModel::class)
+    abstract fun bindsSplashViewModel(splashViewModel: SplashViewModel): ViewModel
 
 }

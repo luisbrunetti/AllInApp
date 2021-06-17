@@ -1,15 +1,12 @@
 package com.tawa.allinapp.features
 
-import android.app.AlertDialog
-import android.app.Dialog
-import android.content.DialogInterface
 import android.os.Bundle
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.tawa.allinapp.AndroidApplication
 import com.tawa.allinapp.R
 import com.tawa.allinapp.core.di.ApplicationComponent
@@ -38,16 +35,14 @@ class HomeActivity : AppCompatActivity() {
 
         val appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.navigation_init,R.id.navigation_reports, R.id.navigation_informs,R.id.navigation_routes, R.id.navigation_calendar
+                R.id.navigation_init,
+                R.id.navigation_reports,
+                R.id.navigation_informs,
+                R.id.navigation_routes,
+                R.id.navigation_calendar
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-
-
     }
-
-
-
-
 }
