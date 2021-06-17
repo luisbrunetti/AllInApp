@@ -8,6 +8,6 @@ import javax.inject.Inject
 class GetPVRemote
 @Inject constructor(private val parametersRepository: ParametersRepository) : UseCase<Boolean, UseCase.None>() {
 
-    override suspend fun run(params: None) = parametersRepository.getPV()
+    override suspend fun run(params: None) = parametersRepository.setPV()
 
 }

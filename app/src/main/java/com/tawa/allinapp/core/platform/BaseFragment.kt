@@ -90,11 +90,7 @@ abstract class BaseFragment : Fragment() {
 
     fun showHome(context: Context?) = context?.let { it.startActivity(Intent(it, HomeActivity::class.java)) }
 
-    fun showLogin(context: Context?) = context?.let {
-        val intent = Intent(it, LoginActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
-        it.startActivity(intent)
-    }
+    fun showLogin(context: Context?) = context?.let { it.startActivity(Intent(it, LoginActivity::class.java)) }
 
     internal fun notify(@StringRes message: Int) =
         Snackbar.make(viewContainer, message, Snackbar.LENGTH_SHORT).show()

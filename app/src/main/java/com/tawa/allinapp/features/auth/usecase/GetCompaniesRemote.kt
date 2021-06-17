@@ -8,6 +8,6 @@ import javax.inject.Inject
 class GetCompaniesRemote
 @Inject constructor(private val parametersRepository: ParametersRepository) : UseCase<Boolean, UseCase.None>() {
 
-    override suspend fun run(params: None) = parametersRepository.getCompanies()
+    override suspend fun run(params: None) = parametersRepository.setCompanies()
 
 }

@@ -2,6 +2,7 @@ package com.tawa.allinapp.data.local.models
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.tawa.allinapp.features.auth.Company
 
 @Entity(tableName = "company")
 data class CompanyModel(
@@ -10,4 +11,6 @@ data class CompanyModel(
     val ruc: String,
     val name: String,
     val description: String,
-)
+){
+    fun toView() = Company(id,code,ruc,name,description)
+}

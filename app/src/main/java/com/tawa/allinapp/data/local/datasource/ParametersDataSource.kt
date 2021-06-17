@@ -16,4 +16,7 @@ class ParametersDataSource @Inject constructor(private val parametersDao: Parame
     fun getCompanies():List<CompanyModel> {
         return parametersDao.getCompanies()
     }
+    fun getPV():List<PVModel> {
+        return parametersDao.getPV()
+    }
 }

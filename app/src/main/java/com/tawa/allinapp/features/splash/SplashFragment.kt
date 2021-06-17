@@ -7,10 +7,12 @@ import android.view.ViewGroup
 import com.tawa.allinapp.core.extensions.observe
 import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.platform.BaseFragment
+import com.tawa.allinapp.databinding.FragmentSplashBinding
 
 class SplashFragment : BaseFragment() {
 
     private lateinit var splashViewModel: SplashViewModel
+    private lateinit var binding: FragmentSplashBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -18,6 +20,7 @@ class SplashFragment : BaseFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        binding = FragmentSplashBinding.inflate(inflater)
         splashViewModel = viewModel(viewModelFactory) {
             observe(session, {
                 when(it){
@@ -27,7 +30,7 @@ class SplashFragment : BaseFragment() {
             })
         }
         splashViewModel.getSession()
-        return super.onCreateView(inflater, container, savedInstanceState)
+        return binding.root
     }
 
 }
