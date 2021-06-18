@@ -28,76 +28,35 @@ class InitFragment : BaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         appComponent.inject(this)
-
     }
-
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentInitBinding.inflate(inflater)
-        showSelector("")
+        showSelector()
         initViewModel = viewModel(viewModelFactory) {
-
-            observe(dayState, {
-                it?.let {
-                    if(it)
-                    {
-                        val currentDay = getString(R.string.current_day, getDayWeek(),getDayMonth(),getMonth(),getYear())
-                        binding.currentDay.text  = currentDay
-                    }
+            observe(dayState, { it?.let {
+                if(it) {
+                    val currentDay = getString(R.string.current_day, getDayWeek(),getDayMonth(),getMonth(),getYear())
+                    binding.currentDay.text  = currentDay
                 }
-            })
-
-           /* observe(startCheckIn, {
-                it?.let {
-                    if(it)
-                    {
-                       Toast.makeText(context,"CLICK CHECK",Toast.LENGTH_SHORT).show()
-                    }
-
-                }
-            })*/
-
-
+            }})
         }
-
-        binding.button3.setOnClickListener(View.OnClickListener {
-
-        //Toast.makeText(context,""+current.,Toast.LENGTH_SHORT).show()
-            showSelectorCheckIn("")
-        })
-
-
+        binding.btCheckIn.setOnClickListener{
+            showSelectorCheckIn()
+        }
         return binding.root
     }
 
-        private fun showSelector(message:String?){
+    private fun showSelector(){
         val dialog = SelectorDialogFragment(this)
         dialog.show(childFragmentManager, "dialog")
     }
 
-        private fun showSelectorCheckIn(message:String?){
+    private fun showSelectorCheckIn(){
         val dialog = CheckinSelectorDialogFragment(this)
         dialog.show(childFragmentManager, "dialog")
     }
-
-
-
-    /*private fun onCreateDialog(): Dialog {
-       return activity?.let {
-           val builder = AlertDialog.Builder(it)
-           val inflater = requireActivity().layoutInflater
-
-           builder.setView(inflater.inflate(R.layout.dialog_home,null))
-
-           builder.create()
-       } ?: throw IllegalStateException("Activity cannot be null")
-   }*/
-
-
-
-
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -109,9 +68,6 @@ class InitFragment : BaseFragment() {
         binding.lifecycleOwner = this
         binding.executePendingBindings()
     }
-
-
-
 
 }
 

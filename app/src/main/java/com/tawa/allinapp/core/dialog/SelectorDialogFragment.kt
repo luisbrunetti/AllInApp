@@ -27,28 +27,10 @@ class SelectorDialogFragment
     private val baseFragment: BaseFragment
 ): DialogFragment() {
 
-
-
-
     private lateinit var binding: DialogHomeBinding
     private  lateinit var initViewModel: InitViewModel
 
-
-
-
-
     var listener: Callback? = null
-
-
-
-    companion object {
-
-
-    }
-
-
-
-
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DialogHomeBinding.inflate(inflater)
@@ -58,20 +40,16 @@ class SelectorDialogFragment
         val arrayListPv:ArrayList<String> = ArrayList<String>()
         val  aa = ArrayAdapter<String>(requireActivity(), android.R.layout.simple_spinner_dropdown_item, arrayList)
         val  aaPv = ArrayAdapter<String>(requireActivity(), android.R.layout.simple_spinner_dropdown_item, arrayListPv)
+        
         initViewModel = viewModel(baseFragment.viewModelFactory){
-
             observe(startHome, {
                 it?.let {
-
                     if(it) {
                         getCompanies()
                         getPv()
-
                     }
-
                 }
             })
-
             observe(companies, {
                 it?.let {
                     arrayList.addAll(toArray(it))
