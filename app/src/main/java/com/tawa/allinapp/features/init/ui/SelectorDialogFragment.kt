@@ -1,4 +1,4 @@
-package com.tawa.allinapp.core.dialog
+package com.tawa.allinapp.features.init.ui
 
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -6,83 +6,62 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.TextView
-import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.DialogFragment
 import com.tawa.allinapp.core.extensions.observe
 import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.platform.BaseFragment
-import com.tawa.allinapp.databinding.DialogCheckinBinding
 import com.tawa.allinapp.databinding.DialogHomeBinding
-import com.tawa.allinapp.features.auth.Company
-import com.tawa.allinapp.features.auth.PV
+import com.tawa.allinapp.models.Company
+import com.tawa.allinapp.models.PV
 import com.tawa.allinapp.features.init.InitViewModel
 import javax.inject.Inject
 
 
-class CheckinSelectorDialogFragment
+class SelectorDialogFragment
 @Inject constructor(
     private val baseFragment: BaseFragment
 ): DialogFragment() {
 
-
-
-
-    private lateinit var binding: DialogCheckinBinding
+    private lateinit var binding: DialogHomeBinding
     private  lateinit var initViewModel: InitViewModel
-    private val arrayListPv:ArrayList<String> = ArrayList<String>()
-
-
-
 
     var listener: Callback? = null
 
-
-
-    companion object {
-
-
-    }
-
-
-
-
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = DialogCheckinBinding.inflate(inflater)
+        binding = DialogHomeBinding.inflate(inflater)
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         isCancelable = false
-
-
+        val arrayList:ArrayList<String> = ArrayList<String>()
+        val arrayListPv:ArrayList<String> = ArrayList<String>()
+        val  aa = ArrayAdapter<String>(requireActivity(), android.R.layout.simple_spinner_dropdown_item, arrayList)
         val  aaPv = ArrayAdapter<String>(requireActivity(), android.R.layout.simple_spinner_dropdown_item, arrayListPv)
-        //val arrayList:ArrayList<String> = ArrayList<String>()
-
-       // val  aa = ArrayAdapter<String>(requireActivity(), android.R.layout.simple_spinner_dropdown_item, arrayList)
-
+        
         initViewModel = viewModel(baseFragment.viewModelFactory){
-
-            observe(startCheckIn, {
+            observe(startHome, {
                 it?.let {
-
                     if(it) {
-                        //getCompanies()
+                        getCompanies()
                         getPv()
-
                     }
+                }
+            })
+            observe(companies, {
+                it?.let {
+                    arrayList.addAll(toArray(it))
+                    binding.spinner.adapter = aa
 
                 }
             })
-
 
             observe(pv, {
                 it?.let {
                     arrayListPv.addAll(toArrayPv(it))
-                    binding.pdvSpinner.adapter = aaPv
+                    binding.spinner2.adapter = aaPv
                 }
             })
+
 
 
 
@@ -93,13 +72,9 @@ class CheckinSelectorDialogFragment
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        binding.btnDoCheckin.setOnClickListener {
+        binding.btnAccessHome.setOnClickListener {
             listener?.onAccept()
             dismiss()
-            val posi  = binding.pdvSpinner.selectedItemPosition
-
-            Toast.makeText(context,""+posi,Toast.LENGTH_SHORT).show()
         }
     }
 

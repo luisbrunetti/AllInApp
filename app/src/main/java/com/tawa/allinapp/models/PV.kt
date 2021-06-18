@@ -1,4 +1,4 @@
-package com.tawa.allinapp.features.auth
+package com.tawa.allinapp.models
 
 data class PV(
     val id: String,
@@ -6,4 +6,6 @@ data class PV(
     val zone: String,
     val codGeo: String,
     val idCompany: String,
+    val lat: String,
+    val long: String,
 )

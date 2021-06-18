@@ -4,11 +4,9 @@ import com.tawa.allinapp.core.functional.Either
 import com.tawa.allinapp.core.functional.Failure
 import com.tawa.allinapp.core.functional.NetworkHandler
 import com.tawa.allinapp.data.local.datasource.ParametersDataSource
-import com.tawa.allinapp.data.local.models.CompanyModel
-import com.tawa.allinapp.data.local.models.PVModel
 import com.tawa.allinapp.data.remote.service.ParametersService
-import com.tawa.allinapp.features.auth.Company
-import com.tawa.allinapp.features.auth.PV
+import com.tawa.allinapp.models.Company
+import com.tawa.allinapp.models.PV
 import javax.inject.Inject
 
 interface ParametersRepository {

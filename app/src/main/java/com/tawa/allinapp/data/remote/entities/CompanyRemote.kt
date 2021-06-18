@@ -2,7 +2,7 @@ package com.tawa.allinapp.data.remote.entities
 
 import com.google.gson.annotations.SerializedName
 import com.tawa.allinapp.data.local.models.CompanyModel
-import com.tawa.allinapp.features.auth.Company
+import com.tawa.allinapp.models.Company
 
 class CompanyRemote {
     data class Response(

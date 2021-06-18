@@ -29,13 +29,13 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".features.auth.ui.LoginActivity" android:windowSoftInputMode="stateHidden|adjustResize" />
-        <activity android:name=".features.HomeActivity"/>
-
-        <activity android:name=".features.splash.SplashActivity"
-            android:theme="@style/SplashTheme"
+        <activity android:name=".features.auth.ui.LoginActivity" android:windowSoftInputMode="stateHidden|adjustResize"/>
+        <activity android:name=".features.HomeActivity" />
+        <activity
+            android:name=".features.splash.SplashActivity"
             android:noHistory="true"
-            android:screenOrientation="unspecified">
+            android:screenOrientation="unspecified"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

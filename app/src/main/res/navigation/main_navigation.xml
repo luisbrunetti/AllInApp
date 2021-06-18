@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/navigation_init"
-        android:name="com.tawa.allinapp.features.init.InitFragment"
+        android:name="com.tawa.allinapp.features.init.ui.InitFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_init" />
 

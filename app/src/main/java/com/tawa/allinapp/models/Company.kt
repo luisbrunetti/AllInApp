@@ -1,4 +1,4 @@
-package com.tawa.allinapp.features.auth
+package com.tawa.allinapp.models
 
 data class Company(
     val id: String,

@@ -10,6 +10,7 @@ class Prefs
         const val FILENAME ="dagger"
         const val USERNAME = "name"
         const val TOKEN = "token"
+        const val USERID = "userId"
         const val SESSION = "session"
     }
 
@@ -17,6 +18,10 @@ class Prefs
     var name:String?
         get() = prefs.getString(USERNAME,"")
         set(value) = prefs.edit().putString(USERNAME,value).apply()
+
+    var userId:String?
+        get() = prefs.getString(USERID,"")
+        set(value) = prefs.edit().putString(USERID,value).apply()
 
     var token:String?
         get() = prefs.getString(TOKEN,"")
