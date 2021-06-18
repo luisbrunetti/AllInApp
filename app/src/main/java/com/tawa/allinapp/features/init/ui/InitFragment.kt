@@ -24,7 +24,6 @@ class InitFragment : BaseFragment() {
         appComponent.inject(this)
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentInitBinding.inflate(inflater)
         showSelector()

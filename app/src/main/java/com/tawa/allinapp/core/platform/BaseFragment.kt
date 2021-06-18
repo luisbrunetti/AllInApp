@@ -26,6 +26,7 @@ import kotlinx.android.synthetic.main.toolbar.*
 import java.time.DayOfWeek
 import java.time.LocalDateTime
 import java.time.Month
+import java.util.*
 import javax.inject.Inject
 
 abstract class BaseFragment : Fragment() {
@@ -37,16 +38,9 @@ abstract class BaseFragment : Fragment() {
         (activity?.application as AndroidApplication).appComponent
     }
 
-    val current: LocalDateTime = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        LocalDateTime.now()
-
-    } else {
-        TODO("VERSION.SDK_INT < O")
-    }
+    val current: Date = Calendar.getInstance().time
 
     var dayWeek:String = ""
-    var dayMonth:String = ""
-    var month:String = ""
     var year:String = ""
 
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -76,63 +70,38 @@ abstract class BaseFragment : Fragment() {
         progressDialog?.dismiss()
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     internal  fun getDayWeek():String{
-        when(current.dayOfWeek){
-
-            DayOfWeek.SUNDAY -> dayWeek= "Domingo"
-            DayOfWeek.MONDAY -> dayWeek= "Lunes"
-            DayOfWeek.TUESDAY -> dayWeek= "Martes"
-            DayOfWeek.WEDNESDAY -> dayWeek= "Miercoles"
-            DayOfWeek.THURSDAY -> dayWeek= "Jueves"
-            DayOfWeek.FRIDAY -> dayWeek= "Viernes"
-            DayOfWeek.SATURDAY -> dayWeek= "Sabado"
-
+        when(current.day){
+            0 -> dayWeek= "Domingo"
+            1 -> dayWeek= "Lunes"
+            2 -> dayWeek= "Martes"
+            3 -> dayWeek= "Miercoles"
+            4 -> dayWeek= "Jueves"
+            5 -> dayWeek= "Viernes"
+            6 -> dayWeek= "Sabado"
         }
-
         return dayWeek
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    internal  fun getDayMonth():String {
+    internal  fun getDayMonth() = current.date.toString()
 
-        dayMonth = current.dayOfMonth.toString()
+    internal  fun getYear() = "${current.year + 1900}"
 
-        return dayMonth
+    internal  fun getMonth() = when (current.month) {
+        0 -> "Enero"
+        1 -> "Febrero"
+        2 -> "Marzo"
+        3 -> "Abril"
+        4 -> "Mayo"
+        5 -> "Junio"
+        6 ->  "Julio"
+        7 ->  "Agosto"
+        8 ->  "Septiembre"
+        9 ->  "Octubre"
+        10 -> "Noviembre"
+        11 ->  "Diciembre"
+        else -> ""
     }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    internal  fun getYear():String {
-
-        year = current.year.toString()
-
-        return year
-    }
-
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    internal  fun getMonth():String{
-
-        when (current.month)
-        {
-            Month.JANUARY -> month = "Enero"
-            Month.FEBRUARY -> month = "Febrero"
-            Month.MARCH -> month= "Marzo"
-            Month.APRIL -> month = "Abril"
-            Month.MAY -> month= "Mayo"
-            Month.JUNE -> month= "Junio"
-            Month.JULY -> month= "Julio"
-            Month.AUGUST -> month = "Agosto"
-            Month.SEPTEMBER -> month = "Septiembre"
-            Month.OCTOBER -> month= "Octubre"
-            Month.NOVEMBER -> month = "Noviembre"
-            Month.DECEMBER -> month= "Diciembre"
-        }
-
-        return month
-    }
-
-
 
     open fun showMessage(message:String?){
         val dialog = MessageDialogFragment.newInstance(message ?:"")
