@@ -23,18 +23,14 @@
 
 
     </item>
-    <item
-        android:drawable="@drawable/ic_pdv"
-        android:width="24dp"
-        android:height="24dp"
-        android:left="10dp"
-        android:gravity="start|center_vertical" />
+
+
+
+
 
     <item
-        android:drawable="@drawable/ic_arrowdown"
-        android:width="24dp"
-        android:height="24dp"
+        android:drawable="@drawable/ic_arrowcheckin"
+
         android:right="10dp"
         android:gravity="end|center_vertical" />
-
 </layer-list>

@@ -16,7 +16,7 @@ import com.tawa.allinapp.databinding.DialogHomeBinding
 class HomeActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityHomeBinding
-    private lateinit var bindingDialog: DialogHomeBinding
+
 
     private val appComponent: ApplicationComponent by lazy(mode = LazyThreadSafetyMode.NONE) {
         (application as AndroidApplication).appComponent
@@ -42,7 +42,9 @@ class HomeActivity : AppCompatActivity() {
                 R.id.navigation_calendar
             )
         )
-        setupActionBarWithNavController(navController, appBarConfiguration)
+
+
+        //setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
     }
 }

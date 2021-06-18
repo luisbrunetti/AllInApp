@@ -15,6 +15,7 @@ import androidx.fragment.app.DialogFragment
 import com.tawa.allinapp.core.extensions.observe
 import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.platform.BaseFragment
+import com.tawa.allinapp.databinding.DialogCheckinBinding
 import com.tawa.allinapp.databinding.DialogHomeBinding
 import com.tawa.allinapp.features.auth.Company
 import com.tawa.allinapp.features.auth.PV
@@ -22,7 +23,7 @@ import com.tawa.allinapp.features.init.InitViewModel
 import javax.inject.Inject
 
 
-class SelectorDialogFragment
+class CheckinSelectorDialogFragment
 @Inject constructor(
     private val baseFragment: BaseFragment
 ): DialogFragment() {
@@ -30,7 +31,7 @@ class SelectorDialogFragment
 
 
 
-    private lateinit var binding: DialogHomeBinding
+    private lateinit var binding: DialogCheckinBinding
     private  lateinit var initViewModel: InitViewModel
 
 
@@ -51,20 +52,22 @@ class SelectorDialogFragment
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = DialogHomeBinding.inflate(inflater)
+        binding = DialogCheckinBinding.inflate(inflater)
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         isCancelable = false
-        val arrayList:ArrayList<String> = ArrayList<String>()
         val arrayListPv:ArrayList<String> = ArrayList<String>()
-        val  aa = ArrayAdapter<String>(requireActivity(), android.R.layout.simple_spinner_dropdown_item, arrayList)
         val  aaPv = ArrayAdapter<String>(requireActivity(), android.R.layout.simple_spinner_dropdown_item, arrayListPv)
+        //val arrayList:ArrayList<String> = ArrayList<String>()
+
+       // val  aa = ArrayAdapter<String>(requireActivity(), android.R.layout.simple_spinner_dropdown_item, arrayList)
+
         initViewModel = viewModel(baseFragment.viewModelFactory){
 
-            observe(startHome, {
+            observe(startCheckIn, {
                 it?.let {
 
                     if(it) {
-                        getCompanies()
+                        //getCompanies()
                         getPv()
 
                     }
@@ -72,18 +75,11 @@ class SelectorDialogFragment
                 }
             })
 
-            observe(companies, {
-                it?.let {
-                    arrayList.addAll(toArray(it))
-                    binding.spinner.adapter = aa
-
-                }
-            })
 
             observe(pv, {
                 it?.let {
                     arrayListPv.addAll(toArrayPv(it))
-                    binding.spinner2.adapter = aaPv
+                    binding.pdvSpinner.adapter = aaPv
                 }
             })
 
@@ -115,12 +111,10 @@ class SelectorDialogFragment
         //binding.spinner.onItemSelectedListener = this
 
 
-        binding.btnAccessHome.setOnClickListener {
+        binding.btnDoCheckin.setOnClickListener {
             listener?.onAccept()
             dismiss()
-
-
-
+            Toast.makeText(context,"Guardar checkin",Toast.LENGTH_SHORT).show()
         }
     }
 
