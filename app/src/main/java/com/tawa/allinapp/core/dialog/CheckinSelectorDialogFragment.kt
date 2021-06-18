@@ -28,28 +28,9 @@ class CheckinSelectorDialogFragment
     private val baseFragment: BaseFragment
 ): DialogFragment() {
 
-
-
-
     private lateinit var binding: DialogCheckinBinding
     private  lateinit var initViewModel: InitViewModel
-
-
-
-
-
     var listener: Callback? = null
-
-
-
-    companion object {
-
-
-    }
-
-
-
-
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DialogCheckinBinding.inflate(inflater)
