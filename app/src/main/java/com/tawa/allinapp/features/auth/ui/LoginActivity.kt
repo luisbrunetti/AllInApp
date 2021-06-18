@@ -35,7 +35,7 @@ class LoginActivity : AppCompatActivity() {
         }
 
         //splash
-        theme.applyStyle(R.style.AppTheme,true)
+        //theme.applyStyle(R.style.AppTheme,true)
 
         binding = ActivityLoginBinding.inflate(layoutInflater)
         supportActionBar?.hide()
