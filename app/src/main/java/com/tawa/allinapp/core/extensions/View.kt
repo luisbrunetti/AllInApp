@@ -5,9 +5,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.annotation.LayoutRes
+import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.tawa.allinapp.R
 
 fun ViewGroup.inflate(@LayoutRes layoutRes: Int): View =
     LayoutInflater.from(context).inflate(layoutRes, this, false)
@@ -31,6 +34,17 @@ fun View.setButtonEnabled(value: Boolean?){
         }else{
             isEnabled = false
             alpha = 0.5F
+        }
+    }
+}
+
+@BindingAdapter("bgError")
+fun View.setErrorBg(value: Boolean?){
+    value?.let { enable ->
+        background = if (enable){
+            ResourcesCompat.getDrawable(resources, R.drawable.bg_error_text, null)
+        }else{
+            ResourcesCompat.getDrawable(resources, R.drawable.selector, null)
         }
     }
 }
