@@ -33,7 +33,7 @@ class CheckinSelectorDialogFragment
 
     private lateinit var binding: DialogCheckinBinding
     private  lateinit var initViewModel: InitViewModel
-
+    private val arrayListPv:ArrayList<String> = ArrayList<String>()
 
 
 
@@ -55,7 +55,8 @@ class CheckinSelectorDialogFragment
         binding = DialogCheckinBinding.inflate(inflater)
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         isCancelable = false
-        val arrayListPv:ArrayList<String> = ArrayList<String>()
+
+
         val  aaPv = ArrayAdapter<String>(requireActivity(), android.R.layout.simple_spinner_dropdown_item, arrayListPv)
         //val arrayList:ArrayList<String> = ArrayList<String>()
 
@@ -93,28 +94,12 @@ class CheckinSelectorDialogFragment
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-
-
-        /*arguments?.let { bundle ->
-            bundle.getInt(TITLE)?.let { binding.tvTitle.text = context?.getString(it) }
-            bundle.getString(MESSAGE)?.let { binding.tvMessage.text = it }
-            bundle.getInt(BUTTON).let { binding.btAccept.text = context?.getString(it) }
-            bundle.getInt(ICON).let {
-                if(it == NO_ICON) binding.ivIcon.invisible() else {
-                    binding.ivIcon.visible()
-                    binding.ivIcon.setImageResource(it)
-                }
-            }
-        }*/
-
-        //binding.spinner.onItemSelectedListener = this
-
-
         binding.btnDoCheckin.setOnClickListener {
             listener?.onAccept()
             dismiss()
-            Toast.makeText(context,"Guardar checkin",Toast.LENGTH_SHORT).show()
+            val posi  = binding.pdvSpinner.selectedItemPosition
+
+            Toast.makeText(context,""+posi,Toast.LENGTH_SHORT).show()
         }
     }
 
