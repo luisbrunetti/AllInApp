@@ -2,10 +2,12 @@ package com.tawa.allinapp.core.platform
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -23,6 +25,9 @@ import com.tawa.allinapp.core.functional.Failure
 import com.tawa.allinapp.features.HomeActivity
 import com.tawa.allinapp.features.auth.ui.LoginActivity
 import kotlinx.android.synthetic.main.toolbar.*
+import java.time.DayOfWeek
+import java.time.LocalDateTime
+import java.time.Month
 import javax.inject.Inject
 
 abstract class BaseFragment : Fragment() {
@@ -33,6 +38,18 @@ abstract class BaseFragment : Fragment() {
     val appComponent: ApplicationComponent by lazy(mode = LazyThreadSafetyMode.NONE) {
         (activity?.application as AndroidApplication).appComponent
     }
+
+    val current: LocalDateTime = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        LocalDateTime.now()
+
+    } else {
+        TODO("VERSION.SDK_INT < O")
+    }
+
+    var dayWeek:String = ""
+    var dayMonth:String = ""
+    var month:String = ""
+    var year:String = ""
 
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
 
@@ -60,6 +77,64 @@ abstract class BaseFragment : Fragment() {
     internal fun hideProgressDialog() {
         progressDialog?.dismiss()
     }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    internal  fun getDayWeek():String{
+        when(current.dayOfWeek){
+
+            DayOfWeek.SUNDAY -> dayWeek= "Domingo"
+            DayOfWeek.MONDAY -> dayWeek= "Lunes"
+            DayOfWeek.TUESDAY -> dayWeek= "Martes"
+            DayOfWeek.WEDNESDAY -> dayWeek= "Miercoles"
+            DayOfWeek.THURSDAY -> dayWeek= "Jueves"
+            DayOfWeek.FRIDAY -> dayWeek= "Viernes"
+            DayOfWeek.SATURDAY -> dayWeek= "Sabado"
+
+        }
+
+        return dayWeek
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    internal  fun getDayMonth():String {
+
+        dayMonth = current.dayOfMonth.toString()
+
+        return dayMonth
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    internal  fun getYear():String {
+
+        year = current.year.toString()
+
+        return year
+    }
+
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    internal  fun getMonth():String{
+
+        when (current.month)
+        {
+            Month.JANUARY -> month = "Enero"
+            Month.FEBRUARY -> month = "Febrero"
+            Month.MARCH -> month= "Marzo"
+            Month.APRIL -> month = "Abril"
+            Month.MAY -> month= "Mayo"
+            Month.JUNE -> month= "Junio"
+            Month.JULY -> month= "Julio"
+            Month.AUGUST -> month = "Agosto"
+            Month.SEPTEMBER -> month = "Septiembre"
+            Month.OCTOBER -> month= "Octubre"
+            Month.NOVEMBER -> month = "Noviembre"
+            Month.DECEMBER -> month= "Diciembre"
+        }
+
+        return month
+    }
+
+
 
     open fun showMessage(message:String?){
         val dialog = MessageDialogFragment.newInstance(message ?:"")

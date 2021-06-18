@@ -31,6 +31,7 @@ class InitFragment : BaseFragment() {
 
     }
 
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentInitBinding.inflate(inflater)
@@ -41,10 +42,9 @@ class InitFragment : BaseFragment() {
                 it?.let {
                     if(it)
                     {
-                        val currentDay = getString(R.string.current_day, dayWeek.value,dayMonth.value,month.value,year.value)
+                        val currentDay = getString(R.string.current_day, getDayWeek(),getDayMonth(),getMonth(),getYear())
                         binding.currentDay.text  = currentDay
                     }
-
                 }
             })
 
