@@ -2,18 +2,15 @@ package com.tawa.allinapp.core.platform
 
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.view.View
-import android.view.ViewGroup
-import androidx.annotation.RequiresApi
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.tawa.allinapp.R
 import com.google.android.material.snackbar.Snackbar
 import com.tawa.allinapp.AndroidApplication
+import com.tawa.allinapp.R
 import com.tawa.allinapp.core.di.ApplicationComponent
 import com.tawa.allinapp.core.dialog.MessageDialogFragment
 import com.tawa.allinapp.core.dialog.ProgressDialogFragment
@@ -23,9 +20,6 @@ import com.tawa.allinapp.core.functional.Failure
 import com.tawa.allinapp.features.HomeActivity
 import com.tawa.allinapp.features.auth.ui.LoginActivity
 import kotlinx.android.synthetic.main.toolbar.*
-import java.time.DayOfWeek
-import java.time.LocalDateTime
-import java.time.Month
 import java.util.*
 import javax.inject.Inject
 
