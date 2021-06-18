@@ -98,6 +98,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/conteUsu"
             app:layout_constraintVertical_bias="0.0"
+            app:passwordToggleDrawable="@drawable/icon_selector"
             app:passwordToggleEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -105,10 +106,10 @@
                 android:layout_height="30dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
-                android:text="@={viewModel.password}"
                 android:background="@null"
                 android:hint="Contraseña"
-                android:inputType="textPassword" />
+                android:inputType="textPassword"
+                android:text="@={viewModel.password}" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <CheckBox
