@@ -5,9 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.tawa.allinapp.R
+import com.tawa.allinapp.core.dialog.MessageDialogFragment
 import com.tawa.allinapp.core.extensions.failure
 import com.tawa.allinapp.core.extensions.observe
 import com.tawa.allinapp.core.extensions.viewModel
+import com.tawa.allinapp.core.functional.Failure
 import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.LoginFragmentBinding
 import com.tawa.allinapp.features.auth.AuthViewModel
@@ -53,7 +55,22 @@ class LoginFragment : BaseFragment() {
             observe(password, { it?.let {
                 authViewModel.validateFields()
             }})
-            failure(failure, ::handleFailure)
+            failure(failure, { it?.let {
+                hideProgressDialog()
+                when(it){
+                    is Failure.DefaultError -> {
+                        authViewModel.setErrorLogin(it.message ?: getString(R.string.error_unknown))
+                    }
+                    is Failure.NetworkConnection -> {
+                        authViewModel.setErrorLogin("")
+                        MessageDialogFragment.newInstance(getString(R.string.error_network))
+                    }
+                    else -> {
+                        authViewModel.setErrorLogin("")
+                        MessageDialogFragment.newInstance(getString(R.string.error_unknown))
+                    }
+                }
+            }})
         }
         return binding.root
     }

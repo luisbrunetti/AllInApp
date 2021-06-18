@@ -36,9 +36,16 @@ class AuthViewModel
     val successGetPV: LiveData<Boolean>
         get() = _successGetPV
 
-    private val _enableButton = MutableLiveData<Boolean>(false)
+    private val _enableButton = MutableLiveData(false)
     val enableButton: LiveData<Boolean>
         get() = _enableButton
+
+    private val _errorMessage = MutableLiveData("")
+    val errorMessage = _errorMessage
+
+    private val _errorEdits = MutableLiveData(false)
+    val errorEdits: LiveData<Boolean>
+        get() = _errorEdits
 
     private val _username = MutableLiveData("")
     val username = _username
@@ -46,8 +53,10 @@ class AuthViewModel
     private val _password = MutableLiveData("")
     val password = _password
 
-    private val _error = MutableLiveData("")
-    val error = _error
+    fun setErrorLogin(error:String){
+        _errorEdits.value = true
+        _errorMessage.value = error
+    }
 
     fun doLogin() {
         _startLogin.value = true
