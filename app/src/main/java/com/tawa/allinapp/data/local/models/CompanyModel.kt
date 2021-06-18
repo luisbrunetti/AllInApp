@@ -2,7 +2,7 @@ package com.tawa.allinapp.data.local.models
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.tawa.allinapp.features.auth.Company
+import com.tawa.allinapp.models.Company
 
 @Entity(tableName = "company")
 data class CompanyModel(

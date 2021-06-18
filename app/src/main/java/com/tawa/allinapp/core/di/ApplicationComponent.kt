@@ -2,14 +2,13 @@ package com.tawa.allinapp.core.di
 
 import com.tawa.allinapp.AndroidApplication
 import com.tawa.allinapp.core.di.viewmodel.ViewModelModule
-import com.tawa.allinapp.core.dialog.SelectorDialogFragment
-import com.tawa.allinapp.core.platform.BaseFragment
+import com.tawa.allinapp.features.init.ui.SelectorDialogFragment
 import com.tawa.allinapp.features.auth.ui.LoginFragment
 import com.tawa.allinapp.features.HomeActivity
 import com.tawa.allinapp.features.auth.ui.LoginActivity
 import com.tawa.allinapp.features.calendar.CalendarFragment
 import com.tawa.allinapp.features.informs.InformsFragment
-import com.tawa.allinapp.features.init.InitFragment
+import com.tawa.allinapp.features.init.ui.InitFragment
 
 
 import com.tawa.allinapp.features.location.LocationFragment
