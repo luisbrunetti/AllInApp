@@ -85,45 +85,6 @@ class InitViewModel
 
     private fun getDay(){
         _dayState.value = true
-
-        val current = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            LocalDateTime.now()
-
-        } else {
-            TODO("VERSION.SDK_INT < O")
-        }
-        _dayMonth.value =current.dayOfMonth.toString()
-        _year.value =current.year.toString()
-
-        when(current.dayOfWeek){
-
-            DayOfWeek.SUNDAY -> _dayWeek.value= "Domingo"
-            DayOfWeek.MONDAY -> _dayWeek.value= "Lunes"
-            DayOfWeek.TUESDAY -> _dayWeek.value= "Martes"
-            DayOfWeek.WEDNESDAY -> _dayWeek.value= "Miercoles"
-            DayOfWeek.THURSDAY -> _dayWeek.value= "Jueves"
-            DayOfWeek.FRIDAY -> _dayWeek.value= "Viernes"
-            DayOfWeek.SATURDAY -> _dayWeek.value= "Sabado"
-
-        }
-
-        when (current.month)
-        {
-            Month.JANUARY -> _month.value = "Enero"
-            Month.FEBRUARY -> _month.value = "Febrero"
-            Month.MARCH -> _month.value = "Marzo"
-            Month.APRIL -> _month.value = "Abril"
-            Month.MAY -> _month.value = "Mayo"
-            Month.JUNE -> _month.value = "Junio"
-            Month.JULY -> _month.value = "Julio"
-            Month.AUGUST -> _month.value = "Agosto"
-            Month.SEPTEMBER -> _month.value = "Septiembre"
-            Month.OCTOBER -> _month.value = "Octubre"
-            Month.NOVEMBER -> _month.value = "Noviembre"
-            Month.DECEMBER -> _month.value = "Diciembre"
-        }
-
-
     }
 
     private fun startHome(){
