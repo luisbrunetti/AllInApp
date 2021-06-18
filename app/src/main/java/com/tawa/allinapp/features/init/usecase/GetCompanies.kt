@@ -1,11 +1,8 @@
-package com.tawa.allinapp.features.init
+package com.tawa.allinapp.features.init.usecase
 
-import com.tawa.allinapp.core.functional.Either
-import com.tawa.allinapp.core.functional.Failure
 import com.tawa.allinapp.core.interactor.UseCase
-import com.tawa.allinapp.data.local.models.CompanyModel
 import com.tawa.allinapp.data.repository.ParametersRepository
-import com.tawa.allinapp.features.auth.Company
+import com.tawa.allinapp.models.Company
 import javax.inject.Inject
 
 class GetCompanies

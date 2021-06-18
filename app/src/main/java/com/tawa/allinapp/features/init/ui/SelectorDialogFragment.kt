@@ -1,4 +1,4 @@
-package com.tawa.allinapp.core.dialog
+package com.tawa.allinapp.features.init.ui
 
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -6,18 +6,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.TextView
-import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.DialogFragment
 import com.tawa.allinapp.core.extensions.observe
 import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.DialogHomeBinding
-import com.tawa.allinapp.features.auth.Company
-import com.tawa.allinapp.features.auth.PV
+import com.tawa.allinapp.models.Company
+import com.tawa.allinapp.models.PV
 import com.tawa.allinapp.features.init.InitViewModel
 import javax.inject.Inject
 
@@ -67,6 +64,7 @@ class SelectorDialogFragment
 
 
 
+
         }
 
         return binding.root
@@ -74,31 +72,9 @@ class SelectorDialogFragment
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-
-
-
-        /*arguments?.let { bundle ->
-            bundle.getInt(TITLE)?.let { binding.tvTitle.text = context?.getString(it) }
-            bundle.getString(MESSAGE)?.let { binding.tvMessage.text = it }
-            bundle.getInt(BUTTON).let { binding.btAccept.text = context?.getString(it) }
-            bundle.getInt(ICON).let {
-                if(it == NO_ICON) binding.ivIcon.invisible() else {
-                    binding.ivIcon.visible()
-                    binding.ivIcon.setImageResource(it)
-                }
-            }
-        }*/
-
-        //binding.spinner.onItemSelectedListener = this
-
-
         binding.btnAccessHome.setOnClickListener {
             listener?.onAccept()
             dismiss()
-
-
-
         }
     }
 

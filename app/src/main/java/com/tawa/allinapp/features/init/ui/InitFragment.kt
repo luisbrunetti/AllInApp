@@ -1,22 +1,16 @@
-package com.tawa.allinapp.features.init
+package com.tawa.allinapp.features.init.ui
 
-import android.app.AlertDialog
-import android.app.Dialog
 import android.os.Build
 import android.os.Bundle
 import android.view.*
-import android.widget.PopupMenu
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import com.tawa.allinapp.R
-import com.tawa.allinapp.core.dialog.CheckinSelectorDialogFragment
-import com.tawa.allinapp.core.dialog.MessageDialogFragment
-import com.tawa.allinapp.core.dialog.SelectorDialogFragment
+import com.tawa.allinapp.core.extensions.failure
 import com.tawa.allinapp.core.extensions.observe
 import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.FragmentInitBinding
-import java.time.LocalDateTime
+import com.tawa.allinapp.features.init.InitViewModel
 
 
 class InitFragment : BaseFragment() {
@@ -41,6 +35,7 @@ class InitFragment : BaseFragment() {
                     binding.currentDay.text  = currentDay
                 }
             }})
+            failure(failure, ::handleFailure)
         }
         binding.btCheckIn.setOnClickListener{
             showSelectorCheckIn()

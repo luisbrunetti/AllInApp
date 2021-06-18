@@ -11,6 +11,6 @@ class PVRemote {
         @SerializedName("CO_UBIC_GEOG") val codGeo: String,
         @SerializedName("ID_EMPR") val idCompany: String,
     ){
-        fun toModel() = PVModel(id,description,zone,codGeo,idCompany)
+        fun toModel() = PVModel(id,description,zone,codGeo,idCompany,"1","2")
     }
 }
