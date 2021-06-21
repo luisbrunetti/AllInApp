@@ -12,6 +12,7 @@ class Prefs
         const val TOKEN = "token"
         const val USERID = "userId"
         const val SESSION = "session"
+        const val CHECK_IN = "checkIn"
     }
 
     private val prefs  = context.getSharedPreferences(FILENAME, Context.MODE_PRIVATE)
@@ -26,6 +27,10 @@ class Prefs
     var token:String?
         get() = prefs.getString(TOKEN,"")
         set(value) = prefs.edit().putString(TOKEN,value).apply()
+
+    var checkIn:Boolean
+        get() = prefs.getBoolean(CHECK_IN,true)
+        set(value) = prefs.edit().putBoolean(CHECK_IN,value).apply()
 
     var session:Boolean
         get() = prefs.getBoolean(SESSION,false)
