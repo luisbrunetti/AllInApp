@@ -51,6 +51,7 @@ abstract class BaseFragment : Fragment() {
         if (this is BaseActivity) this.progress.visibility = viewStatus
     }
 
+
     internal fun showProgressDialog() {
         progressDialog?.let {
             progressDialog?.show(childFragmentManager, "loading")
@@ -64,17 +65,16 @@ abstract class BaseFragment : Fragment() {
         progressDialog?.dismiss()
     }
 
-    internal  fun getDayWeek():String{
-        when(current.day){
-            0 -> dayWeek= "Domingo"
-            1 -> dayWeek= "Lunes"
-            2 -> dayWeek= "Martes"
-            3 -> dayWeek= "Miercoles"
-            4 -> dayWeek= "Jueves"
-            5 -> dayWeek= "Viernes"
-            6 -> dayWeek= "Sabado"
-        }
-        return dayWeek
+    internal  fun getDayWeek()= when(current.day){
+            0 ->  "Domingo"
+            1 -> "Lunes"
+            2 -> "Martes"
+            3 -> "Miercoles"
+            4 ->  "Jueves"
+            5 ->  "Viernes"
+            6 -> "Sabado"
+        else -> ""
+
     }
 
     internal  fun getDayMonth() = current.date.toString()

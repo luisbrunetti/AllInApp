@@ -29,13 +29,10 @@ class LoginActivity : AppCompatActivity() {
         // antifake
         val dev = devMod()
 
-        if(dev==1) {
+        if(dev==0) {
             Toast.makeText(applicationContext, "Error", Toast.LENGTH_LONG).show()
             return
         }
-
-        //splash
-        //theme.applyStyle(R.style.AppTheme,true)
 
         binding = ActivityLoginBinding.inflate(layoutInflater)
         supportActionBar?.hide()
@@ -53,7 +50,7 @@ class LoginActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         val dev = devMod()
-        if(dev==1) finish()
+        if(dev==0) finish()
     }
 }
 
