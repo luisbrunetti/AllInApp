@@ -7,7 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.DialogFragment
 import com.tawa.allinapp.core.extensions.observe
 import com.tawa.allinapp.core.extensions.viewModel
@@ -33,40 +35,57 @@ class SelectorDialogFragment
         binding = DialogHomeBinding.inflate(inflater)
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         isCancelable = false
+        RequestPermission()
         val arrayList:ArrayList<String> = ArrayList<String>()
         val arrayListPv:ArrayList<String> = ArrayList<String>()
         val  aa = ArrayAdapter<String>(requireActivity(), android.R.layout.simple_spinner_dropdown_item, arrayList)
         val  aaPv = ArrayAdapter<String>(requireActivity(), android.R.layout.simple_spinner_dropdown_item, arrayListPv)
         
         initViewModel = viewModel(baseFragment.viewModelFactory){
-            observe(startHome, {
-                it?.let {
-                    if(it) {
-                        getCompanies()
-                        getPv()
-                    }
-                }
-            })
+
             observe(companies, {
                 it?.let {
-                    arrayList.addAll(toArray(it))
-                    binding.spinner.adapter = aa
+                    if(positionCompany.value==-1) {
+                        arrayList.addAll(toArray(it))
+                        binding.spinnerCompany.adapter = aa
+                    }
+                    else
+                    {
+                        Toast.makeText(context, it[positionCompany.value!!].name,Toast.LENGTH_SHORT).show()
+                    }
 
                 }
             })
 
             observe(pv, {
                 it?.let {
-                    arrayListPv.addAll(toArrayPv(it))
-                    binding.spinner2.adapter = aaPv
+                    if(positionPv.value==-1)
+                    {
+                        arrayListPv.addAll(toArrayPv(it))
+                        binding.spinnerPv.adapter = aaPv
+                    }
+                    else
+                    {
+                      Toast.makeText(context, it[positionPv.value!!].description,Toast.LENGTH_SHORT).show()
+                    }
+
                 }
             })
 
+            observe(positionCompany, {
+                it?.let {
 
+                    getCompanies()
 
+                }
+            })
 
+            observe(positionPv, {
+                it?.let {
+                    getPv()
+                }
+            })
         }
-
         return binding.root
     }
 
@@ -74,6 +93,11 @@ class SelectorDialogFragment
         super.onViewCreated(view, savedInstanceState)
         binding.btnAccessHome.setOnClickListener {
             listener?.onAccept()
+            val positionCompany  = binding.spinnerCompany.selectedItemPosition
+            initViewModel.selectPositionCompany(positionCompany)
+            val positionPv  = binding.spinnerPv.selectedItemPosition
+            initViewModel.selectPositionPv(positionPv)
+
             dismiss()
         }
     }
@@ -96,6 +120,14 @@ class SelectorDialogFragment
 
         }
         return  arrayList
+    }
+
+    fun RequestPermission(){
+        //this function will allows us to tell the user to requesut the necessary permsiion if they are not garented
+        ActivityCompat.requestPermissions(
+            requireActivity(),
+            arrayOf(android.Manifest.permission.ACCESS_COARSE_LOCATION,android.Manifest.permission.ACCESS_FINE_LOCATION), 1010
+        )
     }
 
 

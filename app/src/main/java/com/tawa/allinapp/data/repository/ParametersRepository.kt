@@ -4,7 +4,9 @@ import com.tawa.allinapp.core.functional.Either
 import com.tawa.allinapp.core.functional.Failure
 import com.tawa.allinapp.core.functional.NetworkHandler
 import com.tawa.allinapp.data.local.datasource.ParametersDataSource
+import com.tawa.allinapp.data.local.models.CheckinModel
 import com.tawa.allinapp.data.remote.service.ParametersService
+import com.tawa.allinapp.models.Checkin
 import com.tawa.allinapp.models.Company
 import com.tawa.allinapp.models.PV
 import javax.inject.Inject
@@ -14,6 +16,7 @@ interface ParametersRepository {
     fun getCompanies(): Either<Failure,List<Company>>
     fun setPV(): Either<Failure, Boolean>
     fun getPV(): Either<Failure, List<PV>>
+    fun setCheckin(checkinModel: CheckinModel): Either<Failure, Boolean>
 
     class Network
     @Inject constructor(private val networkHandler: NetworkHandler,
@@ -79,6 +82,13 @@ interface ParametersRepository {
 
         override fun getPV(): Either<Failure, List<PV>> {
             return Either.Right(parametersDataSource.getPV().map { it.toView() })
+        }
+
+        override fun setCheckin(checkinModel: CheckinModel): Either<Failure, Boolean> {
+
+                    parametersDataSource.insertCheckin(checkinModel)
+                    return Either.Right(true)
+
         }
     }
 }
