@@ -3,7 +3,7 @@ package com.tawa.allinapp.core.di
 import android.app.Application
 import android.content.Context
 import androidx.room.Room
-import com.bumptech.glide.integration.recyclerview.BuildConfig
+import com.tawa.allinapp.BuildConfig
 import com.tawa.allinapp.data.local.AllInAppDatabase
 import com.tawa.allinapp.data.local.Prefs
 import com.tawa.allinapp.data.local.dao.MovieDao
@@ -32,7 +32,7 @@ class ApplicationModule(private val application: Application){
 
     @Provides
     @Singleton
-    fun providerRoom(): AllInAppDatabase {
+    fun provideRoom(): AllInAppDatabase {
         return Room.databaseBuilder(application, AllInAppDatabase::class.java, "app").build()
     }
 
@@ -40,7 +40,7 @@ class ApplicationModule(private val application: Application){
     @Singleton
     fun provideRetrofit(): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("https://raw.githubusercontent.com/android10/Sample-Data/master/Android-CleanArchitecture-Kotlin/")
+            .baseUrl(BuildConfig.BASE_URL)
             .client(createClient())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
