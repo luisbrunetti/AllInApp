@@ -46,7 +46,7 @@ class InitFragment : BaseFragment() {
     }
 
     private fun showSelectorCheckIn(){
-        val dialog = CheckinSelectorDialogFragment(this)
+        val dialog = CheckInSelectorDialogFragment(this)
         dialog.show(childFragmentManager, "dialog")
     }
 
