@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -14,6 +15,7 @@ import androidx.fragment.app.DialogFragment
 import com.tawa.allinapp.core.extensions.observe
 import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.platform.BaseFragment
+import com.tawa.allinapp.data.local.Prefs
 import com.tawa.allinapp.databinding.DialogHomeBinding
 import com.tawa.allinapp.models.Company
 import com.tawa.allinapp.models.PV
@@ -30,17 +32,22 @@ class SelectorDialogFragment
     private  lateinit var initViewModel: InitViewModel
 
     var listener: Callback? = null
+    private var idCompany:String = ""
+    private var idPv:String = ""
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DialogHomeBinding.inflate(inflater)
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         isCancelable = false
-        RequestPermission()
+        requestPermission()
         val arrayList:ArrayList<String> = ArrayList<String>()
         val arrayListPv:ArrayList<String> = ArrayList<String>()
         val  aa = ArrayAdapter<String>(requireActivity(), android.R.layout.simple_spinner_dropdown_item, arrayList)
         val  aaPv = ArrayAdapter<String>(requireActivity(), android.R.layout.simple_spinner_dropdown_item, arrayListPv)
-        
+
+
+
         initViewModel = viewModel(baseFragment.viewModelFactory){
 
             observe(companies, {
@@ -51,7 +58,9 @@ class SelectorDialogFragment
                     }
                     else
                     {
-                        Toast.makeText(context, it[positionCompany.value!!].name,Toast.LENGTH_SHORT).show()
+                        arrayListPv.removeAll(arrayListPv)
+                        getPv(it[positionCompany.value!!].id)
+                        idCompany = it[positionCompany.value!!].id
                     }
 
                 }
@@ -66,7 +75,7 @@ class SelectorDialogFragment
                     }
                     else
                     {
-                      Toast.makeText(context, it[positionPv.value!!].description,Toast.LENGTH_SHORT).show()
+                        idPv=it[positionPv.value!!].description
                     }
 
                 }
@@ -82,23 +91,41 @@ class SelectorDialogFragment
 
             observe(positionPv, {
                 it?.let {
-                    getPv("")
+
+                    getPv(idCompany)
+
                 }
             })
+
         }
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.spinnerCompany?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            override fun onNothingSelected(parent: AdapterView<*>?) {  }
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                initViewModel.selectPositionCompany(position)
+            }
+
+        }
+
         binding.btnAccessHome.setOnClickListener {
             listener?.onAccept()
-            val positionCompany  = binding.spinnerCompany.selectedItemPosition
-            initViewModel.selectPositionCompany(positionCompany)
-            val positionPv  = binding.spinnerPv.selectedItemPosition
-            initViewModel.selectPositionPv(positionPv)
+            val positionPv = binding.spinnerPv.selectedItemPosition
+            if(positionPv>-1)
+            {  initViewModel.selectPositionPv(positionPv)
+                initViewModel.setIdCompany(idCompany)
+                dismiss()
+            }
+            else
+                {
+                    Toast.makeText(context,"Debe seleccionar un punto de venta",Toast.LENGTH_SHORT).show()
+                }
 
-            dismiss()
         }
     }
 
@@ -124,7 +151,7 @@ class SelectorDialogFragment
         return  arrayList
     }
 
-    fun RequestPermission(){
+    fun requestPermission(){
         //this function will allows us to tell the user to requesut the necessary permsiion if they are not garented
         ActivityCompat.requestPermissions(
             requireActivity(),

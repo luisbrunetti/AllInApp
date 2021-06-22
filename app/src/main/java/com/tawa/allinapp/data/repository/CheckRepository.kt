@@ -10,6 +10,8 @@ import javax.inject.Inject
 interface CheckRepository {
 
     fun setCheck(checkIn: Check): Either<Failure, Boolean>
+    fun setIdCompany(idCompany:String): Either<Failure, Boolean>
+    fun getIdCompany(): Either<Failure, String>
 
     class Network
     @Inject constructor(private val checkDataSource: CheckDataSource,
@@ -21,6 +23,23 @@ interface CheckRepository {
                 checkDataSource.insertCheck(checkIn.toModel())
                 prefs.checkIn = false
                 Either.Right(true)
+            }catch (e:Exception){
+                Either.Left(Failure.DefaultError(e.message!!))
+            }
+        }
+
+        override fun setIdCompany(idCompany: String): Either<Failure, Boolean> {
+            return try {
+                prefs.companyId = idCompany
+                Either.Right(true)
+            }catch (e:Exception){
+                Either.Left(Failure.DefaultError(e.message!!))
+            }
+        }
+
+        override fun getIdCompany(): Either<Failure, String> {
+            return try {
+                Either.Right(prefs.companyId!!)
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))
             }

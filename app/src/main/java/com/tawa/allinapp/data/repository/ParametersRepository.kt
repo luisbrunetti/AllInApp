@@ -6,7 +6,6 @@ import com.tawa.allinapp.core.functional.NetworkHandler
 import com.tawa.allinapp.data.local.Prefs
 import com.tawa.allinapp.data.local.datasource.ParametersDataSource
 import com.tawa.allinapp.data.remote.service.ParametersService
-import com.tawa.allinapp.models.CheckIn
 import com.tawa.allinapp.models.Company
 import com.tawa.allinapp.models.PV
 import javax.inject.Inject

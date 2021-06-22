@@ -4,7 +4,6 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.tawa.allinapp.data.local.models.CheckInModel
 import com.tawa.allinapp.data.local.models.CompanyModel
 import com.tawa.allinapp.data.local.models.PVModel
 
