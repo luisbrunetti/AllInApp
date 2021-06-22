@@ -18,8 +18,8 @@ class InitViewModel
     private val getCompanies: GetCompanies,
     private val getPV: GetPV,
     private val setCheckIn: SetCheckIn,
-
     ) : BaseViewModel() {
+
     private  val formatter: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
     var timestamp: Timestamp = Timestamp(System.currentTimeMillis())
 
@@ -38,7 +38,6 @@ class InitViewModel
     private val _successCheckin= MutableLiveData(false)
     val successCheckin: LiveData<Boolean>
         get() = _successCheckin
-
 
     private val _companies = MutableLiveData<List<Company>>()
     val companies: LiveData<List<Company>>
@@ -70,9 +69,9 @@ class InitViewModel
         getDay()
     }
 
-    fun setCheckIn(idPuntoventa:String,lat:String,lon:String) {
+    fun setCheckIn(idPV:String,lat:String,long:String) {
         _startSetCheckIn.value = true
-        setCheckIn(SetCheckIn.Params(0,"",idPuntoventa,formatter.format(timestamp),lat,lon,"CHECKIN")) {
+        setCheckIn(SetCheckIn.Params(0,"",idPV,formatter.format(timestamp),lat,long,"CHECKIN")) {
             it.either(::handleFailure, ::handleCheckIn)
         }
     }
