@@ -30,7 +30,7 @@ interface AuthRepository {
                                     if(body.success) {
                                         prefs.name = username
                                         prefs.token = body.data.token
-                                        //prefs.userId = body.data.userId
+                                        prefs.idUser = body.data.idUser
                                         prefs.session = true
                                         prefs.checkIn = true
                                         Either.Right(true)

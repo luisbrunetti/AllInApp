@@ -8,5 +8,8 @@ class LoginRemote {
         @SerializedName("password") val password: String
     )
 
-    data class Response(@SerializedName("access_token") val token: String)
+    data class Response(
+        @SerializedName("access_token") val token: String,
+        @SerializedName("id_user") val idUser: String,
+    )
 }

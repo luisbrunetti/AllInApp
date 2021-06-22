@@ -3,6 +3,7 @@ package com.tawa.allinapp.data.repository
 import com.tawa.allinapp.core.functional.Either
 import com.tawa.allinapp.core.functional.Failure
 import com.tawa.allinapp.core.functional.NetworkHandler
+import com.tawa.allinapp.data.local.Prefs
 import com.tawa.allinapp.data.local.datasource.ParametersDataSource
 import com.tawa.allinapp.data.local.models.CheckinModel
 import com.tawa.allinapp.data.remote.service.ParametersService
@@ -15,12 +16,13 @@ interface ParametersRepository {
     fun setCompanies(): Either<Failure, Boolean>
     fun getCompanies(): Either<Failure,List<Company>>
     fun setPV(): Either<Failure, Boolean>
-    fun getPV(): Either<Failure, List<PV>>
-    fun setCheckin(checkinModel: CheckinModel): Either<Failure, Boolean>
+    fun getPV(company:String): Either<Failure, List<PV>>
+    fun setCheckin(checkin: Checkin): Either<Failure, Boolean>
 
     class Network
     @Inject constructor(private val networkHandler: NetworkHandler,
                         private val parametersDataSource: ParametersDataSource,
+                        private val prefs: Prefs,
                         private val service: ParametersService
     ): ParametersRepository{
         override fun setCompanies(): Either<Failure, Boolean> {
@@ -51,8 +53,13 @@ interface ParametersRepository {
         }
 
         override fun getCompanies(): Either<Failure, List<Company>> {
-            return Either.Right(parametersDataSource.getCompanies().map { it.toView() })
+            return try {
+                Either.Right(parametersDataSource.getCompanies().map { it.toView() })
+            }catch (e:Exception){
+                Either.Left(Failure.DefaultError(e.message!!))
+            }
         }
+
         override fun setPV(): Either<Failure, Boolean> {
             return when (networkHandler.isConnected) {
                 true ->{
@@ -80,15 +87,22 @@ interface ParametersRepository {
             }
         }
 
-        override fun getPV(): Either<Failure, List<PV>> {
-            return Either.Right(parametersDataSource.getPV().map { it.toView() })
+        override fun getPV(company:String): Either<Failure, List<PV>> {
+            return try {
+                Either.Right(parametersDataSource.getPV(company).map { it.toView() })
+            }catch (e:Exception){
+                Either.Left(Failure.DefaultError(e.message!!))
+            }
         }
 
-        override fun setCheckin(checkinModel: CheckinModel): Either<Failure, Boolean> {
-
-                    parametersDataSource.insertCheckin(checkinModel)
-                    return Either.Right(true)
-
+        override fun setCheckin(checkin: Checkin): Either<Failure, Boolean> {
+            return try {
+                parametersDataSource.insertCheckin(checkin.toModel())
+                prefs.checkIn = false
+                Either.Right(true)
+            }catch (e:Exception){
+                Either.Left(Failure.DefaultError(e.message!!))
+            }
         }
     }
 }

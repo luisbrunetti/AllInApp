@@ -75,7 +75,7 @@ class CheckinSelectorDialogFragment
 
             observe(positionPv, {
                 it?.let {
-                    getPv()
+                    getPv("")
                 }
             })
         }
@@ -110,7 +110,7 @@ class CheckinSelectorDialogFragment
     }
 
 
-    fun getLastLocation(){
+    private fun getLastLocation(){
         if(CheckPermission()){
             if(isLocationEnabled()){
                 fusedLocationProviderClient.lastLocation.addOnCompleteListener {task->

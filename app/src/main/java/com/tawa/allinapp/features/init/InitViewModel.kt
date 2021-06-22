@@ -104,11 +104,9 @@ class InitViewModel
         _startCheckIn.value = true
     }
 
-
-
-
     fun getCompanies() = getCompanies(UseCase.None()) { it.either(::handleFailure, ::handleCompanieList) }
-    fun getPv() = getPV(UseCase.None()) { it.either(::handleFailure, ::handlePvList) }
+
+    fun getPv(company:String) = getPV(GetPV.Params(company)) { it.either(::handleFailure, ::handlePvList) }
 
     private fun handleCompanieList(company: List<Company>) {
         this._companies.value = company.map { Company(it.id,it.code,it.ruc,it.name,it.description) }
