@@ -84,8 +84,6 @@ class CheckinSelectorDialogFragment
     }
 
 
-
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
@@ -100,9 +98,6 @@ class CheckinSelectorDialogFragment
             listener?.onAccept()
             val positionPv  = binding.pdvSpinner.selectedItemPosition
             initViewModel.selectPositionPv(positionPv)
-
-
-
             dismiss()
 
 

@@ -82,7 +82,7 @@ class SelectorDialogFragment
 
             observe(positionPv, {
                 it?.let {
-                    getPv()
+                    getPv("")
                 }
             })
         }
