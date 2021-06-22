@@ -6,8 +6,10 @@ import com.tawa.allinapp.models.PV
 import javax.inject.Inject
 
 class GetPV
-@Inject constructor(private val parametersRepository: ParametersRepository) : UseCase<List<PV>, UseCase.None>() {
+@Inject constructor(private val parametersRepository: ParametersRepository) : UseCase<List<PV>, GetPV.Params>() {
 
-    override suspend fun run(params: None) = parametersRepository.getPV()
+    override suspend fun run(params: Params) = parametersRepository.getPV(params.company)
+
+    data class Params(val company: String)
 
 }

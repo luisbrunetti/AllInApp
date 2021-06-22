@@ -23,6 +23,6 @@ interface ParametersDao {
     @Query("SELECT * FROM company")
     fun getCompanies(): List<CompanyModel>
 
-    @Query("SELECT * FROM pv")
-    fun getPV(): List<PVModel>
+    @Query("SELECT * FROM pv WHERE idCompany=:company")
+    fun getPV(company:String): List<PVModel>
 }

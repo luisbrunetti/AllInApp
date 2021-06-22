@@ -7,12 +7,12 @@ import com.tawa.allinapp.models.PV
 @Entity(tableName = "pv")
 data class PVModel (
     @PrimaryKey val id: String,
-    val description: String,
-    val zone: String,
-    val codGeo: String,
-    val idCompany: String,
-    val latitude: String,
-    val longitude: String,
+    val description: String?,
+    val zone: String?,
+    val codGeo: String?,
+    val idCompany: String?,
+    val latitude: String?,
+    val longitude: String?,
 ){
-    fun toView() = PV(id,description,zone,codGeo,idCompany,latitude,longitude)
+    fun toView() = PV(id,description?:"",zone?:"",codGeo?:"",idCompany?:"",latitude?:"",longitude?:"")
 }
