@@ -6,9 +6,11 @@ import androidx.room.Room
 import com.tawa.allinapp.BuildConfig
 import com.tawa.allinapp.data.local.AllInAppDatabase
 import com.tawa.allinapp.data.local.Prefs
+import com.tawa.allinapp.data.local.dao.CheckDao
 import com.tawa.allinapp.data.local.dao.MovieDao
 import com.tawa.allinapp.data.local.dao.ParametersDao
 import com.tawa.allinapp.data.repository.AuthRepository
+import com.tawa.allinapp.data.repository.CheckRepository
 import com.tawa.allinapp.data.repository.MoviesRepository
 import com.tawa.allinapp.data.repository.ParametersRepository
 import dagger.Module
@@ -57,9 +59,11 @@ class ApplicationModule(private val application: Application){
 
     @Provides @Singleton fun providesMovieDao(demoDatabase:AllInAppDatabase) : MovieDao { return demoDatabase.movieDao() }
     @Provides @Singleton fun providesParametersDao(demoDatabase:AllInAppDatabase) : ParametersDao { return demoDatabase.parametersDao() }
+    @Provides @Singleton fun providesCheckDao(demoDatabase:AllInAppDatabase) : CheckDao { return demoDatabase.checkDao() }
 
     @Provides @Singleton fun provideMoviesRepository(dataSource: MoviesRepository.Network): MoviesRepository = dataSource
     @Provides @Singleton fun provideAuthRepository(dataSource: AuthRepository.Network): AuthRepository = dataSource
     @Provides @Singleton fun provideParametersRepository(dataSource: ParametersRepository.Network): ParametersRepository = dataSource
+    @Provides @Singleton fun provideCheckRepository(dataSource: CheckRepository.Network): CheckRepository = dataSource
 
 }

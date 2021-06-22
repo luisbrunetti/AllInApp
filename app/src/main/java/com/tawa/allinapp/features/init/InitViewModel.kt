@@ -6,21 +6,20 @@ import com.tawa.allinapp.core.interactor.UseCase
 import com.tawa.allinapp.core.platform.BaseViewModel
 import com.tawa.allinapp.features.init.usecase.GetCompanies
 import com.tawa.allinapp.features.init.usecase.GetPV
-import com.tawa.allinapp.features.init.usecase.SetCheckin
+import com.tawa.allinapp.features.init.usecase.SetCheckIn
 import com.tawa.allinapp.models.Company
 import com.tawa.allinapp.models.PV
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
-import java.util.*
 import javax.inject.Inject
 
 class InitViewModel
 @Inject constructor(
     private val getCompanies: GetCompanies,
     private val getPV: GetPV,
-    private val setCheckin: SetCheckin,
+    private val setCheckIn: SetCheckIn,
 
-) : BaseViewModel() {
+    ) : BaseViewModel() {
     private  val formatter: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
     var timestamp: Timestamp = Timestamp(System.currentTimeMillis())
 
@@ -73,7 +72,7 @@ class InitViewModel
 
     fun setCheckIn(idPuntoventa:String,lat:String,lon:String) {
         _startSetCheckIn.value = true
-        setCheckin(SetCheckin.Params(0,"",idPuntoventa,formatter.format(timestamp),lat,lon,"CHECKIN")) {
+        setCheckIn(SetCheckIn.Params(0,"",idPuntoventa,formatter.format(timestamp),lat,lon,"CHECKIN")) {
             it.either(::handleFailure, ::handleCheckIn)
         }
     }
