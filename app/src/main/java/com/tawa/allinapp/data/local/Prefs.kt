@@ -13,7 +13,7 @@ class Prefs
         const val USERID = "idUser"
         const val SESSION = "session"
         const val CHECK_IN = "checkIn"
-        const val COMPANY_ID = "checkIn"
+        const val COMPANY_ID= "checkIn"
         const val PV_ID = "checkIn"
     }
 
