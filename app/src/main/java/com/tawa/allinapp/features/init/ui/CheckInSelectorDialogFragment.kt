@@ -1,12 +1,10 @@
 package com.tawa.allinapp.features.init.ui
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.location.Location
-import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
 import android.os.Looper
@@ -16,24 +14,20 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import com.google.android.gms.location.*
 import com.tawa.allinapp.core.extensions.observe
 import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.DialogCheckinBinding
-import com.tawa.allinapp.models.Company
-import com.tawa.allinapp.models.PV
 import com.tawa.allinapp.features.init.InitViewModel
-import java.util.jar.Manifest
+import com.tawa.allinapp.models.PV
 import javax.inject.Inject
 
 
-class CheckinSelectorDialogFragment
+class CheckInSelectorDialogFragment
 @Inject constructor(
     private val baseFragment: BaseFragment
 ): DialogFragment(){
@@ -52,34 +46,22 @@ class CheckinSelectorDialogFragment
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         isCancelable = false
 
-
-
         val arrayListPv:ArrayList<String> = ArrayList<String>()
         val  aaPv = ArrayAdapter<String>(requireActivity(), android.R.layout.simple_spinner_dropdown_item, arrayListPv)
 
         initViewModel = viewModel(baseFragment.viewModelFactory){
-
-            observe(pv, {
-                it?.let {
-                    if(positionPv.value==-1)
-                    {
-                        arrayListPv.addAll(toArrayPv(it))
-                        binding.pdvSpinner.adapter = aaPv
-                    }
-                    else
-                    {
-                        initViewModel.setCheckIn(it.get(positionPv.value!!).id,latitud,longitud)
-                    }
+            observe(pv, { it?.let {
+                if(positionPv.value==-1) {
+                    arrayListPv.addAll(toArrayPv(it))
+                    binding.pdvSpinner.adapter = aaPv
                 }
-            })
-
-            observe(positionPv, {
-                it?.let {
-                    getPv("")
-                }
-            })
+                else
+                    initViewModel.setCheckIn(it[positionPv.value!!].id,latitud,longitud)
+            } })
+            observe(positionPv, { it?.let {
+                getPv("")
+            } })
         }
-
         return binding.root
     }
 
@@ -87,26 +69,22 @@ class CheckinSelectorDialogFragment
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
-        Log.d("Debug:",CheckPermission().toString())
+        Log.d("Debug:",checkPermission().toString())
         Log.d("Debug:",isLocationEnabled().toString())
-        NewLocationData()
-        RequestPermission()
+        newLocationData()
+        requestPermission()
         getLastLocation()
-
 
         binding.btnDoCheckin.setOnClickListener {
             listener?.onAccept()
             val positionPv  = binding.pdvSpinner.selectedItemPosition
             initViewModel.selectPositionPv(positionPv)
             dismiss()
-
-
         }
     }
 
-
     private fun getLastLocation(){
-        if(CheckPermission()){
+        if(checkPermission()){
             if(isLocationEnabled()){
                 if (ActivityCompat.checkSelfPermission(
                         requireContext(),
@@ -115,71 +93,47 @@ class CheckinSelectorDialogFragment
                         requireContext(),
                         android.Manifest.permission.ACCESS_COARSE_LOCATION
                     ) != PackageManager.PERMISSION_GRANTED
-                ) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
-                    return
-                }
+                ) return
                 fusedLocationProviderClient.lastLocation.addOnCompleteListener { task->
-                    var location:Location? = task.result
+                    val location:Location? = task.result
                     if(location == null){
-                        NewLocationData()
-
+                        newLocationData()
                     }else{
-
                         Log.d("Debug:" ,"Your Location:"+ location.longitude)
                         longitud = location.longitude.toString()
                         latitud = location.latitude.toString()
-
                     }
                 }
             }else{
                 Toast.makeText(context,"Please Turn on Your device Location",Toast.LENGTH_SHORT).show()
             }
         }else{
-            RequestPermission()
+            requestPermission()
         }
     }
 
 
-    fun CheckPermission():Boolean{
-        //this function will return a boolean
-        //true: if we have permission
-        //false if not
-        if(
-            context?.let { ActivityCompat.checkSelfPermission(it,android.Manifest.permission.ACCESS_COARSE_LOCATION) } == PackageManager.PERMISSION_GRANTED ||
+    private fun checkPermission():Boolean{
+        if(context?.let { ActivityCompat.checkSelfPermission(it,android.Manifest.permission.ACCESS_COARSE_LOCATION) } == PackageManager.PERMISSION_GRANTED ||
             context?.let { ActivityCompat.checkSelfPermission(it,android.Manifest.permission.ACCESS_FINE_LOCATION) } == PackageManager.PERMISSION_GRANTED
-        ){
-            return true
-        }
-
+        ) return true
         return false
-
     }
 
-    fun RequestPermission(){
-        //this function will allows us to tell the user to requesut the necessary permsiion if they are not garented
+    private fun requestPermission(){
         ActivityCompat.requestPermissions(
             requireActivity(),
             arrayOf(android.Manifest.permission.ACCESS_COARSE_LOCATION,android.Manifest.permission.ACCESS_FINE_LOCATION), 1010
         )
     }
 
-    fun isLocationEnabled():Boolean{
-        //this function will return to us the state of the location service
-        //if the gps or the network provider is enabled then it will return true otherwise it will return false
+    private fun isLocationEnabled():Boolean{
         val locationManager = context?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
     }
 
-
-    fun NewLocationData(){
-        var locationRequest =  LocationRequest()
+    private fun newLocationData(){
+        val locationRequest =  LocationRequest()
         locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         locationRequest.interval = 0
         locationRequest.fastestInterval = 0
@@ -192,43 +146,27 @@ class CheckinSelectorDialogFragment
                 requireContext(),
                 android.Manifest.permission.ACCESS_COARSE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return
-        }
+        ) return
         fusedLocationProviderClient.requestLocationUpdates(
             locationRequest,locationCallback, Looper.myLooper()
         )
     }
 
-
     private val locationCallback = object : LocationCallback(){
         override fun onLocationResult(locationResult: LocationResult) {
-            var lastLocation: Location = locationResult.lastLocation
+            val lastLocation: Location = locationResult.lastLocation
             Log.d("Debug:","your last last location: "+ lastLocation.longitude.toString())
             longitud = lastLocation.longitude.toString()
             latitud = lastLocation.latitude.toString()
         }
     }
 
-
     private fun toArrayPv(list : List<PV>):ArrayList<String>{
         val arrayList = ArrayList<String>()
         for(element in list)
-        {
             arrayList.add(element.description)
-
-        }
         return  arrayList
     }
-
-
 
     override fun onResume() {
         super.onResume()
@@ -240,7 +178,4 @@ class CheckinSelectorDialogFragment
     interface Callback {
         fun onAccept()
     }
-
-
-
 }

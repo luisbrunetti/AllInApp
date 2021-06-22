@@ -1,9 +1,7 @@
 package com.tawa.allinapp.features.init.ui
 
-import android.os.Build
 import android.os.Bundle
 import android.view.*
-import androidx.annotation.RequiresApi
 import com.tawa.allinapp.R
 import com.tawa.allinapp.core.extensions.failure
 import com.tawa.allinapp.core.extensions.observe
@@ -48,7 +46,7 @@ class InitFragment : BaseFragment() {
     }
 
     private fun showSelectorCheckIn(){
-        val dialog = CheckinSelectorDialogFragment(this)
+        val dialog = CheckInSelectorDialogFragment(this)
         dialog.show(childFragmentManager, "dialog")
     }
 
