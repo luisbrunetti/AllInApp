@@ -1,12 +1,10 @@
 package com.tawa.allinapp.features.init.ui
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.location.Location
-import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
 import android.os.Looper
@@ -14,28 +12,22 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import com.google.android.gms.location.*
 import com.tawa.allinapp.core.extensions.observe
 import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.platform.BaseFragment
-import com.tawa.allinapp.data.local.Prefs
 import com.tawa.allinapp.databinding.DialogCheckinBinding
-import com.tawa.allinapp.models.Company
-import com.tawa.allinapp.models.PV
 import com.tawa.allinapp.features.init.InitViewModel
-import java.util.jar.Manifest
+import com.tawa.allinapp.models.PV
 import javax.inject.Inject
 
 
-class CheckinSelectorDialogFragment
+class CheckInSelectorDialogFragment
 @Inject constructor(
     private val baseFragment: BaseFragment
 ): DialogFragment(){

@@ -7,14 +7,14 @@ class Prefs
 @Inject constructor(context: Context){
 
     companion object{
-        const val FILENAME ="dagger"
+        const val FILENAME ="allin"
         const val USERNAME = "name"
         const val TOKEN = "token"
         const val USERID = "idUser"
         const val SESSION = "session"
         const val CHECK_IN = "checkIn"
-        const val COMPANY_ID= "checkIn"
-        const val PV_ID = "checkIn"
+        const val COMPANY_ID= "companyId"
+        const val PV_ID = "pvId"
     }
 
     private val prefs  = context.getSharedPreferences(FILENAME, Context.MODE_PRIVATE)
