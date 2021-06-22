@@ -106,7 +106,7 @@ class SelectorDialogFragment
         val arrayList = ArrayList<String>()
         for(element in list)
         {
-            arrayList.add(element.description)
+            arrayList.add(element.name)
 
         }
         return  arrayList
@@ -116,7 +116,9 @@ class SelectorDialogFragment
         val arrayList = ArrayList<String>()
         for(element in list)
         {
-            arrayList.add(element.description)
+            arrayList.add(element.description
+
+            )
 
         }
         return  arrayList
