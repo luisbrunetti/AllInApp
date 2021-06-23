@@ -8,7 +8,7 @@ import com.tawa.allinapp.features.HomeActivity
 import com.tawa.allinapp.features.auth.ui.LoginActivity
 import com.tawa.allinapp.features.calendar.CalendarFragment
 import com.tawa.allinapp.features.informs.InformsFragment
-import com.tawa.allinapp.features.init.ui.CheckInSelectorDialogFragment
+import com.tawa.allinapp.features.init.ui.CheckInDialogFragment
 import com.tawa.allinapp.features.init.ui.InitFragment
 
 
@@ -38,5 +38,5 @@ interface ApplicationComponent{
     fun inject(splashFragment: SplashFragment)
     fun inject(splashActivity: SplashActivity)
     fun inject(selectorDialogFragment: SelectorDialogFragment)
-    fun inject(checkInSelectorDialogFragment: CheckInSelectorDialogFragment)
+    fun inject(checkInSelectorDialogFragment: CheckInDialogFragment)
 }

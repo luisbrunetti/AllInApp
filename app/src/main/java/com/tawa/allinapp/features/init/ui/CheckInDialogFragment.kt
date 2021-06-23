@@ -28,7 +28,7 @@ import com.tawa.allinapp.models.PV
 import javax.inject.Inject
 
 
-class CheckInSelectorDialogFragment
+class CheckInDialogFragment
 @Inject constructor(
     private val baseFragment: BaseFragment
 ): DialogFragment(){
@@ -102,7 +102,7 @@ class CheckInSelectorDialogFragment
             myLocation.longitude = myLon
 
             val distance = myLocation.distanceTo(locationPv)
-            if(distance<=250){
+            if(distance>=250){
                 initViewModel.setIdPv(list[positionPv].id)
                 initViewModel.setCheckIn(idUsers,list[positionPv].id,latitude,longitude)
                 dismiss()

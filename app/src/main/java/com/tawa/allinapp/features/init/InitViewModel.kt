@@ -77,8 +77,8 @@ class InitViewModel
     val dayState: LiveData<Boolean>
         get()= _dayState
 
-    private val _checkModeItem = MutableLiveData(true)
-    val checkModeItem = _checkModeItem
+    private val _checkInMode = MutableLiveData(true)
+    val checkInMode = _checkInMode
 
     init {
         startHome()
@@ -121,7 +121,7 @@ class InitViewModel
         this._successCheckIn.value = success
     }
     private fun handleCheckMode(checkIn:Boolean) {
-        this._checkModeItem.value = checkIn
+        this.checkInMode.value = checkIn
     }
     private fun handleCompanyList(company: List<Company>) {
         this._companies.value = company.map { Company(it.id,it.code,it.ruc,it.name,it.description) }
