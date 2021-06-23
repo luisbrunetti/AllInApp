@@ -105,14 +105,11 @@ class InitViewModel
 
     fun getIdCompany() = getIdCompany(UseCase.None()) { it.either(::handleFailure, ::handleGetIdCompany) }
 
-    fun getIdUser() = getIdUser(com.tawa.allinapp.core.interactor.UseCase.None()) { it.either(::handleFailure, ::handleGetIdUser)
-
-    }
+    fun getIdUser() = getIdUser(UseCase.None()) { it.either(::handleFailure, ::handleGetIdUser) }
 
     fun setIdCompany(idCompany:String) = setIdCompany(SetIdCompany.Params(idCompany)) { it.either(::handleFailure, ::handleSetIdCompany) }
 
     fun setIdPv(idPv:String) = setIdPv(SetIdPv.Params(idPv)) { it.either(::handleFailure, ::handleSetIdPv) }
-
 
     fun getCompanies() = getCompanies(UseCase.None()) { it.either(::handleFailure, ::handleCompanyList) }
 
