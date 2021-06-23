@@ -38,7 +38,6 @@ class CheckInSelectorDialogFragment
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     var latitude :String= ""
     var longitude :String= ""
-    val PERMISSION_ID = 1010
     var idUsers = ""
     lateinit var list: List<PV>
     var listener: Callback? = null
@@ -51,34 +50,24 @@ class CheckInSelectorDialogFragment
         val  aaPv = ArrayAdapter<String>(requireActivity(), android.R.layout.simple_spinner_dropdown_item, arrayListPv)
 
         initViewModel = viewModel(baseFragment.viewModelFactory){
-
-            observe(pv, {
-                it?.let {
-
-                        arrayListPv.addAll(toArrayPv(it))
-                        binding.pdvSpinner.adapter = aaPv
-                        list= it
-                }
-            })
-
-
-
-           observe(getIdCompanyPv, {
-                it?.let {
-                    getPv(it)
-                }
-            })
+            observe(pv, { it?.let {
+                arrayListPv.addAll(toArrayPv(it))
+                binding.pdvSpinner.adapter = aaPv
+                list= it
+            } })
+            observe(successCheckIn, { it?.let {
+                listener?.onAccept()
+            } })
+            observe(getIdCompanyPv, { it?.let {
+                getPv(it)
+            } })
 
             observe(idUser, {
                 it?.let {
                     idUsers=it
                 }
             })
-
-
         }
-
-
         initViewModel.getIdCompany()
         initViewModel.getIdUser()
 
@@ -88,17 +77,13 @@ class CheckInSelectorDialogFragment
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
         Log.d("Debug:",checkPermission().toString())
         Log.d("Debug:",isLocationEnabled().toString())
         newLocationData()
         requestPermission()
         getLastLocation()
-
-
         binding.btnDoCheckin.setOnClickListener {
-            listener?.onAccept()
             val positionPv  = binding.pdvSpinner.selectedItemPosition
             val latitudePv=list[positionPv].lat
             val longitudePv=list[positionPv].long
@@ -120,18 +105,11 @@ class CheckInSelectorDialogFragment
             if(distance<=250){
                 initViewModel.setIdPv(list[positionPv].id)
                 initViewModel.setCheckIn(idUsers,list[positionPv].id,latitude,longitude)
-
                 dismiss()
             }
             else
-            {
                 showErrorSelector()
-
-            }
-
-
-
-
+            dismiss()
         }
     }
 
@@ -151,55 +129,31 @@ class CheckInSelectorDialogFragment
                         requireContext(),
                         android.Manifest.permission.ACCESS_COARSE_LOCATION
                     ) != PackageManager.PERMISSION_GRANTED
-                ) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
-                    return
-                }
+                ) return
                 fusedLocationProviderClient.lastLocation.addOnCompleteListener { task->
-                    var location:Location? = task.result
+                    val location:Location? = task.result
                     if(location == null){
                         newLocationData()
-
                     }else{
-
                         Log.d("Debug:" ,"Your Location:"+ location.longitude)
                         longitude = location.longitude.toString()
                         latitude = location.latitude.toString()
-
                     }
                 }
-            }else{
+            }else
                 Toast.makeText(context,"Please Turn on Your device Location",Toast.LENGTH_SHORT).show()
-            }
-        }else{
+        }else
             requestPermission()
-        }
     }
 
-
-    fun checkPermission():Boolean{
-        //this function will return a boolean
-        //true: if we have permission
-        //false if not
-        if(
-            context?.let { ActivityCompat.checkSelfPermission(it,android.Manifest.permission.ACCESS_COARSE_LOCATION) } == PackageManager.PERMISSION_GRANTED ||
-            context?.let { ActivityCompat.checkSelfPermission(it,android.Manifest.permission.ACCESS_FINE_LOCATION) } == PackageManager.PERMISSION_GRANTED
-        ){
+    private fun checkPermission():Boolean{
+        if(context?.let { ActivityCompat.checkSelfPermission(it,android.Manifest.permission.ACCESS_COARSE_LOCATION) } == PackageManager.PERMISSION_GRANTED ||
+            context?.let { ActivityCompat.checkSelfPermission(it,android.Manifest.permission.ACCESS_FINE_LOCATION) } == PackageManager.PERMISSION_GRANTED)
             return true
-        }
-
         return false
-
     }
 
-    fun requestPermission(){
-        //this function will allows us to tell the user to requesut the necessary permsiion if they are not garented
+    private fun requestPermission(){
         ActivityCompat.requestPermissions(
             requireActivity(),
             arrayOf(android.Manifest.permission.ACCESS_COARSE_LOCATION,android.Manifest.permission.ACCESS_FINE_LOCATION), 1010
@@ -207,15 +161,12 @@ class CheckInSelectorDialogFragment
     }
 
     private fun isLocationEnabled():Boolean{
-        //this function will return to us the state of the location service
-        //if the gps or the network provider is enabled then it will return true otherwise it will return false
         val locationManager = context?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
     }
 
-
-    fun newLocationData(){
-        var locationRequest =  LocationRequest()
+    private fun newLocationData(){
+        val locationRequest =  LocationRequest()
         locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         locationRequest.interval = 0
         locationRequest.fastestInterval = 0
@@ -228,21 +179,11 @@ class CheckInSelectorDialogFragment
                 requireContext(),
                 android.Manifest.permission.ACCESS_COARSE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return
-        }
+        ) return
         fusedLocationProviderClient.requestLocationUpdates(
             locationRequest,locationCallback, Looper.myLooper()
         )
     }
-
 
     private val locationCallback = object : LocationCallback(){
         override fun onLocationResult(locationResult: LocationResult) {
@@ -253,18 +194,13 @@ class CheckInSelectorDialogFragment
         }
     }
 
-
     private fun toArrayPv(list : List<PV>):ArrayList<String>{
         val arrayList = ArrayList<String>()
-        for(element in list)
-        {
+        for(element in list) {
             arrayList.add(element.description)
-
         }
         return  arrayList
     }
-
-
 
     override fun onResume() {
         super.onResume()
@@ -276,7 +212,4 @@ class CheckInSelectorDialogFragment
     interface Callback {
         fun onAccept()
     }
-
-
-
 }

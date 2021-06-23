@@ -37,8 +37,6 @@ class SelectorDialogFragment
     lateinit var listCompany:List<Company>
     lateinit var listPV:List<PV>
 
-
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DialogHomeBinding.inflate(inflater)
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -49,108 +47,76 @@ class SelectorDialogFragment
         val  aa = ArrayAdapter<String>(requireActivity(), android.R.layout.simple_spinner_dropdown_item, arrayList)
         val  aaPv = ArrayAdapter<String>(requireActivity(), android.R.layout.simple_spinner_dropdown_item, arrayListPv)
 
-
-
         initViewModel = viewModel(baseFragment.viewModelFactory){
-
-            observe(companies, {
-                it?.let {
-                    if(positionCompany.value==-1) {
-                        arrayList.addAll(toArray(it))
-                        binding.spinnerCompany.adapter = aa
-                        listCompany = it
-                    }
-                    else
-                    {
-                        arrayListPv.removeAll(arrayListPv)
-                        getPv(it[positionCompany.value!!].id)
-                    }
-
+            observe(companies, { it?.let {
+                if(positionCompany.value==-1) {
+                    arrayList.addAll(toArray(it))
+                    binding.spinnerCompany.adapter = aa
+                    listCompany = it
                 }
-            })
-
-            observe(pv, {
-                it?.let {
-                        arrayListPv.addAll(toArrayPv(it))
-                        binding.spinnerPv.adapter = aaPv
-                        listPV = it
-
-
+                else {
+                    arrayListPv.removeAll(arrayListPv)
+                    getPv(it[positionCompany.value!!].id)
+                    idCompany = it[positionCompany.value!!].id
                 }
-            })
-
-           observe(positionCompany, {
-                it?.let {
-
-                    getCompanies()
-
-                }
-            })
-
+            } })
+            observe(pv, { it?.let {
+                arrayListPv.addAll(toArrayPv(it))
+                binding.spinnerPv.adapter = aaPv
+                listPV = it
+            } })
+            observe(positionCompany, { it?.let {
+                getCompanies()
+            } })
         }
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         binding.spinnerCompany?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
             override fun onNothingSelected(parent: AdapterView<*>?) {  }
-
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 initViewModel.selectPositionCompany(position)
             }
-
         }
 
         binding.btnAccessHome.setOnClickListener {
             listener?.onAccept()
             val positionPv = binding.spinnerPv.selectedItemPosition
             val positionCompany = binding.spinnerCompany.selectedItemPosition
-            if(positionPv>-1)
-            {
-                 initViewModel.setIdCompany(listCompany[positionCompany].id)
-                 dismiss()
+            if(positionPv>-1) {
+                initViewModel.setIdCompany(listCompany[positionCompany].id)
+                dismiss()
             }
-            else
-                {
-                    Toast.makeText(context,"Debe seleccionar un punto de venta",Toast.LENGTH_SHORT).show()
-                }
-
+            else {
+                Toast.makeText(context,"Debe seleccionar un punto de venta",Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
     private fun toArray(list : List<Company>):ArrayList<String>{
         val arrayList = ArrayList<String>()
-        for(element in list)
-        {
+        for(element in list) {
             arrayList.add(element.name)
-
         }
         return  arrayList
     }
 
     private fun toArrayPv(list : List<PV>):ArrayList<String>{
         val arrayList = ArrayList<String>()
-        for(element in list)
-        {
-            arrayList.add(element.description
-
-            )
-
+        for(element in list) {
+            arrayList.add(element.description)
         }
         return  arrayList
     }
 
-    fun requestPermission(){
-        //this function will allows us to tell the user to requesut the necessary permsiion if they are not garented
+    private fun requestPermission(){
         ActivityCompat.requestPermissions(
             requireActivity(),
             arrayOf(android.Manifest.permission.ACCESS_COARSE_LOCATION,android.Manifest.permission.ACCESS_FINE_LOCATION), 1010
         )
     }
-
-
 
     override fun onResume() {
         super.onResume()
@@ -162,8 +128,4 @@ class SelectorDialogFragment
     interface Callback {
         fun onAccept()
     }
-
-
-
-
 }

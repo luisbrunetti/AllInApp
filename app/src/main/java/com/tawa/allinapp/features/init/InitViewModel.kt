@@ -13,15 +13,15 @@ import javax.inject.Inject
 
 class InitViewModel
 @Inject constructor(
+    private val getCheckMode: GetCheckMode,
     private val getCompanies: GetCompanies,
-    private val getPV: GetPV,
-    private val setCheckIn: SetCheckIn,
-    private val setIdCompany: SetIdCompany,
     private val getIdCompany: GetIdCompany,
+    private val getPV: GetPV,
+    private val setIdCompany: SetIdCompany,
+    private val setCheckIn: SetCheckIn,
     private val setIdPv: SetIdPv,
     private val getIdUser: GetIdUser,
-
-    ) : BaseViewModel() {
+) : BaseViewModel()  {
     private  val formatter: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
     var timestamp: Timestamp = Timestamp(System.currentTimeMillis())
 
@@ -77,6 +77,9 @@ class InitViewModel
     val dayState: LiveData<Boolean>
         get()= _dayState
 
+    private val _checkModeItem = MutableLiveData(true)
+    val checkModeItem = _checkModeItem
+
     init {
         startHome()
         startCheckIn()
@@ -90,35 +93,17 @@ class InitViewModel
         }
     }
 
-    private fun handleCheckIn(success: Boolean) {
-        this._successCheckIn.value = success
-    }
+    private fun getDay(){ _dayState.value = true }
 
-    private fun getDay(){
-        _dayState.value = true
-    }
+    fun selectPositionCompany(position : Int) { _positionCompany.value = position }
 
-     fun selectPositionCompany(position : Int)
-    {
-        _positionCompany.value = position
-    }
+    fun selectPositionPv(position : Int) { _positionPv.value = position }
 
-    fun selectPositionPv(position : Int)
-    {
-        _positionPv.value = position
-    }
+    private fun startHome(){ _startHome.value = true }
 
-    private fun startHome(){
-       _startHome.value = true
-    }
+    private fun startCheckIn(){ _startCheckIn.value = true }
 
-    private fun startCheckIn(){
-        _startCheckIn.value = true
-    }
-
-    fun getIdCompany() = getIdCompany(com.tawa.allinapp.core.interactor.UseCase.None()) { it.either(::handleFailure, ::handleGetIdCompany)
-
-    }
+    fun getIdCompany() = getIdCompany(UseCase.None()) { it.either(::handleFailure, ::handleGetIdCompany) }
 
     fun getIdUser() = getIdUser(com.tawa.allinapp.core.interactor.UseCase.None()) { it.either(::handleFailure, ::handleGetIdUser)
 
@@ -133,10 +118,17 @@ class InitViewModel
 
     fun getPv(company:String) = getPV(GetPV.Params(company)) { it.either(::handleFailure, ::handlePvList) }
 
+    fun getCheckMode() = getCheckMode(UseCase.None()) { it.either(::handleFailure, ::handleCheckMode) }
+
+    private fun handleCheckIn(success: Boolean) {
+        this._successCheckIn.value = success
+    }
+    private fun handleCheckMode(checkIn:Boolean) {
+        this._checkModeItem.value = checkIn
+    }
     private fun handleCompanyList(company: List<Company>) {
         this._companies.value = company.map { Company(it.id,it.code,it.ruc,it.name,it.description) }
     }
-
     private fun handlePvList(pv: List<PV>) {
         this._pv.value = pv.map { PV(it.id,it.description,it.zone,it.codGeo,it.idCompany, it.lat,it.long) }
     }

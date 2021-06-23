@@ -13,6 +13,8 @@
     <string name="ok_login">Login correcto</string>
     <string name="error_network">Error de red</string>
     <string name="error_unknown">Ha ocurrido un error</string>
+    <string name="text_check_in">Marcar Ingreso</string>
+    <string name="text_check_out">Marcar salida</string>
     <string name="bt_accept">Entiendo</string>
     <string name="current_day">%1$s, %2$s %3$s %4$s</string>
 </resources>
