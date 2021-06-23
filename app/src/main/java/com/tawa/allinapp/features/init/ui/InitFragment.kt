@@ -1,7 +1,9 @@
 package com.tawa.allinapp.features.init.ui
 
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import com.tawa.allinapp.R
 import com.tawa.allinapp.core.extensions.failure
 import com.tawa.allinapp.core.extensions.observe
@@ -16,6 +18,9 @@ class InitFragment : BaseFragment() {
     private lateinit var initViewModel: InitViewModel
     private lateinit var binding: FragmentInitBinding
 
+    private var checkOutDialog: CheckOutDialogFragment? = null
+    private var checkIn:Boolean = true
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         appComponent.inject(this)
@@ -29,13 +34,15 @@ class InitFragment : BaseFragment() {
                 val currentDay = getString(R.string.current_day, getDayWeek(),getDayMonth(),getMonth(),getYear())
                 binding.currentDay.text  = currentDay
             } }})
-            observe(checkModeItem, { it?.let {
+            observe(checkInMode, { it?.let {
+                checkIn = it
                 hideProgressDialog()
             }})
             failure(failure, ::handleFailure)
         }
         binding.btCheckIn.setOnClickListener{
-            showSelectorCheckIn()
+            if(checkIn) showSelectorCheckIn()
+            else showCheckOut()
         }
         return binding.root
     }
@@ -46,13 +53,23 @@ class InitFragment : BaseFragment() {
     }
 
     private fun showSelectorCheckIn(){
-        val dialog = CheckInSelectorDialogFragment(this)
-        dialog.listener = object : CheckInSelectorDialogFragment.Callback {
+        val dialog = CheckInDialogFragment(this)
+        dialog.listener = object : CheckInDialogFragment.Callback {
             override fun onAccept() {
                 initViewModel.getCheckMode()
             }
         }
         dialog.show(childFragmentManager, "dialog")
+    }
+
+    private fun showCheckOut(){
+        checkOutDialog = CheckOutDialogFragment.newInstance()
+        checkOutDialog?.listener = object : CheckOutDialogFragment.Callback {
+            override fun onAccept() {
+                initViewModel.getCheckMode()
+            }
+        }
+        checkOutDialog?.show(childFragmentManager, "checkOutDialog")
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -65,9 +82,6 @@ class InitFragment : BaseFragment() {
         binding.lifecycleOwner = this
         binding.executePendingBindings()
     }
-
-
-
 }
 
 

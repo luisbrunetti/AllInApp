@@ -91,7 +91,7 @@
             android:layout_marginEnd="36dp"
             android:background="@drawable/bg_button_check_in"
             android:elevation="3dp"
-            app:checkModeBtn="@{viewModel.checkModeItem}"
+            app:checkModeBtn="@{viewModel.checkInMode}"
             android:text="@string/text_check_in"
             android:textAllCaps="false"
             android:textColor="@color/colorTextPrimary"
