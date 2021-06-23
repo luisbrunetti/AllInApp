@@ -40,15 +40,15 @@ class CheckInDialogFragment
     var longitude :String= ""
     var idUsers = ""
     lateinit var list: List<PV>
-    var place: String = ""
+    private var place: String = ""
     var listener: Callback? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = DialogCheckinBinding.inflate(inflater)
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         isCancelable = false
-        val arrayListPv:ArrayList<String> = ArrayList<String>()
-        val  aaPv = ArrayAdapter<String>(requireActivity(), android.R.layout.simple_spinner_dropdown_item, arrayListPv)
+        val arrayListPv:ArrayList<String> = ArrayList()
+        val aaPv = ArrayAdapter(requireActivity(), android.R.layout.simple_spinner_dropdown_item, arrayListPv)
 
         initViewModel = viewModel(baseFragment.viewModelFactory){
             observe(pv, { it?.let {
@@ -62,12 +62,9 @@ class CheckInDialogFragment
             observe(getIdCompanyPv, { it?.let {
                 getPv(it)
             } })
-
-            observe(idUser, {
-                it?.let {
-                    idUsers=it
-                }
-            })
+            observe(idUser, { it?.let {
+                idUsers=it
+            } })
         }
         initViewModel.getIdCompany()
         initViewModel.getIdUser()
@@ -75,9 +72,9 @@ class CheckInDialogFragment
         return binding.root
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setUpBinding()
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
         Log.d("Debug:",checkPermission().toString())
         Log.d("Debug:",isLocationEnabled().toString())
@@ -104,7 +101,7 @@ class CheckInDialogFragment
             myLocation.longitude = myLon
 
             val distance = myLocation.distanceTo(locationPv)
-            if(distance>=250){
+            if(distance<=250){
                 initViewModel.setIdPv(list[positionPv].id)
                 initViewModel.setCheckIn(idUsers,list[positionPv].id,latitude,longitude)
                 dismiss()
@@ -119,7 +116,6 @@ class CheckInDialogFragment
         val dialog = ErrorLocationDialogFragment()
         dialog.show(childFragmentManager, "dialog")
     }
-
 
     private fun getLastLocation(){
         if(checkPermission()){
@@ -189,7 +185,7 @@ class CheckInDialogFragment
 
     private val locationCallback = object : LocationCallback(){
         override fun onLocationResult(locationResult: LocationResult) {
-            var lastLocation: Location = locationResult.lastLocation
+            val lastLocation: Location = locationResult.lastLocation
             Log.d("Debug:","your last last location: "+ lastLocation.longitude.toString())
             longitude = lastLocation.longitude.toString()
             latitude = lastLocation.latitude.toString()
@@ -209,6 +205,12 @@ class CheckInDialogFragment
         val params = dialog!!.window!!.attributes
         params.width = ConstraintLayout.LayoutParams.MATCH_PARENT
         dialog!!.window!!.attributes = params as android.view.WindowManager.LayoutParams
+    }
+
+    private fun setUpBinding() {
+        binding.viewModel = initViewModel
+        binding.lifecycleOwner = this
+        binding.executePendingBindings()
     }
 
     interface Callback {

@@ -12,18 +12,22 @@ import com.tawa.allinapp.core.dialog.MessageDialogFragment
 import com.tawa.allinapp.core.extensions.invisible
 import com.tawa.allinapp.core.extensions.visible
 import com.tawa.allinapp.databinding.FragmentCheckOutDialogBinding
+import com.tawa.allinapp.features.init.InitViewModel
 
 
 class CheckOutDialogFragment : DialogFragment() {
     private lateinit var binding: FragmentCheckOutDialogBinding
+    private  lateinit var initViewModel: InitViewModel
     var listener: Callback? = null
 
     companion object {
         const val PV = "pv"
-        fun newInstance(pv: String = ""): CheckOutDialogFragment {
+        const val USER = "user"
+        fun newInstance(pv: String = "",user: String = ""): CheckOutDialogFragment {
             val frag = CheckOutDialogFragment()
             val bundle = Bundle()
             bundle.putString(PV, pv)
+            bundle.putString(USER, user)
             frag.arguments = bundle
             return frag
         }
@@ -38,10 +42,14 @@ class CheckOutDialogFragment : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        var user =""
+        var pv =""
         arguments?.let { bundle ->
-            bundle.getString(PV)?.let { binding.tvPV.text = it }
+            bundle.getString(PV)?.let { binding.tvPV.text = it; pv = it }
+            bundle.getString(USER)?.let { user = it }
         }
         binding.btnDoCheckOut.setOnClickListener {
+            //initViewModel.setCheckOut(user,pv)
             listener?.onAccept()
             dismiss()
         }

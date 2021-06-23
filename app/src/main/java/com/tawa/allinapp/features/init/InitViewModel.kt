@@ -41,6 +41,10 @@ class InitViewModel
     val successCheckIn: LiveData<Boolean>
         get() = _successCheckIn
 
+    private val _successCheckOut= MutableLiveData(false)
+    val successCheckOut: LiveData<Boolean>
+        get() = _successCheckOut
+
     private val _companies = MutableLiveData<List<Company>>()
     val companies: LiveData<List<Company>>
         get()= _companies
@@ -92,6 +96,12 @@ class InitViewModel
             it.either(::handleFailure, ::handleCheckIn)
         }
     }
+    fun setCheckOut(idUser:String,idPV:String) {
+        _startSetCheckIn.value = false
+        setCheckIn(SetCheckIn.Params(0,idUser,idPV,formatter.format(timestamp),"","","CHECKOUT")) {
+            it.either(::handleFailure, ::handleCheckOut)
+        }
+    }
 
     private fun getDay(){ _dayState.value = true }
 
@@ -119,6 +129,9 @@ class InitViewModel
 
     private fun handleCheckIn(success: Boolean) {
         this._successCheckIn.value = success
+    }
+    private fun handleCheckOut(success: Boolean) {
+        this._successCheckOut.value = success
     }
     private fun handleCheckMode(checkIn:Boolean) {
         this.checkInMode.value = checkIn

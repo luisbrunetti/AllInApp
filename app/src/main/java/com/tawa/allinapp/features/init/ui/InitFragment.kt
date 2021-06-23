@@ -20,6 +20,7 @@ class InitFragment : BaseFragment() {
 
     private var checkOutDialog: CheckOutDialogFragment? = null
     private var checkIn:Boolean = true
+    var _user = ""
     private lateinit var _place: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,8 +40,15 @@ class InitFragment : BaseFragment() {
                 checkIn = it
                 hideProgressDialog()
             }})
+            observe(idUser, { it?.let {
+                _user = it
+            }})
+            observe(successCheckOut, { it?.let {
+                initViewModel.getCheckMode()
+            } })
             failure(failure, ::handleFailure)
         }
+        initViewModel.getIdUser()
         binding.btCheckIn.setOnClickListener{
             if(checkIn) showSelectorCheckIn()
             else showCheckOut()
@@ -65,10 +73,11 @@ class InitFragment : BaseFragment() {
     }
 
     private fun showCheckOut(){
-        checkOutDialog = CheckOutDialogFragment.newInstance(_place)
+        checkOutDialog = CheckOutDialogFragment.newInstance(_place, _user)
         checkOutDialog?.listener = object : CheckOutDialogFragment.Callback {
             override fun onAccept() {
-                initViewModel.getCheckMode()
+                initViewModel.setCheckOut(_user,_place)
+                //initViewModel.getCheckMode()
             }
         }
         checkOutDialog?.show(childFragmentManager, "checkOutDialog")

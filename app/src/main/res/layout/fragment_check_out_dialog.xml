@@ -5,6 +5,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".features.init.ui.CheckOutDialogFragment">
 
+    <data>
+        <variable
+            name="viewModel"
+            type="com.tawa.allinapp.features.init.InitViewModel" />
+    </data>
+
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -37,7 +43,7 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="24dp"
                 android:gravity="center"
-                android:text="Check Out PDV"
+                android:text="@string/check_out_pdv"
                 android:textColor="@color/design_default_color_on_secondary"
                 android:textSize="20sp"
                 android:textStyle="bold" />
@@ -49,6 +55,8 @@
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="24dp"
+                android:textSize="20sp"
+                android:gravity="center"
                 android:textColor="#787F87"/>
 
             <Button
@@ -60,7 +68,7 @@
                 android:layout_marginEnd="50dp"
                 android:layout_marginBottom="25dp"
                 android:background="@drawable/roundedbuttom"
-                android:text="Registrar"
+                android:text="@string/register_button"
                 android:textAllCaps="false"
                 android:textColor="@color/colorTextPrimary"
                 android:textSize="18sp" />
