@@ -14,10 +14,11 @@ import javax.inject.Inject
 class InitViewModel
 @Inject constructor(
     private val getCheckMode: GetCheckMode,
-    private val getStateCheck: GetStateCheck,
     private val getCompanies: GetCompanies,
     private val getIdCompany: GetIdCompany,
     private val getPV: GetPV,
+    private val getDescPV: GetDescPV,
+    private val getIdPV: GetIdPV,
     private val setIdCompany: SetIdCompany,
     private val setCheckIn: SetCheckIn,
     private val setIdPv: SetIdPv,
@@ -41,10 +42,6 @@ class InitViewModel
     private val _successCheckIn= MutableLiveData(false)
     val successCheckIn: LiveData<Boolean>
         get() = _successCheckIn
-
-    private val _stateCheck= MutableLiveData(false)
-    val stateCheck: LiveData<Boolean>
-        get() = _stateCheck
 
     private val _successCheckOut= MutableLiveData(false)
     val successCheckOut: LiveData<Boolean>
@@ -81,6 +78,14 @@ class InitViewModel
     private val _pv = MutableLiveData<List<PV>>()
     val pv: LiveData<List<PV>>
         get()= _pv
+
+    private val _pvDesc = MutableLiveData<String>()
+    val pvDesc: LiveData<String>
+        get()= _pvDesc
+
+    private val _pvId = MutableLiveData<String>()
+    val pvId: LiveData<String>
+        get()= _pvId
 
     private val _dayState = MutableLiveData<Boolean>(false)
     val dayState: LiveData<Boolean>
@@ -124,7 +129,11 @@ class InitViewModel
 
     fun setIdCompany(idCompany:String) = setIdCompany(SetIdCompany.Params(idCompany)) { it.either(::handleFailure, ::handleSetIdCompany) }
 
-    fun setIdPv(idPv:String) = setIdPv(SetIdPv.Params(idPv)) { it.either(::handleFailure, ::handleSetIdPv) }
+    fun setPv(idPv:String,descPv:String) = setIdPv(SetIdPv.Params(idPv,descPv)) { it.either(::handleFailure, ::handleSetIdPv) }
+
+    fun getDescPV() = getDescPV(UseCase.None()) { it.either(::handleFailure, ::handlePVDesc) }
+
+    fun getIdPV() = getIdPV(UseCase.None()) { it.either(::handleFailure, ::handlePVId) }
 
     fun getCompanies() = getCompanies(UseCase.None()) { it.either(::handleFailure, ::handleCompanyList) }
 
@@ -132,8 +141,12 @@ class InitViewModel
 
     fun getCheckMode() = getCheckMode(UseCase.None()) { it.either(::handleFailure, ::handleCheckMode) }
 
-    fun getStateCheck(idPv:String) = getStateCheck(GetStateCheck.Params(idPv)) { it.either(::handleFailure, ::handleGetStateCheck) }
-
+    private fun handlePVDesc(checkIn:String) {
+        this._pvDesc.value = checkIn
+    }
+    private fun handlePVId(checkIn:String) {
+        this._pvId.value = checkIn
+    }
     private fun handleCheckIn(success: Boolean) {
         this._successCheckIn.value = success
     }
@@ -142,9 +155,6 @@ class InitViewModel
     }
     private fun handleCheckMode(checkIn:Boolean) {
         this.checkInMode.value = checkIn
-    }
-    private fun handleGetStateCheck(stateCheck:Boolean) {
-        this._stateCheck.value = stateCheck
     }
     private fun handleCompanyList(company: List<Company>) {
         this._companies.value = company.map { Company(it.id,it.code,it.ruc,it.name,it.description) }
@@ -155,15 +165,12 @@ class InitViewModel
     private fun handleSetIdCompany(success: Boolean) {
         _setIdCompanySuccess.value = success
     }
-
     private fun handleSetIdPv(success: Boolean) {
         _idPv.value = success
     }
-
     private fun handleGetIdCompany(idCompany: String) {
         _getIdCompanyPv.value = idCompany
     }
-
     private fun handleGetIdUser(idCompany: String) {
         _idUser.value = idCompany
     }
