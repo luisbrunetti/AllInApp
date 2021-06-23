@@ -21,7 +21,10 @@ class InitFragment : BaseFragment() {
     private var checkOutDialog: CheckOutDialogFragment? = null
     private var checkIn:Boolean = true
     var _user = ""
+    private lateinit var _placeId: String
     private lateinit var _place: String
+    private lateinit var _lat: String
+    private lateinit var _long: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,8 +67,8 @@ class InitFragment : BaseFragment() {
     private fun showSelectorCheckIn(){
         val dialog = CheckInDialogFragment(this)
         dialog.listener = object : CheckInDialogFragment.Callback {
-            override fun onAccept(place:String) {
-                _place = place
+            override fun onAccept(placeId:String, place:String,lat:String, long:String) {
+                _place = place; _lat = lat; _long = long; _placeId = placeId
                 initViewModel.getCheckMode()
             }
         }
@@ -76,8 +79,7 @@ class InitFragment : BaseFragment() {
         checkOutDialog = CheckOutDialogFragment.newInstance(_place, _user)
         checkOutDialog?.listener = object : CheckOutDialogFragment.Callback {
             override fun onAccept() {
-                initViewModel.setCheckOut(_user,_place)
-                //initViewModel.getCheckMode()
+                initViewModel.setCheckOut(_user,_placeId,_lat,_long)
             }
         }
         checkOutDialog?.show(childFragmentManager, "checkOutDialog")

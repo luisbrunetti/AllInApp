@@ -96,9 +96,9 @@ class InitViewModel
             it.either(::handleFailure, ::handleCheckIn)
         }
     }
-    fun setCheckOut(idUser:String,idPV:String) {
+    fun setCheckOut(idUser:String,idPV:String,lat:String,long:String) {
         _startSetCheckIn.value = false
-        setCheckIn(SetCheckIn.Params(0,idUser,idPV,formatter.format(timestamp),"","","CHECKOUT")) {
+        setCheckIn(SetCheckIn.Params(0,idUser,idPV,formatter.format(timestamp),lat,long,"CHECKOUT")) {
             it.either(::handleFailure, ::handleCheckOut)
         }
     }

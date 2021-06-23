@@ -17,7 +17,6 @@ import com.tawa.allinapp.features.init.InitViewModel
 
 class CheckOutDialogFragment : DialogFragment() {
     private lateinit var binding: FragmentCheckOutDialogBinding
-    private  lateinit var initViewModel: InitViewModel
     var listener: Callback? = null
 
     companion object {

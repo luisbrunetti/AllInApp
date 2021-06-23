@@ -2,20 +2,12 @@ package com.tawa.allinapp.core.platform
 
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.location.Location
-import android.location.LocationManager
 import android.os.Bundle
-import android.os.Looper
-import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.annotation.StringRes
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.gms.location.*
 import com.google.android.material.snackbar.Snackbar
 import com.tawa.allinapp.AndroidApplication
 import com.tawa.allinapp.R
