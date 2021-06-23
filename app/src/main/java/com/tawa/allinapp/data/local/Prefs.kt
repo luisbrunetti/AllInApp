@@ -15,6 +15,7 @@ class Prefs
         const val CHECK_IN = "checkIn"
         const val COMPANY_ID= "companyId"
         const val PV_ID = "pvId"
+        const val PV_NAME = "pv_name"
     }
 
     private val prefs  = context.getSharedPreferences(FILENAME, Context.MODE_PRIVATE)
@@ -41,6 +42,10 @@ class Prefs
     var pvId:String?
         get() = prefs.getString(PV_ID,"")
         set(value) = prefs.edit().putString(PV_ID,value).apply()
+
+    var pvName:String?
+        get() = prefs.getString(PV_NAME,"")
+        set(value) = prefs.edit().putString(PV_NAME,value).apply()
 
     var session:Boolean
         get() = prefs.getBoolean(SESSION,false)

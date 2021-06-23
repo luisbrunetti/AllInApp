@@ -9,8 +9,8 @@ import javax.inject.Inject
 class SetIdPv
 @Inject constructor(private val checkRepository: CheckRepository) : UseCase<Boolean, SetIdPv.Params>() {
 
-    override suspend fun run(params: Params) = checkRepository.setIdPv(params.idPv)
+    override suspend fun run(params: Params) = checkRepository.setIdPv(params.idPv, params.namePv)
 
-    data class Params(val idPv: String)
+    data class Params(val idPv: String, val namePv: String)
 
 }

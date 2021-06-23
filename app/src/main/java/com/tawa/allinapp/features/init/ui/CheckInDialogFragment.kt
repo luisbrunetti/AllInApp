@@ -88,7 +88,7 @@ class CheckInDialogFragment
             {
                 _pv = list[positionPv].description
                 _pvId = list[positionPv].id
-                initViewModel.setIdPv(list[positionPv].id)
+                initViewModel.setPv(list[positionPv].id,list[positionPv].description)
                 initViewModel.setCheckIn(idUsers,list[positionPv].id,latitude,longitude)
                 dismiss()
             }
@@ -135,7 +135,6 @@ class CheckInDialogFragment
                         newLocationData()
                     }else{
                         Log.d("Debug:" ,"Your Location:"+ location.longitude)
-
                         longitude = location.longitude.toString()
                         latitude = location.latitude.toString()
                     }
