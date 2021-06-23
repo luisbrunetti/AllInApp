@@ -8,4 +8,8 @@ class CheckDataSource @Inject constructor(private val checkDao: CheckDao){
     fun insertCheck(check: CheckModel){
         checkDao.insertCheck(check)
     }
+
+    fun getStateCheck(idPv:String):Int{
+        return checkDao.getStateCheck(idPv)
+    }
 }
