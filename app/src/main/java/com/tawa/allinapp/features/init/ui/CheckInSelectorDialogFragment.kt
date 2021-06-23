@@ -18,6 +18,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.DialogFragment
 import com.google.android.gms.location.*
+import com.google.android.gms.maps.model.LatLng
 import com.tawa.allinapp.core.extensions.observe
 import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.platform.BaseFragment
@@ -38,6 +39,7 @@ class CheckInSelectorDialogFragment
     var latitude :String= ""
     var longitude :String= ""
     val PERMISSION_ID = 1010
+    var idUsers = ""
     lateinit var list: List<PV>
     var listener: Callback? = null
 
@@ -67,11 +69,18 @@ class CheckInSelectorDialogFragment
                 }
             })
 
+            observe(idUser, {
+                it?.let {
+                    idUsers=it
+                }
+            })
+
 
         }
 
 
         initViewModel.getIdCompany()
+        initViewModel.getIdUser()
 
         return binding.root
     }
@@ -81,27 +90,59 @@ class CheckInSelectorDialogFragment
         super.onViewCreated(view, savedInstanceState)
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
-        Log.d("Debug:",CheckPermission().toString())
+        Log.d("Debug:",checkPermission().toString())
         Log.d("Debug:",isLocationEnabled().toString())
-        NewLocationData()
-        RequestPermission()
+        newLocationData()
+        requestPermission()
         getLastLocation()
 
 
         binding.btnDoCheckin.setOnClickListener {
             listener?.onAccept()
             val positionPv  = binding.pdvSpinner.selectedItemPosition
+            val latitudePv=list[positionPv].lat
+            val longitudePv=list[positionPv].long
+            val latPv = latitudePv.toDouble()
+            val lonPv = longitudePv.toDouble()
+            val locationPv = Location("point A")
+            val myLocation = Location("point B")
+            locationPv.latitude= latPv
+            locationPv.longitude= lonPv
 
-            initViewModel.setCheckIn(list[positionPv].lat,latitude,longitude)
-            dismiss()
+            val myLatitude = latitude
+            val myLongitude = longitude
+            val myLat = myLatitude.toDouble()
+            val myLon= myLongitude.toDouble()
+            myLocation.latitude= myLat
+            myLocation.longitude = myLon
+
+            val distance = myLocation.distanceTo(locationPv)
+            if(distance<=250){
+                initViewModel.setIdPv(list[positionPv].id)
+                initViewModel.setCheckIn(idUsers,list[positionPv].id,latitude,longitude)
+
+                dismiss()
+            }
+            else
+            {
+                showErrorSelector()
+
+            }
+
+
 
 
         }
     }
 
+    private fun showErrorSelector(){
+        val dialog = ErrorLocationDialogFragment()
+        dialog.show(childFragmentManager, "dialog")
+    }
+
 
     private fun getLastLocation(){
-        if(CheckPermission()){
+        if(checkPermission()){
             if(isLocationEnabled()){
                 if (ActivityCompat.checkSelfPermission(
                         requireContext(),
@@ -123,7 +164,7 @@ class CheckInSelectorDialogFragment
                 fusedLocationProviderClient.lastLocation.addOnCompleteListener { task->
                     var location:Location? = task.result
                     if(location == null){
-                        NewLocationData()
+                        newLocationData()
 
                     }else{
 
@@ -137,12 +178,12 @@ class CheckInSelectorDialogFragment
                 Toast.makeText(context,"Please Turn on Your device Location",Toast.LENGTH_SHORT).show()
             }
         }else{
-            RequestPermission()
+            requestPermission()
         }
     }
 
 
-    fun CheckPermission():Boolean{
+    fun checkPermission():Boolean{
         //this function will return a boolean
         //true: if we have permission
         //false if not
@@ -157,7 +198,7 @@ class CheckInSelectorDialogFragment
 
     }
 
-    fun RequestPermission(){
+    fun requestPermission(){
         //this function will allows us to tell the user to requesut the necessary permsiion if they are not garented
         ActivityCompat.requestPermissions(
             requireActivity(),
@@ -165,7 +206,7 @@ class CheckInSelectorDialogFragment
         )
     }
 
-    fun isLocationEnabled():Boolean{
+    private fun isLocationEnabled():Boolean{
         //this function will return to us the state of the location service
         //if the gps or the network provider is enabled then it will return true otherwise it will return false
         val locationManager = context?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
@@ -173,7 +214,7 @@ class CheckInSelectorDialogFragment
     }
 
 
-    fun NewLocationData(){
+    fun newLocationData(){
         var locationRequest =  LocationRequest()
         locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         locationRequest.interval = 0

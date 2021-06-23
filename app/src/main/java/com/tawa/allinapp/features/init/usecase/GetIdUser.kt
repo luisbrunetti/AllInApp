@@ -5,9 +5,9 @@ import com.tawa.allinapp.data.repository.AuthRepository
 import com.tawa.allinapp.data.repository.CheckRepository
 import javax.inject.Inject
 
-class GetIdCompany
+class GetIdUser
 @Inject constructor(private val checkRepository: CheckRepository) : UseCase<String, UseCase.None>() {
 
-    override suspend fun run(params: None) = checkRepository.getIdCompany()
+    override suspend fun run(params: None) = checkRepository.getIdUser()
 
 }
