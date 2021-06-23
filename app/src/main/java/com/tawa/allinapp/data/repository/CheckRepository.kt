@@ -24,7 +24,7 @@ interface CheckRepository {
         override fun setCheck(checkIn: Check): Either<Failure, Boolean> {
             return try {
                 checkDataSource.insertCheck(checkIn.toModel())
-                prefs.checkIn = false
+                prefs.checkIn = !prefs.checkIn
                 Either.Right(true)
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))

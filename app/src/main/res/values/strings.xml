@@ -17,4 +17,6 @@
     <string name="text_check_out">Marcar salida</string>
     <string name="bt_accept">Entiendo</string>
     <string name="current_day">%1$s, %2$s %3$s %4$s</string>
+    <string name="register_button">Registrar</string>
+    <string name="check_out_pdv">Check Out PDV</string>
 </resources>
