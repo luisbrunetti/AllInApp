@@ -3,6 +3,7 @@ package com.tawa.allinapp.core.extensions
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import androidx.annotation.LayoutRes
 import androidx.core.content.ContextCompat
@@ -41,10 +42,20 @@ fun View.setButtonEnabled(value: Boolean?){
 @BindingAdapter("bgError")
 fun View.setErrorBg(value: Boolean?){
     value?.let { enable ->
-        background = if (enable){
-            ResourcesCompat.getDrawable(resources, R.drawable.bg_error_text, null)
-        }else{
-            ResourcesCompat.getDrawable(resources, R.drawable.selector, null)
-        }
+        background =
+            if (enable) ResourcesCompat.getDrawable(resources, R.drawable.bg_error_text, null)
+            else ResourcesCompat.getDrawable(resources, R.drawable.selector, null)
+    }
+}
+
+@BindingAdapter("checkModeBtn")
+fun Button.setCheckModeBtn(value: Boolean?){
+    value?.let { enable ->
+        background =
+            if (enable) ResourcesCompat.getDrawable(resources, R.drawable.bg_button_check_in, null)
+            else ResourcesCompat.getDrawable(resources, R.drawable.bg_button_check_out, null)
+        text =
+            if (enable) resources.getString(R.string.text_check_in)
+            else resources.getString(R.string.text_check_out)
     }
 }

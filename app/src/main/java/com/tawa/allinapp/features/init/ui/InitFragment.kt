@@ -15,7 +15,6 @@ class InitFragment : BaseFragment() {
 
     private lateinit var initViewModel: InitViewModel
     private lateinit var binding: FragmentInitBinding
-    var flag= true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,11 +25,12 @@ class InitFragment : BaseFragment() {
         binding = FragmentInitBinding.inflate(inflater)
         showSelector()
         initViewModel = viewModel(viewModelFactory) {
-            observe(dayState, { it?.let {
-                if(it) {
-                    val currentDay = getString(R.string.current_day, getDayWeek(),getDayMonth(),getMonth(),getYear())
-                    binding.currentDay.text  = currentDay
-                }
+            observe(dayState, { it?.let { if(it) {
+                val currentDay = getString(R.string.current_day, getDayWeek(),getDayMonth(),getMonth(),getYear())
+                binding.currentDay.text  = currentDay
+            } }})
+            observe(checkModeItem, { it?.let {
+                hideProgressDialog()
             }})
             failure(failure, ::handleFailure)
         }
@@ -47,6 +47,11 @@ class InitFragment : BaseFragment() {
 
     private fun showSelectorCheckIn(){
         val dialog = CheckInSelectorDialogFragment(this)
+        dialog.listener = object : CheckInSelectorDialogFragment.Callback {
+            override fun onAccept() {
+                initViewModel.getCheckMode()
+            }
+        }
         dialog.show(childFragmentManager, "dialog")
     }
 
@@ -60,6 +65,8 @@ class InitFragment : BaseFragment() {
         binding.lifecycleOwner = this
         binding.executePendingBindings()
     }
+
+
 
 }
 

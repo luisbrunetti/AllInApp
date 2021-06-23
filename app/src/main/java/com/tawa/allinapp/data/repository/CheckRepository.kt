@@ -14,6 +14,7 @@ interface CheckRepository {
     fun setIdPv(idPv:String): Either<Failure, Boolean>
     fun getIdCompany(): Either<Failure, String>
     fun getIdUser(): Either<Failure, String>
+    fun getCheckMode(): Either<Failure, Boolean>
 
     class Network
     @Inject constructor(private val checkDataSource: CheckDataSource,
@@ -51,6 +52,14 @@ interface CheckRepository {
         override fun getIdCompany(): Either<Failure, String> {
             return try {
                 Either.Right(prefs.companyId!!)
+            }catch (e:Exception){
+                Either.Left(Failure.DefaultError(e.message!!))
+            }
+        }
+
+        override fun getCheckMode(): Either<Failure, Boolean> {
+            return try {
+                Either.Right(prefs.checkIn)
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))
             }
