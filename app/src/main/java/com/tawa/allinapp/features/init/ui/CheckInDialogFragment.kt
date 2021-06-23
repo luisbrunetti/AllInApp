@@ -40,6 +40,7 @@ class CheckInDialogFragment
     var longitude :String= ""
     var idUsers = ""
     lateinit var list: List<PV>
+    var place: String = ""
     var listener: Callback? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -56,7 +57,7 @@ class CheckInDialogFragment
                 list= it
             } })
             observe(successCheckIn, { it?.let {
-                listener?.onAccept()
+                listener?.onAccept(place)
             } })
             observe(getIdCompanyPv, { it?.let {
                 getPv(it)
@@ -85,6 +86,7 @@ class CheckInDialogFragment
         getLastLocation()
         binding.btnDoCheckin.setOnClickListener {
             val positionPv  = binding.pdvSpinner.selectedItemPosition
+            place = list[positionPv].description
             val latitudePv=list[positionPv].lat
             val longitudePv=list[positionPv].long
             val latPv = latitudePv.toDouble()
@@ -210,6 +212,6 @@ class CheckInDialogFragment
     }
 
     interface Callback {
-        fun onAccept()
+        fun onAccept(place:String)
     }
 }
