@@ -4,11 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.tawa.allinapp.core.interactor.UseCase
 import com.tawa.allinapp.core.platform.BaseViewModel
-import com.tawa.allinapp.features.init.usecase.GetCompanies
-import com.tawa.allinapp.features.init.usecase.GetPV
-import com.tawa.allinapp.features.init.usecase.SetCheckIn
-import com.tawa.allinapp.features.init.usecase.SetIdCompany
-import com.tawa.allinapp.features.splash.GetIdCompany
+import com.tawa.allinapp.features.init.usecase.*
 import com.tawa.allinapp.models.Company
 import com.tawa.allinapp.models.PV
 import java.sql.Timestamp
@@ -22,6 +18,8 @@ class InitViewModel
     private val setCheckIn: SetCheckIn,
     private val setIdCompany: SetIdCompany,
     private val getIdCompany: GetIdCompany,
+    private val setIdPv: SetIdPv,
+    private val getIdUser: GetIdUser,
 
     ) : BaseViewModel() {
     private  val formatter: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
@@ -43,10 +41,13 @@ class InitViewModel
     val successCheckIn: LiveData<Boolean>
         get() = _successCheckIn
 
-
     private val _companies = MutableLiveData<List<Company>>()
     val companies: LiveData<List<Company>>
         get()= _companies
+
+    private val _idPv = MutableLiveData<Boolean>(false)
+    val idPv: LiveData<Boolean>
+        get()= _idPv
 
     private val _setIdCompanySuccess = MutableLiveData<Boolean>(false)
     val setIdCompanySuccess: LiveData<Boolean>
@@ -55,6 +56,10 @@ class InitViewModel
     private val _getIdCompanyPv= MutableLiveData<String>("")
     val getIdCompanyPv: LiveData<String>
         get()= _getIdCompanyPv
+
+    private val _idUser= MutableLiveData<String>("")
+    val idUser: LiveData<String>
+        get()= _idUser
 
     private val _positionCompany= MutableLiveData<Int>(-1)
     val positionCompany: LiveData<Int>
@@ -78,9 +83,9 @@ class InitViewModel
         getDay()
     }
 
-    fun setCheckIn(idPV:String,lat:String,lon:String) {
+    fun setCheckIn(idUser:String,idPV:String,lat:String,lon:String) {
         _startSetCheckIn.value = true
-        setCheckIn(SetCheckIn.Params(0,"",idPV,formatter.format(timestamp),lat,lon,"CHECKIN")) {
+        setCheckIn(SetCheckIn.Params(0,idUser,idPV,formatter.format(timestamp),lat,lon,"CHECKIN")) {
             it.either(::handleFailure, ::handleCheckIn)
         }
     }
@@ -115,7 +120,13 @@ class InitViewModel
 
     }
 
+    fun getIdUser() = getIdUser(com.tawa.allinapp.core.interactor.UseCase.None()) { it.either(::handleFailure, ::handleGetIdUser)
+
+    }
+
     fun setIdCompany(idCompany:String) = setIdCompany(SetIdCompany.Params(idCompany)) { it.either(::handleFailure, ::handleSetIdCompany) }
+
+    fun setIdPv(idPv:String) = setIdPv(SetIdPv.Params(idPv)) { it.either(::handleFailure, ::handleSetIdPv) }
 
 
     fun getCompanies() = getCompanies(UseCase.None()) { it.either(::handleFailure, ::handleCompanyList) }
@@ -132,8 +143,17 @@ class InitViewModel
     private fun handleSetIdCompany(success: Boolean) {
         _setIdCompanySuccess.value = success
     }
+
+    private fun handleSetIdPv(success: Boolean) {
+        _idPv.value = success
+    }
+
     private fun handleGetIdCompany(idCompany: String) {
         _getIdCompanyPv.value = idCompany
+    }
+
+    private fun handleGetIdUser(idCompany: String) {
+        _idUser.value = idCompany
     }
 
 

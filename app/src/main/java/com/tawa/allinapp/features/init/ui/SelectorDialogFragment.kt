@@ -33,7 +33,10 @@ class SelectorDialogFragment
 
     var listener: Callback? = null
     private var idCompany:String = ""
-    private var idPv:String = ""
+    private var idPV:String = ""
+    lateinit var listCompany:List<Company>
+    lateinit var listPV:List<PV>
+
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -55,6 +58,7 @@ class SelectorDialogFragment
                     if(positionCompany.value==-1) {
                         arrayList.addAll(toArray(it))
                         binding.spinnerCompany.adapter = aa
+                        listCompany = it
                     }
                     else
                     {
@@ -68,31 +72,18 @@ class SelectorDialogFragment
 
             observe(pv, {
                 it?.let {
-                    if(positionPv.value==-1)
-                    {
                         arrayListPv.addAll(toArrayPv(it))
                         binding.spinnerPv.adapter = aaPv
-                    }
-                    else
-                    {
-                        idPv=it[positionPv.value!!].description
-                    }
+                        listPV = it
+
 
                 }
             })
 
-            observe(positionCompany, {
+           observe(positionCompany, {
                 it?.let {
 
                     getCompanies()
-
-                }
-            })
-
-            observe(positionPv, {
-                it?.let {
-
-                    getPv(idCompany)
 
                 }
             })
@@ -116,10 +107,11 @@ class SelectorDialogFragment
         binding.btnAccessHome.setOnClickListener {
             listener?.onAccept()
             val positionPv = binding.spinnerPv.selectedItemPosition
+            val positionCompany = binding.spinnerCompany.selectedItemPosition
             if(positionPv>-1)
-            {  initViewModel.selectPositionPv(positionPv)
-                initViewModel.setIdCompany(idCompany)
-                dismiss()
+            {
+                 initViewModel.setIdCompany(listCompany[positionCompany].id)
+                 dismiss()
             }
             else
                 {
