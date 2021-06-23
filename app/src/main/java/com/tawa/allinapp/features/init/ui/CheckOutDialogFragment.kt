@@ -52,6 +52,9 @@ class CheckOutDialogFragment : DialogFragment() {
             listener?.onAccept()
             dismiss()
         }
+        binding.closeCheckOutModal.setOnClickListener{
+            dismiss()
+        }
     }
 
     override fun onResume() {

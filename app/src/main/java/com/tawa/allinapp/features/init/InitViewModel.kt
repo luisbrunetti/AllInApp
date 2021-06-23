@@ -14,6 +14,7 @@ import javax.inject.Inject
 class InitViewModel
 @Inject constructor(
     private val getCheckMode: GetCheckMode,
+    private val getStateCheck: GetStateCheck,
     private val getCompanies: GetCompanies,
     private val getIdCompany: GetIdCompany,
     private val getPV: GetPV,
@@ -40,6 +41,10 @@ class InitViewModel
     private val _successCheckIn= MutableLiveData(false)
     val successCheckIn: LiveData<Boolean>
         get() = _successCheckIn
+
+    private val _stateCheck= MutableLiveData(false)
+    val stateCheck: LiveData<Boolean>
+        get() = _stateCheck
 
     private val _successCheckOut= MutableLiveData(false)
     val successCheckOut: LiveData<Boolean>
@@ -127,6 +132,8 @@ class InitViewModel
 
     fun getCheckMode() = getCheckMode(UseCase.None()) { it.either(::handleFailure, ::handleCheckMode) }
 
+    fun getStateCheck(idPv:String) = getStateCheck(GetStateCheck.Params(idPv)) { it.either(::handleFailure, ::handleGetStateCheck) }
+
     private fun handleCheckIn(success: Boolean) {
         this._successCheckIn.value = success
     }
@@ -135,6 +142,9 @@ class InitViewModel
     }
     private fun handleCheckMode(checkIn:Boolean) {
         this.checkInMode.value = checkIn
+    }
+    private fun handleGetStateCheck(stateCheck:Boolean) {
+        this._stateCheck.value = stateCheck
     }
     private fun handleCompanyList(company: List<Company>) {
         this._companies.value = company.map { Company(it.id,it.code,it.ruc,it.name,it.description) }
