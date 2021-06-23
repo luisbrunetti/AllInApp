@@ -64,7 +64,6 @@ class SelectorDialogFragment
                     {
                         arrayListPv.removeAll(arrayListPv)
                         getPv(it[positionCompany.value!!].id)
-                        idCompany = it[positionCompany.value!!].id
                     }
 
                 }
