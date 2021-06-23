@@ -12,12 +12,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
-import androidx.core.view.ViewParentCompat
 import androidx.fragment.app.DialogFragment
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.model.LatLng
@@ -41,10 +39,9 @@ class CheckInDialogFragment
     var latitude :String= ""
     var longitude :String= ""
     var idUsers = ""
-    var checkState =false
     lateinit var list: List<PV>
-    private var _place: String = ""
-    private var _placeId: String = ""
+    private var _pv: String = ""
+    private var _pvId: String = ""
     var listener: Callback? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -61,17 +58,13 @@ class CheckInDialogFragment
                 list= it
             } })
             observe(successCheckIn, { it?.let {
-                listener?.onAccept(_placeId,_place, latitude,longitude)
+                listener?.onAccept(_pvId,_pv, latitude,longitude)
             } })
             observe(getIdCompanyPv, { it?.let {
                 getPv(it)
             } })
             observe(idUser, { it?.let {
                 idUsers=it
-            } })
-            observe(stateCheck, { it?.let {
-                checkState = it
-
             } })
         }
         initViewModel.getIdCompany()
@@ -89,37 +82,19 @@ class CheckInDialogFragment
         newLocationData()
         requestPermission()
         getLastLocation()
-
-        binding.pdvSpinner?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
-            override fun onNothingSelected(parent: AdapterView<*>?) {  }
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                initViewModel.getStateCheck(list[position].id)
-            }
-        }
-
         binding.btnDoCheckin.setOnClickListener {
             val positionPv  = binding.pdvSpinner.selectedItemPosition
-
-            if(checkState)
+            if(getDistance(list[positionPv].lat,list[positionPv].long,latitude,longitude)<=250)
             {
-                if(getDistance(list[positionPv].lat,list[positionPv].long,latitude,longitude)<=250)
-                {
-                    _place = list[positionPv].description
-                    _placeId = list[positionPv].id
-                    initViewModel.setIdPv(list[positionPv].id)
-                    initViewModel.setCheckIn(idUsers,list[positionPv].id,latitude,longitude)
-                    dismiss()
-                }
-                else
-                    showErrorSelector()
+                _pv = list[positionPv].description
+                _pvId = list[positionPv].id
+                initViewModel.setIdPv(list[positionPv].id)
+                initViewModel.setCheckIn(idUsers,list[positionPv].id,latitude,longitude)
+                dismiss()
             }
             else
-                Toast.makeText(context,"YA ESTÁ REGISTRADO",Toast.LENGTH_SHORT).show()
+                showErrorSelector()
         }
-        binding.closeCheckInModal.setOnClickListener{
-            dismiss()
-        }
-
     }
 
     fun getDistance(latitudeA:String,longitudeA:String,latitudeB:String,longitudeB: String):Float{
@@ -140,11 +115,6 @@ class CheckInDialogFragment
 
     private fun showErrorSelector(){
         val dialog = ErrorLocationDialogFragment()
-        dialog.listener = object : ErrorLocationDialogFragment.Callback{
-            override fun onAccept() {
-                dismiss()
-            }
-        }
         dialog.show(childFragmentManager, "dialog")
     }
 
@@ -246,6 +216,6 @@ class CheckInDialogFragment
     }
 
     interface Callback {
-        fun onAccept(placeId:String, place:String, lat:String, long:String)
+        fun onAccept(pvId:String, pv:String, lat:String, long:String)
     }
 }
