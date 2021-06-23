@@ -1,9 +1,23 @@
 package com.tawa.allinapp.features.init.ui
 
+import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
+import android.location.Location
+import android.location.LocationManager
 import android.os.Bundle
+import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationListener
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.GoogleMap
 import com.tawa.allinapp.R
 import com.tawa.allinapp.core.extensions.failure
 import com.tawa.allinapp.core.extensions.observe
@@ -17,12 +31,14 @@ class InitFragment : BaseFragment() {
 
     private lateinit var initViewModel: InitViewModel
     private lateinit var binding: FragmentInitBinding
+    private lateinit var locationManager:LocationManager
 
     private var checkOutDialog: CheckOutDialogFragment? = null
+    lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private var checkIn:Boolean = true
     var _user = ""
-    private lateinit var _placeId: String
-    private lateinit var _place: String
+    private lateinit var _pvId: String
+    private lateinit var _pv: String
     private lateinit var _lat: String
     private lateinit var _long: String
 
@@ -46,6 +62,12 @@ class InitFragment : BaseFragment() {
             observe(idUser, { it?.let {
                 _user = it
             }})
+            observe(pvDesc, { it?.let {
+                _pv = it; if(::_pvId.isInitialized) showCheckOut()
+            }})
+            observe(pvId, { it?.let {
+                _pvId = it; if(::_pv.isInitialized) showCheckOut()
+            }})
             observe(successCheckOut, { it?.let {
                 initViewModel.getCheckMode()
             } })
@@ -54,7 +76,10 @@ class InitFragment : BaseFragment() {
         initViewModel.getIdUser()
         binding.btCheckIn.setOnClickListener{
             if(checkIn) showSelectorCheckIn()
-            else showCheckOut()
+            else {
+                initViewModel.getDescPV()
+                initViewModel.getIdPV()
+            }
         }
         return binding.root
     }
@@ -67,8 +92,8 @@ class InitFragment : BaseFragment() {
     private fun showSelectorCheckIn(){
         val dialog = CheckInDialogFragment(this)
         dialog.listener = object : CheckInDialogFragment.Callback {
-            override fun onAccept(placeId:String, place:String,lat:String, long:String) {
-                _place = place; _lat = lat; _long = long; _placeId = placeId
+            override fun onAccept(pvId:String, pv:String,lat:String, long:String) {
+                _pv = pv; _lat = lat; _long = long; _pvId = pvId
                 initViewModel.getCheckMode()
             }
         }
@@ -76,10 +101,11 @@ class InitFragment : BaseFragment() {
     }
 
     private fun showCheckOut(){
-        checkOutDialog = CheckOutDialogFragment.newInstance(_place, _user)
+        getActualLocation()
+        checkOutDialog = CheckOutDialogFragment.newInstance(_pv, _user)
         checkOutDialog?.listener = object : CheckOutDialogFragment.Callback {
             override fun onAccept() {
-                initViewModel.setCheckOut(_user,_placeId,_lat,_long)
+                initViewModel.setCheckOut(_user,_pvId,_lat,_long)
             }
         }
         checkOutDialog?.show(childFragmentManager, "checkOutDialog")
@@ -88,6 +114,21 @@ class InitFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setUpBinding()
+    }
+
+    private fun getActualLocation() {
+        locationManager = context?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        if (ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) return
+        val location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+        _lat = location?.latitude.toString()
+        _long = location?.longitude.toString()
     }
 
     private fun setUpBinding() {

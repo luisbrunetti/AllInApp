@@ -11,7 +11,9 @@ interface CheckRepository {
 
     fun setCheck(checkIn: Check): Either<Failure, Boolean>
     fun setIdCompany(idCompany:String): Either<Failure, Boolean>
-    fun setIdPv(idPv:String): Either<Failure, Boolean>
+    fun setIdPv(idPv:String,namePv:String): Either<Failure, Boolean>
+    fun getDescPv(): Either<Failure, String>
+    fun getIdPv(): Either<Failure, String>
     fun getIdCompany(): Either<Failure, String>
     fun getIdUser(): Either<Failure, String>
     fun getCheckMode(): Either<Failure, Boolean>
@@ -41,10 +43,27 @@ interface CheckRepository {
             }
         }
 
-        override fun setIdPv(idPv: String): Either<Failure, Boolean> {
+        override fun setIdPv(idPv: String,namePv:String): Either<Failure, Boolean> {
             return try {
                 prefs.pvId = idPv
+                prefs.pvName = namePv
                 Either.Right(true)
+            }catch (e:Exception){
+                Either.Left(Failure.DefaultError(e.message!!))
+            }
+        }
+
+        override fun getDescPv(): Either<Failure, String> {
+            return try {
+                Either.Right(prefs.pvName?:"")
+            }catch (e:Exception){
+                Either.Left(Failure.DefaultError(e.message!!))
+            }
+        }
+
+        override fun getIdPv(): Either<Failure, String> {
+            return try {
+                Either.Right(prefs.pvName?:"")
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))
             }

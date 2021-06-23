@@ -18,6 +18,8 @@ class InitViewModel
     private val getCompanies: GetCompanies,
     private val getIdCompany: GetIdCompany,
     private val getPV: GetPV,
+    private val getDescPV: GetDescPV,
+    private val getIdPV: GetIdPV,
     private val setIdCompany: SetIdCompany,
     private val setCheckIn: SetCheckIn,
     private val setIdPv: SetIdPv,
@@ -82,6 +84,14 @@ class InitViewModel
     val pv: LiveData<List<PV>>
         get()= _pv
 
+    private val _pvDesc = MutableLiveData<String>()
+    val pvDesc: LiveData<String>
+        get()= _pvDesc
+
+    private val _pvId = MutableLiveData<String>()
+    val pvId: LiveData<String>
+        get()= _pvId
+
     private val _dayState = MutableLiveData<Boolean>(false)
     val dayState: LiveData<Boolean>
         get()= _dayState
@@ -124,7 +134,11 @@ class InitViewModel
 
     fun setIdCompany(idCompany:String) = setIdCompany(SetIdCompany.Params(idCompany)) { it.either(::handleFailure, ::handleSetIdCompany) }
 
-    fun setIdPv(idPv:String) = setIdPv(SetIdPv.Params(idPv)) { it.either(::handleFailure, ::handleSetIdPv) }
+    fun setPv(idPv:String,descPv:String) = setIdPv(SetIdPv.Params(idPv,descPv)) { it.either(::handleFailure, ::handleSetIdPv) }
+
+    fun getDescPV() = getDescPV(UseCase.None()) { it.either(::handleFailure, ::handlePVDesc) }
+
+    fun getIdPV() = getIdPV(UseCase.None()) { it.either(::handleFailure, ::handlePVId) }
 
     fun getCompanies() = getCompanies(UseCase.None()) { it.either(::handleFailure, ::handleCompanyList) }
 
@@ -134,6 +148,12 @@ class InitViewModel
 
     fun getStateCheck(idPv:String) = getStateCheck(GetStateCheck.Params(idPv)) { it.either(::handleFailure, ::handleGetStateCheck) }
 
+    private fun handlePVDesc(checkIn:String) {
+        this._pvDesc.value = checkIn
+    }
+    private fun handlePVId(checkIn:String) {
+        this._pvId.value = checkIn
+    }
     private fun handleCheckIn(success: Boolean) {
         this._successCheckIn.value = success
     }
@@ -155,15 +175,12 @@ class InitViewModel
     private fun handleSetIdCompany(success: Boolean) {
         _setIdCompanySuccess.value = success
     }
-
     private fun handleSetIdPv(success: Boolean) {
         _idPv.value = success
     }
-
     private fun handleGetIdCompany(idCompany: String) {
         _getIdCompanyPv.value = idCompany
     }
-
     private fun handleGetIdUser(idCompany: String) {
         _idUser.value = idCompany
     }

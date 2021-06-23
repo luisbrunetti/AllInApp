@@ -43,8 +43,8 @@ class CheckInDialogFragment
     var idUsers = ""
     var checkState =false
     lateinit var list: List<PV>
-    private var _place: String = ""
-    private var _placeId: String = ""
+    private var _pv: String = ""
+    private var _pvId: String = ""
     var listener: Callback? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -61,7 +61,7 @@ class CheckInDialogFragment
                 list= it
             } })
             observe(successCheckIn, { it?.let {
-                listener?.onAccept(_placeId,_place, latitude,longitude)
+                listener?.onAccept(_pvId,_pv, latitude,longitude)
             } })
             observe(getIdCompanyPv, { it?.let {
                 getPv(it)
@@ -99,14 +99,13 @@ class CheckInDialogFragment
 
         binding.btnDoCheckin.setOnClickListener {
             val positionPv  = binding.pdvSpinner.selectedItemPosition
-
             if(checkState)
             {
                 if(getDistance(list[positionPv].lat,list[positionPv].long,latitude,longitude)<=250)
                 {
-                    _place = list[positionPv].description
-                    _placeId = list[positionPv].id
-                    initViewModel.setIdPv(list[positionPv].id)
+                    _pv = list[positionPv].description
+                    _pvId = list[positionPv].id
+                    initViewModel.setPv(list[positionPv].id,list[positionPv].description)
                     initViewModel.setCheckIn(idUsers,list[positionPv].id,latitude,longitude)
                     dismiss()
                 }
@@ -165,7 +164,6 @@ class CheckInDialogFragment
                         newLocationData()
                     }else{
                         Log.d("Debug:" ,"Your Location:"+ location.longitude)
-
                         longitude = location.longitude.toString()
                         latitude = location.latitude.toString()
                     }
@@ -246,6 +244,6 @@ class CheckInDialogFragment
     }
 
     interface Callback {
-        fun onAccept(placeId:String, place:String, lat:String, long:String)
+        fun onAccept(pvId:String, pv:String, lat:String, long:String)
     }
 }
