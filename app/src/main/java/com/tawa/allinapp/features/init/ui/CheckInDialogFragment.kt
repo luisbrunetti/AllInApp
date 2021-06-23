@@ -83,33 +83,32 @@ class CheckInDialogFragment
         getLastLocation()
         binding.btnDoCheckin.setOnClickListener {
             val positionPv  = binding.pdvSpinner.selectedItemPosition
-            place = list[positionPv].description
-            val latitudePv=list[positionPv].lat
-            val longitudePv=list[positionPv].long
-            val latPv = latitudePv.toDouble()
-            val lonPv = longitudePv.toDouble()
-            val locationPv = Location("point A")
-            val myLocation = Location("point B")
-            locationPv.latitude= latPv
-            locationPv.longitude= lonPv
-
-            val myLatitude = latitude
-            val myLongitude = longitude
-            val myLat = myLatitude.toDouble()
-            val myLon= myLongitude.toDouble()
-            myLocation.latitude= myLat
-            myLocation.longitude = myLon
-
-            val distance = myLocation.distanceTo(locationPv)
-            if(distance<=250){
+            if(getDistance(list[positionPv].lat,list[positionPv].long,latitude,longitude)<=250)
+            {
+                place = list[positionPv].description
                 initViewModel.setIdPv(list[positionPv].id)
                 initViewModel.setCheckIn(idUsers,list[positionPv].id,latitude,longitude)
                 dismiss()
             }
             else
                 showErrorSelector()
-            dismiss()
         }
+    }
+
+    fun getDistance(latitudeA:String,longitudeA:String,latitudeB:String,longitudeB: String):Float{
+
+        val latA = latitudeA.toDouble()
+        val lonA = longitudeA.toDouble()
+        val latB = latitudeB.toDouble()
+        val lonB= longitudeB.toDouble()
+        val locationA = Location("point A")
+        locationA.latitude = latA
+        locationA.longitude= lonA
+        val locationB = Location("point B")
+        locationB.latitude= latB
+        locationB.longitude =lonB
+        return   locationA.distanceTo(locationB)
+
     }
 
     private fun showErrorSelector(){
@@ -134,6 +133,7 @@ class CheckInDialogFragment
                         newLocationData()
                     }else{
                         Log.d("Debug:" ,"Your Location:"+ location.longitude)
+
                         longitude = location.longitude.toString()
                         latitude = location.latitude.toString()
                     }
