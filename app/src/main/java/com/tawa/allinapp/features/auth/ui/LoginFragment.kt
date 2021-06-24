@@ -11,14 +11,14 @@ import com.tawa.allinapp.core.extensions.observe
 import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.functional.Failure
 import com.tawa.allinapp.core.platform.BaseFragment
-import com.tawa.allinapp.databinding.LoginFragmentBinding
+import com.tawa.allinapp.databinding.FragmentLoginBinding
 import com.tawa.allinapp.features.auth.AuthViewModel
 
 
 class LoginFragment : BaseFragment() {
 
     private lateinit var authViewModel: AuthViewModel
-    private lateinit var binding:LoginFragmentBinding
+    private lateinit var binding:FragmentLoginBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,7 +26,7 @@ class LoginFragment : BaseFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        binding = LoginFragmentBinding.inflate(inflater)
+        binding = FragmentLoginBinding.inflate(inflater)
         authViewModel= viewModel(viewModelFactory) {
             observe(successLogin, { it?.let {
                 if(it){

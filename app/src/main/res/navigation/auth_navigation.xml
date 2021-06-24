@@ -9,6 +9,6 @@
         android:id="@+id/loginFragment"
         android:name="com.tawa.allinapp.features.auth.ui.LoginFragment"
         android:label="login_fragment"
-        tools:layout="@layout/login_fragment" />
+        tools:layout="@layout/fragment_login" />
 
 </navigation>
