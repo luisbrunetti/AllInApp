@@ -46,7 +46,7 @@ class LoginFragment : BaseFragment() {
             observe(successEndLogin, { it?.let {
                 if (it) {
                     hideProgressDialog()
-                    showHome(context)
+                    showHome(context,true)
                 }
             }})
             observe(username, { it?.let {

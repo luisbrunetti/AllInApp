@@ -3,21 +3,13 @@ package com.tawa.allinapp.features.init.ui
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
-import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
-import android.os.Looper
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationListener
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.maps.GoogleMap
 import com.tawa.allinapp.R
 import com.tawa.allinapp.core.extensions.failure
 import com.tawa.allinapp.core.extensions.observe
@@ -36,11 +28,12 @@ class InitFragment : BaseFragment() {
     private var checkOutDialog: CheckOutDialogFragment? = null
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private var checkIn:Boolean = true
-    var _user = ""
+    private var _user = ""
     private lateinit var _pvId: String
     private lateinit var _pv: String
     private lateinit var _lat: String
     private lateinit var _long: String
+    private var selector = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,7 +42,10 @@ class InitFragment : BaseFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentInitBinding.inflate(inflater)
-        showSelector()
+        showProgressDialog()
+        selector = activity?.intent?.getBooleanExtra("selector",false)?:false
+        if(selector) showSelector()
+
         initViewModel = viewModel(viewModelFactory) {
             observe(dayState, { it?.let { if(it) {
                 val currentDay = getString(R.string.current_day, getDayWeek(),getDayMonth(),getMonth(),getYear())
@@ -63,10 +59,12 @@ class InitFragment : BaseFragment() {
                 _user = it
             }})
             observe(pvDesc, { it?.let {
-                _pv = it; if(::_pvId.isInitialized) showCheckOut()
+                _pv = it
+                initViewModel.getIdPV()
             }})
             observe(pvId, { it?.let {
-                _pvId = it; if(::_pv.isInitialized) showCheckOut()
+                _pvId = it
+                showCheckOut()
             }})
             observe(successCheckOut, { it?.let {
                 initViewModel.getCheckMode()
@@ -78,7 +76,6 @@ class InitFragment : BaseFragment() {
             if(checkIn) showSelectorCheckIn()
             else {
                 initViewModel.getDescPV()
-                initViewModel.getIdPV()
             }
         }
         return binding.root
@@ -101,10 +98,11 @@ class InitFragment : BaseFragment() {
     }
 
     private fun showCheckOut(){
-        getActualLocation()
         checkOutDialog = CheckOutDialogFragment.newInstance(_pv, _user)
         checkOutDialog?.listener = object : CheckOutDialogFragment.Callback {
             override fun onAccept() {
+                showProgressDialog()
+                getActualLocation()
                 initViewModel.setCheckOut(_user,_pvId,_lat,_long)
             }
         }
@@ -114,6 +112,7 @@ class InitFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setUpBinding()
+        hideProgressDialog()
     }
 
     private fun getActualLocation() {

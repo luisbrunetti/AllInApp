@@ -61,7 +61,7 @@ class CheckInDialogFragment
                 listener?.onAccept(_pvId,_pv, latitude,longitude)
             } })
             observe(getIdCompanyPv, { it?.let {
-                getPv(it)
+                initViewModel.getPv(it)
             } })
             observe(idUser, { it?.let {
                 idUsers=it

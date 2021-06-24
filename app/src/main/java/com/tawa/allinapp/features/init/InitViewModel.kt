@@ -63,6 +63,10 @@ class InitViewModel
     val getIdCompanyPv: LiveData<String>
         get()= _getIdCompanyPv
 
+    private val _getCompany= MutableLiveData<String>("")
+    val getCompany: LiveData<String>
+        get()= _getCompany
+
     private val _idUser= MutableLiveData<String>("")
     val idUser: LiveData<String>
         get()= _idUser
@@ -154,7 +158,7 @@ class InitViewModel
         this._successCheckOut.value = success
     }
     private fun handleCheckMode(checkIn:Boolean) {
-        this.checkInMode.value = checkIn
+        this._checkInMode.value = checkIn
     }
     private fun handleCompanyList(company: List<Company>) {
         this._companies.value = company.map { Company(it.id,it.code,it.ruc,it.name,it.description) }
@@ -170,6 +174,7 @@ class InitViewModel
     }
     private fun handleGetIdCompany(idCompany: String) {
         _getIdCompanyPv.value = idCompany
+        _getCompany.value = idCompany
     }
     private fun handleGetIdUser(idCompany: String) {
         _idUser.value = idCompany

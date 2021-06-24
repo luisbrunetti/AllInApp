@@ -63,7 +63,7 @@ interface CheckRepository {
 
         override fun getIdPv(): Either<Failure, String> {
             return try {
-                Either.Right(prefs.pvName?:"")
+                Either.Right(prefs.pvId?:"")
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))
             }

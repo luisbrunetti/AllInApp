@@ -24,7 +24,7 @@ class SplashFragment : BaseFragment() {
         splashViewModel = viewModel(viewModelFactory) {
             observe(session, {
                 when(it){
-                    true -> showHome(context)
+                    true -> showHome(context,false)
                     else -> showLogin(context)
                 }
             })
