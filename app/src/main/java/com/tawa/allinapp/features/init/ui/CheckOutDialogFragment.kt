@@ -48,7 +48,6 @@ class CheckOutDialogFragment : DialogFragment() {
             bundle.getString(USER)?.let { user = it }
         }
         binding.btnDoCheckOut.setOnClickListener {
-            //initViewModel.setCheckOut(user,pv)
             listener?.onAccept()
             dismiss()
         }

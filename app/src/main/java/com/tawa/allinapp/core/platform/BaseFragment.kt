@@ -28,14 +28,11 @@ abstract class BaseFragment : Fragment() {
     private var errorDialog: MessageDialogFragment? = null
     private var progressDialog: ProgressDialogFragment? = null
 
-
     val appComponent: ApplicationComponent by lazy(mode = LazyThreadSafetyMode.NONE) {
         (activity?.application as AndroidApplication).appComponent
     }
 
     val current: Date = Calendar.getInstance().time
-
-    var dayWeek:String = ""
     var year:String = ""
 
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -67,15 +64,14 @@ abstract class BaseFragment : Fragment() {
     }
 
     internal  fun getDayWeek()= when(current.day){
-            0 ->  "Domingo"
-            1 -> "Lunes"
-            2 -> "Martes"
-            3 -> "Miercoles"
-            4 ->  "Jueves"
-            5 ->  "Viernes"
-            6 -> "Sabado"
+        0 ->  "Domingo"
+        1 -> "Lunes"
+        2 -> "Martes"
+        3 -> "Miercoles"
+        4 ->  "Jueves"
+        5 ->  "Viernes"
+        6 -> "Sabado"
         else -> ""
-
     }
 
     internal  fun getDayMonth() = current.date.toString()
@@ -125,7 +121,11 @@ abstract class BaseFragment : Fragment() {
         }
     }
 
-    fun showHome(context: Context?) = context?.let { it.startActivity(Intent(it, HomeActivity::class.java)) }
+    fun showHome(context: Context?,selector:Boolean) = context?.let {
+        val home = Intent(it, HomeActivity::class.java)
+        home.putExtra("selector",selector)
+        it.startActivity(home)
+    }
 
     fun showLogin(context: Context?) = context?.let { it.startActivity(Intent(it, LoginActivity::class.java)) }
 
@@ -138,8 +138,5 @@ abstract class BaseFragment : Fragment() {
         snackBar.setActionTextColor(ContextCompat.getColor(appContext, R.color.colorTextPrimary))
         snackBar.show()
     }
-
-
-
 
 }

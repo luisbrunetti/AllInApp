@@ -30,10 +30,20 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:gravity="center"
-            android:text="Seleccione la empresa"
+            android:text="@string/select_company"
             android:textColor="@color/design_default_color_on_secondary"
             android:textSize="20sp"
             android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvDivision"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:text="@string/trade_marketing"
+            android:textColor="@color/design_default_color_on_secondary"
+            android:textSize="18sp" />
 
         <Spinner
             android:id="@+id/spinnerCompany"
@@ -50,19 +60,6 @@
             android:paddingEnd="35dp"
             android:spinnerMode="dropdown" />
 
-        <Spinner
-            android:id="@+id/spinnerPv"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="24dp"
-            android:background="@drawable/spinner_pdv"
-            android:entries="@array/Pdv"
-            android:overlapAnchor="false"
-            android:paddingStart="35dp"
-            android:paddingEnd="35dp" />
-
         <Button
             android:id="@+id/btnAccessHome"
             android:layout_width="match_parent"
@@ -72,8 +69,7 @@
             android:layout_marginEnd="24dp"
             android:layout_marginBottom="25dp"
             android:background="@drawable/roundedbuttom"
-            android:text="Ingresar"
-
+            android:text="@string/enter"
             android:textAllCaps="false"
             android:textColor="@color/colorTextPrimary"
             android:textSize="18sp" />
