@@ -81,28 +81,7 @@ class InitFragment : BaseFragment() {
             }
         }
         binding.btnToolTip.setOnClickListener{
-            val balloon = createBalloon(requireContext()) {
-                setLayout(R.layout.home_options)
-                setArrowSize(10)
-                setWidth(200)
-                setHeight(106)
-                setMarginRight(16)
-                setArrowPosition(0.82f)
-                setCornerRadius(0f)
-                setAlpha(1f)
-                setText("Sincronizar")
-                setTextColorResource(R.color.colorTextAll)
-                setTextIsHtml(true)
-                setOverlayShape(BalloonOverlayRect)
-                setIconDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_calendar))
-                setIconSpace(-10)
-                setBackgroundColorResource(R.color.white)
-                setBalloonAnimation(BalloonAnimation.FADE)
-                setLifecycleOwner(lifecycleOwner)
-                setArrowOrientation(ArrowOrientation.TOP)
-            }
-            binding.btnToolTip.showAlignBottom(balloon)
-
+            showToolTip()
         }
         return binding.root
     }
@@ -112,6 +91,30 @@ class InitFragment : BaseFragment() {
         dialog.show(childFragmentManager, "dialog")
     }
 
+    private  fun showToolTip(){
+        val balloon = createBalloon(requireContext()) {
+            setLayout(R.layout.home_options)
+            setArrowSize(10)
+            setWidth(200)
+            setHeight(106)
+            setMarginRight(16)
+            setArrowPosition(0.82f)
+            setCornerRadius(0f)
+            setAlpha(1f)
+            setText("Sincronizar")
+            setTextColorResource(R.color.colorTextAll)
+            setTextIsHtml(true)
+            setOverlayShape(BalloonOverlayRect)
+            setIconDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_calendar))
+            setIconSpace(-10)
+            setBackgroundColorResource(R.color.white)
+            setBalloonAnimation(BalloonAnimation.FADE)
+            setLifecycleOwner(lifecycleOwner)
+            setArrowOrientation(ArrowOrientation.TOP)
+        }
+        binding.btnToolTip.showAlignBottom(balloon)
+
+    }
     private fun showSelectorCheckIn(){
         val dialog = CheckInDialogFragment(this)
         dialog.listener = object : CheckInDialogFragment.Callback {
