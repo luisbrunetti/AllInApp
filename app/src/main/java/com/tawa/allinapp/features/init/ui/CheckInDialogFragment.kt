@@ -12,13 +12,14 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.DialogFragment
 import com.google.android.gms.location.*
-import com.google.android.gms.maps.model.LatLng
 import com.tawa.allinapp.core.extensions.observe
 import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.platform.BaseFragment
@@ -39,6 +40,7 @@ class CheckInDialogFragment
     var latitude :String= ""
     var longitude :String= ""
     var idUsers = ""
+    var checkState =false
     lateinit var list: List<PV>
     private var _pv: String = ""
     private var _pvId: String = ""
@@ -66,6 +68,9 @@ class CheckInDialogFragment
             observe(idUser, { it?.let {
                 idUsers=it
             } })
+            observe(stateCheck, { it?.let {
+                checkState = it
+            } })
         }
         initViewModel.getIdCompany()
         initViewModel.getIdUser()
@@ -82,19 +87,38 @@ class CheckInDialogFragment
         newLocationData()
         requestPermission()
         getLastLocation()
+
+        binding.pdvSpinner?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            override fun onNothingSelected(parent: AdapterView<*>?) {  }
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                initViewModel.getStateCheck(list[position].id)
+            }
+        }
+
         binding.btnDoCheckin.setOnClickListener {
             val positionPv  = binding.pdvSpinner.selectedItemPosition
-            if(getDistance(list[positionPv].lat,list[positionPv].long,latitude,longitude)<=250)
+            if(checkState)
             {
-                _pv = list[positionPv].description
-                _pvId = list[positionPv].id
-                initViewModel.setPv(list[positionPv].id,list[positionPv].description)
-                initViewModel.setCheckIn(idUsers,list[positionPv].id,latitude,longitude)
+                if(getDistance(list[positionPv].lat,list[positionPv].long,latitude,longitude)<=250)
+                {
+                    _pv = list[positionPv].description
+                    _pvId = list[positionPv].id
+                    initViewModel.setPv(list[positionPv].id,list[positionPv].description)
+                    initViewModel.setCheckIn(idUsers,list[positionPv].id,latitude,longitude)
+                    dismiss()
+                }
+                else
+                    showErrorSelector()
+            }
+            else{
+                listener?.onSnack(true)
                 dismiss()
             }
-            else
-                showErrorSelector()
         }
+        binding.closeCheckInModal.setOnClickListener{
+            dismiss()
+        }
+
     }
 
     fun getDistance(latitudeA:String,longitudeA:String,latitudeB:String,longitudeB: String):Float{
@@ -115,6 +139,11 @@ class CheckInDialogFragment
 
     private fun showErrorSelector(){
         val dialog = ErrorLocationDialogFragment()
+        dialog.listener = object : ErrorLocationDialogFragment.Callback{
+            override fun onAccept() {
+                dismiss()
+            }
+        }
         dialog.show(childFragmentManager, "dialog")
     }
 
@@ -205,7 +234,7 @@ class CheckInDialogFragment
         super.onResume()
         val params = dialog!!.window!!.attributes
         params.width = ConstraintLayout.LayoutParams.MATCH_PARENT
-        dialog!!.window!!.attributes = params as android.view.WindowManager.LayoutParams
+        dialog!!.window!!.attributes = params as WindowManager.LayoutParams
     }
 
     private fun setUpBinding() {
@@ -216,5 +245,6 @@ class CheckInDialogFragment
 
     interface Callback {
         fun onAccept(pvId:String, pv:String, lat:String, long:String)
+        fun onSnack(snack:Boolean)
     }
 }

@@ -7,6 +7,7 @@ import android.view.View
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import com.tawa.allinapp.AndroidApplication
@@ -129,14 +130,16 @@ abstract class BaseFragment : Fragment() {
 
     fun showLogin(context: Context?) = context?.let { it.startActivity(Intent(it, LoginActivity::class.java)) }
 
-    internal fun notify(@StringRes message: Int) =
-        Snackbar.make(viewContainer, message, Snackbar.LENGTH_SHORT).show()
+    internal fun notify(activity: FragmentActivity?,@StringRes message: Int) =
+        activity?.let { Snackbar.make(it.findViewById(R.id.container), message, Snackbar.LENGTH_SHORT).show() }
 
-    internal fun notifyWithAction(@StringRes message: Int, @StringRes actionText: Int, action: () -> Any) {
-        val snackBar = Snackbar.make(viewContainer, message, Snackbar.LENGTH_INDEFINITE)
-        snackBar.setAction(actionText) { _ -> action.invoke() }
-        snackBar.setActionTextColor(ContextCompat.getColor(appContext, R.color.colorTextPrimary))
-        snackBar.show()
+    internal fun notifyWithAction(activity: FragmentActivity?, @StringRes message: Int, @StringRes actionText: Int, action: () -> Any) {
+        activity?.let {
+            val snackBar = Snackbar.make(it.findViewById(R.id.container), message, Snackbar.LENGTH_INDEFINITE)
+            snackBar.setAction(actionText) { _ -> action.invoke() }
+            snackBar.setActionTextColor(ContextCompat.getColor(appContext, R.color.colorTextPrimary))
+            snackBar.show()
+        }
     }
 
 }
