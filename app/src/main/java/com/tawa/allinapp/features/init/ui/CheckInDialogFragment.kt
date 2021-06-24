@@ -12,15 +12,14 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
-import androidx.core.view.ViewParentCompat
 import androidx.fragment.app.DialogFragment
 import com.google.android.gms.location.*
-import com.google.android.gms.maps.model.LatLng
 import com.tawa.allinapp.core.extensions.observe
 import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.platform.BaseFragment
@@ -71,7 +70,6 @@ class CheckInDialogFragment
             } })
             observe(stateCheck, { it?.let {
                 checkState = it
-
             } })
         }
         initViewModel.getIdCompany()
@@ -112,8 +110,10 @@ class CheckInDialogFragment
                 else
                     showErrorSelector()
             }
-            else
-                Toast.makeText(context,"YA ESTÁ REGISTRADO",Toast.LENGTH_SHORT).show()
+            else{
+                listener?.onSnack(true)
+                dismiss()
+            }
         }
         binding.closeCheckInModal.setOnClickListener{
             dismiss()
@@ -234,7 +234,7 @@ class CheckInDialogFragment
         super.onResume()
         val params = dialog!!.window!!.attributes
         params.width = ConstraintLayout.LayoutParams.MATCH_PARENT
-        dialog!!.window!!.attributes = params as android.view.WindowManager.LayoutParams
+        dialog!!.window!!.attributes = params as WindowManager.LayoutParams
     }
 
     private fun setUpBinding() {
@@ -245,5 +245,6 @@ class CheckInDialogFragment
 
     interface Callback {
         fun onAccept(pvId:String, pv:String, lat:String, long:String)
+        fun onSnack(snack:Boolean)
     }
 }

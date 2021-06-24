@@ -93,6 +93,9 @@ class InitFragment : BaseFragment() {
                 _pv = pv; _lat = lat; _long = long; _pvId = pvId
                 initViewModel.getCheckMode()
             }
+            override fun onSnack(snack: Boolean) {
+                if (snack) notify(activity,R.string.notify_already)
+            }
         }
         dialog.show(childFragmentManager, "dialog")
     }

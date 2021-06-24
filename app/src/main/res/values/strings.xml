@@ -22,4 +22,6 @@
     <string name="enter">Ingresar</string>
     <string name="select_company">Seleccione la empresa</string>
     <string name="trade_marketing">Trade Marketing</string>
+    <string name="notify_already">YA REALIZASTE CHECK-IN EN ESTE PUNTO DE VENTA</string>
+    <string name="ok">OK</string>
 </resources>
