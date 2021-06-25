@@ -72,7 +72,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="100dp"
             android:layout_marginEnd="16dp"
-            android:background="@drawable/roundedshadow"
+            android:background="@drawable/bg_top_view"
             android:elevation="1dp"
             android:translationZ="1dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -185,6 +185,7 @@
             android:layout_marginEnd="20dp"
             android:elevation="2dp"
 
+            android:foreground="?android:attr/selectableItemBackground"
             android:src="@drawable/ic_menus"
             app:layout_constraintBottom_toTopOf="@+id/currentDay"
             app:layout_constraintEnd_toEndOf="@+id/textView20"
@@ -221,346 +222,265 @@
             app:layout_constraintStart_toStartOf="@+id/view10"
             app:layout_constraintTop_toTopOf="@+id/view10" />
 
-        <View
-            android:id="@+id/view12"
+        <ScrollView
             android:layout_width="0dp"
-            android:layout_height="80dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:background="@drawable/roundedshadow"
-            android:elevation="2dp"
+            android:layout_height="0dp"
+            android:fillViewport="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btCheckIn"
-            app:layout_constraintVertical_bias="0.07999998" />
+            app:layout_constraintVertical_bias="1.0">
 
-        <TextView
-            android:id="@+id/textView22"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="65dp"
-            android:layout_marginTop="20dp"
-            android:elevation="3dp"
-            android:text="Reportar"
-            android:textColor="@color/blue"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/view12"
-            app:layout_constraintEnd_toEndOf="@+id/view12"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/view12"
-            app:layout_constraintTop_toTopOf="@+id/view12"
-            app:layout_constraintVertical_bias="0.0" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/textView23"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="65dp"
-            android:elevation="3dp"
-            android:text="Lorem ipsum dolor sit amet, consectetur"
-            android:textColor="@color/design_default_color_on_secondary"
-            android:textSize="12sp"
-            app:layout_constraintBottom_toBottomOf="@+id/view12"
-            app:layout_constraintEnd_toEndOf="@+id/view12"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/view12"
-            app:layout_constraintTop_toBottomOf="@+id/textView22"
-            app:layout_constraintVertical_bias="0.0" />
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/imageView6"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="21dp"
-            android:layout_marginEnd="8dp"
-            android:background="@drawable/bg_icon_rounded"
-            android:elevation="2dp"
-            android:scaleType="center"
-            android:src="@drawable/ic_reports"
-            app:layout_constraintBottom_toBottomOf="@+id/view12"
-            app:layout_constraintEnd_toStartOf="@+id/textView22"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/view12"
-            app:layout_constraintTop_toTopOf="@+id/view12"
-            app:layout_constraintVertical_bias="0.0"
-            app:tint="@color/colorPrimary" />
+                    <TextView
+                        android:id="@+id/textView4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="11dp"
+                        android:elevation="4dp"
+                        android:text="Puntos de venta"
+                        android:textColor="@color/blue"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="@+id/viewBtnPV"
+                        app:layout_constraintEnd_toEndOf="@+id/viewBtnPV"
+                        app:layout_constraintStart_toStartOf="@+id/viewBtnPV"
+                        app:layout_constraintTop_toBottomOf="@+id/imageView6"
+                        app:layout_constraintVertical_bias="0.0" />
 
-        <ImageView
-            android:id="@+id/imageView5"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
-            android:layout_marginTop="31dp"
-            android:layout_marginEnd="28dp"
-            android:elevation="4dp"
-            android:src="@drawable/ic_arright"
-            app:layout_constraintBottom_toBottomOf="@+id/view12"
-            app:layout_constraintEnd_toEndOf="@+id/view12"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toEndOf="@+id/textView22"
-            app:layout_constraintTop_toTopOf="@+id/view12"
-            app:layout_constraintVertical_bias="0.0"
-            app:tint="@color/design_default_color_on_secondary" />
-
-        <View
-            android:id="@+id/view13"
-            android:layout_width="0dp"
-            android:layout_height="80dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:background="@drawable/roundedshadow"
-            android:elevation="2dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/view12"
-            app:layout_constraintVertical_bias="0.0" />
-
-        <TextView
-            android:id="@+id/textView24"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="65dp"
-            android:layout_marginTop="20dp"
-            android:elevation="3dp"
-            android:text="Fotográfico"
-            android:textColor="@color/blue"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/view13"
-            app:layout_constraintEnd_toEndOf="@+id/view13"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/view13"
-            app:layout_constraintTop_toTopOf="@+id/view13"
-            app:layout_constraintVertical_bias="0.0" />
-
-        <TextView
-            android:id="@+id/textView25"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="65dp"
-            android:elevation="3dp"
-            android:text="Lorem ipsum dolor sit amet, consectetur"
-            android:textColor="@color/design_default_color_on_secondary"
-            android:textSize="12sp"
-            app:layout_constraintBottom_toBottomOf="@+id/view13"
-            app:layout_constraintEnd_toEndOf="@+id/view13"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/view13"
-            app:layout_constraintTop_toBottomOf="@+id/textView24"
-            app:layout_constraintVertical_bias="0.0" />
-
-        <ImageView
-            android:id="@+id/imageView4"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="21dp"
-            android:layout_marginEnd="8dp"
-            android:background="@drawable/bg_icon_rounded"
-            android:elevation="2dp"
-            android:scaleType="center"
-            android:src="@drawable/ic_photo"
-            app:layout_constraintBottom_toBottomOf="@+id/view13"
-            app:layout_constraintEnd_toStartOf="@+id/textView24"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/view13"
-            app:layout_constraintTop_toTopOf="@+id/view13"
-            app:layout_constraintVertical_bias="0.0"
-            app:tint="@color/colorPrimary" />
-
-        <ImageView
-            android:id="@+id/imageView7"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
-            android:layout_marginTop="31dp"
-            android:layout_marginEnd="28dp"
-            android:elevation="4dp"
-            android:src="@drawable/ic_arright"
-            app:layout_constraintBottom_toBottomOf="@+id/view13"
-            app:layout_constraintEnd_toEndOf="@+id/view13"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toEndOf="@+id/textView24"
-            app:layout_constraintTop_toTopOf="@+id/view13"
-            app:layout_constraintVertical_bias="0.0"
-            app:tint="@color/design_default_color_on_secondary" />
-
-        <View
-            android:id="@+id/view2"
-            android:layout_width="0dp"
-            android:layout_height="80dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:background="@drawable/roundedshadow"
-            android:elevation="2dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/view13"
-            app:layout_constraintVertical_bias="0.0" />
-
-        <TextView
-            android:id="@+id/textView10"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="65dp"
-            android:layout_marginTop="20dp"
-            android:elevation="3dp"
-            android:text="Quiebres y precios por SKU"
-            android:textColor="@color/blue"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/view2"
-            app:layout_constraintEnd_toEndOf="@+id/view2"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/view2"
-            app:layout_constraintTop_toTopOf="@+id/view2"
-            app:layout_constraintVertical_bias="0.0" />
-
-        <TextView
-            android:id="@+id/textView11"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="65dp"
-            android:elevation="3dp"
-            android:text="Lorem ipsum dolor sit amet, consectetur"
-            android:textColor="@color/design_default_color_on_secondary"
-            android:textSize="12sp"
-            app:layout_constraintBottom_toBottomOf="@+id/view2"
-            app:layout_constraintEnd_toEndOf="@+id/view2"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/view2"
-            app:layout_constraintTop_toBottomOf="@+id/textView10"
-            app:layout_constraintVertical_bias="0.0" />
-
-        <ImageView
-            android:id="@+id/imageView10"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="21dp"
-            android:layout_marginEnd="8dp"
-            android:background="@drawable/bg_icon_rounded"
-            android:elevation="2dp"
-            android:scaleType="center"
-            android:src="@drawable/ic_sku"
-            app:layout_constraintBottom_toBottomOf="@+id/view2"
-            app:layout_constraintEnd_toStartOf="@+id/textView10"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/view2"
-            app:layout_constraintTop_toTopOf="@+id/view2"
-            app:layout_constraintVertical_bias="0.0"
-            app:tint="@color/colorPrimary" />
+                    <TextView
+                        android:id="@+id/textView5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="11dp"
+                        android:elevation="4dp"
+                        android:text="Reportes"
+                        android:textColor="@color/blue"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="@+id/viewBtnReports"
+                        app:layout_constraintEnd_toEndOf="@+id/viewBtnReports"
+                        app:layout_constraintStart_toStartOf="@+id/viewBtnReports"
+                        app:layout_constraintTop_toBottomOf="@+id/imageView7"
+                        app:layout_constraintVertical_bias="0.0" />
 
 
+                    <TextView
+                        android:id="@+id/textView6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="11dp"
+                        android:elevation="4dp"
+                        android:text="Rutas"
+                        android:textColor="@color/blue"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="@+id/viewBtnRoutes"
+                        app:layout_constraintEnd_toEndOf="@+id/viewBtnRoutes"
+                        app:layout_constraintStart_toStartOf="@+id/viewBtnRoutes"
+                        app:layout_constraintTop_toBottomOf="@+id/imageView8"
+                        app:layout_constraintVertical_bias="0.0" />
 
-        <ImageView
-            android:id="@+id/imageView11"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
-            android:layout_marginTop="31dp"
-            android:layout_marginEnd="28dp"
-            android:elevation="4dp"
-            android:src="@drawable/ic_arright"
-            app:layout_constraintBottom_toBottomOf="@+id/view2"
-            app:layout_constraintEnd_toEndOf="@+id/view2"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toEndOf="@+id/textView10"
-            app:layout_constraintTop_toTopOf="@+id/view2"
-            app:layout_constraintVertical_bias="0.0"
-            app:tint="@color/design_default_color_on_secondary" />
+                    <TextView
+                        android:id="@+id/textView7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="11dp"
+                        android:elevation="4dp"
+                        android:text="Calendario"
+                        android:textColor="@color/blue"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="@+id/viewBtnCalendar"
+                        app:layout_constraintEnd_toEndOf="@+id/viewBtnCalendar"
+                        app:layout_constraintStart_toStartOf="@+id/viewBtnCalendar"
+                        app:layout_constraintTop_toBottomOf="@+id/imageView9"
+                        app:layout_constraintVertical_bias="0.0" />
 
-        <TextView
-            android:id="@+id/textView12"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="65dp"
-            android:layout_marginTop="20dp"
-            android:elevation="3dp"
-            android:text="Estatus por usuario"
-            android:textColor="@color/blue"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/view3"
-            app:layout_constraintEnd_toEndOf="@+id/view3"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/view3"
-            app:layout_constraintTop_toTopOf="@+id/view3"
-            app:layout_constraintVertical_bias="0.0" />
+                    <TextView
+                        android:id="@+id/textView8"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="11dp"
+                        android:elevation="4dp"
+                        android:text="Calendario"
+                        android:textColor="@color/blue"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="@+id/viewBtnDocs"
+                        app:layout_constraintEnd_toEndOf="@+id/viewBtnDocs"
+                        app:layout_constraintStart_toStartOf="@+id/viewBtnDocs"
+                        app:layout_constraintTop_toBottomOf="@+id/imageView10"
+                        app:layout_constraintVertical_bias="0.0" />
 
-        <TextView
-            android:id="@+id/textView15"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="65dp"
-            android:elevation="3dp"
-            android:text="Lorem ipsum dolor sit amet, consectetur"
-            android:textColor="@color/design_default_color_on_secondary"
-            android:textSize="12sp"
-            app:layout_constraintBottom_toBottomOf="@+id/view3"
-            app:layout_constraintEnd_toEndOf="@+id/view3"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/view3"
-            app:layout_constraintTop_toBottomOf="@+id/textView12"
-            app:layout_constraintVertical_bias="0.0" />
+                    <ImageView
+                        android:id="@+id/imageView6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="26dp"
+                        android:elevation="4dp"
+                        android:src="@drawable/ic_pv_home"
+                        app:layout_constraintEnd_toEndOf="@+id/viewBtnPV"
+                        app:layout_constraintStart_toStartOf="@+id/viewBtnPV"
+                        app:layout_constraintTop_toTopOf="@+id/viewBtnPV" />
 
-        <ImageView
-            android:id="@+id/imageView12"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="21dp"
-            android:layout_marginEnd="8dp"
-            android:background="@drawable/bg_icon_rounded"
-            android:elevation="4dp"
-            android:scaleType="center"
-            android:src="@drawable/ic_status"
-            app:layout_constraintBottom_toBottomOf="@+id/view3"
-            app:layout_constraintEnd_toStartOf="@+id/textView12"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/view3"
-            app:layout_constraintTop_toTopOf="@+id/view3"
-            app:layout_constraintVertical_bias="0.0"
-            app:tint="@color/colorPrimary" />
+                    <ImageView
+                        android:id="@+id/imageView7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="26dp"
+                        android:elevation="4dp"
+                        android:src="@drawable/ic_reports_home"
+                        app:layout_constraintEnd_toEndOf="@+id/viewBtnReports"
+                        app:layout_constraintStart_toStartOf="@+id/viewBtnReports"
+                        app:layout_constraintTop_toTopOf="@+id/viewBtnReports" />
 
-        <ImageView
-            android:id="@+id/imageView13"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
-            android:layout_marginTop="31dp"
-            android:layout_marginEnd="28dp"
-            android:elevation="4dp"
-            android:src="@drawable/ic_arright"
-            app:layout_constraintBottom_toBottomOf="@+id/view3"
-            app:layout_constraintEnd_toEndOf="@+id/view3"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toEndOf="@+id/textView12"
-            app:layout_constraintTop_toTopOf="@+id/view3"
-            app:layout_constraintVertical_bias="0.0"
-            app:tint="@color/design_default_color_on_secondary" />
+                    <ImageView
+                        android:id="@+id/imageView8"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="26dp"
+                        android:elevation="4dp"
+                        android:src="@drawable/ic_routes_home"
+                        app:layout_constraintEnd_toEndOf="@+id/viewBtnRoutes"
+                        app:layout_constraintHorizontal_bias="0.496"
+                        app:layout_constraintStart_toStartOf="@+id/viewBtnRoutes"
+                        app:layout_constraintTop_toTopOf="@+id/viewBtnRoutes" />
 
-        <View
-            android:id="@+id/view3"
-            android:layout_width="0dp"
-            android:layout_height="80dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:background="@drawable/roundedshadow"
-            android:elevation="2dp"
-            app:layout_constraintBottom_toBottomOf="@+id/view7"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/view2"
-            app:layout_constraintVertical_bias="0.0" />
+                    <ImageView
+                        android:id="@+id/imageView9"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="26dp"
+                        android:elevation="4dp"
+                        android:src="@drawable/ic_calendar_home"
+                        app:layout_constraintEnd_toEndOf="@+id/viewBtnCalendar"
+                        app:layout_constraintStart_toStartOf="@+id/viewBtnCalendar"
+                        app:layout_constraintTop_toTopOf="@+id/viewBtnCalendar" />
+
+                    <ImageView
+                        android:id="@+id/imageView10"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="26dp"
+                        android:elevation="4dp"
+                        android:src="@drawable/ic_docs_home"
+                        app:layout_constraintEnd_toEndOf="@+id/viewBtnDocs"
+                        app:layout_constraintStart_toStartOf="@+id/viewBtnDocs"
+                        app:layout_constraintTop_toTopOf="@+id/viewBtnDocs" />
+
+                    <View
+                        android:id="@+id/viewBtnPV"
+                        android:layout_width="0dp"
+                        android:layout_height="120dp"
+                        android:layout_marginStart="36dp"
+                        android:layout_marginTop="24dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_button_home"
+                        android:elevation="2dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/viewBtnReports"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.0" />
+
+                    <View
+                        android:id="@+id/viewBtnReports"
+                        android:layout_width="0dp"
+                        android:layout_height="120dp"
+                        android:layout_marginStart="18dp"
+                        android:layout_marginTop="24dp"
+                        android:layout_marginEnd="36dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_button_home"
+                        android:elevation="2dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/viewBtnPV"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.0" />
+
+                    <View
+                        android:id="@+id/viewBtnRoutes"
+                        android:layout_width="0dp"
+                        android:layout_height="120dp"
+                        android:layout_marginStart="36dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_button_home"
+                        android:elevation="2dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/viewBtnCalendar"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/viewBtnPV"
+                        app:layout_constraintVertical_bias="0.0" />
+
+                    <View
+                        android:id="@+id/viewBtnCalendar"
+                        android:layout_width="0dp"
+                        android:layout_height="120dp"
+                        android:layout_marginStart="18dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="36dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_button_home"
+                        android:elevation="2dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/viewBtnRoutes"
+                        app:layout_constraintTop_toBottomOf="@+id/viewBtnReports"
+                        app:layout_constraintVertical_bias="0.0" />
+
+                    <View
+                        android:id="@+id/viewBtnDocs"
+                        android:layout_width="0dp"
+                        android:layout_height="120dp"
+                        android:layout_marginStart="36dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_button_home"
+                        android:elevation="2dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/viewBtnCalendar2"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/viewBtnRoutes"
+                        app:layout_constraintVertical_bias="0.13999999" />
+
+                    <View
+                        android:id="@+id/viewBtnCalendar2"
+                        android:layout_width="0dp"
+                        android:layout_height="120dp"
+                        android:layout_marginStart="18dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="36dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_button_home"
+                        android:elevation="2dp"
+                        android:visibility="invisible"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/viewBtnDocs"
+                        app:layout_constraintTop_toBottomOf="@+id/viewBtnCalendar"
+                        app:layout_constraintVertical_bias="0.0" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </LinearLayout>
+        </ScrollView>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
