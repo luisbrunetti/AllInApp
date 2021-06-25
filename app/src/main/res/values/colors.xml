@@ -18,7 +18,8 @@
     <color name="border_view">#E4E8ED</color>
     <color name="bg_tooltip">#E2F2FF</color>
     <color name="bg_overlay">#B9000000</color>
-
+    <color name="bg_reports">#E5E5E5</color>
+    <color name="text_dark">#303235</color>
 
 
     <color name="white">#ffff</color>
