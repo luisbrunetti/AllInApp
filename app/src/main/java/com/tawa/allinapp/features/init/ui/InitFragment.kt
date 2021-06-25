@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -94,25 +95,22 @@ class InitFragment : BaseFragment() {
     private  fun showToolTip(){
         val balloon = createBalloon(requireContext()) {
             setLayout(R.layout.home_options)
-            setArrowSize(10)
-            setWidth(200)
-            setHeight(106)
-            setMarginRight(16)
-            setArrowPosition(0.82f)
+            setArrowSize(0)
+            setWidthRatio(0.92f)
+            setHeight(182)
+            setMarginTop(118)
+            setMarginRight(36)
             setCornerRadius(0f)
             setAlpha(1f)
-            setText("Sincronizar")
-            setTextColorResource(R.color.colorTextAll)
-            setTextIsHtml(true)
-            setOverlayShape(BalloonOverlayRect)
-            setIconDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_calendar))
-            setIconSpace(-10)
             setBackgroundColorResource(R.color.white)
-            setBalloonAnimation(BalloonAnimation.FADE)
+            setBalloonAnimation(BalloonAnimation.OVERSHOOT)
             setLifecycleOwner(lifecycleOwner)
-            setArrowOrientation(ArrowOrientation.TOP)
+            setArrowOrientation(ArrowOrientation.RIGHT)
+           // setIsVisibleOverlay(true)
+            setOverlayColorResource(R.color.bg_overlay)
+            setOverlayShape(BalloonOverlayRect).build()
         }
-        binding.btnToolTip.showAlignBottom(balloon)
+        binding.btnToolTip.showBalloon(balloon)
 
     }
     private fun showSelectorCheckIn(){
