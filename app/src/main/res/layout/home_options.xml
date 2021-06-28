@@ -32,7 +32,7 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/view"
         app:layout_constraintTop_toTopOf="@+id/view"
-        app:srcCompat="@drawable/ic_sync" />
+        app:srcCompat="@drawable/ic_sync_home" />
 
     <TextView
         android:id="@+id/textView2"
