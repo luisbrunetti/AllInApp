@@ -81,9 +81,6 @@ class InitFragment : BaseFragment() {
                 initViewModel.getDescPV()
             }
         }
-        binding.btnToolTip.setOnClickListener{
-            showToolTip()
-        }
         return binding.root
     }
 
@@ -93,7 +90,7 @@ class InitFragment : BaseFragment() {
     }
 
     private  fun showToolTip(){
-        val balloon = createBalloon(requireContext()) {
+        /*val balloon = createBalloon(requireContext()) {
             setLayout(R.layout.home_options)
             setArrowSize(0)
             setWidthRatio(0.92f)
@@ -110,7 +107,7 @@ class InitFragment : BaseFragment() {
             setOverlayColorResource(R.color.bg_overlay)
             setOverlayShape(BalloonOverlayRect).build()
         }
-        binding.btnToolTip.showBalloon(balloon)
+        binding.btnToolTip.showBalloon(balloon)*/
 
     }
     private fun showSelectorCheckIn(){

@@ -177,23 +177,6 @@
             app:layout_constraintTop_toTopOf="@+id/view8"
             app:layout_constraintVertical_bias="0.0" />
 
-        <ImageView
-            android:id="@+id/btnToolTip"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="21dp"
-            android:layout_marginEnd="20dp"
-            android:elevation="2dp"
-
-            android:foreground="?android:attr/selectableItemBackground"
-            android:src="@drawable/ic_menus"
-            app:layout_constraintBottom_toTopOf="@+id/currentDay"
-            app:layout_constraintEnd_toEndOf="@+id/textView20"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toEndOf="@+id/imageView3"
-            app:layout_constraintTop_toTopOf="@+id/view8"
-            app:layout_constraintVertical_bias="0.0" />
-
         <View
             android:id="@+id/view10"
             android:layout_width="50dp"
@@ -313,7 +296,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="11dp"
                         android:elevation="4dp"
-                        android:text="Calendario"
+                        android:text="Documentos"
                         android:textColor="@color/blue"
                         android:textSize="16sp"
                         android:textStyle="bold"
@@ -321,6 +304,23 @@
                         app:layout_constraintEnd_toEndOf="@+id/viewBtnDocs"
                         app:layout_constraintStart_toStartOf="@+id/viewBtnDocs"
                         app:layout_constraintTop_toBottomOf="@+id/imageView10"
+                        app:layout_constraintVertical_bias="0.0" />
+
+
+                    <TextView
+                        android:id="@+id/textView9"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="11dp"
+                        android:elevation="4dp"
+                        android:text="Sincronizar"
+                        android:textColor="@color/blue"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="@+id/viewBtnDocs"
+                        app:layout_constraintEnd_toEndOf="@+id/viewBtnSync"
+                        app:layout_constraintStart_toStartOf="@+id/viewBtnSync"
+                        app:layout_constraintTop_toBottomOf="@+id/imageView11"
                         app:layout_constraintVertical_bias="0.0" />
 
                     <ImageView
@@ -378,6 +378,17 @@
                         app:layout_constraintEnd_toEndOf="@+id/viewBtnDocs"
                         app:layout_constraintStart_toStartOf="@+id/viewBtnDocs"
                         app:layout_constraintTop_toTopOf="@+id/viewBtnDocs" />
+
+                    <ImageView
+                        android:id="@+id/imageView11"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="26dp"
+                        android:elevation="4dp"
+                        android:src="@drawable/ic_sync_home"
+                        app:layout_constraintEnd_toEndOf="@+id/viewBtnSync"
+                        app:layout_constraintStart_toStartOf="@+id/viewBtnSync"
+                        app:layout_constraintTop_toTopOf="@+id/viewBtnSync" />
 
                     <View
                         android:id="@+id/viewBtnPV"
@@ -452,14 +463,14 @@
                         android:background="@drawable/bg_button_home"
                         android:elevation="2dp"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/viewBtnCalendar2"
+                        app:layout_constraintEnd_toStartOf="@+id/viewBtnSync"
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/viewBtnRoutes"
                         app:layout_constraintVertical_bias="0.13999999" />
 
                     <View
-                        android:id="@+id/viewBtnCalendar2"
+                        android:id="@+id/viewBtnSync"
                         android:layout_width="0dp"
                         android:layout_height="120dp"
                         android:layout_marginStart="18dp"
@@ -469,7 +480,7 @@
                         android:layout_weight="1"
                         android:background="@drawable/bg_button_home"
                         android:elevation="2dp"
-                        android:visibility="invisible"
+                        android:visibility="visible"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@id/viewBtnDocs"
