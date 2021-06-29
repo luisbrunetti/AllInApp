@@ -8,7 +8,7 @@ import javax.inject.Inject
 class ReportsViewModel
     @Inject constructor ():BaseViewModel() {
 
-    private val _text = MutableLiveData<String>("Reportes")
+    private val _text = MutableLiveData<String>("CheckList")
     val text: LiveData<String>
         get()= _text
 }
