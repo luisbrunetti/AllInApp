@@ -14,6 +14,7 @@ import com.tawa.allinapp.features.init.ui.InitFragment
 
 import com.tawa.allinapp.features.location.LocationFragment
 import com.tawa.allinapp.features.movies.ui.MoviesFragment
+import com.tawa.allinapp.features.reports.CheckListFragment
 import com.tawa.allinapp.features.reports.ReportsFragment
 import com.tawa.allinapp.features.routes.RoutesFragment
 import com.tawa.allinapp.features.splash.SplashActivity
@@ -39,4 +40,5 @@ interface ApplicationComponent{
     fun inject(splashActivity: SplashActivity)
     fun inject(selectorDialogFragment: SelectorDialogFragment)
     fun inject(checkInSelectorDialogFragment: CheckInDialogFragment)
+    fun inject(checkListFragment: CheckListFragment)
 }

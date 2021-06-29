@@ -1,19 +1,22 @@
 package com.tawa.allinapp.features.reports
 
 import android.app.DatePickerDialog
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
+import android.view.animation.ScaleAnimation
+import android.widget.ImageView
+import androidx.navigation.fragment.findNavController
+import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
+import com.tawa.allinapp.R
 import com.tawa.allinapp.core.extensions.observe
 import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.FragmentReportsBinding
-import kotlinx.android.synthetic.main.fragment_reports.*
-import java.text.SimpleDateFormat
-import java.time.Month
 import java.util.*
 
 
@@ -42,23 +45,54 @@ class ReportsFragment : BaseFragment() {
             val year = c.get(Calendar.YEAR)
             val month = c.get(Calendar.MONTH)
             val day = c.get(Calendar.DAY_OF_MONTH)
-
-
             val dpd = DatePickerDialog(requireContext(), DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
                 binding.textDate.setText("" + dayOfMonth + "/" +getMonth(monthOfYear) + "/" + year) }, year, month, day)
             dpd.show()
         }
-
-        binding.textDate.setOnClickListener{
-            val c = Calendar.getInstance()
-            val year = c.get(Calendar.YEAR)
-            val month = c.get(Calendar.MONTH)
-            val day = c.get(Calendar.DAY_OF_MONTH)
-            val dpd = DatePickerDialog(requireContext(), DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
-                binding.textDate.setText("" + dayOfMonth + "/" +getMonth(monthOfYear) + "/" + year) }, year, month, day)
-            dpd.show()
+       binding.btnCheckList.setOnClickListener{
+            findNavController().navigate(R.id.action_navigation_reports_to_checkListFragment)
         }
+
+        binding.appbar.addOnOffsetChangedListener(object : OnOffsetChangedListener {
+            var isShow = true
+            var scrollRange = -1
+            override fun onOffsetChanged(appBarLayout: AppBarLayout, verticalOffset: Int) {
+                if (scrollRange == -1) {
+                    scrollRange = appBarLayout.totalScrollRange
+                }
+                if (scrollRange + verticalOffset == 0) {
+                    isShow = true
+                    val animation: Animation =
+                        AnimationUtils.loadAnimation(context, R.anim.scale_down)
+                    binding.imageView5.setImageResource(R.drawable.ic_report_top_resize)
+                    //imageView.setVisibility(View.GONE);
+                } else if (isShow) {
+                    val animation: Animation =
+                        AnimationUtils.loadAnimation(context, R.anim.scale_up)
+                    binding.imageView5.startAnimation(animation)
+                    binding.imageView5.setVisibility(View.VISIBLE)
+                    binding.imageView5.setVisibility(View.VISIBLE)
+                    binding.imageView5.setImageResource(R.drawable.ic_report_top)
+                    isShow = false
+                }
+            }
+        })
+
+
+
         return binding.root
+    }
+
+    fun scaleView(v: View, startScale: Float, endScale: Float) {
+        val anim: Animation = ScaleAnimation(
+            1f, 1f,  // Start and end values for the X axis scaling
+            startScale, endScale,  // Start and end values for the Y axis scaling
+            Animation.RELATIVE_TO_SELF, 0f,  // Pivot point of X scaling
+            Animation.RELATIVE_TO_SELF, 1f
+        ) // Pivot point of Y scaling
+        anim.fillAfter = true // Needed to keep the result of the animation
+        anim.duration = 1000
+        v.startAnimation(anim)
     }
 
     private fun getMonth(monthYear: Int) = when(monthYear){
