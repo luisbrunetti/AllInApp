@@ -50,6 +50,10 @@ abstract class BaseFragment : Fragment() {
         if (this is BaseActivity) this.progress.visibility = viewStatus
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (activity is HomeActivity) (activity as HomeActivity).showNavBar()
+    }
 
     internal fun showProgressDialog() {
         progressDialog?.let {

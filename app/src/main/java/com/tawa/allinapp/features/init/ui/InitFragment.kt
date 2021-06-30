@@ -1,4 +1,6 @@
 package com.tawa.allinapp.features.init.ui
+
+
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
@@ -7,18 +9,21 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
+import androidx.navigation.fragment.findNavController
 import com.google.android.gms.location.FusedLocationProviderClient
-import com.skydoves.balloon.*
+import com.skydoves.balloon.ArrowOrientation
+import com.skydoves.balloon.BalloonAnimation
+import com.skydoves.balloon.createBalloon
 import com.skydoves.balloon.overlay.BalloonOverlayRect
+import com.skydoves.balloon.showBalloon
 import com.tawa.allinapp.R
 import com.tawa.allinapp.core.extensions.failure
 import com.tawa.allinapp.core.extensions.observe
 import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.FragmentInitBinding
+import com.tawa.allinapp.features.HomeActivity
 import com.tawa.allinapp.features.init.InitViewModel
 
 
@@ -81,6 +86,21 @@ class InitFragment : BaseFragment() {
                 initViewModel.getDescPV()
             }
         }
+        binding.btnToolTip.setOnClickListener{
+            showToolTip()
+        }
+        binding.viewBtnRoutes.setOnClickListener {
+            findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationRoutes())
+        }
+        binding.viewBtnPV.setOnClickListener {
+            findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationPdv())
+        }
+        binding.viewBtnCalendar.setOnClickListener {
+            findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationCalendar())
+        }
+        binding.viewBtnReports.setOnClickListener {
+            findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationReports())
+        }
         return binding.root
     }
 
@@ -90,7 +110,7 @@ class InitFragment : BaseFragment() {
     }
 
     private  fun showToolTip(){
-        /*val balloon = createBalloon(requireContext()) {
+        val balloon = createBalloon(requireContext()) {
             setLayout(R.layout.home_options)
             setArrowSize(0)
             setWidthRatio(0.92f)
@@ -107,7 +127,7 @@ class InitFragment : BaseFragment() {
             setOverlayColorResource(R.color.bg_overlay)
             setOverlayShape(BalloonOverlayRect).build()
         }
-        binding.btnToolTip.showBalloon(balloon)*/
+        binding.btnToolTip.showBalloon(balloon)
 
     }
     private fun showSelectorCheckIn(){
@@ -155,6 +175,11 @@ class InitFragment : BaseFragment() {
         val location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
         _lat = location?.latitude.toString()
         _long = location?.longitude.toString()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        (activity as HomeActivity).hideNavBar()
     }
 
     private fun setUpBinding() {
