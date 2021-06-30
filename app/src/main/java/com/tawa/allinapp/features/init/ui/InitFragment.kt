@@ -11,12 +11,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
 import androidx.navigation.fragment.findNavController
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.skydoves.balloon.ArrowOrientation
-import com.skydoves.balloon.BalloonAnimation
-import com.skydoves.balloon.createBalloon
-import com.skydoves.balloon.overlay.BalloonOverlayRect
-import com.skydoves.balloon.showBalloon
 import com.tawa.allinapp.R
 import com.tawa.allinapp.core.extensions.failure
 import com.tawa.allinapp.core.extensions.observe
@@ -34,7 +28,6 @@ class InitFragment : BaseFragment() {
     private lateinit var locationManager:LocationManager
 
     private var checkOutDialog: CheckOutDialogFragment? = null
-    lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private var checkIn:Boolean = true
     private var _user = ""
     private lateinit var _pvId: String
@@ -86,9 +79,7 @@ class InitFragment : BaseFragment() {
                 initViewModel.getDescPV()
             }
         }
-        binding.btnToolTip.setOnClickListener{
-            showToolTip()
-        }
+
         binding.viewBtnRoutes.setOnClickListener {
             findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationRoutes())
         }
@@ -109,27 +100,6 @@ class InitFragment : BaseFragment() {
         dialog.show(childFragmentManager, "dialog")
     }
 
-    private  fun showToolTip(){
-        val balloon = createBalloon(requireContext()) {
-            setLayout(R.layout.home_options)
-            setArrowSize(0)
-            setWidthRatio(0.92f)
-            setHeight(182)
-            setMarginTop(118)
-            setMarginRight(36)
-            setCornerRadius(0f)
-            setAlpha(1f)
-            setBackgroundColorResource(R.color.white)
-            setBalloonAnimation(BalloonAnimation.OVERSHOOT)
-            setLifecycleOwner(lifecycleOwner)
-            setArrowOrientation(ArrowOrientation.RIGHT)
-           // setIsVisibleOverlay(true)
-            setOverlayColorResource(R.color.bg_overlay)
-            setOverlayShape(BalloonOverlayRect).build()
-        }
-        binding.btnToolTip.showBalloon(balloon)
-
-    }
     private fun showSelectorCheckIn(){
         val dialog = CheckInDialogFragment(this)
         dialog.listener = object : CheckInDialogFragment.Callback {
