@@ -1,6 +1,7 @@
 package com.tawa.allinapp.features
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -11,7 +12,6 @@ import com.tawa.allinapp.AndroidApplication
 import com.tawa.allinapp.R
 import com.tawa.allinapp.core.di.ApplicationComponent
 import com.tawa.allinapp.databinding.ActivityHomeBinding
-import com.tawa.allinapp.databinding.DialogHomeBinding
 
 class HomeActivity : AppCompatActivity() {
 
@@ -30,17 +30,22 @@ class HomeActivity : AppCompatActivity() {
 
         val navView: BottomNavigationView = binding.navView
         val navController = findNavController(R.id.nav_host_fragment_activity_home)
+
         val appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.navigation_init,
                 R.id.navigation_reports,
-                R.id.navigation_informs,
+                R.id.navigation_pdv,
                 R.id.navigation_routes,
-                R.id.navigation_calendar
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
     }
+
+    fun hideNavBar(){ binding.navView.visibility = View.GONE }
+
+    fun showNavBar(){ binding.navView.visibility = View.VISIBLE }
 
 }
