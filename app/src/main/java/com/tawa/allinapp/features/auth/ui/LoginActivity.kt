@@ -1,9 +1,5 @@
 package com.tawa.allinapp.features.auth.ui
 
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
 import android.os.Bundle
 import android.provider.Settings
 import android.widget.Toast
@@ -29,7 +25,7 @@ class LoginActivity : AppCompatActivity() {
         // antifake
         val dev = devMod()
 
-        if(dev==0) {
+        if(dev==1) {
             Toast.makeText(applicationContext, "Error", Toast.LENGTH_LONG).show()
             return
         }
@@ -50,7 +46,7 @@ class LoginActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         val dev = devMod()
-        if(dev==0) finish()
+        if(dev==1) finish()
     }
 }
 

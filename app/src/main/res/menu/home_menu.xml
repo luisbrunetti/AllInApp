@@ -6,19 +6,19 @@
         android:icon="@drawable/ic_home"
         android:title="@string/title_home" />
     <item
-        android:id="@+id/navigation_reports"
-        android:icon="@drawable/ic_rep"
-        android:title="@string/title_reports" />
+        android:id="@+id/navigation_pdv"
+        android:icon="@drawable/ic_pv_home"
+        android:title="@string/title_pdv" />
     <item
-        android:id="@+id/navigation_informs"
+        android:id="@+id/navigation_reports"
         android:icon="@drawable/ic_infor"
-        android:title="@string/title_infor" />
+        android:title="@string/title_reports" />
     <item
         android:id="@+id/navigation_routes"
         android:icon="@drawable/ic_rutas"
         android:title="@string/title_routes" />
     <item
-        android:id="@+id/navigation_calendar"
+        android:id="@+id/navigation_others"
         android:icon="@drawable/ic_calendar"
-        android:title="@string/title_calendar" />
+        android:title="@string/title_others" />
 </menu>

@@ -8,7 +8,7 @@ import javax.inject.Inject
 class InformsViewModel
     @Inject constructor() : BaseViewModel() {
 
-    private val _text = MutableLiveData<String>("Informes")
+    private val _text = MutableLiveData<String>("PDV")
     val text: LiveData<String>
         get()= _text
 }

@@ -9,7 +9,20 @@
         android:id="@+id/navigation_init"
         android:name="com.tawa.allinapp.features.init.ui.InitFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_init" />
+        tools:layout="@layout/fragment_init" >
+        <action
+            android:id="@+id/action_navigation_init_to_navigation_routes"
+            app:destination="@id/navigation_routes" />
+        <action
+            android:id="@+id/action_navigation_init_to_navigation_reports"
+            app:destination="@id/navigation_reports" />
+        <action
+            android:id="@+id/action_navigation_init_to_navigation_calendar"
+            app:destination="@id/navigation_calendar" />
+        <action
+            android:id="@+id/action_navigation_init_to_navigation_pdv"
+            app:destination="@id/navigation_pdv" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_reports"
@@ -22,18 +35,16 @@
     </fragment>
 
     <fragment
-        android:id="@+id/navigation_informs"
-        android:name="com.tawa.allinapp.features.informs.InformsFragment"
-        android:label="@string/title_infor"
+        android:id="@+id/navigation_pdv"
+        android:name="com.tawa.allinapp.features.informs.PDVFragment"
+        android:label="@string/title_pdv"
         tools:layout="@layout/fragment_calendar" />
-
-
 
     <fragment
         android:id="@+id/navigation_calendar"
         android:name="com.tawa.allinapp.features.calendar.CalendarFragment"
         android:label="@string/title_calendar"
-        tools:layout="@layout/fragment_informs" />
+        tools:layout="@layout/fragment_pdv" />
 
     <fragment
         android:id="@+id/navigation_routes"

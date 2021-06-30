@@ -8,12 +8,12 @@ import com.tawa.allinapp.core.extensions.observe
 import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.platform.BaseFragment
 
-import com.tawa.allinapp.databinding.FragmentInformsBinding
+import com.tawa.allinapp.databinding.FragmentPdvBinding
 
-class InformsFragment : BaseFragment() {
+class PDVFragment : BaseFragment() {
 
     private lateinit var informsViewModel: InformsViewModel
-    private lateinit var binding: FragmentInformsBinding
+    private lateinit var binding: FragmentPdvBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,7 +21,7 @@ class InformsFragment : BaseFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        binding = FragmentInformsBinding.inflate(inflater)
+        binding = FragmentPdvBinding.inflate(inflater)
         informsViewModel = viewModel(viewModelFactory) {
             observe(text, {
                 it?.let {

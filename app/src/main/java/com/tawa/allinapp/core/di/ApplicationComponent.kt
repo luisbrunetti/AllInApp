@@ -7,7 +7,7 @@ import com.tawa.allinapp.features.auth.ui.LoginFragment
 import com.tawa.allinapp.features.HomeActivity
 import com.tawa.allinapp.features.auth.ui.LoginActivity
 import com.tawa.allinapp.features.calendar.CalendarFragment
-import com.tawa.allinapp.features.informs.InformsFragment
+import com.tawa.allinapp.features.informs.PDVFragment
 import com.tawa.allinapp.features.init.ui.CheckInDialogFragment
 import com.tawa.allinapp.features.init.ui.InitFragment
 
@@ -30,7 +30,7 @@ interface ApplicationComponent{
     fun inject(loginActivity: LoginActivity)
     fun inject(moviesFragment: MoviesFragment)
     fun inject(locationFragment: LocationFragment)
-    fun inject(informsFragment: InformsFragment)
+    fun inject(informsFragment: PDVFragment)
     fun inject(calendarFragment: CalendarFragment)
     fun inject(reportsFragment: ReportsFragment)
     fun inject(loginFragment: LoginFragment)
