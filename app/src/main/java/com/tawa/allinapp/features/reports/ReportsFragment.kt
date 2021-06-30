@@ -64,22 +64,19 @@ class ReportsFragment : BaseFragment() {
                     isShow = true
                     val animation: Animation =
                         AnimationUtils.loadAnimation(context, R.anim.scale_down)
-                    binding.imageView5.setImageResource(R.drawable.ic_report_top_resize)
-                    //imageView.setVisibility(View.GONE);
+                       binding.imageView5.startAnimation(animation)
+                       binding.imageView5.setImageResource(R.drawable.ic_report_top_resize)
                 } else if (isShow) {
                     val animation: Animation =
                         AnimationUtils.loadAnimation(context, R.anim.scale_up)
                     binding.imageView5.startAnimation(animation)
-                    binding.imageView5.setVisibility(View.VISIBLE)
-                    binding.imageView5.setVisibility(View.VISIBLE)
+                    binding.imageView5.visibility = View.VISIBLE
+                    binding.imageView5.visibility = View.VISIBLE
                     binding.imageView5.setImageResource(R.drawable.ic_report_top)
                     isShow = false
                 }
             }
         })
-
-
-
         return binding.root
     }
 
