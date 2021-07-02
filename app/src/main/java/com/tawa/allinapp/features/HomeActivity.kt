@@ -12,6 +12,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.tawa.allinapp.AndroidApplication
+import com.tawa.allinapp.BuildConfig
 import com.tawa.allinapp.R
 import com.tawa.allinapp.core.di.ApplicationComponent
 import com.tawa.allinapp.databinding.ActivityHomeBinding
@@ -29,7 +30,7 @@ class HomeActivity : AppCompatActivity() {
         appComponent.inject(this)
         val dev = devMod()
 
-        if(dev==0) {
+        if(dev == BuildConfig.DEV) {
             Toast.makeText(applicationContext, "Error", Toast.LENGTH_LONG).show()
             return
         }
@@ -64,7 +65,7 @@ class HomeActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         val dev = devMod()
-        if(dev==0) finish()
+        if(dev==BuildConfig.DEV) finish()
     }
 
     fun hideNavBar(){ binding.navView.visibility = View.GONE }

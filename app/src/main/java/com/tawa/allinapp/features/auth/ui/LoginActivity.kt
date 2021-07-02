@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import com.tawa.allinapp.AndroidApplication
+import com.tawa.allinapp.BuildConfig
 import com.tawa.allinapp.R
 import com.tawa.allinapp.core.di.ApplicationComponent
 import com.tawa.allinapp.databinding.ActivityLoginBinding
@@ -25,7 +26,7 @@ class LoginActivity : AppCompatActivity() {
         // antifake
         val dev = devMod()
 
-        if(dev==0) {
+        if(dev== BuildConfig.DEV) {
             Toast.makeText(applicationContext, "Error", Toast.LENGTH_LONG).show()
             return
         }
@@ -46,7 +47,7 @@ class LoginActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         val dev = devMod()
-        if(dev==0) finish()
+        if(dev==BuildConfig.DEV) finish()
 
     }
 }
