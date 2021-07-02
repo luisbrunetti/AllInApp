@@ -45,6 +45,7 @@ class CheckListFragment : BaseFragment() {
         binding = FragmentChecklistBinding.inflate(inflater)
 
         val id = arguments?.getString("id")
+        Toast.makeText(context,id,Toast.LENGTH_SHORT).show()
 
         reportsViewModel = viewModel(viewModelFactory) {
             observe(text, {

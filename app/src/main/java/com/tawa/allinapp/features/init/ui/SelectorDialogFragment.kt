@@ -67,6 +67,7 @@ class SelectorDialogFragment
             val positionCompany = binding.spinnerCompany.selectedItemPosition
             initViewModel.setIdCompany(listCompany[positionCompany].id)
             initViewModel.getReportsRemote()
+            initViewModel.getQuestionsRemote()
             dismiss()
         }
     }

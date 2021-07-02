@@ -50,7 +50,7 @@ class ReportsFragment : BaseFragment() {
             dpd.show()
         }
        binding.btnCheckList.setOnClickListener{
-            findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToCheckListFragment("tania"))
+            findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToCheckListFragment("Probando"))
         }
 
         binding.appbar.addOnOffsetChangedListener(object : OnOffsetChangedListener {
