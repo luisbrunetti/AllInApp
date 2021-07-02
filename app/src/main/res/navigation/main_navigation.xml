@@ -29,9 +29,17 @@
         android:name="com.tawa.allinapp.features.reports.ui.ReportsFragment"
         android:label="@string/title_reports"
         tools:layout="@layout/fragment_reports" >
+
         <action
             android:id="@+id/action_navigation_reports_to_checkListFragment"
-            app:destination="@id/checkListFragment" />
+            app:destination="@id/checkListFragment" >
+
+            <argument
+                android:name="id"
+                app:argType="string"/>
+
+
+        </action>
     </fragment>
 
     <fragment
