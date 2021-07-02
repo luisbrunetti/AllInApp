@@ -7,6 +7,7 @@ import com.tawa.allinapp.features.calendar.CalendarViewModel
 import com.tawa.allinapp.features.informs.InformsViewModel
 import com.tawa.allinapp.features.init.InitViewModel
 import com.tawa.allinapp.features.movies.MoviesViewModel
+import com.tawa.allinapp.features.reports.CheckListViewModel
 import com.tawa.allinapp.features.reports.ReportsViewModel
 import com.tawa.allinapp.features.routes.RoutesViewModel
 import com.tawa.allinapp.features.splash.SplashViewModel
@@ -58,5 +59,10 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(SplashViewModel::class)
     abstract fun bindsSplashViewModel(splashViewModel: SplashViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(CheckListViewModel::class)
+    abstract fun bindsCheckListViewModel(checkListViewModel: CheckListViewModel): ViewModel
 
 }

@@ -26,9 +26,13 @@
 
     <fragment
         android:id="@+id/navigation_reports"
-        android:name="com.tawa.allinapp.features.reports.ReportsFragment"
+        android:name="com.tawa.allinapp.features.reports.ui.ReportsFragment"
         android:label="@string/title_reports"
-        tools:layout="@layout/fragment_reports" />
+        tools:layout="@layout/fragment_reports" >
+        <action
+            android:id="@+id/action_navigation_reports_to_checkListFragment"
+            app:destination="@id/checkListFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_pdv"
@@ -47,5 +51,12 @@
         android:name="com.tawa.allinapp.features.routes.RoutesFragment"
         android:label="@string/title_routes"
         tools:layout="@layout/fragment_routes" />
+
+    <fragment
+        android:id="@+id/checkListFragment"
+        android:name="com.tawa.allinapp.features.reports.ui.CheckListFragment"
+        android:label="CheckListFragment"
+        tools:layout="@layout/fragment_checklist" />
+
 
 </navigation>

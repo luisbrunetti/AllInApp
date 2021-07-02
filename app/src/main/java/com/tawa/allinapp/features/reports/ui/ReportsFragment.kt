@@ -1,4 +1,4 @@
-package com.tawa.allinapp.features.reports
+package com.tawa.allinapp.features.reports.ui
 
 import android.app.DatePickerDialog
 import android.os.Bundle
@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.view.animation.ScaleAnimation
-import android.widget.ImageView
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
@@ -17,6 +16,7 @@ import com.tawa.allinapp.core.extensions.observe
 import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.FragmentReportsBinding
+import com.tawa.allinapp.features.reports.ReportsViewModel
 import java.util.*
 
 

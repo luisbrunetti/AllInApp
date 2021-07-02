@@ -114,4 +114,6 @@ dependencies {
 
     //ToolTip
     implementation "com.github.skydoves:balloon:1.3.4"
+    //Fresco
+    implementation 'com.facebook.fresco:fresco:2.5.0'
 }

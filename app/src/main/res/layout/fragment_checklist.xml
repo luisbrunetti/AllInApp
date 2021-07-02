@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".features.routes.CheckListFragment">
 
+
     <data>
         <variable
             name="viewModel"
@@ -319,7 +320,7 @@
                         app:layout_constraintVertical_bias="0.0" />
 
                     <Button
-                        android:id="@+id/button3"
+                        android:id="@+id/btnTakePhoto"
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
                         android:layout_marginStart="88dp"
@@ -341,6 +342,43 @@
                         app:layout_constraintTop_toBottomOf="@+id/textView36"
                         app:layout_constraintVertical_bias="0.0" />
 
+                    <ImageView
+                        android:id="@+id/imageView26"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:elevation="10dp"
+                        android:src="@drawable/ic_closemodal"
+                        app:layout_constraintBottom_toBottomOf="@+id/checkListPhoto"
+                        app:layout_constraintEnd_toEndOf="@+id/checkListPhoto"
+                        app:layout_constraintHorizontal_bias="1.0"
+                        app:layout_constraintStart_toStartOf="@+id/checkListPhoto"
+                        app:layout_constraintTop_toTopOf="@+id/checkListPhoto"
+                        app:layout_constraintVertical_bias="0.0" />
+
+                    <com.facebook.drawee.view.SimpleDraweeView
+                        android:id="@+id/checkListPhoto"
+                        android:layout_width="0dp"
+                        android:layout_height="200dp"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginTop="24dp"
+                        android:layout_marginEnd="24dp"
+                        android:layout_marginBottom="24dp"
+                        android:elevation="0dp"
+                        android:visibility="visible"
+                        app:failureImage="@drawable/ic_error"
+                        app:failureImageScaleType="center"
+                        app:layout_constraintBottom_toTopOf="@+id/button4"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/btnTakePhoto"
+                        app:layout_constraintVertical_bias="0.0"
+                        app:placeholderImage="@drawable/ic_img"
+                        app:placeholderImageScaleType="center"
+                        app:roundedCornerRadius="16dp" />
+
                     <Button
                         android:id="@+id/button4"
                         android:layout_width="match_parent"
@@ -358,8 +396,8 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/button3"
-                        app:layout_constraintVertical_bias="0.0" />
+                        app:layout_constraintTop_toBottomOf="@+id/btnTakePhoto"
+                        app:layout_constraintVertical_bias="1.0" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </LinearLayout>

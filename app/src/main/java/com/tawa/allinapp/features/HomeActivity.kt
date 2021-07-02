@@ -9,6 +9,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.facebook.drawee.backends.pipeline.Fresco
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.tawa.allinapp.AndroidApplication
 import com.tawa.allinapp.R
@@ -32,7 +33,7 @@ class HomeActivity : AppCompatActivity() {
             Toast.makeText(applicationContext, "Error", Toast.LENGTH_LONG).show()
             return
         }
-
+        Fresco.initialize(this)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
         supportActionBar?.hide()
