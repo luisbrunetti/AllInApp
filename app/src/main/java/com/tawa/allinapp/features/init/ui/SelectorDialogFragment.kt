@@ -26,7 +26,8 @@ class SelectorDialogFragment
 ): DialogFragment() {
 
     private lateinit var binding: DialogHomeBinding
-    private  lateinit var initViewModel: InitViewModel
+    private lateinit var initViewModel: InitViewModel
+    private lateinit var selectedCompany: String
 
     var listener: Callback? = null
     private lateinit var listCompany:List<Company>
@@ -50,6 +51,12 @@ class SelectorDialogFragment
             observe(positionCompany, { it?.let {
                 getCompanies()
             } })
+            observe(setIdCompanySuccess, { it?.let { if (it)
+                initViewModel.getReportsRemote(selectedCompany)
+            } })
+            observe(successGetReports, { it?.let { if (it)
+                dismiss()
+            } })
         }
         return binding.root
     }
@@ -65,10 +72,8 @@ class SelectorDialogFragment
         binding.btnAccessHome.setOnClickListener {
             listener?.onAccept()
             val positionCompany = binding.spinnerCompany.selectedItemPosition
-            initViewModel.setIdCompany(listCompany[positionCompany].id)
-            initViewModel.getReportsRemote()
-            initViewModel.getQuestionsRemote()
-            dismiss()
+            selectedCompany = listCompany[positionCompany].id
+            initViewModel.setIdCompany(selectedCompany)
         }
     }
 

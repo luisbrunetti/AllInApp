@@ -61,9 +61,9 @@ class InitViewModel
     val setIdCompanySuccess: LiveData<Boolean>
         get()= _setIdCompanySuccess
 
-    private val _getIdCompanyPv= MutableLiveData<String>("")
-    val getIdCompanyPv: LiveData<String>
-        get()= _getIdCompanyPv
+    private val _successGetCompanyId= MutableLiveData<String>("")
+    val successGetCompanyId: LiveData<String>
+        get()= _successGetCompanyId
 
     private val _getCompany= MutableLiveData<String>("")
     val getCompany: LiveData<String>
@@ -151,7 +151,7 @@ class InitViewModel
 
     fun getCompanies() = getCompanies(UseCase.None()) { it.either(::handleFailure, ::handleCompanyList) }
 
-    fun getReportsRemote() = getReportsRemote(com.tawa.allinapp.core.interactor.UseCase.None()) {
+    fun getReportsRemote(company: String) = getReportsRemote(GetReportsRemote.Params(company)) {
         it.either(::handleFailure, ::handleReportsRemote)
     }
     private fun handleReportsRemote(success: Boolean) {
@@ -197,8 +197,7 @@ class InitViewModel
         _idPv.value = success
     }
     private fun handleGetIdCompany(idCompany: String) {
-        _getIdCompanyPv.value = idCompany
-        _getCompany.value = idCompany
+        _successGetCompanyId.value = idCompany
     }
     private fun handleGetIdUser(idCompany: String) {
         _idUser.value = idCompany
