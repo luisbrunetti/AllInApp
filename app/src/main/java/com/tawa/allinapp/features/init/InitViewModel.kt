@@ -16,6 +16,7 @@ class InitViewModel
     private val getCheckMode: GetCheckMode,
     private val getCompanies: GetCompanies,
     private val getIdCompany: GetIdCompany,
+    private val getReportsRemote: GetReportsRemote,
     private val getPV: GetPV,
     private val getDescPV: GetDescPV,
     private val getIdPV: GetIdPV,
@@ -98,6 +99,10 @@ class InitViewModel
     private val _checkInMode = MutableLiveData(true)
     val checkInMode = _checkInMode
 
+    private val _successGetReports = MutableLiveData(false)
+    val successGetReports: LiveData<Boolean>
+        get() = _successGetReports
+
     init {
         startHome()
         startCheckIn()
@@ -140,6 +145,13 @@ class InitViewModel
     fun getIdPV() = getIdPV(UseCase.None()) { it.either(::handleFailure, ::handlePVId) }
 
     fun getCompanies() = getCompanies(UseCase.None()) { it.either(::handleFailure, ::handleCompanyList) }
+
+    fun getReportsRemote() = getReportsRemote(com.tawa.allinapp.core.interactor.UseCase.None()) {
+        it.either(::handleFailure, ::handleReportsRemote)
+    }
+    private fun handleReportsRemote(success: Boolean) {
+        this._successGetReports.value = success
+    }
 
     fun getPv(company:String) = getPV(GetPV.Params(company)) { it.either(::handleFailure, ::handlePvList) }
 

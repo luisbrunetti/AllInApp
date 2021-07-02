@@ -11,7 +11,7 @@ import retrofit2.http.POST
 
 interface ReportsApi {
 
-    @GET("https://run.mocky.io/v3/fe260c04-a844-4d1c-a021-f6f9c11047ff")
+    @GET("https://run.mocky.io/v3/0b8161c3-fa63-4bcd-9a7f-6c4cccff080e")
     fun getReports(): Call<BaseResponse<List<ReportsRemote.Response>>>
 
 }
