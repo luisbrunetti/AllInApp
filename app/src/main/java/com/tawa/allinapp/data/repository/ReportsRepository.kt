@@ -15,7 +15,7 @@ import com.tawa.allinapp.models.Report
 import javax.inject.Inject
 
 interface ReportsRepository {
-    fun setReports(): Either<Failure, Boolean>
+    fun setReports(company: String): Either<Failure, Boolean>
     fun getReports(): Either<Failure,List<Report>>
 
     class Network
@@ -25,11 +25,11 @@ interface ReportsRepository {
                         private val service: ReportsService,
     ): ReportsRepository{
 
-        override fun setReports(): Either<Failure, Boolean> {
+        override fun setReports(company:String): Either<Failure, Boolean> {
             return when (networkHandler.isConnected) {
                 true ->{
                     try {
-                        val response = service.getReports().execute()
+                        val response = service.getReports(company).execute()
                         when (response.isSuccessful) {
                             true -> {
                                 response.body()?.let { body ->
