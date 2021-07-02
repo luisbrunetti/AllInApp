@@ -36,8 +36,7 @@ interface QuestionsRepository {
                                         body.data.map {
                                             questionsDataSource.insertQuestions(it.toModel())
                                             for(answers in it.answers )
-                                                questionsDataSource.insertAnswers(answers.toModel())
-                                        }
+                                                questionsDataSource.insertAnswers(answers.toModel()) }
                                         Either.Right(true)
                                     }
                                     else Either.Left(Failure.DefaultError(body.message))
