@@ -1,4 +1,4 @@
-package com.tawa.allinapp.features.reports.usecase
+package com.tawa.allinapp.features.init.usecase
 
 import com.tawa.allinapp.core.interactor.UseCase
 import com.tawa.allinapp.data.repository.ReportsRepository
