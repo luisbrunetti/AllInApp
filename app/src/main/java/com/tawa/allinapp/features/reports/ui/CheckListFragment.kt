@@ -36,7 +36,6 @@ class CheckListFragment : BaseFragment() {
     private val TAKE_PHOTO_REQUEST = 101
     private var mCurrentPhotoPath: String = ""
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         appComponent.inject(this)
@@ -44,6 +43,8 @@ class CheckListFragment : BaseFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentChecklistBinding.inflate(inflater)
+
+        val id = arguments?.getString("id")
 
         reportsViewModel = viewModel(viewModelFactory) {
             observe(text, {
