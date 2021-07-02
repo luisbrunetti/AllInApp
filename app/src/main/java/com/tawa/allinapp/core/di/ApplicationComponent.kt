@@ -14,8 +14,8 @@ import com.tawa.allinapp.features.init.ui.InitFragment
 
 import com.tawa.allinapp.features.location.LocationFragment
 import com.tawa.allinapp.features.movies.ui.MoviesFragment
-import com.tawa.allinapp.features.reports.CheckListFragment
-import com.tawa.allinapp.features.reports.ReportsFragment
+import com.tawa.allinapp.features.reports.ui.CheckListFragment
+import com.tawa.allinapp.features.reports.ui.ReportsFragment
 import com.tawa.allinapp.features.routes.RoutesFragment
 import com.tawa.allinapp.features.splash.SplashActivity
 import com.tawa.allinapp.features.splash.SplashFragment
