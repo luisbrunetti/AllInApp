@@ -5,4 +5,7 @@ data class Report(
     val report: String,
     val idCompany: String,
     val idUser: String,
+    val idUserMod: String,
+    val feMod: String,
+    val feCreate: String,
 )

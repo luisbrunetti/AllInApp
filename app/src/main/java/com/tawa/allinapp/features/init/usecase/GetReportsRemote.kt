@@ -6,8 +6,10 @@ import javax.inject.Inject
 
 
 class GetReportsRemote
-@Inject constructor(private val reportsRepository: ReportsRepository) : UseCase<Boolean, UseCase.None>() {
+@Inject constructor(private val reportsRepository: ReportsRepository) : UseCase<Boolean, GetReportsRemote.Params>() {
 
-    override suspend fun run(params: None) = reportsRepository.setReports()
+    override suspend fun run(params: Params) = reportsRepository.setReports(params.company)
+
+    class Params(val company: String)
 
 }
