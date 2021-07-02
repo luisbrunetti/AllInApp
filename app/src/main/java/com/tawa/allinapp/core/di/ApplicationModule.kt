@@ -6,11 +6,9 @@ import androidx.room.Room
 import com.tawa.allinapp.BuildConfig
 import com.tawa.allinapp.data.local.AllInAppDatabase
 import com.tawa.allinapp.data.local.Prefs
-import com.tawa.allinapp.data.local.dao.CheckDao
-import com.tawa.allinapp.data.local.dao.MovieDao
-import com.tawa.allinapp.data.local.dao.ParametersDao
-import com.tawa.allinapp.data.local.dao.ReportsDao
+import com.tawa.allinapp.data.local.dao.*
 import com.tawa.allinapp.data.repository.*
+import com.tawa.allinapp.models.Question
 import com.tawa.allinapp.models.Report
 import dagger.Module
 import dagger.Provides
@@ -60,11 +58,13 @@ class ApplicationModule(private val application: Application){
     @Provides @Singleton fun providesParametersDao(demoDatabase:AllInAppDatabase) : ParametersDao { return demoDatabase.parametersDao() }
     @Provides @Singleton fun providesCheckDao(demoDatabase:AllInAppDatabase) : CheckDao { return demoDatabase.checkDao() }
     @Provides @Singleton fun providesReportDao(demoDatabase:AllInAppDatabase) : ReportsDao { return demoDatabase.reportsDao() }
+    @Provides @Singleton fun providesQuestionDao(demoDatabase:AllInAppDatabase) : QuestionsDao { return demoDatabase.questionsDao() }
 
     @Provides @Singleton fun provideMoviesRepository(dataSource: MoviesRepository.Network): MoviesRepository = dataSource
     @Provides @Singleton fun provideAuthRepository(dataSource: AuthRepository.Network): AuthRepository = dataSource
     @Provides @Singleton fun provideParametersRepository(dataSource: ParametersRepository.Network): ParametersRepository = dataSource
     @Provides @Singleton fun provideCheckRepository(dataSource: CheckRepository.Network): CheckRepository = dataSource
     @Provides @Singleton fun provideReportRepository(dataSource: ReportsRepository.Network): ReportsRepository = dataSource
+    @Provides @Singleton fun provideQuestionRepository(dataSource: QuestionsRepository.Network): QuestionsRepository = dataSource
 
 }
