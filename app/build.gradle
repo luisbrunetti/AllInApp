@@ -6,6 +6,8 @@ plugins {
     id 'androidx.navigation.safeargs.kotlin'
 }
 
+def dev = 1
+
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
@@ -30,6 +32,7 @@ android {
             minifyEnabled false
             signingConfig signingConfigs.debug
             buildConfigField("String", "BASE_URL", "\"https://tawa.com\"")
+            buildConfigField('int', 'DEV', "$dev")
         }
         prod {
             minifyEnabled false
