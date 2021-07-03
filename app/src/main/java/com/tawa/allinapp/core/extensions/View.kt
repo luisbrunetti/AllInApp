@@ -22,6 +22,12 @@ fun ImageView.loadFromUrl(url: String) =
         .transition(DrawableTransitionOptions.withCrossFade())
         .into(this)
 
+fun ImageView.loadFromResource(resource: Int) =
+    Glide.with(this.context.applicationContext)
+        .load(resource)
+        .transition(DrawableTransitionOptions.withCrossFade())
+        .into(this)
+
 fun View.visible() { this.visibility = View.VISIBLE }
 
 fun View.invisible() { this.visibility = View.GONE }
