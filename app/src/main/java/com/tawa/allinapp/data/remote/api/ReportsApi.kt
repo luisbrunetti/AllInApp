@@ -12,7 +12,7 @@ import retrofit2.http.Path
 
 interface ReportsApi {
 
-    @GET("https://run.mocky.io/v3/0b8161c3-fa63-4bcd-9a7f-6c4cccff080e/{id_empr}")
+    @GET("https://run.mocky.io/v3/c9c45ba0-b6b9-4e18-9a5a-c5560426e8de/{id_empr}")
     fun getReports(@Path("id_empr") company:String): Call<BaseResponse<List<ReportsRemote.Response>>>
 
 }

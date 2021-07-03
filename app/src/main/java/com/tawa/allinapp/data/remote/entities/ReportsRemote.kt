@@ -9,7 +9,7 @@ import com.tawa.allinapp.models.Report
 class ReportsRemote {
     data class Response(
         @SerializedName("_id") val id: String?,
-        @SerializedName("nombre_rpte") val report: String?,
+        @SerializedName("nombre_rpte") val reportName: String?,
         @SerializedName("id_empr") val idCompany: String?,
         @SerializedName("id_usua_cread") val idUser: String?,
         @SerializedName("id_usua_modi") val idUserMod: String?,
@@ -17,6 +17,6 @@ class ReportsRemote {
         @SerializedName("fe_creacion") val feCreate: String?,
 
     ){
-        fun toModel() = ReportModel(id?:"",report?:"",idCompany?:"",idUser?:"",idUserMod?:"",feMod?:"",feCreate?:"")
+        fun toModel() = ReportModel(id?:"",reportName?:"",idCompany?:"",idUser?:"",idUserMod?:"",feMod?:"",feCreate?:"")
     }
 }

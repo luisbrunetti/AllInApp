@@ -1,4 +1,4 @@
-package com.tawa.allinapp.features.reports
+package com.tawa.allinapp.features.reports.standard
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

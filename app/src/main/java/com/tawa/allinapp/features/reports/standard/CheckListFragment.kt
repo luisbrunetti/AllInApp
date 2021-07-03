@@ -1,4 +1,4 @@
-package com.tawa.allinapp.features.reports.ui
+package com.tawa.allinapp.features.reports.standard
 
 import android.app.Activity
 import android.app.AlertDialog
@@ -20,18 +20,16 @@ import com.karumi.dexter.listener.PermissionDeniedResponse
 import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
-import com.tawa.allinapp.R
 import com.tawa.allinapp.core.extensions.observe
 import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.FragmentChecklistBinding
-import com.tawa.allinapp.features.reports.ReportsViewModel
+import com.tawa.allinapp.features.reports.reports.ReportsViewModel
 import java.io.File
 
 
 class CheckListFragment : BaseFragment() {
 
-    private lateinit var reportsViewModel: ReportsViewModel
     private lateinit var binding: FragmentChecklistBinding
     private val TAKE_PHOTO_REQUEST = 101
     private var mCurrentPhotoPath: String = ""
@@ -47,13 +45,6 @@ class CheckListFragment : BaseFragment() {
         val id = arguments?.getString("id")
         Toast.makeText(context,id,Toast.LENGTH_SHORT).show()
 
-        reportsViewModel = viewModel(viewModelFactory) {
-            observe(text, {
-                it?.let {
-
-                }
-            })
-        }
         binding.btnTakePhoto.setOnClickListener{
            validatePermissions()
         }

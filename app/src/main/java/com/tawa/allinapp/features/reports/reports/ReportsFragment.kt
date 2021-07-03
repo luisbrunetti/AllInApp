@@ -1,4 +1,4 @@
-package com.tawa.allinapp.features.reports.ui
+package com.tawa.allinapp.features.reports.reports
 
 import android.app.DatePickerDialog
 import android.os.Bundle
@@ -9,6 +9,7 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.view.animation.ScaleAnimation
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
 import com.tawa.allinapp.R
@@ -16,8 +17,8 @@ import com.tawa.allinapp.core.extensions.observe
 import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.FragmentReportsBinding
-import com.tawa.allinapp.features.reports.ReportsViewModel
 import java.util.*
+import javax.inject.Inject
 
 
 class ReportsFragment : BaseFragment() {
@@ -25,33 +26,44 @@ class ReportsFragment : BaseFragment() {
     private lateinit var reportsViewModel: ReportsViewModel
     private lateinit var binding: FragmentReportsBinding
 
+    @Inject lateinit var reportsAdapter: ReportsAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         appComponent.inject(this)
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.rvReports.layoutManager = LinearLayoutManager(context)
+        binding.rvReports.adapter = reportsAdapter
+        reportsAdapter.clickListener = {
+            // TODO send to correct report
+            findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToCheckListFragment("Probando"))
+        }
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentReportsBinding.inflate(inflater)
         reportsViewModel = viewModel(viewModelFactory) {
-            observe(text, {
-                it?.let {
-
-                }
-            })
+            observe(reports, { it?.let {
+                reportsAdapter.setData(it)
+            } })
         }
+        reportsViewModel.getReports()
 
-        binding.textDate.setOnClickListener{
+        binding.etDate.setOnClickListener{
             val c = Calendar.getInstance()
             val year = c.get(Calendar.YEAR)
             val month = c.get(Calendar.MONTH)
             val day = c.get(Calendar.DAY_OF_MONTH)
             val dpd = DatePickerDialog(requireContext(), DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
-                binding.textDate.setText("" + dayOfMonth + "/" +getMonth(monthOfYear) + "/" + year) }, year, month, day)
+                binding.etDate.setText("" + dayOfMonth + "/" +getMonth(monthOfYear) + "/" + year) }, year, month, day)
             dpd.show()
         }
-       binding.btnCheckList.setOnClickListener{
-            findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToCheckListFragment("Probando"))
-        }
+       //binding.btnCheckList.setOnClickListener{
+         //   findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToCheckListFragment("Probando"))
+        //}
 
         binding.appbar.addOnOffsetChangedListener(object : OnOffsetChangedListener {
             var isShow = true
@@ -80,20 +92,7 @@ class ReportsFragment : BaseFragment() {
         return binding.root
     }
 
-    fun scaleView(v: View, startScale: Float, endScale: Float) {
-        val anim: Animation = ScaleAnimation(
-            1f, 1f,  // Start and end values for the X axis scaling
-            startScale, endScale,  // Start and end values for the Y axis scaling
-            Animation.RELATIVE_TO_SELF, 0f,  // Pivot point of X scaling
-            Animation.RELATIVE_TO_SELF, 1f
-        ) // Pivot point of Y scaling
-        anim.fillAfter = true // Needed to keep the result of the animation
-        anim.duration = 1000
-        v.startAnimation(anim)
-    }
-
     private fun getMonth(monthYear: Int) = when(monthYear){
-
             0 -> "01"
             1 -> "02"
             2 -> "03"
@@ -108,8 +107,4 @@ class ReportsFragment : BaseFragment() {
             11 -> "12"
         else  ->""
     }
-
-
-
-
 }

@@ -5,13 +5,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".features.routes.CheckListFragment">
 
-
-    <data>
-        <variable
-            name="viewModel"
-            type="com.tawa.allinapp.features.reports.ReportsViewModel" />
-    </data>
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">

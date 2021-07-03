@@ -26,7 +26,7 @@
 
     <fragment
         android:id="@+id/navigation_reports"
-        android:name="com.tawa.allinapp.features.reports.ui.ReportsFragment"
+        android:name="com.tawa.allinapp.features.reports.reports.ReportsFragment"
         android:label="@string/title_reports"
         tools:layout="@layout/fragment_reports" >
 
@@ -62,7 +62,7 @@
 
     <fragment
         android:id="@+id/checkListFragment"
-        android:name="com.tawa.allinapp.features.reports.ui.CheckListFragment"
+        android:name="com.tawa.allinapp.features.reports.standard.CheckListFragment"
         android:label="CheckListFragment"
         tools:layout="@layout/fragment_checklist" />
 

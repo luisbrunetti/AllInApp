@@ -7,8 +7,8 @@ import com.tawa.allinapp.features.calendar.CalendarViewModel
 import com.tawa.allinapp.features.informs.InformsViewModel
 import com.tawa.allinapp.features.init.InitViewModel
 import com.tawa.allinapp.features.movies.MoviesViewModel
-import com.tawa.allinapp.features.reports.CheckListViewModel
-import com.tawa.allinapp.features.reports.ReportsViewModel
+import com.tawa.allinapp.features.reports.standard.CheckListViewModel
+import com.tawa.allinapp.features.reports.reports.ReportsViewModel
 import com.tawa.allinapp.features.routes.RoutesViewModel
 import com.tawa.allinapp.features.splash.SplashViewModel
 import dagger.Binds
