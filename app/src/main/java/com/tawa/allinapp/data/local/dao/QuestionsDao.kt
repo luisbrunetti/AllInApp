@@ -17,8 +17,11 @@ interface QuestionsDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertAnswers(answerModel: AnswerModel)
 
-    @Query("SELECT * FROM questions")
+    @Query("SELECT * FROM questions order by `order` asc")
     fun getQuestions(): List<QuestionModel>
+
+    @Query("SELECT * FROM answers where idQuestion=:idQuestion")
+    fun getAnswers(idQuestion : String): List<AnswerModel>
 
 
 
