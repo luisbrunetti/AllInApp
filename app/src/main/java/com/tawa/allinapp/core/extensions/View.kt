@@ -10,7 +10,10 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.bumptech.glide.request.RequestOptions
 import com.tawa.allinapp.R
 
 fun ViewGroup.inflate(@LayoutRes layoutRes: Int): View =
@@ -19,6 +22,7 @@ fun ViewGroup.inflate(@LayoutRes layoutRes: Int): View =
 fun ImageView.loadFromUrl(url: String) =
     Glide.with(this.context.applicationContext)
         .load(url)
+        .transform(CenterCrop(),RoundedCorners(25))
         .transition(DrawableTransitionOptions.withCrossFade())
         .into(this)
 
