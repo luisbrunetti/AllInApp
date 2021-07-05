@@ -8,7 +8,7 @@ import retrofit2.http.GET
 
 interface QuestionsApi{
 
-    @GET("https://run.mocky.io/v3/02c951fb-17fc-4a40-935a-c6463d57a949")
+    @GET("https://run.mocky.io/v3/4182a98f-5caa-4fc4-a691-269474e5c2a3")
     fun getQuestions(): Call<BaseResponse<List<QuestionsRemote.Response>>>
 
 }

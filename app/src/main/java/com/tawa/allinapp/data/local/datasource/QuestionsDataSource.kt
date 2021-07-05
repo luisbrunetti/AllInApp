@@ -22,5 +22,8 @@ class QuestionsDataSource @Inject constructor(private val questionsDao: Question
         return questionsDao.getQuestions()
     }
 
+    fun getAnswers(idQuestion:String):List<AnswerModel> {
+        return questionsDao.getAnswers(idQuestion)
+    }
 
 }

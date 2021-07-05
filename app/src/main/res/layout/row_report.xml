@@ -1,30 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="12dp"
-    card_view:cardElevation="3dp"
-    card_view:cardCornerRadius="16dp"
     card_view:cardBackgroundColor="@android:color/transparent"
-    >
+    card_view:cardCornerRadius="16dp"
+    card_view:cardElevation="3dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/clReport"
-        android:padding="12dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:padding="12dp">
 
         <TextView
             android:id="@+id/tvPVName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorTextAll"
-            android:textStyle="bold"
             android:layout_marginStart="5dp"
             android:layout_marginEnd="5dp"
+            android:textColor="@color/colorTextAll"
+            android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/ivArrow"
             app:layout_constraintStart_toEndOf="@+id/ivIconReport"
             app:layout_constraintTop_toTopOf="parent" />
@@ -33,10 +31,10 @@
             android:id="@+id/tvPVSub"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorTextAll"
-            android:textSize="12sp"
             android:layout_marginStart="5dp"
             android:layout_marginEnd="5dp"
+            android:textColor="@color/colorTextAll"
+            android:textSize="12sp"
             app:layout_constraintEnd_toStartOf="@+id/ivArrow"
             app:layout_constraintStart_toEndOf="@+id/ivIconReport"
             app:layout_constraintTop_toBottomOf="@+id/tvPVName" />
