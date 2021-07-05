@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.tawa.allinapp.R
+import com.tawa.allinapp.core.extensions.loadBitmap
 import com.tawa.allinapp.core.extensions.loadFromResource
 import com.tawa.allinapp.core.extensions.loadFromUrl
 import com.tawa.allinapp.databinding.RowPictureBinding
@@ -35,7 +36,7 @@ class PictureBeforeAdapter
     class PictureBeforeViewHolder(val binding : RowPictureBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(context: Context, picture: Bitmap, clickListener: (Bitmap) -> Unit) {
-            binding.ivPicture.setImageBitmap(picture)
+            binding.ivPicture.loadBitmap(picture)
             //binding.ivPicture.loadFromUrl("https://www.redagricola.com/pe/assets/uploads/2020/04/flota-drones-792x591-c-default.jpg")
             binding.llPhoto.setOnClickListener {
                 clickListener(picture)

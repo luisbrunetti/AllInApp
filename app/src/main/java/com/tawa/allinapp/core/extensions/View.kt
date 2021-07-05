@@ -1,5 +1,6 @@
 package com.tawa.allinapp.core.extensions
 
+import android.graphics.Bitmap
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,6 +21,13 @@ fun ViewGroup.inflate(@LayoutRes layoutRes: Int): View =
     LayoutInflater.from(context).inflate(layoutRes, this, false)
 
 fun ImageView.loadFromUrl(url: String) =
+    Glide.with(this.context.applicationContext)
+        .load(url)
+        .transform(CenterCrop(),RoundedCorners(25))
+        .transition(DrawableTransitionOptions.withCrossFade())
+        .into(this)
+
+fun ImageView.loadBitmap(url: Bitmap) =
     Glide.with(this.context.applicationContext)
         .load(url)
         .transform(CenterCrop(),RoundedCorners(25))
