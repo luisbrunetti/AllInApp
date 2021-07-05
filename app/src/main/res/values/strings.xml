@@ -114,4 +114,11 @@
         "For example, position the FAB to one side of stream of a cards so the FAB won’t interfere "
         "when a user tries to pick up one of cards.\n\n"
     </string>
+    <string name="report">Reporte</string>
+    <string name="code">Código</string>
+    <string name="take_picture">Tomar Foto</string>
+    <string name="take_picture_before">Tomar Foto Antes</string>
+    <string name="take_picture_after">Tomar Foto Después</string>
+    <string name="comments">Comentario</string>
+    <string name="add_comment">Ingrese comentario</string>
 </resources>

@@ -38,8 +38,10 @@ class ReportsFragment : BaseFragment() {
         binding.rvReports.layoutManager = LinearLayoutManager(context)
         binding.rvReports.adapter = reportsAdapter
         reportsAdapter.clickListener = {
-            // TODO send to correct report
-            findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToCheckListFragment("Probando"))
+            when(it.reportName){
+                "CHECK LIST PUNTO DE VENTA" -> findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToCheckListFragment("Probando"))
+                "REPORTE FOTOGRAFICO" -> findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToPictureFragment())
+            }
         }
     }
 
