@@ -31,6 +31,9 @@ class PictureFragment : BaseFragment() {
     @Inject lateinit var pictureBeforeAdapter: PictureBeforeAdapter
     @Inject lateinit var pictureAfterAdapter: PictureAfterAdapter
 
+    private val before = 200
+    private val after = 300
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         appComponent.inject(this)
@@ -48,21 +51,24 @@ class PictureFragment : BaseFragment() {
         binding = FragmentPictureBinding.inflate(inflater)
         pictureViewModel = viewModel(viewModelFactory){
             observe(text,{ it?.let {
-                it
+
             }})
         }
         binding.btTakePhotoBefore.setOnClickListener {
-            checkCameraPermissions()
+            checkCameraPermissions(before)
+        }
+        binding.btTakePhotoAfter.setOnClickListener {
+            checkCameraPermissions(after)
         }
 
         return binding.root
     }
 
-    private fun checkCameraPermissions(){
+    private fun checkCameraPermissions(origin:Int){
         Dexter.withActivity(activity)
             .withPermission(Manifest.permission.CAMERA)
             .withListener(object: PermissionListener{
-                override fun onPermissionGranted(response: PermissionGrantedResponse?) { launchCamera2() }
+                override fun onPermissionGranted(response: PermissionGrantedResponse?) { launchCamera(origin) }
                 override fun onPermissionDenied(response: PermissionDeniedResponse) {}
                 override fun onPermissionRationaleShouldBeShown(permission: PermissionRequest?, token: PermissionToken?) {
                     token?.continuePermissionRequest()
@@ -70,16 +76,20 @@ class PictureFragment : BaseFragment() {
             }).check()
     }
 
-    private fun launchCamera2(){
+    private fun launchCamera(origin:Int){
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        startActivityForResult(intent,200)
+        startActivityForResult(intent,origin)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when(requestCode){
-            200 -> if(resultCode==Activity.RESULT_OK) {
+            before -> if(resultCode==Activity.RESULT_OK) {
                 val bitmap = data!!.extras?.get("data") as Bitmap
                 pictureBeforeAdapter.collection.add(bitmap)
+            }
+            after -> if(resultCode==Activity.RESULT_OK) {
+                val bitmap = data!!.extras?.get("data") as Bitmap
+                pictureAfterAdapter.collection.add(bitmap)
             }
         }
     }
