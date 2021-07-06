@@ -10,10 +10,12 @@ import com.tawa.allinapp.data.local.datasource.QuestionsDataSource
 import com.tawa.allinapp.data.remote.service.QuestionsService
 import com.tawa.allinapp.models.Answer
 import com.tawa.allinapp.models.Question
+import com.tawa.allinapp.models.ReadyAnswer
 import javax.inject.Inject
 
 interface QuestionsRepository {
     fun setQuestions(): Either<Failure, Boolean>
+    fun setReadyAnswers(readyAnswer: ReadyAnswer): Either<Failure, Boolean>
     fun getQuestions(): Either<Failure,List<Question>>
     fun getAnswers(idQuestion: String): Either<Failure,List<Answer>>
 
@@ -49,6 +51,15 @@ interface QuestionsRepository {
                     }
                 }
                 false -> Either.Left(Failure.NetworkConnection)
+            }
+        }
+
+        override fun setReadyAnswers(readyAnswer: ReadyAnswer): Either<Failure, Boolean> {
+            return try {
+                questionsDataSource.insertReadyAnswers(readyAnswer.toModel())
+                Either.Right(true)
+            }catch (e:Exception){
+                Either.Left(Failure.DefaultError(e.message!!))
             }
         }
 

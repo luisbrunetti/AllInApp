@@ -4,6 +4,7 @@ package com.tawa.allinapp.data.local.datasource
 import com.tawa.allinapp.data.local.dao.QuestionsDao
 import com.tawa.allinapp.data.local.models.AnswerModel
 import com.tawa.allinapp.data.local.models.QuestionModel
+import com.tawa.allinapp.data.local.models.ReadyAnswerModel
 import com.tawa.allinapp.data.remote.entities.QuestionsRemote
 import javax.inject.Inject
 
@@ -18,6 +19,10 @@ class QuestionsDataSource @Inject constructor(private val questionsDao: Question
         questionsDao.insertAnswers(answerModel)
     }
 
+    fun insertReadyAnswers(readyAnswerModel: ReadyAnswerModel){
+        questionsDao.insertReadyAnswers(readyAnswerModel)
+    }
+
     fun getQuestions():List<QuestionModel> {
         return questionsDao.getQuestions()
     }
@@ -25,5 +30,4 @@ class QuestionsDataSource @Inject constructor(private val questionsDao: Question
     fun getAnswers(idQuestion:String):List<AnswerModel> {
         return questionsDao.getAnswers(idQuestion)
     }
-
 }

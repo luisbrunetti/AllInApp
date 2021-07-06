@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.tawa.allinapp.core.interactor.UseCase
 import com.tawa.allinapp.core.platform.BaseViewModel
+import com.tawa.allinapp.features.init.usecase.SetCheckIn
 import com.tawa.allinapp.models.Answer
 import com.tawa.allinapp.models.Question
 import javax.inject.Inject
@@ -11,7 +12,8 @@ import javax.inject.Inject
 class CheckListViewModel
 @Inject constructor (
     private val getQuestions: GetQuestions,
-    private val getAnswers: GetAnswers
+    private val getAnswers: GetAnswers,
+    private val setReadyAnswers: SetReadyAnswers
     ):BaseViewModel() {
 
     private val _text = MutableLiveData<String>("HOLAAAAAAA")
@@ -26,21 +28,33 @@ class CheckListViewModel
     val nameQuestion: LiveData<String>
         get()= _nameQuestion
 
-    private val _order = MutableLiveData<Int>(0)
-    val order: LiveData<Int>
-        get()= _order
+    private val _orderRadio = MutableLiveData<Int>(0)
+    val orderRadio: LiveData<Int>
+        get()= _orderRadio
 
-    private val _order1 = MutableLiveData<Int>(0)
-    val order1: LiveData<Int>
-        get()= _order1
+    private val _orderCheckBox = MutableLiveData<Int>(0)
+    val orderCheckBox: LiveData<Int>
+        get()= _orderCheckBox
 
     private val _answersRadio = MutableLiveData<List<Answer>>()
     val answersRadio: LiveData<List<Answer>>
         get()= _answersRadio
 
+    private val _stateRadio = MutableLiveData<Boolean>(false)
+    val stateRadio: LiveData<Boolean>
+        get()= _stateRadio
+
+    private val _stateCheck = MutableLiveData<Boolean>(false)
+    val stateCheck: LiveData<Boolean>
+        get()= _stateCheck
+
     private val _answersCheck = MutableLiveData<List<Answer>>()
     val answersCheck: LiveData<List<Answer>>
         get()= _answersCheck
+
+    private val _successReadyAnswers = MutableLiveData<Boolean>(false)
+    val successReadyAnswers: LiveData<Boolean>
+        get()= _successReadyAnswers
 
     fun getQuestions() = getQuestions(UseCase.None()) { it.either(::handleFailure, ::handleQuestions) }
 
@@ -50,7 +64,7 @@ class CheckListViewModel
 
     fun getAnswersRadio(idQuestion:String,nameQ: String,order:Int) = getAnswers(GetAnswers.Params(idQuestion)) {
         _nameQuestion.value = nameQ
-        _order.value = order
+        _orderRadio.value = order
         it.either(::handleFailure, ::handleAnswersRadio) }
 
     private fun handleAnswersRadio(answers : List<Answer>) {
@@ -59,10 +73,28 @@ class CheckListViewModel
 
     fun getAnswersCheck(idQuestion:String,nameQ: String,order: Int) = getAnswers(GetAnswers.Params(idQuestion)) {
         _nameQuestion.value = nameQ
-        _order1.value = order
+        _orderCheckBox.value = order
         it.either(::handleFailure, ::handleAnswersCheck) }
 
     private fun handleAnswersCheck(answers : List<Answer>) {
         _answersCheck.value = answers
+    }
+
+    fun startRadio(){
+        _stateRadio.value= true
+    }
+
+    fun startCheck(){
+        _stateCheck.value= true
+    }
+
+    fun setReadyAnswers(idQuestion: String,nameQuestion: String,idAnswer:String,nameAnswer: String) {
+        setReadyAnswers(SetReadyAnswers.Params(0,idQuestion,nameQuestion,idAnswer,nameAnswer)) {
+            it.either(::handleFailure, ::handleReadyAnswers)
+        }
+    }
+
+    private fun handleReadyAnswers(success: Boolean) {
+        this._successReadyAnswers.value = success
     }
 }
