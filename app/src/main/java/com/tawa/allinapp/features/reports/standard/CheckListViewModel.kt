@@ -36,9 +36,17 @@ class CheckListViewModel
     val orderCheckBox: LiveData<Int>
         get()= _orderCheckBox
 
+    private val _orderInput = MutableLiveData<Int>(0)
+    val orderInput: LiveData<Int>
+        get()= _orderInput
+
     private val _answersRadio = MutableLiveData<List<Answer>>()
     val answersRadio: LiveData<List<Answer>>
         get()= _answersRadio
+
+    private val _answersInput = MutableLiveData<List<Answer>>()
+    val answersInput: LiveData<List<Answer>>
+        get()= _answersInput
 
     private val _stateRadio = MutableLiveData<Boolean>(false)
     val stateRadio: LiveData<Boolean>
@@ -47,6 +55,10 @@ class CheckListViewModel
     private val _stateCheck = MutableLiveData<Boolean>(false)
     val stateCheck: LiveData<Boolean>
         get()= _stateCheck
+
+    private val _stateInput = MutableLiveData<Boolean>(false)
+    val stateInput: LiveData<Boolean>
+        get()= _stateInput
 
     private val _answersCheck = MutableLiveData<List<Answer>>()
     val answersCheck: LiveData<List<Answer>>
@@ -80,12 +92,25 @@ class CheckListViewModel
         _answersCheck.value = answers
     }
 
+    fun getAnswersInput(idQuestion:String,nameQ: String,order: Int) = getAnswers(GetAnswers.Params(idQuestion)) {
+        _nameQuestion.value = nameQ
+        _orderInput.value = order
+        it.either(::handleFailure, ::handleAnswersInput) }
+
+    private fun handleAnswersInput(answers : List<Answer>) {
+        _answersInput.value = answers
+    }
+
     fun startRadio(){
         _stateRadio.value= true
     }
 
     fun startCheck(){
         _stateCheck.value= true
+    }
+
+    fun startInput(){
+        _stateInput.value= true
     }
 
     fun setReadyAnswers(idQuestion: String,nameQuestion: String,idAnswer:String,nameAnswer: String) {
