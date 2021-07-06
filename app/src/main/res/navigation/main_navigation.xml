@@ -43,6 +43,9 @@
         <action
             android:id="@+id/action_navigation_reports_to_pictureFragment"
             app:destination="@id/pictureFragment" />
+        <action
+            android:id="@+id/action_navigation_reports_to_userStatusFragment"
+            app:destination="@id/userStatusFragment" />
     </fragment>
 
     <fragment
@@ -73,6 +76,11 @@
         android:name="com.tawa.allinapp.features.reports.picture.PictureFragment"
         android:label="fragment_picture"
         tools:layout="@layout/fragment_picture" />
+    <fragment
+        android:id="@+id/userStatusFragment"
+        android:name="com.tawa.allinapp.features.reports.userstatus.UserStatusFragment"
+        android:label="fragment_user_status"
+        tools:layout="@layout/fragment_user_status" />
 
 
 </navigation>

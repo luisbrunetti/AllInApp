@@ -103,6 +103,9 @@ class CheckListFragment: BaseFragment() {
         binding.btnSaveReport.setOnClickListener{
            findElements()
         }
+        binding.btnBackCheckList.setOnClickListener{
+            activity?.onBackPressed()
+        }
         return binding.root
     }
 
