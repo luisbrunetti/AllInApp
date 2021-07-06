@@ -416,7 +416,7 @@
                         app:roundedCornerRadius="16dp" />
 
                     <Button
-                        android:id="@+id/btnSave"
+                        android:id="@+id/btnSaveReport"
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
                         android:layout_marginStart="16dp"

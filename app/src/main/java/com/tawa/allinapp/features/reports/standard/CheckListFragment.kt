@@ -7,6 +7,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -39,7 +40,9 @@ class CheckListFragment: BaseFragment() {
     private val TAKE_PHOTO_REQUEST = 101
     private var mCurrentPhotoPath: String = ""
     private lateinit var checkListViewModel: CheckListViewModel
-    private  lateinit var  listRadiosButton:List<RadioButton>
+    private var  listRadioButton = ArrayList<RadioButton>()
+    private var  listCheckBox = ArrayList<CheckBox>()
+
     private  var statePhoto = 0
 
 
@@ -60,19 +63,21 @@ class CheckListFragment: BaseFragment() {
             } })
 
             observe(answersRadio, { it?.let {
-                if(order.value!! >0)
-                {
-                    addAnswersRadio(it,binding.contentCheckList,nameQuestion.value!!,order.value!!)
-                }
-
+                if(orderRadio.value!! >0)
+                    addAnswersRadio(it,binding.contentCheckList,nameQuestion.value!!,orderRadio.value!!)
             } })
 
             observe(answersCheck, { it?.let {
-                if(order1.value!! >0)
-                {
-                    addAnswersCheck(it,binding.contentCheckList,nameQuestion.value!!,order1.value!!)
-                }
-
+                if(orderCheckBox.value!! >0)
+                    addAnswersCheck(it,binding.contentCheckList,nameQuestion.value!!,orderCheckBox.value!!)
+            } })
+            observe(stateRadio, { it?.let {
+                if(it)
+                    findRadioButton()
+            } })
+            observe(stateCheck, { it?.let {
+                if(it)
+                    findCheckBox()
             } })
         }
 
@@ -85,18 +90,44 @@ class CheckListFragment: BaseFragment() {
             binding.deletePhoto.visibility = View.GONE
             statePhoto = 0
         }
+        binding.btnSaveReport.setOnClickListener{
+           findElements()
+        }
         return binding.root
+    }
+
+    private fun findElements(){
+        checkListViewModel.startRadio()
+        checkListViewModel.startCheck()
+    }
+
+    private fun findRadioButton(){
+        for(radio in listRadioButton)
+        {
+            if(radio.isChecked)
+            {
+                val tag = radio.tag as ArrayList<String>
+                checkListViewModel.setReadyAnswers(tag[1],tag[2],tag[0],radio.text.toString())
+            }
+        }
+    }
+
+    private fun findCheckBox(){
+        for(check in listCheckBox)
+        {
+            if(check.isChecked)
+            {
+                val tag = check.tag as ArrayList<String>
+                checkListViewModel.setReadyAnswers(tag[1],tag[2],tag[0],check.text.toString())
+            }
+        }
     }
 
     private fun showQuestions(type:String,id:String,questionName:String,order:Int){
                 if(type=="CHECKBOX")
-                {
                     checkListViewModel.getAnswersRadio(id,questionName,order)
-                }
                 if(type=="CHECK BUTTON")
-                {
                     checkListViewModel.getAnswersCheck(id,questionName,order)
-                }
     }
 
     private fun addAnswersRadio(listAnswers:List<Answer>, linear: LinearLayout, nameQ:String,order: Int){
@@ -112,7 +143,13 @@ class CheckListFragment: BaseFragment() {
             for(list in listAnswers)
             {
                 val radioButton  = RadioButton(context)
+                val listTag =ArrayList<String>(2)
                 radioButton.text = list.answerName
+                listTag.add(list.id)
+                listTag.add(list.idQuestion)
+                listTag.add(nameQ)
+                radioButton.tag = listTag
+                listRadioButton.add(radioButton)
                 radioGroup.addView(radioButton)
             }
            linearL.addView(radioGroup)
@@ -133,7 +170,13 @@ class CheckListFragment: BaseFragment() {
             for(list in listAnswers)
             {
                 val checkBox  = CheckBox(context)
+                val listTag =ArrayList<String>(2)
                 checkBox.text = list.answerName
+                listTag.add(list.id)
+                listTag.add(list.idQuestion)
+                listTag.add(nameQ)
+                checkBox.tag = listTag
+                listCheckBox.add(checkBox)
                 linearL.addView(checkBox)
             }
 
