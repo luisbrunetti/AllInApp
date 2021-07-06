@@ -7,31 +7,31 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.imagepipeline.common.ResizeOptions
 import com.facebook.imagepipeline.request.ImageRequestBuilder
 import com.karumi.dexter.Dexter
+import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionDeniedResponse
 import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import com.karumi.dexter.listener.single.PermissionListener
 import com.tawa.allinapp.R
 import com.tawa.allinapp.core.extensions.observe
 import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.platform.BaseFragment
-import com.tawa.allinapp.data.repository.QuestionsRepository
 import com.tawa.allinapp.databinding.FragmentChecklistBinding
 import com.tawa.allinapp.models.Answer
-import com.tawa.allinapp.models.Question
 import java.io.File
-import javax.inject.Inject
 
 
 class CheckListFragment: BaseFragment() {
@@ -42,6 +42,8 @@ class CheckListFragment: BaseFragment() {
     private lateinit var checkListViewModel: CheckListViewModel
     private var  listRadioButton = ArrayList<RadioButton>()
     private var  listCheckBox = ArrayList<CheckBox>()
+    private var  listInput = ArrayList<EditText>()
+    val params = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
 
     private  var statePhoto = 0
 
@@ -71,6 +73,10 @@ class CheckListFragment: BaseFragment() {
                 if(orderCheckBox.value!! >0)
                     addAnswersCheck(it,binding.contentCheckList,nameQuestion.value!!,orderCheckBox.value!!)
             } })
+            observe(answersInput, { it?.let {
+                if(orderInput.value!! >0)
+                    addAnswersInput(it,binding.contentCheckList,nameQuestion.value!!,orderInput.value!!)
+            } })
             observe(stateRadio, { it?.let {
                 if(it)
                     findRadioButton()
@@ -78,6 +84,10 @@ class CheckListFragment: BaseFragment() {
             observe(stateCheck, { it?.let {
                 if(it)
                     findCheckBox()
+            } })
+            observe(stateInput, { it?.let {
+               if(it)
+                   findInput()
             } })
         }
 
@@ -99,6 +109,7 @@ class CheckListFragment: BaseFragment() {
     private fun findElements(){
         checkListViewModel.startRadio()
         checkListViewModel.startCheck()
+        checkListViewModel.startInput()
     }
 
     private fun findRadioButton(){
@@ -123,14 +134,26 @@ class CheckListFragment: BaseFragment() {
         }
     }
 
+    private fun findInput(){
+        for(input in listInput)
+        {
+            val tag = input.tag as ArrayList<String>
+            checkListViewModel.setReadyAnswers(tag[1],tag[2],tag[0],input.text.toString())
+
+        }
+    }
+
     private fun showQuestions(type:String,id:String,questionName:String,order:Int){
                 if(type=="CHECKBOX")
                     checkListViewModel.getAnswersRadio(id,questionName,order)
                 if(type=="CHECK BUTTON")
                     checkListViewModel.getAnswersCheck(id,questionName,order)
+                if(type=="INPUT")
+                    checkListViewModel.getAnswersInput(id,questionName,order)
     }
 
     private fun addAnswersRadio(listAnswers:List<Answer>, linear: LinearLayout, nameQ:String,order: Int){
+            params.setMargins(0,0, 0, 10f.toDips().toInt())
             val linearL = LinearLayout(context)
             linearL.orientation = LinearLayout.VERTICAL
             val textView  = TextView(context)
@@ -153,12 +176,13 @@ class CheckListFragment: BaseFragment() {
                 radioGroup.addView(radioButton)
             }
            linearL.addView(radioGroup)
-
+           linearL.layoutParams = params
            linear.addView(linearL,order)
 
     }
 
     private fun addAnswersCheck(listAnswers:List<Answer>,linear: LinearLayout,nameQ: String,order: Int){
+            params.setMargins(0,0, 0, 20f.toDips().toInt())
             val linearL = LinearLayout(context)
             linearL.orientation = LinearLayout.VERTICAL
             val textView  = TextView(context)
@@ -179,49 +203,56 @@ class CheckListFragment: BaseFragment() {
                 listCheckBox.add(checkBox)
                 linearL.addView(checkBox)
             }
-
+            linearL.layoutParams = params
             linear.addView(linearL,order)
 
     }
 
+    private fun addAnswersInput(listAnswers:List<Answer>,linear: LinearLayout,nameQ: String,order: Int){
+        params.setMargins(0,0, 0, 20f.toDips().toInt())
+        val linearL = LinearLayout(context)
+        linearL.orientation = LinearLayout.VERTICAL
+        val textView  = TextView(context)
+        textView.text = nameQ
+        textView.textSize = 16f
+        textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_dark))
+        linearL.addView(textView)
+
+        for(list in listAnswers)
+        {
+            val editText  = EditText(context)
+            editText.setBackgroundResource(R.drawable.rounded)
+            editText.setPadding((16f).toDips().toInt(),0,(16f).toDips().toInt(),0)
+            editText.height = (50f).toDips().toInt()
+            val listTag =ArrayList<String>(2)
+            editText.hint = list.answerName
+            listTag.add(list.id)
+            listTag.add(list.idQuestion)
+            listTag.add(nameQ)
+            editText.tag = listTag
+            listInput.add(editText)
+            linearL.addView(editText)
+        }
+        linearL.layoutParams = params
+        linear.addView(linearL,order)
+
+    }
+
+    private fun Float.toDips() = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, this, resources.displayMetrics)
 
     private fun validatePermissions() {
         Dexter.withActivity(requireActivity())
-            .withPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-            .withListener(object: PermissionListener {
-                override fun onPermissionGranted(
-                    response: PermissionGrantedResponse?) {
+            .withPermissions(android.Manifest.permission.CAMERA,android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            .withListener(object: MultiplePermissionsListener {
+                override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
                     launchCamera()
                 }
 
                 override fun onPermissionRationaleShouldBeShown(
-                    permission: PermissionRequest?,
-                    token: PermissionToken?) {
-                    AlertDialog.Builder(context)
-                        .setTitle(
-                            "Probando")
-                        .setMessage(
-                            "Hola")
-                        .setNegativeButton(
-                            android.R.string.cancel
-                        ) { dialog, _ ->
-                            dialog.dismiss()
-                            token?.cancelPermissionRequest()
-                        }
-                        .setPositiveButton(android.R.string.ok
-                        ) { dialog, _ ->
-                            dialog.dismiss()
-                            token?.continuePermissionRequest()
-                        }
-                        .setOnDismissListener {
-                            token?.cancelPermissionRequest()
-                        }
-                        .show()
-                }
-
-                override fun onPermissionDenied(
-                    response: PermissionDeniedResponse?) {
-                    Toast.makeText(context,"error" + response,Toast.LENGTH_SHORT).show()
+                    permissions: MutableList<PermissionRequest>?,
+                    token: PermissionToken?
+                ) {
+                    TODO("Not yet implemented")
                 }
             })
             .check()
@@ -279,6 +310,7 @@ class CheckListFragment: BaseFragment() {
             .setImageRequest(request)
             .build()
         binding.checkListPhoto?.controller = controller
+        Toast.makeText(context, file.toString(), Toast.LENGTH_SHORT).show()
     }
 
 
