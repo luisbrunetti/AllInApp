@@ -10,7 +10,12 @@
         <item>Bayer</item>
         <item>Molitalia</item>
 
-</string-array>
+    </string-array>
+
+    <string-array name="Select">
+        <item>Seleccione</item>
+
+    </string-array>
 
 
 </resources>

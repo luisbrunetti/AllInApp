@@ -19,6 +19,10 @@
         <item name="android:textColor">@color/colorPrimary</item>
     </style>
 
+    <style name="mySpinnerReportsStyle" parent="@android:style/Widget.Holo.DropDownItem.Spinner">
+        <item name="android:textColor">@color/colorTextAll</item>
+    </style>
+
     <style name="CustomBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/CustomBottomSheetStyle</item>
     </style>

@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import android.widget.EditText
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.appbar.AppBarLayout
@@ -40,6 +41,7 @@ class ReportsFragment : BaseFragment() {
             when(it.reportName){
                 "CHECK LIST PUNTO DE VENTA" -> findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToCheckListFragment("Probando"))
                 "REPORTE FOTOGRAFICO" -> findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToPictureFragment())
+                "ESTATUS DE USUARIO" -> findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToUserStatusFragment())
             }
         }
     }
@@ -54,13 +56,10 @@ class ReportsFragment : BaseFragment() {
         reportsViewModel.getReports()
 
         binding.etDate.setOnClickListener{
-            val c = Calendar.getInstance()
-            val year = c.get(Calendar.YEAR)
-            val month = c.get(Calendar.MONTH)
-            val day = c.get(Calendar.DAY_OF_MONTH)
-            val dpd = DatePickerDialog(requireContext(), DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
-                binding.etDate.setText("" + dayOfMonth + "/" +getMonth(monthOfYear) + "/" + year) }, year, month, day)
-            dpd.show()
+          getDay(binding.etDate)
+        }
+        binding.btnBackReports.setOnClickListener{
+            activity?.onBackPressed()
         }
        //binding.btnCheckList.setOnClickListener{
          //   findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToCheckListFragment("Probando"))
@@ -91,6 +90,16 @@ class ReportsFragment : BaseFragment() {
             }
         })
         return binding.root
+    }
+
+    private fun getDay(et: EditText){
+        val c = Calendar.getInstance()
+        val year = c.get(Calendar.YEAR)
+        val month = c.get(Calendar.MONTH)
+        val day = c.get(Calendar.DAY_OF_MONTH)
+        val dpd = DatePickerDialog(requireContext(), DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+            et.setText("" + dayOfMonth + "/" +getMonth(monthOfYear) + "/" + year) }, year, month, day)
+        dpd.show()
     }
 
     private fun getMonth(monthYear: Int) = when(monthYear){

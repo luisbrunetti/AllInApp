@@ -10,6 +10,7 @@ import com.tawa.allinapp.features.movies.MoviesViewModel
 import com.tawa.allinapp.features.reports.picture.PictureViewModel
 import com.tawa.allinapp.features.reports.standard.CheckListViewModel
 import com.tawa.allinapp.features.reports.reports.ReportsViewModel
+import com.tawa.allinapp.features.reports.userstatus.UserStatusViewModel
 import com.tawa.allinapp.features.routes.RoutesViewModel
 import com.tawa.allinapp.features.splash.SplashViewModel
 import dagger.Binds
@@ -70,5 +71,10 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(PictureViewModel::class)
     abstract fun bindsPictureViewModel(pictureViewModel: PictureViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(UserStatusViewModel::class)
+    abstract fun bindsUserStatusViewModel(userStatusViewModel: UserStatusViewModel): ViewModel
 
 }
