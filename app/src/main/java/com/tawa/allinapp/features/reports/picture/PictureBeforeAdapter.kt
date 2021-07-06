@@ -37,7 +37,6 @@ class PictureBeforeAdapter
 
         fun bind(context: Context, picture: Bitmap, clickListener: (Bitmap) -> Unit) {
             binding.ivPicture.loadBitmap(picture)
-            //binding.ivPicture.loadFromUrl("https://www.redagricola.com/pe/assets/uploads/2020/04/flota-drones-792x591-c-default.jpg")
             binding.llPhoto.setOnClickListener {
                 clickListener(picture)
             }
