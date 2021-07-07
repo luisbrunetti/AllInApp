@@ -46,9 +46,17 @@ class PictureFragment : BaseFragment() {
         binding.rvPhotoBefore.layoutManager = LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
         binding.rvPhotoBefore.adapter = pictureBeforeAdapter
         pictureBeforeAdapter.clickListener = { openImage(it) }
+        pictureBeforeAdapter.deleteListener = {
+            pictureBeforeAdapter.collection.remove(it)
+            pictureBeforeAdapter.notifyDataSetChanged()
+        }
         binding.rvPhotoAfter.layoutManager = LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
         binding.rvPhotoAfter.adapter = pictureAfterAdapter
         pictureAfterAdapter.clickListener = { openImage(it) }
+        pictureAfterAdapter.deleteListener = {
+            pictureAfterAdapter.collection.remove(it)
+            pictureAfterAdapter.notifyDataSetChanged()
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

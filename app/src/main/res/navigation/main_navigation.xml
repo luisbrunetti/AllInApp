@@ -46,6 +46,9 @@
         <action
             android:id="@+id/action_navigation_reports_to_userStatusFragment"
             app:destination="@id/userStatusFragment" />
+        <action
+            android:id="@+id/action_navigation_reports_to_skuFragment"
+            app:destination="@id/skuFragment" />
     </fragment>
 
     <fragment
@@ -81,6 +84,11 @@
         android:name="com.tawa.allinapp.features.reports.userstatus.UserStatusFragment"
         android:label="fragment_user_status"
         tools:layout="@layout/fragment_user_status" />
+    <fragment
+        android:id="@+id/skuFragment"
+        android:name="com.tawa.allinapp.features.reports.sku.SkuFragment"
+        android:label="fragment_sku"
+        tools:layout="@layout/fragment_sku" />
 
 
 </navigation>
