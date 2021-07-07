@@ -1,13 +1,9 @@
 package com.tawa.allinapp.features.reports.picture
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.tawa.allinapp.R
-import com.tawa.allinapp.core.extensions.loadBitmap
-import com.tawa.allinapp.core.extensions.loadFromResource
 import com.tawa.allinapp.core.extensions.loadFromUrl
 import com.tawa.allinapp.databinding.RowPictureBinding
 import javax.inject.Inject
@@ -15,9 +11,9 @@ import javax.inject.Inject
 class PictureAfterAdapter
 @Inject constructor(val context: Context) : RecyclerView.Adapter<PictureAfterAdapter.PictureAfterViewHolder>() {
 
-    var collection = ArrayList<Bitmap>()
+    var collection = ArrayList<String>()
 
-    internal var clickListener: (Bitmap) -> Unit = { _ -> }
+    internal var clickListener: (String) -> Unit = { _ -> }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         PictureAfterViewHolder.from(parent)
@@ -27,7 +23,7 @@ class PictureAfterAdapter
 
     override fun getItemCount() = collection.size
 
-    fun setData(pictures: List<Bitmap>){
+    fun setData(pictures: List<String>){
         collection.clear()
         collection = ArrayList(pictures)
         notifyDataSetChanged()
@@ -35,8 +31,8 @@ class PictureAfterAdapter
 
     class PictureAfterViewHolder(val binding : RowPictureBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(context: Context, picture: Bitmap, clickListener: (Bitmap) -> Unit) {
-            binding.ivPicture.loadBitmap(picture)
+        fun bind(context: Context, picture: String, clickListener: (String) -> Unit) {
+            binding.ivPicture.loadFromUrl(picture)
             binding.llPhoto.setOnClickListener {
                 clickListener(picture)
             }
