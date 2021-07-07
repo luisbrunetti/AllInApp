@@ -14,12 +14,13 @@ class PictureAfterAdapter
     var collection = ArrayList<String>()
 
     internal var clickListener: (String) -> Unit = { _ -> }
+    internal var deleteListener: (String) -> Unit = { _ -> }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         PictureAfterViewHolder.from(parent)
 
     override fun onBindViewHolder(viewHolder: PictureAfterViewHolder, position: Int) =
-        viewHolder.bind(context, collection[position], clickListener)
+        viewHolder.bind(context, collection[position], clickListener,deleteListener)
 
     override fun getItemCount() = collection.size
 
@@ -31,10 +32,13 @@ class PictureAfterAdapter
 
     class PictureAfterViewHolder(val binding : RowPictureBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(context: Context, picture: String, clickListener: (String) -> Unit) {
+        fun bind(context: Context, picture: String, clickListener: (String) -> Unit, deleteListener: (String) -> Unit) {
             binding.ivPicture.loadFromUrl(picture)
-            binding.llPhoto.setOnClickListener {
+            binding.ivPicture.setOnClickListener {
                 clickListener(picture)
+            }
+            binding.ivClose.setOnClickListener {
+                deleteListener(picture)
             }
         }
 

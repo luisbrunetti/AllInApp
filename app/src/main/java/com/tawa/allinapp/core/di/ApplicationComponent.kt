@@ -17,6 +17,7 @@ import com.tawa.allinapp.features.movies.ui.MoviesFragment
 import com.tawa.allinapp.features.reports.picture.PictureFragment
 import com.tawa.allinapp.features.reports.standard.CheckListFragment
 import com.tawa.allinapp.features.reports.reports.ReportsFragment
+import com.tawa.allinapp.features.reports.sku.SkuFragment
 import com.tawa.allinapp.features.reports.userstatus.UserStatusFragment
 import com.tawa.allinapp.features.routes.RoutesFragment
 import com.tawa.allinapp.features.splash.SplashActivity
@@ -45,4 +46,5 @@ interface ApplicationComponent{
     fun inject(checkListFragment: CheckListFragment)
     fun inject(pictureFragment: PictureFragment)
     fun inject(userStatusFragment: UserStatusFragment)
+    fun inject(skuFragment: SkuFragment)
 }

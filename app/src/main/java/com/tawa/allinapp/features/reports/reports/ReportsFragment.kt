@@ -42,6 +42,7 @@ class ReportsFragment : BaseFragment() {
                 "CHECK LIST PUNTO DE VENTA" -> findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToCheckListFragment("Probando"))
                 "REPORTE FOTOGRAFICO" -> findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToPictureFragment())
                 "ESTATUS DE USUARIO" -> findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToUserStatusFragment())
+                "QUIEBRES Y SKU" -> findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToSkuFragment())
             }
         }
     }
