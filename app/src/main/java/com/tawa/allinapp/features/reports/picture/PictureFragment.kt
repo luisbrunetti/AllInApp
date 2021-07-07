@@ -11,6 +11,8 @@ import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import androidx.core.net.toUri
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
@@ -43,8 +45,10 @@ class PictureFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.rvPhotoBefore.layoutManager = LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
         binding.rvPhotoBefore.adapter = pictureBeforeAdapter
+        pictureBeforeAdapter.clickListener = { openImage(it) }
         binding.rvPhotoAfter.layoutManager = LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
         binding.rvPhotoAfter.adapter = pictureAfterAdapter
+        pictureAfterAdapter.clickListener = { openImage(it) }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -64,6 +68,28 @@ class PictureFragment : BaseFragment() {
         return binding.root
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        when(requestCode){
+            before -> if(resultCode==Activity.RESULT_OK) {
+                val bitmap = data!!.extras?.get("data") as Bitmap
+                val uri = getImageUri(activity?.applicationContext!!, bitmap)
+                pictureBeforeAdapter.collection.add(uri.toString())
+            }
+            after -> if(resultCode==Activity.RESULT_OK) {
+                val bitmap = data!!.extras?.get("data") as Bitmap
+                val uri = getImageUri(activity?.applicationContext!!, bitmap)
+                pictureAfterAdapter.collection.add(uri.toString())
+            }
+        }
+    }
+
+    private fun openImage(image:String){
+        val intent = Intent()
+        intent.action = Intent.ACTION_VIEW
+        intent.setDataAndType(image.toUri(), "image/*")
+        activity?.startActivity(intent)
+    }
+
     private fun checkCameraPermissions(origin:Int){
         Dexter.withActivity(activity)
             .withPermissions(Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -78,21 +104,6 @@ class PictureFragment : BaseFragment() {
     private fun launchCamera(origin:Int){
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         startActivityForResult(intent, origin)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        when(requestCode){
-            before -> if(resultCode==Activity.RESULT_OK) {
-                val bitmap = data!!.extras?.get("data") as Bitmap
-                val uri = getImageUri(activity?.applicationContext!!, bitmap)
-                pictureBeforeAdapter.collection.add(uri.toString())
-            }
-            after -> if(resultCode==Activity.RESULT_OK) {
-                val bitmap = data!!.extras?.get("data") as Bitmap
-                val uri = getImageUri(activity?.applicationContext!!, bitmap)
-                pictureAfterAdapter.collection.add(uri.toString())
-            }
-        }
     }
 
     private fun getImageUri(inContext: Context, inImage: Bitmap?): Uri? {
