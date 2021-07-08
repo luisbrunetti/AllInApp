@@ -201,12 +201,12 @@
                         android:layout_marginStart="25dp"
                         android:layout_marginTop="50dp"
                         android:layout_marginBottom="120dp"
-                        android:background="@drawable/bg_button_check_in"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/btnFilter">
+                        app:layout_constraintTop_toBottomOf="@+id/btnFilter"
+                        app:layout_constraintVertical_bias="0.0">
 
                         <TableRow
                             android:layout_width="match_parent"
@@ -228,86 +228,6 @@
 
                         </TableRow>
 
-                        <TableRow
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:background="@color/table_body">
-
-                            <TextView
-                                android:layout_width="150dp"
-                                android:layout_height="60dp"
-                                android:gravity="center"
-                                android:padding="10dp"
-                                android:text="Marcos Gonzáles Cárdenas">
-
-                            </TextView>
-
-                        </TableRow>
-
-                        <TableRow
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:background="@color/table_body">
-
-                            <TextView
-                                android:layout_width="150dp"
-                                android:layout_height="60dp"
-                                android:gravity="center"
-                                android:padding="10dp"
-                                android:text="Guillem San Martin">
-
-                            </TextView>
-
-                        </TableRow>
-
-                        <TableRow
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:background="@color/table_body">
-
-                            <TextView
-                                android:layout_width="150dp"
-                                android:layout_height="60dp"
-                                android:gravity="center"
-                                android:padding="10dp"
-                                android:text="Andoni Espejo">
-
-                            </TextView>
-
-                        </TableRow>
-
-                        <TableRow
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:background="@color/table_body">
-
-                            <TextView
-                                android:layout_width="150dp"
-                                android:layout_height="60dp"
-                                android:gravity="center"
-                                android:padding="10dp"
-                                android:text="Valentin Cantos">
-
-                            </TextView>
-
-                        </TableRow>
-
-                        <TableRow
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:background="@color/table_body">
-
-                            <TextView
-                                android:layout_width="150dp"
-                                android:layout_height="60dp"
-                                android:gravity="center"
-                                android:padding="10dp"
-                                android:text="Rachid Oliver">
-
-                            </TextView>
-
-                        </TableRow>
-
 
                     </TableLayout>
 
@@ -316,12 +236,15 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="50dp"
+                        android:layout_marginBottom="120dp"
                         android:fillViewport="true"
                         android:scrollbarStyle="outsideInset"
                         android:scrollbars="horizontal|vertical"
+                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/tlName"
-                        app:layout_constraintTop_toBottomOf="@+id/btnFilter">
+                        app:layout_constraintTop_toBottomOf="@+id/btnFilter"
+                        app:layout_constraintVertical_bias="0.0">
 
                         <HorizontalScrollView
                             android:id="@+id/horizontalView"
@@ -405,7 +328,8 @@
 
                                 <TableRow
                                     android:layout_width="match_parent"
-                                    android:layout_height="match_parent">
+                                    android:layout_height="match_parent"
+                                    android:background="@drawable/borderbottomtlcontent">
 
                                     <TextView
                                         android:layout_width="wrap_content"
@@ -460,7 +384,8 @@
 
                                 <TableRow
                                     android:layout_width="match_parent"
-                                    android:layout_height="match_parent">
+                                    android:layout_height="match_parent"
+                                    android:background="@drawable/borderbottomtlcontent">
 
                                     <TextView
                                         android:layout_width="wrap_content"
@@ -515,7 +440,8 @@
 
                                 <TableRow
                                     android:layout_width="match_parent"
-                                    android:layout_height="match_parent">
+                                    android:layout_height="match_parent"
+                                    android:background="@drawable/borderbottomtlcontent">
 
                                     <TextView
                                         android:layout_width="wrap_content"
@@ -570,7 +496,8 @@
 
                                 <TableRow
                                     android:layout_width="match_parent"
-                                    android:layout_height="match_parent">
+                                    android:layout_height="match_parent"
+                                    android:background="@drawable/borderbottomtlcontent">
 
                                     <TextView
                                         android:layout_width="wrap_content"
@@ -625,7 +552,8 @@
 
                                 <TableRow
                                     android:layout_width="match_parent"
-                                    android:layout_height="match_parent">
+                                    android:layout_height="match_parent"
+                                    android:background="@drawable/borderbottomtlcontent">
 
                                     <TextView
                                         android:layout_width="wrap_content"
