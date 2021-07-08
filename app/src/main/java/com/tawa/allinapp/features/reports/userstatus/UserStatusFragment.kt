@@ -6,6 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.TableLayout
+import android.widget.TableRow
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -18,6 +21,7 @@ import com.tawa.allinapp.databinding.FragmentInitBinding
 import com.tawa.allinapp.databinding.FragmentRoutesBinding
 import com.tawa.allinapp.databinding.FragmentUserStatusBinding
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class UserStatusFragment : BaseFragment() {
@@ -33,6 +37,13 @@ class UserStatusFragment : BaseFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentUserStatusBinding.inflate(inflater)
+        val userStatus = ArrayList<String>()
+        userStatus.add("Marcos Gonzáles Cárdenas")
+        userStatus.add("Guillem San Martin")
+        userStatus.add("Andoni Espejo")
+        userStatus.add("Valentin Cantos")
+        userStatus.add("Rachid Oliver")
+
 
         userStatusViewModel = viewModel(viewModelFactory) {
             observe(text, {
@@ -48,7 +59,21 @@ class UserStatusFragment : BaseFragment() {
         binding.btnBackStatus.setOnClickListener{
             activity?.onBackPressed()
         }
+        //setDataLayout(binding.tlName,userStatus)
+
         return binding.root
+    }
+
+    private fun setDataLayout(tableLayout: TableLayout, data:ArrayList<String>){
+
+        for(name in data)
+        {
+            val row  = TableRow(context)
+            val textView = TextView(context)
+            textView.text = name
+            row.addView(row)
+            tableLayout.addView(row)
+        }
     }
 
     private fun getDay(et:EditText){

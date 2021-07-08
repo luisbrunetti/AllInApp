@@ -8,13 +8,18 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+        <include
+            android:id="@+id/iHeader"
+            layout="@layout/header_report"
+            app:title="@{`Check List Punto de Venta`}"
+            app:sub="@{`Informe:`}"/>
 
         <View
             android:id="@+id/view14"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@color/colorSplash"
-            android:visibility="visible"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -27,6 +32,7 @@
             android:layout_width="0dp"
             android:layout_height="73dp"
             android:background="@drawable/bg_gradient_rounded"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -40,6 +46,7 @@
             android:layout_marginStart="22dp"
             android:layout_marginTop="19dp"
             android:src="@drawable/ic_arrow_reports"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="@+id/view2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -58,6 +65,7 @@
             android:textColor="@color/white"
             android:textSize="16sp"
             android:textStyle="bold"
+            android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="@+id/view2"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/btnBackCheckList"
@@ -73,6 +81,7 @@
             android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold"
+            android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="@+id/view2"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/btnBackCheckList"

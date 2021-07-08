@@ -20,6 +20,8 @@
     <color name="bg_overlay">#B9000000</color>
     <color name="bg_reports">#E5E5E5</color>
     <color name="text_dark">#303235</color>
+    <color name="table_header">#DCEEF6</color>
+    <color name="table_body">#E8F4FA</color>
 
 
     <color name="white">#ffff</color>

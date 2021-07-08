@@ -28,6 +28,7 @@ import javax.inject.Singleton
 @Singleton
 @Component(modules = [ApplicationModule::class, ViewModelModule::class])
 interface ApplicationComponent{
+
     fun inject(application: AndroidApplication)
     fun inject(homeActivity: HomeActivity)
     fun inject(loginActivity: LoginActivity)
