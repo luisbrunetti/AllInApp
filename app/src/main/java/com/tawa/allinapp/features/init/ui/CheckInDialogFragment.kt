@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.location.Location
 import android.location.LocationManager
+import android.os.BatteryManager
 import android.os.Bundle
 import android.os.Looper
 import android.util.Log
@@ -26,7 +27,11 @@ import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.DialogCheckinBinding
 import com.tawa.allinapp.features.init.InitViewModel
 import com.tawa.allinapp.models.PV
+import java.sql.Timestamp
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 
 class CheckInDialogFragment
@@ -45,6 +50,7 @@ class CheckInDialogFragment
     private var _pv: String = ""
     private var _pvId: String = ""
     var listener: Callback? = null
+    var stateUser  = ArrayList<String>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = DialogCheckinBinding.inflate(inflater)
@@ -97,6 +103,7 @@ class CheckInDialogFragment
 
         binding.btnDoCheckin.setOnClickListener {
             val positionPv  = binding.pdvSpinner.selectedItemPosition
+            Toast.makeText(context,getBatteryPercentage(requireContext()).toString()+" - "+getHour() + " - "+latitude+","+longitude,Toast.LENGTH_LONG).show()
             if(checkState)
             {
                 if(getDistance(list[positionPv].lat,list[positionPv].long,latitude,longitude)<=250)
@@ -120,6 +127,18 @@ class CheckInDialogFragment
         }
 
     }
+
+    private fun getBatteryPercentage(context: Context): Int {
+            val bm = context.getSystemService(Context.BATTERY_SERVICE) as BatteryManager
+            return bm.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY)
+    }
+
+    private fun getHour():String{
+        val formatter = SimpleDateFormat("HH:mm:ss")
+        val timestamp = Timestamp(System.currentTimeMillis())
+        return formatter.format(timestamp)
+    }
+
 
     fun getDistance(latitudeA:String,longitudeA:String,latitudeB:String,longitudeB: String):Float{
 

@@ -13,7 +13,6 @@
             android:id="@+id/conteStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/colorSplash"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -194,6 +193,495 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/reportSpinner"
                         app:layout_constraintVertical_bias="0.0" />
+
+                    <TableLayout
+                        android:id="@+id/tlName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="25dp"
+                        android:layout_marginTop="50dp"
+                        android:layout_marginBottom="120dp"
+                        android:background="@drawable/bg_button_check_in"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/btnFilter">
+
+                        <TableRow
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/bg_header_table_round">
+
+                            <TextView
+                                android:id="@+id/textView15"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_column="0"
+                                android:layout_marginStart="10dp"
+                                android:layout_marginTop="5dp"
+                                android:layout_marginEnd="10dp"
+                                android:text="Usuario"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+
+
+                        </TableRow>
+
+                        <TableRow
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@color/table_body">
+
+                            <TextView
+                                android:layout_width="150dp"
+                                android:layout_height="60dp"
+                                android:gravity="center"
+                                android:padding="10dp"
+                                android:text="Marcos Gonzáles Cárdenas">
+
+                            </TextView>
+
+                        </TableRow>
+
+                        <TableRow
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@color/table_body">
+
+                            <TextView
+                                android:layout_width="150dp"
+                                android:layout_height="60dp"
+                                android:gravity="center"
+                                android:padding="10dp"
+                                android:text="Guillem San Martin">
+
+                            </TextView>
+
+                        </TableRow>
+
+                        <TableRow
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@color/table_body">
+
+                            <TextView
+                                android:layout_width="150dp"
+                                android:layout_height="60dp"
+                                android:gravity="center"
+                                android:padding="10dp"
+                                android:text="Andoni Espejo">
+
+                            </TextView>
+
+                        </TableRow>
+
+                        <TableRow
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@color/table_body">
+
+                            <TextView
+                                android:layout_width="150dp"
+                                android:layout_height="60dp"
+                                android:gravity="center"
+                                android:padding="10dp"
+                                android:text="Valentin Cantos">
+
+                            </TextView>
+
+                        </TableRow>
+
+                        <TableRow
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@color/table_body">
+
+                            <TextView
+                                android:layout_width="150dp"
+                                android:layout_height="60dp"
+                                android:gravity="center"
+                                android:padding="10dp"
+                                android:text="Rachid Oliver">
+
+                            </TextView>
+
+                        </TableRow>
+
+
+                    </TableLayout>
+
+                    <ScrollView
+                        android:id="@+id/layout"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="50dp"
+                        android:fillViewport="true"
+                        android:scrollbarStyle="outsideInset"
+                        android:scrollbars="horizontal|vertical"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/tlName"
+                        app:layout_constraintTop_toBottomOf="@+id/btnFilter">
+
+                        <HorizontalScrollView
+                            android:id="@+id/horizontalView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:scrollbars="horizontal|vertical">
+
+                            <TableLayout
+                                android:id="@+id/tlGridTable"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent">
+
+                                <TableRow
+                                    android:id="@+id/r111"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:background="@drawable/bg_header_table">
+
+                                    <TextView
+                                        android:id="@+id/textView1511"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_column="0"
+                                        android:layout_marginStart="10dp"
+                                        android:layout_marginTop="5dp"
+                                        android:layout_marginEnd="10dp"
+                                        android:text="Batería"
+                                        android:textSize="16sp"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:id="@+id/textView17"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_column="1"
+                                        android:layout_marginStart="10dp"
+                                        android:layout_marginTop="5dp"
+                                        android:layout_marginEnd="10dp"
+                                        android:text="Estado"
+                                        android:textSize="16sp"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:id="@+id/textView18"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_column="2"
+                                        android:layout_marginStart="10dp"
+                                        android:layout_marginTop="5dp"
+                                        android:layout_marginEnd="10dp"
+                                        android:text="Estado GPS"
+                                        android:textSize="16sp"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:id="@+id/textView19"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_column="3"
+                                        android:layout_marginStart="10dp"
+                                        android:layout_marginTop="5dp"
+                                        android:layout_marginEnd="10dp"
+                                        android:text="Última hora de ingreso"
+                                        android:textSize="16sp"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:id="@+id/textView22"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_column="4"
+                                        android:layout_marginStart="10dp"
+                                        android:layout_marginTop="5dp"
+                                        android:layout_marginEnd="10dp"
+                                        android:text="Última ubicación"
+                                        android:textSize="16sp"
+                                        android:textStyle="bold" />
+
+
+                                </TableRow>
+
+                                <TableRow
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="60dp"
+                                        android:layout_column="0"
+                                        android:gravity="start|center_vertical"
+                                        android:padding="10dp"
+                                        android:text="90%">
+
+                                    </TextView>
+
+                                    <TextView
+                                        android:id="@+id/textView7511"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="60dp"
+                                        android:layout_column="1"
+                                        android:gravity="start|center_vertical"
+                                        android:padding="10dp"
+                                        android:text="Activo">
+
+                                    </TextView>
+
+                                    <TextView
+                                        android:id="@+id/textView78111"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="60dp"
+                                        android:layout_column="1"
+                                        android:gravity="start|center_vertical"
+                                        android:padding="10dp"
+                                        android:text="Apagado">
+
+                                    </TextView>
+
+                                    <TextView
+                                        android:id="@+id/textView81111"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="60dp"
+                                        android:layout_column="1"
+                                        android:gravity="start|center_vertical"
+                                        android:padding="10dp"
+                                        android:text="Apagado">
+
+                                    </TextView>
+
+                                    <ImageView
+                                        android:id="@+id/imageView113"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="60dp"
+                                        android:src="@drawable/ic_baseline_visibility_24" />
+
+                                </TableRow>
+
+                                <TableRow
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="60dp"
+                                        android:layout_column="0"
+                                        android:gravity="start|center_vertical"
+                                        android:padding="10dp"
+                                        android:text="10%">
+
+                                    </TextView>
+
+                                    <TextView
+                                        android:id="@+id/textView751"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="60dp"
+                                        android:layout_column="1"
+                                        android:gravity="start|center_vertical"
+                                        android:padding="10dp"
+                                        android:text="Activo">
+
+                                    </TextView>
+
+                                    <TextView
+                                        android:id="@+id/textView7811"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="60dp"
+                                        android:layout_column="1"
+                                        android:gravity="start|center_vertical"
+                                        android:padding="10dp"
+                                        android:text="Apagado">
+
+                                    </TextView>
+
+                                    <TextView
+                                        android:id="@+id/textView8111"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="60dp"
+                                        android:layout_column="1"
+                                        android:gravity="start|center_vertical"
+                                        android:padding="10dp"
+                                        android:text="Apagado">
+
+                                    </TextView>
+
+                                    <ImageView
+                                        android:id="@+id/imageView13"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="60dp"
+                                        android:src="@drawable/ic_baseline_visibility_24" />
+
+                                </TableRow>
+
+                                <TableRow
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="60dp"
+                                        android:layout_column="0"
+                                        android:gravity="start|center_vertical"
+                                        android:padding="10dp"
+                                        android:text="40%">
+
+                                    </TextView>
+
+                                    <TextView
+                                        android:id="@+id/textView73"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="60dp"
+                                        android:layout_column="1"
+                                        android:gravity="start|center_vertical"
+                                        android:padding="10dp"
+                                        android:text="Activo">
+
+                                    </TextView>
+
+                                    <TextView
+                                        android:id="@+id/textView76"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="60dp"
+                                        android:layout_column="1"
+                                        android:gravity="start|center_vertical"
+                                        android:padding="10dp"
+                                        android:text="Apagado">
+
+                                    </TextView>
+
+                                    <TextView
+                                        android:id="@+id/textView79"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="60dp"
+                                        android:layout_column="1"
+                                        android:gravity="start|center_vertical"
+                                        android:padding="10dp"
+                                        android:text="Apagado">
+
+                                    </TextView>
+
+                                    <ImageView
+                                        android:id="@+id/imageView4"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="60dp"
+                                        android:src="@drawable/ic_baseline_visibility_24" />
+
+                                </TableRow>
+
+                                <TableRow
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="60dp"
+                                        android:layout_column="0"
+                                        android:gravity="start|center_vertical"
+                                        android:padding="10dp"
+                                        android:text="75%">
+
+                                    </TextView>
+
+                                    <TextView
+                                        android:id="@+id/textView74"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="60dp"
+                                        android:layout_column="1"
+                                        android:gravity="start|center_vertical"
+                                        android:padding="10dp"
+                                        android:text="Activo">
+
+                                    </TextView>
+
+                                    <TextView
+                                        android:id="@+id/textView77"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="60dp"
+                                        android:layout_column="1"
+                                        android:gravity="start|center_vertical"
+                                        android:padding="10dp"
+                                        android:text="Apagado">
+
+                                    </TextView>
+
+                                    <TextView
+                                        android:id="@+id/textView80"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="60dp"
+                                        android:layout_column="1"
+                                        android:gravity="start|center_vertical"
+                                        android:padding="10dp"
+                                        android:text="Apagado">
+
+                                    </TextView>
+
+                                    <ImageView
+                                        android:id="@+id/imageView12"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="60dp"
+                                        android:src="@drawable/ic_baseline_visibility_24" />
+
+                                </TableRow>
+
+                                <TableRow
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="60dp"
+                                        android:layout_column="0"
+                                        android:gravity="start|center_vertical"
+                                        android:padding="10dp"
+                                        android:text="100%">
+
+                                    </TextView>
+
+                                    <TextView
+                                        android:id="@+id/textView75111"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="60dp"
+                                        android:layout_column="1"
+                                        android:gravity="start|center_vertical"
+                                        android:padding="10dp"
+                                        android:text="Activo">
+
+                                    </TextView>
+
+                                    <TextView
+                                        android:id="@+id/textView781111"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="60dp"
+                                        android:layout_column="1"
+                                        android:gravity="start|center_vertical"
+                                        android:padding="10dp"
+                                        android:text="Apagado">
+
+                                    </TextView>
+
+                                    <TextView
+                                        android:id="@+id/textView811111"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="60dp"
+                                        android:layout_column="1"
+                                        android:gravity="start|center_vertical"
+                                        android:padding="10dp"
+                                        android:text="Apagado">
+
+                                    </TextView>
+
+                                    <ImageView
+                                        android:id="@+id/imageView1113"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="60dp"
+                                        android:src="@drawable/ic_baseline_visibility_24" />
+
+                                </TableRow>
+
+
+                            </TableLayout>
+                        </HorizontalScrollView>
+                    </ScrollView>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </LinearLayout>
