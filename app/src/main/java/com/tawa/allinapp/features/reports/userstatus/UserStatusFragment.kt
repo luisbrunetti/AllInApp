@@ -2,24 +2,20 @@ package com.tawa.allinapp.features.reports.userstatus
 
 import android.app.DatePickerDialog
 import android.os.Bundle
+import android.text.Layout
+import android.util.TypedValue
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.TableLayout
-import android.widget.TableRow
-import android.widget.TextView
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import com.tawa.allinapp.core.di.viewmodel.ViewModelFactory
+import android.widget.*
+import androidx.core.view.setPadding
+import com.tawa.allinapp.R
 import com.tawa.allinapp.core.extensions.observe
 import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.platform.BaseFragment
-
-import com.tawa.allinapp.databinding.FragmentInitBinding
-import com.tawa.allinapp.databinding.FragmentRoutesBinding
 import com.tawa.allinapp.databinding.FragmentUserStatusBinding
+import kotlinx.android.synthetic.main.dialog_home.*
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -28,7 +24,6 @@ class UserStatusFragment : BaseFragment() {
 
     private lateinit var userStatusViewModel: UserStatusViewModel
     private lateinit var binding: FragmentUserStatusBinding
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,22 +54,31 @@ class UserStatusFragment : BaseFragment() {
         binding.btnBackStatus.setOnClickListener{
             activity?.onBackPressed()
         }
-        //setDataLayout(binding.tlName,userStatus)
+        setDataLayout(binding.tlName,userStatus)
 
         return binding.root
     }
 
     private fun setDataLayout(tableLayout: TableLayout, data:ArrayList<String>){
-
-        for(name in data)
+        for((flag, name) in data.withIndex())
         {
             val row  = TableRow(context)
+            row.setBackgroundResource(R.drawable.borderbottom)
             val textView = TextView(context)
             textView.text = name
-            row.addView(row)
+            textView.height=60f.toDips().toInt()
+            textView.width = 150f.toDips().toInt()
+            textView.setPadding(10)
+            textView.gravity = Gravity.CENTER
+            row.addView(textView)
             tableLayout.addView(row)
         }
+
+
+
     }
+
+    private fun Float.toDips() = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, this, resources.displayMetrics)
 
     private fun getDay(et:EditText){
         val c = Calendar.getInstance()
