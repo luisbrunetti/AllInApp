@@ -35,8 +35,10 @@ class ReportsAdapter
 
         fun bind(context: Context, report: Report, clickListener: (Report) -> Unit) {
             when(report.reportName){
-                "A"-> binding.ivIconReport.loadFromResource(R.drawable.ic_noinit)
-                "B" -> binding.ivIconReport.loadFromResource(R.drawable.ic_noinit)
+                "CHECK LIST PUNTO DE VENTA" -> binding.ivIconReport.loadFromResource(R.drawable.ic_noinit)
+                "REPORTE FOTOGRAFICO" -> binding.ivIconReport.loadFromResource(R.drawable.ic_noinit)
+                "ESTATUS DE USUARIO"-> binding.ivIconReport.loadFromResource(R.drawable.ic_noinit)
+                "QUIEBRES Y SKU" -> binding.ivIconReport.loadFromResource(R.drawable.ic_noinit)
                 else -> binding.ivIconReport.loadFromResource(R.drawable.ic_noinit)
             }
             binding.tvPVName.text = report.reportName
