@@ -11,12 +11,15 @@ import com.tawa.allinapp.data.remote.service.QuestionsService
 import com.tawa.allinapp.data.remote.service.ReportsService
 import com.tawa.allinapp.models.Company
 import com.tawa.allinapp.models.PV
+import com.tawa.allinapp.models.PhotoReport
 import com.tawa.allinapp.models.Report
 import javax.inject.Inject
 
 interface ReportsRepository {
     fun setReports(company: String): Either<Failure, Boolean>
+    fun saveLocalPhotoReport(report:PhotoReport): Either<Failure, Boolean>
     fun getReports(): Either<Failure,List<Report>>
+    fun savePhotoReport(): Either<Failure, Boolean>
 
     class Network
     @Inject constructor(private val networkHandler: NetworkHandler,
@@ -52,6 +55,37 @@ interface ReportsRepository {
             }
         }
 
+        override fun saveLocalPhotoReport(report:PhotoReport): Either<Failure, Boolean> {
+            return try {
+                reportsDataSource.insertPhotoReport(report.toModel())
+                Either.Right(true)
+            }catch (e:Exception){
+                Either.Left(Failure.DefaultError(e.message!!))
+            }
+        }
+
+        override fun savePhotoReport(): Either<Failure, Boolean> {
+            return when (networkHandler.isConnected) {
+                true ->{
+                    try {
+                        val reports = reportsDataSource.getPhotoReports()
+                        var regs = 0
+                        reports.map {
+                            val response = service.setPhotoReports(
+                                it.before1?:"",it.before2?:"",it.before3?:"",it.before4?:"",it.before5?:"",
+                                it.after1?:"",it.after2?:"",it.after3?:"",it.after4?:"",it.after5?:"",it.comments?:""
+                            ).execute()
+                            if (response.isSuccessful) regs++
+                        }
+                        if (regs == reports.size) Either.Right(true) else Either.Left(Failure.DefaultError("No se insertaron algunos registros"))
+                    } catch (e: Exception) {
+                        Either.Left(Failure.DefaultError(e.message!!))
+                    }
+                }
+                false -> Either.Left(Failure.NetworkConnection)
+            }
+        }
+
         override fun getReports(): Either<Failure, List<Report>> {
             return try {
                 Either.Right(reportsDataSource.getReports().map { it.toView() })
@@ -59,7 +93,5 @@ interface ReportsRepository {
                 Either.Left(Failure.DefaultError(e.message!!))
             }
         }
-
-
     }
 }

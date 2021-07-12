@@ -15,6 +15,7 @@ import com.tawa.allinapp.features.movies.models.Movie
     QuestionModel::class,
     AnswerModel::class,
     ReadyAnswerModel::class,
+    PhotoReportModel::class,
 ],version = 1)
 abstract class AllInAppDatabase: RoomDatabase(){
     abstract fun movieDao(): MovieDao

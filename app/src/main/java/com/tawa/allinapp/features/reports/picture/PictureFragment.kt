@@ -23,6 +23,7 @@ import com.tawa.allinapp.core.extensions.observe
 import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.FragmentPictureBinding
+import com.tawa.allinapp.models.PhotoReport
 import javax.inject.Inject
 
 class PictureFragment : BaseFragment() {
@@ -43,6 +44,7 @@ class PictureFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setUpBinding()
         binding.rvPhotoBefore.layoutManager = LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
         binding.rvPhotoBefore.adapter = pictureBeforeAdapter
         pictureBeforeAdapter.clickListener = { openImage(it) }
@@ -62,8 +64,8 @@ class PictureFragment : BaseFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentPictureBinding.inflate(inflater)
         pictureViewModel = viewModel(viewModelFactory){
-            observe(text,{ it?.let {
-
+            observe(successReport,{ it?.let {
+                hideProgressDialog()
             }})
         }
         binding.btTakePhotoBefore.setOnClickListener {
@@ -71,6 +73,23 @@ class PictureFragment : BaseFragment() {
         }
         binding.btTakePhotoAfter.setOnClickListener {
             checkCameraPermissions(after)
+        }
+        binding.btSavePictures.setOnClickListener {
+            showProgressDialog()
+            val before = 5 -pictureBeforeAdapter.collection.size
+            for (i in 0..before){
+                if(i!=0) pictureBeforeAdapter.collection.add("")
+            }
+            val after = 5- pictureAfterAdapter.collection.size
+            for (i in 0..after){
+                if(i!=0) pictureAfterAdapter.collection.add("")
+            }
+            val report = PhotoReport(
+                pictureBeforeAdapter.collection,
+                pictureAfterAdapter.collection,
+                binding.tvComments.text.toString()
+            )
+            pictureViewModel.saveReport(report)
         }
 
         return binding.root
@@ -118,5 +137,11 @@ class PictureFragment : BaseFragment() {
         val image = Bitmap.createScaledBitmap(inImage!!, 300, 300, true)
         val path = MediaStore.Images.Media.insertImage(inContext.contentResolver, image, "picture", null)
         return Uri.parse(path)
+    }
+
+    private fun setUpBinding() {
+        binding.viewModel = pictureViewModel
+        binding.lifecycleOwner = this
+        binding.executePendingBindings()
     }
 }
