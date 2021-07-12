@@ -22,9 +22,6 @@
     <color name="text_dark">#303235</color>
     <color name="table_header">#DCEEF6</color>
     <color name="table_body">#E8F4FA</color>
-    <color name="colorCellTable">#838383</color>
-    <color name="colorBgCellTableFirst">#E8F4FA</color>
-    <color name="colorHeaderTable">#DCEEF6</color>
 
     <color name="white">#ffff</color>
     <color name="blue">#044c7e</color>
