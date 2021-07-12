@@ -34,7 +34,7 @@ class SkuFragment : BaseFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentSkuBinding.inflate(inflater)
         list.add(Sku("7UP 1500ml","22/06/2021","Bebida saborizada","7UP","35","1.00"))
-        list.add(Sku("7UP 1500ml","22/06/2021","Bebida saborizada","7UP","35","1.00"))
+        list.add(Sku("7UP 1500ml","22/06/2021","Bebida muy muy saborizada","7UP","35","1.00"))
         list.add(Sku("7UP 1500ml","22/06/2021","Bebida saborizada","7UP","35","1.00"))
         list.add(Sku("7UP 1500ml","22/06/2021","Bebida saborizada","7UP","35","1.00"))
         list.add(Sku("7UP 1500ml","22/06/2021","Bebida saborizada","7UP","35","1.00"))

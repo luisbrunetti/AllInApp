@@ -1,45 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.LinearLayoutCompat
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="@drawable/bg_cell_table"
+    android:background="@drawable/bg_cell_table_header"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvProduct"
-        style="@style/TextTable"
-        android:background="@drawable/bg_cell_table_first"
+        style="@style/TextTableHeader"
         android:layout_width="150dp"
         android:layout_height="wrap_content"/>
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvDate"
-        style="@style/TextTable"
+        style="@style/TextTableHeader"
         android:layout_width="120dp"
         android:layout_height="wrap_content"/>
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvCategory"
-        style="@style/TextTable"
+        style="@style/TextTableHeader"
         android:layout_width="200dp"
         android:layout_height="wrap_content"/>
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvSubCategory"
-        style="@style/TextTable"
+        style="@style/TextTableHeader"
         android:layout_width="200dp"
         android:layout_height="wrap_content"/>
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvInventory"
-        style="@style/TextTable"
+        style="@style/TextTableHeader"
         android:layout_width="80dp"
         android:layout_height="wrap_content"/>
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvPrice"
-        style="@style/TextTable"
+        style="@style/TextTableHeader"
         android:layout_width="80dp"
         android:layout_height="wrap_content"/>
 

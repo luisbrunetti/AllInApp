@@ -43,10 +43,15 @@
 
     <style name="TextTable" parent="AppTheme">
         <item name="android:gravity">center</item>
-        <item name="android:paddingStart">8dp</item>
-        <item name="android:paddingEnd">8dp</item>
-        <item name="android:paddingTop">12dp</item>
-        <item name="android:paddingBottom">12dp</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:padding">12dp</item>
+    </style>
+
+    <style name="TextTableHeader" parent="AppTheme">
+        <item name="android:gravity">center</item>
+        <item name="android:padding">12dp</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textSize">12sp</item>
     </style>
 
     <style name="BaseToolbarStyle">
