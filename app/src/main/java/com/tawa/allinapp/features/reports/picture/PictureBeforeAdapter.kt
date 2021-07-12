@@ -11,7 +11,7 @@ import javax.inject.Inject
 class PictureBeforeAdapter
 @Inject constructor(val context: Context) : RecyclerView.Adapter<PictureBeforeAdapter.PictureBeforeViewHolder>() {
 
-    var collection = ArrayList<String>()
+    var collection = ArrayList<String?>()
 
     internal var clickListener: (String) -> Unit = { _ -> }
     internal var deleteListener: (String) -> Unit = { _ -> }
@@ -20,7 +20,7 @@ class PictureBeforeAdapter
         PictureBeforeViewHolder.from(parent)
 
     override fun onBindViewHolder(viewHolder: PictureBeforeViewHolder, position: Int) =
-        viewHolder.bind(context, collection[position], clickListener,deleteListener)
+        viewHolder.bind(context, collection[position]?:"", clickListener,deleteListener)
 
     override fun getItemCount() = collection.size
 

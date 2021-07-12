@@ -2,10 +2,7 @@ package com.tawa.allinapp.data.local.datasource
 
 import com.tawa.allinapp.data.local.dao.ParametersDao
 import com.tawa.allinapp.data.local.dao.ReportsDao
-import com.tawa.allinapp.data.local.models.CompanyModel
-import com.tawa.allinapp.data.local.models.PVModel
-import com.tawa.allinapp.data.local.models.QuestionModel
-import com.tawa.allinapp.data.local.models.ReportModel
+import com.tawa.allinapp.data.local.models.*
 import javax.inject.Inject
 
 
@@ -18,5 +15,12 @@ class ReportsDataSource @Inject constructor(private val reportsDao: ReportsDao){
         return reportsDao.getReports()
     }
 
+    fun insertPhotoReport(reportModel: PhotoReportModel){
+        reportsDao.insertPhotoReport(reportModel)
+    }
+
+    fun getPhotoReports():List<PhotoReportModel> {
+        return reportsDao.getPhotoReports()
+    }
 
 }
