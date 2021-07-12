@@ -55,7 +55,7 @@
             android:layout_marginEnd="20dp"
             android:text="Reporte"
             android:textColor="@color/white"
-            android:textSize="16sp"
+            android:textSize="14sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="@+id/headStatus"
             app:layout_constraintHorizontal_bias="0.0"
@@ -211,19 +211,21 @@
                         <TableRow
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:background="@drawable/bg_header_table_round">
+                            android:background="@drawable/bg_header_table_round"
+                            android:gravity="center_vertical">
 
                             <TextView
                                 android:id="@+id/textView15"
-                                android:layout_width="wrap_content"
+                                android:layout_width="100dp"
                                 android:layout_height="wrap_content"
                                 android:layout_column="0"
-                                android:layout_marginStart="10dp"
-                                android:layout_marginTop="5dp"
-                                android:layout_marginEnd="10dp"
+                                android:layout_marginStart="16dp"
+                                android:layout_marginTop="12dp"
+                                android:layout_marginEnd="24dp"
+                                android:layout_marginBottom="12dp"
                                 android:text="Usuario"
-                                android:textSize="16sp"
-                                android:textStyle="bold" />
+                                android:textColor="@color/colorTextAll"
+                                android:textSize="12sp" />
 
 
                         </TableRow>
@@ -261,350 +263,81 @@
                                     android:id="@+id/r111"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
-                                    android:background="@drawable/bg_header_table">
+                                    android:background="@drawable/bg_header_table"
+                                    android:gravity="center_vertical">
 
                                     <TextView
-                                        android:id="@+id/textView1511"
-                                        android:layout_width="wrap_content"
+                                        android:id="@+id/tvBattery"
+                                        android:layout_width="50dp"
                                         android:layout_height="wrap_content"
                                         android:layout_column="0"
                                         android:layout_marginStart="10dp"
-                                        android:layout_marginTop="5dp"
+                                        android:layout_marginTop="12dp"
                                         android:layout_marginEnd="10dp"
+                                        android:layout_marginBottom="12sp"
                                         android:text="Batería"
-                                        android:textSize="16sp"
-                                        android:textStyle="bold" />
+                                        android:textColor="@color/colorTextAll"
+                                        android:textSize="12sp" />
 
                                     <TextView
-                                        android:id="@+id/textView17"
-                                        android:layout_width="wrap_content"
+                                        android:id="@+id/tvState"
+                                        android:layout_width="50dp"
                                         android:layout_height="wrap_content"
                                         android:layout_column="1"
-                                        android:layout_marginStart="10dp"
-                                        android:layout_marginTop="5dp"
-                                        android:layout_marginEnd="10dp"
+                                        android:layout_marginStart="20dp"
+                                        android:layout_marginTop="12dp"
+                                        android:layout_marginEnd="20dp"
+                                        android:layout_marginBottom="12dp"
+                                        android:drawableEnd="@drawable/ic_arrow_bottom_status"
                                         android:text="Estado"
-                                        android:textSize="16sp"
-                                        android:textStyle="bold" />
+                                        android:textColor="@color/colorTextAll"
+                                        android:textSize="12sp" />
 
                                     <TextView
-                                        android:id="@+id/textView18"
-                                        android:layout_width="wrap_content"
+                                        android:id="@+id/tvStateGps"
+                                        android:layout_width="75dp"
                                         android:layout_height="wrap_content"
                                         android:layout_column="2"
-                                        android:layout_marginStart="10dp"
-                                        android:layout_marginTop="5dp"
-                                        android:layout_marginEnd="10dp"
+                                        android:layout_marginStart="20dp"
+                                        android:layout_marginTop="12dp"
+                                        android:layout_marginEnd="20dp"
+                                        android:layout_marginBottom="12dp"
+                                        android:drawableEnd="@drawable/ic_arrow_bottom_status"
                                         android:text="Estado GPS"
-                                        android:textSize="16sp"
-                                        android:textStyle="bold" />
+                                        android:textColor="@color/colorTextAll"
+                                        android:textSize="12sp" />
 
                                     <TextView
-                                        android:id="@+id/textView19"
-                                        android:layout_width="wrap_content"
+                                        android:id="@+id/tvLast"
+                                        android:layout_width="130dp"
                                         android:layout_height="wrap_content"
                                         android:layout_column="3"
-                                        android:layout_marginStart="10dp"
-                                        android:layout_marginTop="5dp"
-                                        android:layout_marginEnd="10dp"
+                                        android:layout_marginStart="20dp"
+                                        android:layout_marginTop="12dp"
+                                        android:layout_marginEnd="20dp"
+                                        android:layout_marginBottom="12dp"
+                                        android:drawableEnd="@drawable/ic_arrow_top_status"
                                         android:text="Última hora de ingreso"
-                                        android:textSize="16sp"
-                                        android:textStyle="bold" />
+                                        android:textColor="@color/colorTextAll"
+                                        android:textSize="12sp" />
 
                                     <TextView
                                         android:id="@+id/textView22"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_column="4"
-                                        android:layout_marginStart="10dp"
-                                        android:layout_marginTop="5dp"
-                                        android:layout_marginEnd="10dp"
+                                        android:layout_marginStart="20dp"
+                                        android:layout_marginTop="12dp"
+                                        android:layout_marginEnd="20dp"
+                                        android:layout_marginBottom="12dp"
                                         android:text="Última ubicación"
-                                        android:textSize="16sp"
-                                        android:textStyle="bold" />
-
-
-                                </TableRow>
-
-                                <TableRow
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:background="@drawable/borderbottomtlcontent">
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="60dp"
-                                        android:layout_column="0"
-                                        android:gravity="start|center_vertical"
-                                        android:padding="10dp"
-                                        android:text="90%">
-
-                                    </TextView>
-
-                                    <TextView
-                                        android:id="@+id/textView7511"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="60dp"
-                                        android:layout_column="1"
-                                        android:gravity="start|center_vertical"
-                                        android:padding="10dp"
-                                        android:text="Activo">
-
-                                    </TextView>
-
-                                    <TextView
-                                        android:id="@+id/textView78111"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="60dp"
-                                        android:layout_column="1"
-                                        android:gravity="start|center_vertical"
-                                        android:padding="10dp"
-                                        android:text="Apagado">
-
-                                    </TextView>
-
-                                    <TextView
-                                        android:id="@+id/textView81111"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="60dp"
-                                        android:layout_column="1"
-                                        android:gravity="start|center_vertical"
-                                        android:padding="10dp"
-                                        android:text="Apagado">
-
-                                    </TextView>
-
-                                    <ImageView
-                                        android:id="@+id/imageView113"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="60dp"
-                                        android:src="@drawable/ic_baseline_visibility_24" />
+                                        android:textColor="@color/colorTextAll"
+                                        android:textSize="12sp" />
 
                                 </TableRow>
 
-                                <TableRow
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:background="@drawable/borderbottomtlcontent">
 
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="60dp"
-                                        android:layout_column="0"
-                                        android:gravity="start|center_vertical"
-                                        android:padding="10dp"
-                                        android:text="10%">
 
-                                    </TextView>
-
-                                    <TextView
-                                        android:id="@+id/textView751"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="60dp"
-                                        android:layout_column="1"
-                                        android:gravity="start|center_vertical"
-                                        android:padding="10dp"
-                                        android:text="Activo">
-
-                                    </TextView>
-
-                                    <TextView
-                                        android:id="@+id/textView7811"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="60dp"
-                                        android:layout_column="1"
-                                        android:gravity="start|center_vertical"
-                                        android:padding="10dp"
-                                        android:text="Apagado">
-
-                                    </TextView>
-
-                                    <TextView
-                                        android:id="@+id/textView8111"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="60dp"
-                                        android:layout_column="1"
-                                        android:gravity="start|center_vertical"
-                                        android:padding="10dp"
-                                        android:text="Apagado">
-
-                                    </TextView>
-
-                                    <ImageView
-                                        android:id="@+id/imageView13"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="60dp"
-                                        android:src="@drawable/ic_baseline_visibility_24" />
-
-                                </TableRow>
-
-                                <TableRow
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:background="@drawable/borderbottomtlcontent">
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="60dp"
-                                        android:layout_column="0"
-                                        android:gravity="start|center_vertical"
-                                        android:padding="10dp"
-                                        android:text="40%">
-
-                                    </TextView>
-
-                                    <TextView
-                                        android:id="@+id/textView73"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="60dp"
-                                        android:layout_column="1"
-                                        android:gravity="start|center_vertical"
-                                        android:padding="10dp"
-                                        android:text="Activo">
-
-                                    </TextView>
-
-                                    <TextView
-                                        android:id="@+id/textView76"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="60dp"
-                                        android:layout_column="1"
-                                        android:gravity="start|center_vertical"
-                                        android:padding="10dp"
-                                        android:text="Apagado">
-
-                                    </TextView>
-
-                                    <TextView
-                                        android:id="@+id/textView79"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="60dp"
-                                        android:layout_column="1"
-                                        android:gravity="start|center_vertical"
-                                        android:padding="10dp"
-                                        android:text="Apagado">
-
-                                    </TextView>
-
-                                    <ImageView
-                                        android:id="@+id/imageView4"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="60dp"
-                                        android:src="@drawable/ic_baseline_visibility_24" />
-
-                                </TableRow>
-
-                                <TableRow
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:background="@drawable/borderbottomtlcontent">
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="60dp"
-                                        android:layout_column="0"
-                                        android:gravity="start|center_vertical"
-                                        android:padding="10dp"
-                                        android:text="75%">
-
-                                    </TextView>
-
-                                    <TextView
-                                        android:id="@+id/textView74"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="60dp"
-                                        android:layout_column="1"
-                                        android:gravity="start|center_vertical"
-                                        android:padding="10dp"
-                                        android:text="Activo">
-
-                                    </TextView>
-
-                                    <TextView
-                                        android:id="@+id/textView77"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="60dp"
-                                        android:layout_column="1"
-                                        android:gravity="start|center_vertical"
-                                        android:padding="10dp"
-                                        android:text="Apagado">
-
-                                    </TextView>
-
-                                    <TextView
-                                        android:id="@+id/textView80"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="60dp"
-                                        android:layout_column="1"
-                                        android:gravity="start|center_vertical"
-                                        android:padding="10dp"
-                                        android:text="Apagado">
-
-                                    </TextView>
-
-                                    <ImageView
-                                        android:id="@+id/imageView12"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="60dp"
-                                        android:src="@drawable/ic_baseline_visibility_24" />
-
-                                </TableRow>
-
-                                <TableRow
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:background="@drawable/borderbottomtlcontent">
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="60dp"
-                                        android:layout_column="0"
-                                        android:gravity="start|center_vertical"
-                                        android:padding="10dp"
-                                        android:text="100%">
-
-                                    </TextView>
-
-                                    <TextView
-                                        android:id="@+id/textView75111"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="60dp"
-                                        android:layout_column="1"
-                                        android:gravity="start|center_vertical"
-                                        android:padding="10dp"
-                                        android:text="Activo">
-
-                                    </TextView>
-
-                                    <TextView
-                                        android:id="@+id/textView781111"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="60dp"
-                                        android:layout_column="1"
-                                        android:gravity="start|center_vertical"
-                                        android:padding="10dp"
-                                        android:text="Apagado">
-
-                                    </TextView>
-
-                                    <TextView
-                                        android:id="@+id/textView811111"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="60dp"
-                                        android:layout_column="1"
-                                        android:gravity="start|center_vertical"
-                                        android:padding="10dp"
-                                        android:text="Apagado">
-
-                                    </TextView>
-
-                                    <ImageView
-                                        android:id="@+id/imageView1113"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="60dp"
-                                        android:src="@drawable/ic_baseline_visibility_24" />
-
-                                </TableRow>
 
 
                             </TableLayout>
