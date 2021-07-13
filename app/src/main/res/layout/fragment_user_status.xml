@@ -288,7 +288,6 @@
                                         android:layout_marginTop="12dp"
                                         android:layout_marginEnd="20dp"
                                         android:layout_marginBottom="12dp"
-                                        android:drawableEnd="@drawable/ic_arrow_bottom_status"
                                         android:text="Estado"
                                         android:textColor="@color/colorTextAll"
                                         android:textSize="12sp" />
@@ -316,7 +315,6 @@
                                         android:layout_marginTop="12dp"
                                         android:layout_marginEnd="20dp"
                                         android:layout_marginBottom="12dp"
-                                        android:drawableEnd="@drawable/ic_arrow_top_status"
                                         android:text="Última hora de ingreso"
                                         android:textColor="@color/colorTextAll"
                                         android:textSize="12sp" />
