@@ -23,7 +23,8 @@ interface ReportsApi {
         after1:String,after2:String,after3:String,after4:String,after5:String,comment:String
     ): Call<BaseResponse<String>>
 
-    @GET("https://run.mocky.io/v3/cc3dc872-5d9a-4302-aac1-463ab8407e2a")
+    @GET("https://run.mocky.io/v3/1c3b1f54-1a41-4a37-8389-535724534774")
+     //https://run.mocky.io/v3/cc3dc872-5d9a-4302-aac1-463ab8407e2a
     fun getReportStatus(): Call<BaseResponse<List<ReportsStatusRemote.Response>>>
 
 }
