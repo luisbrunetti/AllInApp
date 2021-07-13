@@ -56,7 +56,6 @@ class UserStatusFragment : BaseFragment() {
 
         userStatusViewModel = viewModel(viewModelFactory) {
             observe(reportStatus, { it?.let {
-                    Log.d("datos","cantidades")
                     listStatus = it
                     if(order.value==0)
                     {
@@ -88,66 +87,6 @@ class UserStatusFragment : BaseFragment() {
                     }
             }
             })
-            observe(order,{it?.let {
-                if(order.value==1)
-                {
-                    userStatus.removeAll(userStatus)
-                    batteryStatus.removeAll(batteryStatus)
-                    state.removeAll(state)
-                    stateGps.removeAll(stateGps)
-                    lastHour.removeAll(lastHour)
-                    lastPosition.removeAll(lastPosition)
-                    val listAsc = listStatus.sortedBy { it.battery }
-                    for(report in listAsc)
-                    {
-                        userStatus.add(report.name)
-                        batteryStatus.add(report.battery)
-                        if(report.status=="ACT")
-                            state.add("Activo")
-                        else
-                            state.add("Inactivo")
-                        stateGps.add("Encendido")
-                        lastHour.add(getDate(report.lastConnection))
-                        val  coordinate  = ArrayList<String>(3)
-                        coordinate.add(report.lastLatitude.toString())
-                        coordinate.add(report.lastLongitude.toString())
-                        coordinate.add(report.name)
-                        lastPosition.add(coordinate)
-                    }
-                    setDataLayout(binding.tlName,userStatus,order.value!!)
-                    setDataStatus(binding.tlGridTable,batteryStatus,state,stateGps,lastHour,lastPosition,order.value!!)
-                }
-
-                if(order.value==2)
-                {
-                    userStatus.removeAll(userStatus)
-                    batteryStatus.removeAll(batteryStatus)
-                    state.removeAll(state)
-                    stateGps.removeAll(stateGps)
-                    lastHour.removeAll(lastHour)
-                    lastPosition.removeAll(lastPosition)
-                    val listDesc = listStatus.sortedByDescending { it.battery }
-                    for(report in listDesc)
-                    {
-                        userStatus.add(report.name)
-                        batteryStatus.add(report.battery)
-                        if(report.status=="ACT")
-                            state.add("Activo")
-                        else
-                            state.add("Inactivo")
-                        stateGps.add("Encendido")
-                        lastHour.add(getDate(report.lastConnection))
-                        val  coordinate  = ArrayList<String>(3)
-                        coordinate.add(report.lastLatitude.toString())
-                        coordinate.add(report.lastLongitude.toString())
-                        coordinate.add(report.name)
-                        lastPosition.add(coordinate)
-                    }
-                    setDataLayout(binding.tlName,userStatus,order.value!!)
-                    setDataStatus(binding.tlGridTable,batteryStatus,state,stateGps,lastHour,lastPosition,order.value!!)
-                }
-
-            }})
         }
 
         binding.etDateUserStatus.setOnClickListener{
@@ -167,7 +106,31 @@ class UserStatusFragment : BaseFragment() {
                     R.drawable.ic_arrow_bottom_status,
                     0
                 )
-                userStatusViewModel.getReportStatusAsc(1)
+                userStatus.removeAll(userStatus)
+                batteryStatus.removeAll(batteryStatus)
+                state.removeAll(state)
+                stateGps.removeAll(stateGps)
+                lastHour.removeAll(lastHour)
+                lastPosition.removeAll(lastPosition)
+                val listAsc = listStatus.sortedBy { it.battery }
+                for(report in listAsc)
+                {
+                    userStatus.add(report.name)
+                    batteryStatus.add(report.battery)
+                    if(report.status=="ACT")
+                        state.add("Activo")
+                    else
+                        state.add("Inactivo")
+                    stateGps.add("Encendido")
+                    lastHour.add(getDate(report.lastConnection))
+                    val  coordinate  = ArrayList<String>(3)
+                    coordinate.add(report.lastLatitude.toString())
+                    coordinate.add(report.lastLongitude.toString())
+                    coordinate.add(report.name)
+                    lastPosition.add(coordinate)
+                }
+                setDataLayout(binding.tlName,userStatus,1)
+                setDataStatus(binding.tlGridTable,batteryStatus,state,stateGps,lastHour,lastPosition,1)
             }
             else {
                 binding.tvBattery.setCompoundDrawablesWithIntrinsicBounds(
@@ -176,7 +139,31 @@ class UserStatusFragment : BaseFragment() {
                     R.drawable.ic_arrow_top_status,
                     0
                 )
-                userStatusViewModel.getReportStatusAsc(2)
+                userStatus.removeAll(userStatus)
+                batteryStatus.removeAll(batteryStatus)
+                state.removeAll(state)
+                stateGps.removeAll(stateGps)
+                lastHour.removeAll(lastHour)
+                lastPosition.removeAll(lastPosition)
+                val listDesc = listStatus.sortedByDescending { it.battery }
+                for(report in listDesc)
+                {
+                    userStatus.add(report.name)
+                    batteryStatus.add(report.battery)
+                    if(report.status=="ACT")
+                        state.add("Activo")
+                    else
+                        state.add("Inactivo")
+                    stateGps.add("Encendido")
+                    lastHour.add(getDate(report.lastConnection))
+                    val  coordinate  = ArrayList<String>(3)
+                    coordinate.add(report.lastLatitude.toString())
+                    coordinate.add(report.lastLongitude.toString())
+                    coordinate.add(report.name)
+                    lastPosition.add(coordinate)
+                }
+                setDataLayout(binding.tlName,userStatus,2)
+                setDataStatus(binding.tlGridTable,batteryStatus,state,stateGps,lastHour,lastPosition,2)
             }
             count++
         }
@@ -184,13 +171,8 @@ class UserStatusFragment : BaseFragment() {
     }
 
     private fun setDataLayout(tableLayout: TableLayout, data:ArrayList<String>,type:Int){
-        if(type>0) {
-            if(data.size>0)
-            {
-                tableLayout.removeViews(1, data.size)
-            }
-
-        }
+        if(type>0)
+            tableLayout.removeViews(1, data.size)
 
         for((flag, name) in data.withIndex())
         {
@@ -257,27 +239,8 @@ class UserStatusFragment : BaseFragment() {
         }
     }
 
-    private fun setDataStatusOrder(tableLayout: TableLayout, data:ArrayList<Int>, type:String){
-        tableLayout.removeViews(1,data.size)
+    private fun setDataStatusOrder(){
 
-        if (type=="0")
-            Collections.sort(data, Collections.reverseOrder())
-        if(type=="1")
-            data.sort()
-
-        for((flag, percent) in data.withIndex())
-        {
-            val row  = TableRow(context)
-            row.setBackgroundResource(R.drawable.borderbottomtlcontent)
-            val textView = TextView(context)
-            textView.text ="$percent %"
-            textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.colorTextAll))
-            textView.height=60f.toDips().toInt()
-            textView.setPadding(10)
-            textView.gravity = Gravity.CENTER
-            row.addView(textView)
-            tableLayout.addView(row)
-        }
     }
 
 
