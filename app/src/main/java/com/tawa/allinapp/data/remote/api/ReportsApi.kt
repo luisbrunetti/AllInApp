@@ -4,6 +4,7 @@ import com.tawa.allinapp.core.platform.BaseResponse
 import com.tawa.allinapp.data.remote.entities.CompanyRemote
 import com.tawa.allinapp.data.remote.entities.LoginRemote
 import com.tawa.allinapp.data.remote.entities.ReportsRemote
+import com.tawa.allinapp.data.remote.entities.ReportsStatusRemote
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -21,4 +22,8 @@ interface ReportsApi {
         before1:String,before2:String,before3:String,before4:String,before5:String,
         after1:String,after2:String,after3:String,after4:String,after5:String,comment:String
     ): Call<BaseResponse<String>>
+
+    @GET("https://run.mocky.io/v3/cc3dc872-5d9a-4302-aac1-463ab8407e2a")
+    fun getReportStatus(): Call<BaseResponse<List<ReportsStatusRemote.Response>>>
+
 }

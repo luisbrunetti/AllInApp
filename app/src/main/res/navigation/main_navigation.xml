@@ -83,12 +83,36 @@
         android:id="@+id/userStatusFragment"
         android:name="com.tawa.allinapp.features.reports.userstatus.UserStatusFragment"
         android:label="fragment_user_status"
-        tools:layout="@layout/fragment_user_status" />
+        tools:layout="@layout/fragment_user_status" >
+        <action
+            android:id="@+id/action_userStatusFragment_to_lastLocationFragment"
+            app:destination="@id/lastLocationFragment">
+
+        <argument
+            android:name="latitude"
+            app:argType="string"/>
+        <argument
+            android:name="longitude"
+            app:argType="string"/>
+
+            <argument
+                android:name="name"
+                app:argType="string"/>
+
+        </action>
+
+    </fragment>
     <fragment
         android:id="@+id/skuFragment"
         android:name="com.tawa.allinapp.features.reports.sku.SkuFragment"
         android:label="fragment_sku"
         tools:layout="@layout/fragment_sku" />
+
+    <fragment
+        android:id="@+id/lastLocationFragment"
+        android:name="com.tawa.allinapp.features.reports.userstatus.LastLocationFragment"
+        android:label="fragment_last_location"
+        tools:layout="@layout/fragment_last_location" />
 
 
 </navigation>
