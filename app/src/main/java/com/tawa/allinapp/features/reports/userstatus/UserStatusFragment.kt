@@ -44,6 +44,7 @@ class UserStatusFragment : BaseFragment() {
     private val lastPosition  = ArrayList<ArrayList<String>>()
     private lateinit var listStatus:List<ReportStatus>
     private lateinit var listLimited:List<ReportStatus>
+    var pageNum = 0 ;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,10 +58,9 @@ class UserStatusFragment : BaseFragment() {
             observe(reportStatus, { it?.let {
                 listStatus = it
                 listLimited = it.slice(0..4)
-
                 if(order.value==0)
                     showDataTable(listLimited,order.value!!)
-                createPager(it,binding.pagerContent,binding.tlName,binding.tlGridTable)
+                createPager(it,binding.pageNumber,binding.tlName,binding.tlGridTable)
             } })
         }
         binding.etDateUserStatus.setOnClickListener{
@@ -230,22 +230,42 @@ class UserStatusFragment : BaseFragment() {
         } else {
             (list.size/5)+1
         }
-        for(i in 0 until numPager)
+        binding.tvPager.text = "${pageNum*5+1} - ${pageNum*5+5} de ${list.size} entradas"
+        /*for(i in 0 until 1)
         {
            val textView = TextView(context)
             pagerList.add(textView)
-            pagerList[i].text  = (i+1).toString()
+            pagerList[i].text  = "$pageNum - 5 de ${list.size} entradas"
             pagerList[i].setTextColor(ContextCompat.getColor(requireContext(), R.color.colorTextAll))
-            val params = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT)
+            val params = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
             params.marginStart = 10f.toDips().toInt()
             params.marginEnd = 10f.toDips().toInt()
             pagerList[i].layoutParams = params
             pagerList[i].gravity = Gravity.CENTER
-            pagerList[i].setOnClickListener{
+           /* pagerList[i].setOnClickListener{
                 limitedTable(tl1,tl2,(pagerList[i].text.toString().toInt()-1))
-            }
+            }*/
             linearPage.addView(pagerList[i])
+        }*/
+
+        binding.btnPrevPage.setOnClickListener{
+            if(pageNum>0)
+            {
+                pageNum--
+                binding.tvPager.text = "${pageNum*5+1} - ${pageNum*5+5} de ${list.size} entradas"
+                limitedTable(tl1,tl2,pageNum)
+            }
         }
+
+        binding.btnNextPage.setOnClickListener{
+            if(pageNum<(numPager-1))
+            {
+                pageNum++
+                binding.tvPager.text = "${pageNum*5+1} - ${pageNum*5+5} de ${list.size} entradas"
+                limitedTable(tl1,tl2,pageNum)
+            }
+        }
+
     }
 
     private fun removeArray(){

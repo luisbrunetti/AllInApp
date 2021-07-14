@@ -14,19 +14,12 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.tawa.allinapp.R
-import com.tawa.allinapp.core.extensions.observe
-import com.tawa.allinapp.core.extensions.viewModel
-import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.DialogShowMapBinding
-import com.tawa.allinapp.features.init.ui.CheckOutDialogFragment
-import com.tawa.allinapp.models.Company
-import javax.inject.Inject
 
 
 class ShowMapDialogFragment: DialogFragment() {
 
     private lateinit var binding: DialogShowMapBinding
-    private lateinit var userStatusViewModel: UserStatusViewModel
     var listener: Callback? = null
     var lat = ""
     var long = ""
@@ -48,7 +41,7 @@ class ShowMapDialogFragment: DialogFragment() {
 
 
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = DialogShowMapBinding.inflate(inflater)
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         isCancelable = false
