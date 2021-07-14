@@ -3,7 +3,9 @@ package com.tawa.allinapp.features.reports.standard
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.ContentValues
+import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -14,6 +16,7 @@ import android.view.ViewGroup
 import android.widget.*
 import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.imagepipeline.common.ResizeOptions
 import com.facebook.imagepipeline.request.ImageRequestBuilder
@@ -44,6 +47,7 @@ class CheckListFragment: BaseFragment() {
     private var  listCheckBox = ArrayList<CheckBox>()
     private var  listInput = ArrayList<EditText>()
     val params = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+    var urlImage = ""
 
     private  var statePhoto = 0
 
@@ -102,6 +106,7 @@ class CheckListFragment: BaseFragment() {
         }
         binding.btnSaveReport.setOnClickListener{
            findElements()
+            Toast.makeText(context,urlImage,Toast.LENGTH_SHORT).show()
         }
         binding.btnBackCheckList.setOnClickListener{
             activity?.onBackPressed()
@@ -263,32 +268,50 @@ class CheckListFragment: BaseFragment() {
 
 
     private fun launchCamera() {
-        val values = ContentValues(1)
-        values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpg")
-        val fileUri = requireActivity().contentResolver
-            .insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                values)
+
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        if(intent.resolveActivity(requireActivity().packageManager) != null) {
-            mCurrentPhotoPath = fileUri.toString()
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri)
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION
-                    or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
-            startActivityForResult(intent, TAKE_PHOTO_REQUEST)
-        }
+        startActivityForResult(intent, TAKE_PHOTO_REQUEST)
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int,
                                   data: Intent?) {
         if (resultCode == Activity.RESULT_OK
             && requestCode == TAKE_PHOTO_REQUEST) {
-            processCapturedPhoto()
+            //processCapturedPhoto()
+            val bitmap = data!!.extras?.get("data") as Bitmap
+            val uri = getImageUri(activity?.applicationContext!!, bitmap)
+            val height =200
+            val width = 300
+            val request = ImageRequestBuilder.newBuilderWithSource(uri)
+                .setResizeOptions(ResizeOptions(width, height))
+                .build()
+            val controller = Fresco.newDraweeControllerBuilder()
+                .setOldController(binding.checkListPhoto?.controller)
+                .setImageRequest(request)
+                .build()
+            binding.checkListPhoto?.controller = controller
+            //Toast.makeText(context, file.toString(), Toast.LENGTH_SHORT).show()
             binding.checkListPhoto.visibility = View.VISIBLE
             binding.deletePhoto.visibility = View.VISIBLE
             statePhoto = 1
         } else {
             super.onActivityResult(requestCode, resultCode, data)
         }
+    }
+
+    private fun getImageUri(inContext: Context, inImage: Bitmap?): Uri? {
+        val image = Bitmap.createScaledBitmap(inImage!!, 300, 300, true)
+        val path = MediaStore.Images.Media.insertImage(inContext.contentResolver, image, "picture", null)
+        val cursor = requireActivity().contentResolver.query(
+            Uri.parse(path),
+            Array(1) {android.provider.MediaStore.Images.ImageColumns.DATA},
+            null, null, null)
+        cursor?.moveToFirst()
+        val photoPath = cursor?.getString(0)
+        val file = File(photoPath)
+        urlImage = file.toString()
+        return Uri.parse(path)
     }
 
     private fun processCapturedPhoto() {

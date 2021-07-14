@@ -1,5 +1,6 @@
 package com.tawa.allinapp.features.reports.userstatus
 
+import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.graphics.Typeface
 import android.os.Build
@@ -24,7 +25,6 @@ import com.tawa.allinapp.models.ReportStatus
 import java.text.SimpleDateFormat
 import java.time.Instant
 import java.util.*
-import java.util.stream.Collector
 import kotlin.collections.ArrayList
 
 
@@ -34,15 +34,16 @@ class UserStatusFragment : BaseFragment() {
     private lateinit var binding: FragmentUserStatusBinding
     private var count = 0
     private var countLast = 0
+    @SuppressLint("SimpleDateFormat")
     val formatter = SimpleDateFormat("HH:mm:ss")
     val userStatus = ArrayList<String>()
-    val batteryStatus = ArrayList<Int>()
+    private val batteryStatus = ArrayList<Int>()
     val state = ArrayList<String>()
-    val stateGps = ArrayList<String>()
+    private val stateGps = ArrayList<String>()
     val lastHour = ArrayList<String>()
-    val lastPosition  = ArrayList<ArrayList<String>>()
-    lateinit var listStatus:List<ReportStatus>
-    lateinit var listLimited:List<ReportStatus>
+    private val lastPosition  = ArrayList<ArrayList<String>>()
+    private lateinit var listStatus:List<ReportStatus>
+    private lateinit var listLimited:List<ReportStatus>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,180 +55,103 @@ class UserStatusFragment : BaseFragment() {
         binding = FragmentUserStatusBinding.inflate(inflater)
         userStatusViewModel = viewModel(viewModelFactory) {
             observe(reportStatus, { it?.let {
+                listStatus = it
+                listLimited = it.slice(0..4)
 
-                    listStatus = it
-                    listLimited = it.slice(0..4)
-                    if(order.value==0)
-                    {
-                        for(report in listLimited)
-                        {
-                            userStatus.add(report.name)
-                            batteryStatus.add(report.battery)
-                            if(report.status=="ACT")
-                                state.add("Activo")
-                            else
-                                state.add("Inactivo")
-                            stateGps.add("Encendido")
-                            lastHour.add(getDate(report.lastConnection))
-                            val  coordinate  = ArrayList<String>(3)
-                            coordinate.add(report.lastLatitude.toString())
-                            coordinate.add(report.lastLongitude.toString())
-                            coordinate.add(report.name)
-                            lastPosition.add(coordinate)
-                        }
-                        setDataLayout(binding.tlName,userStatus,order.value!!)
-                        setDataStatus(binding.tlGridTable,batteryStatus,state,stateGps,lastHour,lastPosition,order.value!!)
-                        }
-                        createPager(it,binding.pagerContent,binding.tlName,binding.tlGridTable)
-            }
-            })
+                if(order.value==0)
+                    showDataTable(listLimited,order.value!!)
+                createPager(it,binding.pagerContent,binding.tlName,binding.tlGridTable)
+            } })
         }
-
         binding.etDateUserStatus.setOnClickListener{
             getDay(binding.etDateUserStatus)
         }
         binding.btnBackStatus.setOnClickListener{
             activity?.onBackPressed()
         }
-
-
         binding.tvBattery.setOnClickListener{
-            userStatus.removeAll(userStatus)
-            batteryStatus.removeAll(batteryStatus)
-            state.removeAll(state)
-            stateGps.removeAll(stateGps)
-            lastHour.removeAll(lastHour)
-            lastPosition.removeAll(lastPosition)
-
-            if(count%2==0) {
-                binding.tvBattery.setCompoundDrawablesWithIntrinsicBounds(
-                    0,
-                    0,
-                    R.drawable.ic_arrow_bottom_status,
-                    0
-                )
-                val listAsc = listLimited.sortedBy { it.battery }
-                for(report in listAsc)
-                {
-                    userStatus.add(report.name)
-                    batteryStatus.add(report.battery)
-                    if(report.status=="ACT")
-                        state.add("Activo")
-                    else
-                        state.add("Inactivo")
-                    stateGps.add("Encendido")
-                    lastHour.add(getDate(report.lastConnection))
-                    val  coordinate  = ArrayList<String>(3)
-                    coordinate.add(report.lastLatitude.toString())
-                    coordinate.add(report.lastLongitude.toString())
-                    coordinate.add(report.name)
-                    lastPosition.add(coordinate)
-                }
-                setDataLayout(binding.tlName,userStatus,1)
-                setDataStatus(binding.tlGridTable,batteryStatus,state,stateGps,lastHour,lastPosition,1)
-            }
-            else {
-                binding.tvBattery.setCompoundDrawablesWithIntrinsicBounds(
-                    0,
-                    0,
-                    R.drawable.ic_arrow_top_status,
-                    0
-                )
-
-                val listDesc = listLimited.sortedByDescending { it.battery }
-                for(report in listDesc)
-                {
-                    userStatus.add(report.name)
-                    batteryStatus.add(report.battery)
-                    if(report.status=="ACT")
-                        state.add("Activo")
-                    else
-                        state.add("Inactivo")
-                    stateGps.add("Encendido")
-                    lastHour.add(getDate(report.lastConnection))
-                    val  coordinate  = ArrayList<String>(3)
-                    coordinate.add(report.lastLatitude.toString())
-                    coordinate.add(report.lastLongitude.toString())
-                    coordinate.add(report.name)
-                    lastPosition.add(coordinate)
-                }
-                setDataLayout(binding.tlName,userStatus,2)
-                setDataStatus(binding.tlGridTable,batteryStatus,state,stateGps,lastHour,lastPosition,2)
-            }
-            count++
+            batteryOrder()
         }
         binding.tvLast.setOnClickListener {
-            userStatus.removeAll(userStatus)
-            batteryStatus.removeAll(batteryStatus)
-            state.removeAll(state)
-            stateGps.removeAll(stateGps)
-            lastHour.removeAll(lastHour)
-            lastPosition.removeAll(lastPosition)
-            if (countLast % 2 == 0) {
-                binding.tvLast.setCompoundDrawablesWithIntrinsicBounds(
-                    0,
-                    0,
-                    R.drawable.ic_arrow_bottom_status,
-                    0
-                )
-
-                val listLast = listLimited.sortedBy { it.lastConnection }
-                for(report in listLast)
-                {
-                    userStatus.add(report.name)
-                    batteryStatus.add(report.battery)
-                    if(report.status=="ACT")
-                        state.add("Activo")
-                    else
-                        state.add("Inactivo")
-                    stateGps.add("Encendido")
-                    lastHour.add(getDate(report.lastConnection))
-                    val  coordinate  = ArrayList<String>(3)
-                    coordinate.add(report.lastLatitude.toString())
-                    coordinate.add(report.lastLongitude.toString())
-                    coordinate.add(report.name)
-                    lastPosition.add(coordinate)
-                }
-                setDataLayout(binding.tlName,userStatus,1)
-                setDataStatus(binding.tlGridTable,batteryStatus,state,stateGps,lastHour,lastPosition,1)
-            }
-            else{
-                binding.tvLast.setCompoundDrawablesWithIntrinsicBounds(
-                    0,
-                    0,
-                    R.drawable.ic_arrow_top_status,
-                    0
-                )
-
-                val listLast = listLimited.sortedByDescending { it.lastConnection }
-                for(report in listLast)
-                {
-                    userStatus.add(report.name)
-                    batteryStatus.add(report.battery)
-                    if(report.status=="ACT")
-                        state.add("Activo")
-                    else
-                        state.add("Inactivo")
-                    stateGps.add("Encendido")
-                    lastHour.add(getDate(report.lastConnection))
-                    val  coordinate  = ArrayList<String>(3)
-                    coordinate.add(report.lastLatitude.toString())
-                    coordinate.add(report.lastLongitude.toString())
-                    coordinate.add(report.name)
-                    lastPosition.add(coordinate)
-                }
-                setDataLayout(binding.tlName,userStatus,2)
-                setDataStatus(binding.tlGridTable,batteryStatus,state,stateGps,lastHour,lastPosition,2)
-            }
-            countLast++
+            connectionOrder()
         }
         return binding.root
+    }
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun showDataTable(listInit:List<ReportStatus>,order:Int){
+        for(report in listInit)
+        {
+            userStatus.add(report.name)
+            batteryStatus.add(report.battery)
+            if(report.status=="ACT")
+                state.add("Activo")
+            else
+                state.add("Inactivo")
+            stateGps.add("Encendido")
+            lastHour.add(getDate(report.lastConnection))
+            val  coordinate  = ArrayList<String>(3)
+            coordinate.add(report.lastLatitude.toString())
+            coordinate.add(report.lastLongitude.toString())
+            coordinate.add(report.name)
+            lastPosition.add(coordinate)
+        }
+        setDataLayout(binding.tlName,userStatus,order)
+        setDataStatus(binding.tlGridTable,batteryStatus,state,stateGps,lastHour,lastPosition,order)
+    }
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun batteryOrder(){
+        removeArray()
+        if(count%2==0) {
+            binding.tvBattery.setCompoundDrawablesWithIntrinsicBounds(
+                0,
+                0,
+                R.drawable.ic_arrow_bottom_status,
+                0
+            )
+            val listAsc = listLimited.sortedBy { it.battery }
+            showDataTable(listAsc,1)
+        }
+        else {
+            binding.tvBattery.setCompoundDrawablesWithIntrinsicBounds(
+                0,
+                0,
+                R.drawable.ic_arrow_top_status,
+                0
+            )
+            val listDesc = listLimited.sortedByDescending { it.battery }
+            showDataTable(listDesc,2)
+        }
+        count++
+    }
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun connectionOrder(){
+        removeArray()
+        if (countLast % 2 == 0) {
+            binding.tvLast.setCompoundDrawablesWithIntrinsicBounds(
+                0,
+                0,
+                R.drawable.ic_arrow_bottom_status,
+                0
+            )
+            val listLastAsc = listLimited.sortedBy { it.lastConnection }
+            showDataTable(listLastAsc,1)
+        }
+        else{
+            binding.tvLast.setCompoundDrawablesWithIntrinsicBounds(
+                0,
+                0,
+                R.drawable.ic_arrow_top_status,
+                0
+            )
+            val listLastDesc = listLimited.sortedByDescending { it.lastConnection }
+            showDataTable(listLastDesc,2)
+        }
+        countLast++
     }
     private fun setDataLayout(tableLayout: TableLayout, data:ArrayList<String>,type:Int){
         if(type>0)
             tableLayout.removeViews(1, data.size)
-
-        for((flag, name) in data.withIndex())
+        for(name in data)
         {
             val row  = TableRow(context)
             row.setBackgroundResource(R.drawable.borderbottom)
@@ -284,54 +208,27 @@ class UserStatusFragment : BaseFragment() {
             tvLastPosition[flag].setOnClickListener{
                 val tag:ArrayList<String> = tvLastPosition[flag].tag as java.util.ArrayList<String>
                 showMapDialog(tag[0],tag[1],tag[2])
-
             }
             row.addView(tvLastPosition[flag])
-
             tableLayout.addView(row)
         }
     }
     @RequiresApi(Build.VERSION_CODES.O)
     private fun limitedTable(tl1:TableLayout,tl2:TableLayout,item:Int){
             listLimited = listStatus.slice((item*5)..(item*5+4))
-            userStatus.removeAll(userStatus)
-            batteryStatus.removeAll(batteryStatus)
-            state.removeAll(state)
-            stateGps.removeAll(stateGps)
-            lastHour.removeAll(lastHour)
-            lastPosition.removeAll(lastPosition)
+            removeArray()
             tl1.removeViews(1,tl1.size-1)
             tl2.removeViews(1,tl2.size-1)
-            for(report in listLimited)
-            {
-                userStatus.add(report.name)
-                batteryStatus.add(report.battery)
-                if(report.status=="ACT")
-                    state.add("Activo")
-                else
-                    state.add("Inactivo")
-                stateGps.add("Encendido")
-                lastHour.add(getDate(report.lastConnection))
-                val  coordinate  = ArrayList<String>(3)
-                coordinate.add(report.lastLatitude.toString())
-                coordinate.add(report.lastLongitude.toString())
-                coordinate.add(report.name)
-                lastPosition.add(coordinate)
-            }
-            setDataLayout(tl1,userStatus,0)
-            setDataStatus(tl2,batteryStatus,state,stateGps,lastHour,lastPosition,0)
-
+            showDataTable(listLimited,0)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun createPager(list:List<ReportStatus>, linearPage : LinearLayout,tl1:TableLayout,tl2:TableLayout){
-        val count =list.size
-        var pagerList = ArrayList<TextView>()
-        var numPager = 0
-        numPager = if(count%5==0) {
-            count/5
+        val pagerList = ArrayList<TextView>()
+        val numPager = if(list.size%5==0) {
+            list.size/5
         } else {
-            (count/5)+1
+            (list.size/5)+1
         }
         for(i in 0 until numPager)
         {
@@ -349,9 +246,16 @@ class UserStatusFragment : BaseFragment() {
             }
             linearPage.addView(pagerList[i])
         }
-
     }
 
+    private fun removeArray(){
+        userStatus.removeAll(userStatus)
+        batteryStatus.removeAll(batteryStatus)
+        state.removeAll(state)
+        stateGps.removeAll(stateGps)
+        lastHour.removeAll(lastHour)
+        lastPosition.removeAll(lastPosition)
+    }
 
     private fun showMapDialog(latitude:String,longitude:String,name:String){
         val dialog = ShowMapDialogFragment.newInstance(latitude,longitude,name)
@@ -365,7 +269,7 @@ class UserStatusFragment : BaseFragment() {
         val year = c.get(Calendar.YEAR)
         val month = c.get(Calendar.MONTH)
         val day = c.get(Calendar.DAY_OF_MONTH)
-        val dpd = DatePickerDialog(requireContext(), DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+        val dpd = DatePickerDialog(requireContext(), DatePickerDialog.OnDateSetListener { _, _, monthOfYear, dayOfMonth ->
             et.setText("" + dayOfMonth + "/" +getMonth(monthOfYear) + "/" + year) }, year, month, day)
         dpd.show()
     }
