@@ -5,10 +5,13 @@ import android.app.DatePickerDialog
 import android.graphics.Typeface
 import android.os.Build
 import android.os.Bundle
+import android.text.InputType
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.OnFocusChangeListener
+import android.view.View.OnTouchListener
 import android.view.ViewGroup
 import android.widget.*
 import android.widget.LinearLayout
@@ -44,6 +47,7 @@ class UserStatusFragment : BaseFragment() {
     private val lastPosition  = ArrayList<ArrayList<String>>()
     private lateinit var listStatus:List<ReportStatus>
     private lateinit var listLimited:List<ReportStatus>
+    private val numPages  = ArrayList<Int>()
     var pageNum = 0 ;
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,6 +61,7 @@ class UserStatusFragment : BaseFragment() {
         userStatusViewModel = viewModel(viewModelFactory) {
             observe(reportStatus, { it?.let {
                 listStatus = it
+                showReporter(listStatus)
                 listLimited = it.slice(0..4)
                 if(order.value==0)
                     showDataTable(listLimited,order.value!!)
@@ -74,6 +79,27 @@ class UserStatusFragment : BaseFragment() {
         }
         binding.tvLast.setOnClickListener {
             connectionOrder()
+        }
+        binding.btnFilter.setOnClickListener{
+            val reporter = binding.edReporter.text.toString()
+            removeArray()
+            binding.tlName.removeViews(1,listLimited.size)
+            binding.tlGridTable.removeViews(1,listLimited.size)
+            numPages.removeAll(numPages)
+            pageNum = 0
+            if(reporter=="")
+            {
+                listLimited = listStatus.slice(0..4)
+                showDataTable(listLimited,0)
+                createPager(listStatus,binding.pageNumber,binding.tlName,binding.tlGridTable)
+            }
+            else
+            { listLimited= listStatus.filter { it.name == reporter.toString() }
+                showDataTable(listLimited,0)
+                createPager(listLimited,binding.pageNumber,binding.tlName,binding.tlGridTable)
+            }
+
+
         }
         return binding.root
     }
@@ -148,6 +174,15 @@ class UserStatusFragment : BaseFragment() {
         }
         countLast++
     }
+    private fun showReporter(list:List<ReportStatus>){
+        var listReporters  = ArrayList<String>()
+        for(reporters in list)
+        {
+            listReporters.add(reporters.name)
+        }
+        val reportAdapter = ArrayAdapter(requireContext(),android.R.layout.simple_list_item_1,listReporters)
+        binding.edReporter.setAdapter(reportAdapter)
+    }
     private fun setDataLayout(tableLayout: TableLayout, data:ArrayList<String>,type:Int){
         if(type>0)
             tableLayout.removeViews(1, data.size)
@@ -215,7 +250,7 @@ class UserStatusFragment : BaseFragment() {
     }
     @RequiresApi(Build.VERSION_CODES.O)
     private fun limitedTable(tl1:TableLayout,tl2:TableLayout,item:Int){
-            listLimited = listStatus.slice((item*5)..(item*5+4))
+            listLimited = listStatus.slice((item*5)..(item*5+(numPages[item]-1)))
             removeArray()
             tl1.removeViews(1,tl1.size-1)
             tl2.removeViews(1,tl2.size-1)
@@ -225,34 +260,28 @@ class UserStatusFragment : BaseFragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     private fun createPager(list:List<ReportStatus>, linearPage : LinearLayout,tl1:TableLayout,tl2:TableLayout){
         val pagerList = ArrayList<TextView>()
-        val numPager = if(list.size%5==0) {
-            list.size/5
-        } else {
-            (list.size/5)+1
+        var numPager = 0
+        if(list.size%5==0) {
+            numPager=  list.size/5
+            for(i in 0 until (list.size/5) )
+            {
+                numPages.add(listLimited.size)
+            }
         }
-        binding.tvPager.text = "${pageNum*5+1} - ${pageNum*5+5} de ${list.size} entradas"
-        /*for(i in 0 until 1)
-        {
-           val textView = TextView(context)
-            pagerList.add(textView)
-            pagerList[i].text  = "$pageNum - 5 de ${list.size} entradas"
-            pagerList[i].setTextColor(ContextCompat.getColor(requireContext(), R.color.colorTextAll))
-            val params = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-            params.marginStart = 10f.toDips().toInt()
-            params.marginEnd = 10f.toDips().toInt()
-            pagerList[i].layoutParams = params
-            pagerList[i].gravity = Gravity.CENTER
-           /* pagerList[i].setOnClickListener{
-                limitedTable(tl1,tl2,(pagerList[i].text.toString().toInt()-1))
-            }*/
-            linearPage.addView(pagerList[i])
-        }*/
-
+        else {
+            numPager = (list.size/5)+1
+            for(i in 0 until (list.size/5) )
+            {
+                numPages.add(listLimited.size)
+            }
+            numPages.add(list.size%5)
+        }
+        binding.tvPager.text = "${pageNum*5+1} - ${pageNum*5+numPages[pageNum]} de ${list.size} entradas"
         binding.btnPrevPage.setOnClickListener{
             if(pageNum>0)
             {
                 pageNum--
-                binding.tvPager.text = "${pageNum*5+1} - ${pageNum*5+5} de ${list.size} entradas"
+                binding.tvPager.text = "${pageNum*5+1} - ${pageNum*5+numPages[pageNum]} de ${list.size} entradas"
                 limitedTable(tl1,tl2,pageNum)
             }
         }
@@ -261,7 +290,7 @@ class UserStatusFragment : BaseFragment() {
             if(pageNum<(numPager-1))
             {
                 pageNum++
-                binding.tvPager.text = "${pageNum*5+1} - ${pageNum*5+5} de ${list.size} entradas"
+                binding.tvPager.text = "${pageNum*5+1} - ${pageNum*5+numPages[pageNum]} de ${list.size} entradas"
                 limitedTable(tl1,tl2,pageNum)
             }
         }
