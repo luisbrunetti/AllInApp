@@ -6,7 +6,7 @@ plugins {
     id 'androidx.navigation.safeargs.kotlin'
 }
 
-def dev = 0
+def dev = 1
 
 android {
     compileSdkVersion 30
@@ -31,19 +31,19 @@ android {
         debug {
             minifyEnabled false
             signingConfig signingConfigs.debug
-            buildConfigField("String", "BASE_URL", "\"https://tawa.com\"")
+            buildConfigField("String", "BASE_URL", "\"http://tismart-alb-prd-us-east-001-1633035529.us-east-1.elb.amazonaws.com\"")
             buildConfigField('int', 'DEV', "$dev")
         }
         prod {
             minifyEnabled false
             signingConfig signingConfigs.debug
-            buildConfigField("String", "BASE_URL", "\"https://tawa.com\"")
+            buildConfigField("String", "BASE_URL", "\"http://tismart-alb-prd-us-east-001-1633035529.us-east-1.elb.amazonaws.com\"")
             buildConfigField('int', 'DEV', "$dev")
         }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            buildConfigField("String", "BASE_URL", "\"https://tawa.com\"")
+            buildConfigField("String", "BASE_URL", "\"http://tismart-alb-prd-us-east-001-1633035529.us-east-1.elb.amazonaws.com\"")
             buildConfigField('int', 'DEV', "$dev")
         }
     }

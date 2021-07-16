@@ -7,12 +7,11 @@ import com.tawa.allinapp.models.Company
 class CompanyRemote {
     data class Response(
         @SerializedName("_id") val id: String,
-        @SerializedName("CO_EMPR") val code: String,
-        @SerializedName("NU_RUCS") val ruc: String,
-        @SerializedName("DE_NOMB") val name: String,
-        @SerializedName("DE_GIRO") val description: String,
+        @SerializedName("numero_ruc") val ruc: String?,
+        @SerializedName("nombre_empresa") val name: String?,
+        @SerializedName("giro_empresa") val description: String?,
     ){
-        fun toView() = Company(id,code,ruc,name,description)
-        fun toModel() = CompanyModel(id,code,ruc,name,description)
+        fun toView() = Company(id,ruc?:"",name?:"",description?:"")
+        fun toModel() = CompanyModel(id,ruc?:"",name?:"",description?:"")
     }
 }
