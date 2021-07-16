@@ -17,7 +17,7 @@ class ParametersService
 @Inject constructor(retrofit: Retrofit) : ParametersApi {
     private val authApi by lazy { retrofit.create(ParametersApi::class.java) }
 
-    override fun getCompanies() = authApi.getCompanies()
+    override fun getCompanies(user: String, token:String) = authApi.getCompanies(user,token)
     override fun getPV() = authApi.getPV()
 
 }

@@ -26,7 +26,7 @@ interface ParametersRepository {
             return when (networkHandler.isConnected) {
                 true ->{
                     try {
-                        val response = service.getCompanies().execute()
+                        val response = service.getCompanies(prefs.idUser!!, "Bearer ${prefs.token!!}").execute()
                         when (response.isSuccessful) {
                             true -> {
                                 response.body()?.let { body ->
@@ -37,7 +37,7 @@ interface ParametersRepository {
                                         Either.Right(true)
                                     }
                                     else Either.Left(Failure.DefaultError(body.message))
-                                }?: Either.Left(Failure.DefaultError(""))
+                                }?: Either.Left(Failure.DefaultError("Unauthorized"))
                             }
                             false -> Either.Left(Failure.ServerError)
                         }

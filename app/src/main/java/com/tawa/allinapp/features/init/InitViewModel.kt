@@ -186,7 +186,7 @@ class InitViewModel
         this._checkInMode.value = checkIn
     }
     private fun handleCompanyList(company: List<Company>) {
-        this._companies.value = company.map { Company(it.id,it.code,it.ruc,it.name,it.description) }
+        this._companies.value = company.map { Company(it.id,it.ruc,it.name,it.description) }
     }
     private fun handlePvList(pv: List<PV>) {
         this._pv.value = pv.map { PV(it.id,it.description,it.zone,it.codGeo,it.idCompany, it.lat,it.long) }

@@ -9,6 +9,8 @@ class Prefs
     companion object{
         const val FILENAME ="allin"
         const val USERNAME = "name"
+        const val USER = "user"
+        const val SUPERVISOR = "supervisor"
         const val TOKEN = "token"
         const val USERID = "idUser"
         const val SESSION = "session"
@@ -22,6 +24,14 @@ class Prefs
     var name:String?
         get() = prefs.getString(USERNAME,"")
         set(value) = prefs.edit().putString(USERNAME,value).apply()
+
+    var user:String?
+        get() = prefs.getString(USER,"")
+        set(value) = prefs.edit().putString(USER,value).apply()
+
+    var suoervisor:Boolean
+        get() = prefs.getBoolean(SUPERVISOR,false)
+        set(value) = prefs.edit().putBoolean(SUPERVISOR,value).apply()
 
     var idUser:String?
         get() = prefs.getString(USERID,"")

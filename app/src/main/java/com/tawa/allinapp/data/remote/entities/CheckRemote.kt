@@ -7,13 +7,12 @@ import com.tawa.allinapp.models.Company
 class CheckRemote {
     data class Request(
         @SerializedName("_id") val id: String,
-        @SerializedName("CO_EMPR") val code: String,
         @SerializedName("NU_RUCS") val ruc: String,
         @SerializedName("DE_NOMB") val name: String,
         @SerializedName("DE_GIRO") val description: String,
     ){
-        fun toView() = Company(id,code,ruc,name,description)
-        fun toModel() = CompanyModel(id,code,ruc,name,description)
+        fun toView() = Company(id,ruc,name,description)
+        fun toModel() = CompanyModel(id,ruc,name,description)
     }
 
 }
