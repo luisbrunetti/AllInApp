@@ -3,45 +3,384 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <androidx.appcompat.widget.LinearLayoutCompat
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:context=".features.reports.sku.SkuFragment">
+        android:layout_height="match_parent">
 
-        <include
-            android:id="@+id/iHeader"
-            layout="@layout/header_report"
-            app:title="@{`Quiebres y SKU`}"
-            app:sub="@{`Reporte`}" />
+        <View
+            android:id="@+id/conteSku"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
 
-        <ScrollView
-            android:layout_margin="25dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        <View
+            android:id="@+id/headSku"
+            android:layout_width="0dp"
+            android:layout_height="73dp"
+            android:background="@drawable/bg_gradient_rounded"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
 
-            <HorizontalScrollView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/btnBackSku"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="22dp"
+            android:layout_marginTop="19dp"
+            android:src="@drawable/ic_arrow_reports"
+            app:layout_constraintBottom_toBottomOf="@+id/headSku"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/headSku"
+            app:layout_constraintTop_toTopOf="@+id/headSku"
+            app:layout_constraintVertical_bias="0.0" />
 
-                <androidx.appcompat.widget.LinearLayoutCompat
-                    android:orientation="vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/textView30"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="11dp"
+            android:layout_marginTop="17dp"
+            android:layout_marginEnd="20dp"
+            android:text="Reporte"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/headSku"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/btnBackSku"
+            app:layout_constraintTop_toTopOf="@+id/headSku" />
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rvSku"
+        <TextView
+            android:id="@+id/textView31"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="11dp"
+            android:layout_marginEnd="20dp"
+            android:text="Quiebres y SKUS"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/headSku"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/btnBackSku"
+            app:layout_constraintTop_toBottomOf="@+id/textView30" />
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:fillViewport="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/headSku">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/layoutStatus"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <Button
+                        android:id="@+id/btnFilterCat"
+                        android:layout_width="wrap_content"
+                        android:layout_height="50dp"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginTop="24dp"
+                        android:background="@drawable/bg_blue_button_filter_sku"
+                        android:drawableStart="@drawable/ic_filter_cat"
+                        android:drawablePadding="14dp"
+                        android:gravity="center"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:text="Filtrar por categoría:"
+                        android:textAllCaps="false"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.0" />
+
+                    <TableLayout
+                        android:id="@+id/tlSku"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        tools:listitem="@layout/row_sku"
-                        tools:itemCount="5" />
+                        android:layout_marginStart="25dp"
+                        android:layout_marginTop="50dp"
+                        android:layout_marginBottom="120dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/btnFilterCat"
+                        app:layout_constraintVertical_bias="0.0">
 
-                </androidx.appcompat.widget.LinearLayoutCompat>
+                        <TableRow
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/bg_header_table_round"
+                            android:gravity="center_vertical">
 
-            </HorizontalScrollView>
+                            <TextView
+                                android:id="@+id/textView15"
+                                android:layout_width="80dp"
+                                android:layout_height="wrap_content"
+                                android:layout_column="0"
+                                android:layout_marginStart="16dp"
+                                android:layout_marginTop="12dp"
+                                android:layout_marginEnd="24dp"
+                                android:layout_marginBottom="12dp"
+                                android:text="Producto"
+                                android:textColor="@color/colorTextAll"
+                                android:textSize="12sp" />
 
-        </ScrollView>
 
-    </androidx.appcompat.widget.LinearLayoutCompat>
+                        </TableRow>
+
+
+                    </TableLayout>
+
+                    <ScrollView
+                        android:id="@+id/layout"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="50dp"
+                        android:layout_marginBottom="120dp"
+                        android:fillViewport="true"
+                        android:scrollbarStyle="outsideInset"
+                        android:scrollbars="horizontal|vertical"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/tlSku"
+                        app:layout_constraintTop_toBottomOf="@+id/btnFilterCat"
+                        app:layout_constraintVertical_bias="0.0">
+
+                        <HorizontalScrollView
+                            android:id="@+id/horizontalView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:scrollbars="horizontal|vertical">
+
+                            <TableLayout
+                                android:id="@+id/tlDataSku"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent">
+
+                                <TableRow
+                                    android:id="@+id/r111"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:background="@drawable/bg_header_table"
+                                    android:gravity="center_vertical">
+
+                                    <TextView
+                                        android:id="@+id/tvBattery"
+                                        android:layout_width="70dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_column="0"
+                                        android:layout_marginStart="10dp"
+                                        android:layout_marginTop="12dp"
+                                        android:layout_marginEnd="10dp"
+                                        android:layout_marginBottom="12sp"
+                                        android:text="Fecha Data"
+                                        android:textColor="@color/colorTextAll"
+                                        android:textSize="12sp" />
+
+                                    <TextView
+                                        android:id="@+id/tvState"
+                                        android:layout_width="70dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_column="1"
+                                        android:layout_marginStart="0dp"
+                                        android:layout_marginTop="12dp"
+                                        android:layout_marginEnd="20dp"
+                                        android:layout_marginBottom="12dp"
+                                        android:paddingStart="15dp"
+                                        android:text="Categoria"
+                                        android:textColor="@color/colorTextAll"
+                                        android:textSize="12sp" />
+
+                                    <TextView
+                                        android:id="@+id/tvStateGps"
+                                        android:layout_width="95dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_column="2"
+                                        android:layout_marginTop="12dp"
+                                        android:layout_marginEnd="20dp"
+                                        android:layout_marginBottom="12dp"
+                                        android:paddingStart="15dp"
+                                        android:text="Subcategoria"
+                                        android:textColor="@color/colorTextAll"
+                                        android:textSize="12sp" />
+
+                                    <TextView
+                                        android:id="@+id/tvLast"
+                                        android:layout_width="70dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_column="3"
+                                        android:layout_marginTop="12dp"
+                                        android:layout_marginEnd="20dp"
+                                        android:layout_marginBottom="12dp"
+                                        android:paddingStart="15dp"
+                                        android:text="Inventario"
+                                        android:textColor="@color/colorTextAll"
+                                        android:textSize="12sp" />
+
+                                    <TextView
+                                        android:id="@+id/textView22"
+                                        android:layout_width="60dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_column="4"
+                                        android:layout_marginStart="15dp"
+                                        android:layout_marginTop="12dp"
+                                        android:layout_marginEnd="20dp"
+                                        android:layout_marginBottom="12dp"
+                                        android:text="Precio"
+                                        android:textColor="@color/colorTextAll"
+                                        android:textSize="12sp" />
+
+                                    <TextView
+                                        android:id="@+id/textView17"
+                                        android:layout_width="60dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_column="4"
+                                        android:layout_marginStart="15dp"
+                                        android:layout_marginTop="12dp"
+                                        android:layout_marginEnd="20dp"
+                                        android:layout_marginBottom="12dp"
+                                        android:text="Stock"
+                                        android:textColor="@color/colorTextAll"
+                                        android:textSize="12sp" />
+
+                                    <TextView
+                                        android:id="@+id/textView18"
+                                        android:layout_width="70dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_column="4"
+                                        android:layout_marginStart="20dp"
+                                        android:layout_marginTop="12dp"
+                                        android:layout_marginEnd="20dp"
+                                        android:layout_marginBottom="12dp"
+                                        android:text="Exhibición"
+                                        android:textColor="@color/colorTextAll"
+                                        android:textSize="12sp" />
+
+                                    <TextView
+                                        android:id="@+id/textView19"
+                                        android:layout_width="60dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_column="4"
+                                        android:layout_marginStart="15dp"
+                                        android:layout_marginTop="12dp"
+                                        android:layout_marginEnd="20dp"
+                                        android:layout_marginBottom="12dp"
+                                        android:text="Precio"
+                                        android:textColor="@color/colorTextAll"
+                                        android:textSize="12sp" />
+
+                                    <TextView
+                                        android:id="@+id/textView23"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_column="4"
+                                        android:layout_marginStart="20dp"
+                                        android:layout_marginTop="12dp"
+                                        android:layout_marginEnd="20dp"
+                                        android:layout_marginBottom="12dp"
+                                        android:text="Observación"
+                                        android:textColor="@color/colorTextAll"
+                                        android:textSize="12sp" />
+
+                                </TableRow>
+
+
+                            </TableLayout>
+                        </HorizontalScrollView>
+                    </ScrollView>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="90dp"
+                        android:orientation="horizontal"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tlSku"
+                        app:layout_constraintVertical_bias="0.0">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="end"
+                            android:orientation="vertical">
+
+                            <Button
+                                android:id="@+id/btnPrevPage"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@null"
+                                android:drawableEnd="@drawable/ic_prev_page"
+                                android:paddingEnd="17dp" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/pageNumber"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="5dp"
+                            android:layout_marginEnd="5dp"
+                            android:layout_weight="1.5"
+                            android:gravity="center"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/tvPager"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="1 de 5 de 77 entradas"
+                                android:textColor="@color/colorTextAll"
+                                android:textSize="16sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <Button
+                                android:id="@+id/btnNextPage"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@null"
+                                android:drawableStart="@drawable/ic_next_page"
+                                android:paddingStart="17dp" />
+
+                        </LinearLayout>
+                    </LinearLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
