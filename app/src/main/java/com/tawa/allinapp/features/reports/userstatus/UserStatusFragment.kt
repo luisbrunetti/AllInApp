@@ -1,21 +1,16 @@
 package com.tawa.allinapp.features.reports.userstatus
 
-import android.annotation.SuppressLint
+
 import android.app.DatePickerDialog
 import android.graphics.Typeface
-import android.os.Build
 import android.os.Bundle
-import android.text.InputType
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.OnFocusChangeListener
-import android.view.View.OnTouchListener
 import android.view.ViewGroup
 import android.widget.*
 import android.widget.LinearLayout
-import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.core.view.setPadding
 import androidx.core.view.size
@@ -37,7 +32,6 @@ class UserStatusFragment : BaseFragment() {
     private lateinit var binding: FragmentUserStatusBinding
     private var count = 0
     private var countLast = 0
-    @SuppressLint("SimpleDateFormat")
     val formatter = SimpleDateFormat("HH:mm:ss")
     val userStatus = ArrayList<String>()
     private val batteryStatus = ArrayList<Int>()
@@ -48,14 +42,12 @@ class UserStatusFragment : BaseFragment() {
     private lateinit var listStatus:List<ReportStatus>
     private lateinit var listLimited:List<ReportStatus>
     private val numPages  = ArrayList<Int>()
-    var pageNum = 0 ;
+    private var pageNum = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         appComponent.inject(this)
     }
-
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentUserStatusBinding.inflate(inflater)
         userStatusViewModel = viewModel(viewModelFactory) {
@@ -94,7 +86,7 @@ class UserStatusFragment : BaseFragment() {
                 createPager(listStatus,binding.pageNumber,binding.tlName,binding.tlGridTable)
             }
             else
-            { listLimited= listStatus.filter { it.name == reporter.toString() }
+            { listLimited= listStatus.filter { it.name == reporter }
                 showDataTable(listLimited,0)
                 createPager(listLimited,binding.pageNumber,binding.tlName,binding.tlGridTable)
             }
@@ -103,7 +95,6 @@ class UserStatusFragment : BaseFragment() {
         }
         return binding.root
     }
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun showDataTable(listInit:List<ReportStatus>,order:Int){
         for(report in listInit)
         {
@@ -124,7 +115,6 @@ class UserStatusFragment : BaseFragment() {
         setDataLayout(binding.tlName,userStatus,order)
         setDataStatus(binding.tlGridTable,batteryStatus,state,stateGps,lastHour,lastPosition,order)
     }
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun batteryOrder(){
         removeArray()
         if(count%2==0) {
@@ -149,7 +139,6 @@ class UserStatusFragment : BaseFragment() {
         }
         count++
     }
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun connectionOrder(){
         removeArray()
         if (countLast % 2 == 0) {
@@ -175,7 +164,7 @@ class UserStatusFragment : BaseFragment() {
         countLast++
     }
     private fun showReporter(list:List<ReportStatus>){
-        var listReporters  = ArrayList<String>()
+        val listReporters  = ArrayList<String>()
         for(reporters in list)
         {
             listReporters.add(reporters.name)
@@ -203,7 +192,6 @@ class UserStatusFragment : BaseFragment() {
             tableLayout.addView(row)
         }
     }
-
     private fun setDataStatus(tableLayout: TableLayout, battery:ArrayList<Int>,state : ArrayList<String>,stateGps:ArrayList<String>,lastHour:ArrayList<String>,lastPosition:ArrayList<ArrayList<String>>,type:Int){
         if(type>0)
             tableLayout.removeViews(1,battery.size)
@@ -248,7 +236,6 @@ class UserStatusFragment : BaseFragment() {
             tableLayout.addView(row)
         }
     }
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun limitedTable(tl1:TableLayout,tl2:TableLayout,item:Int){
             listLimited = listStatus.slice((item*5)..(item*5+(numPages[item]-1)))
             removeArray()
@@ -256,11 +243,8 @@ class UserStatusFragment : BaseFragment() {
             tl2.removeViews(1,tl2.size-1)
             showDataTable(listLimited,0)
     }
-
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun createPager(list:List<ReportStatus>, linearPage : LinearLayout,tl1:TableLayout,tl2:TableLayout){
-        val pagerList = ArrayList<TextView>()
-        var numPager = 0
+        val numPager: Int
         if(list.size%5==0) {
             numPager=  list.size/5
             for(i in 0 until (list.size/5) )
@@ -276,21 +260,20 @@ class UserStatusFragment : BaseFragment() {
             }
             numPages.add(list.size%5)
         }
-        binding.tvPager.text = "${pageNum*5+1} - ${pageNum*5+numPages[pageNum]} de ${list.size} entradas"
+        "${pageNum*5+1} - ${pageNum*5+numPages[pageNum]} de ${list.size} entradas".also { binding.tvPager.text = it }
         binding.btnPrevPage.setOnClickListener{
             if(pageNum>0)
             {
                 pageNum--
-                binding.tvPager.text = "${pageNum*5+1} - ${pageNum*5+numPages[pageNum]} de ${list.size} entradas"
+                "${pageNum*5+1} - ${pageNum*5+numPages[pageNum]} de ${list.size} entradas".also { binding.tvPager.text = it }
                 limitedTable(tl1,tl2,pageNum)
             }
         }
-
         binding.btnNextPage.setOnClickListener{
             if(pageNum<(numPager-1))
             {
                 pageNum++
-                binding.tvPager.text = "${pageNum*5+1} - ${pageNum*5+numPages[pageNum]} de ${list.size} entradas"
+                "${pageNum*5+1} - ${pageNum*5+numPages[pageNum]} de ${list.size} entradas".also { binding.tvPager.text = it }
                 limitedTable(tl1,tl2,pageNum)
             }
         }
@@ -323,7 +306,7 @@ class UserStatusFragment : BaseFragment() {
         dpd.show()
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
+
     private fun getDate(text: String):String{
         val instant: Instant = Instant.parse(text)
         val myDate = Date.from(instant)
