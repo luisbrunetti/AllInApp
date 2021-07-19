@@ -2,15 +2,13 @@ package com.tawa.allinapp.features.reports.sku
 
 import android.graphics.Typeface
 import android.os.Bundle
+import android.text.InputType
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TableLayout
-import android.widget.TableRow
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.core.content.ContextCompat
 import androidx.core.view.setPadding
 import androidx.core.view.size
@@ -53,30 +51,51 @@ class SkuFragment : BaseFragment() {
                                Sku("7UP 1500ml","22/06/2021","Bebida saborizada 5","7UP","35","1.00")
         )
 
-        listLimitedSku  = listSku.slice(0..4)
-        for(cate in listSku)
-            categoryFilter.add(cate.category!!)
-        for(sku in listLimitedSku)
-        {
-            category.add(sku.category!!)
-            date.add(sku.date!!)
-            product.add(sku.product!!)
-            subCategory.add(sku.subCategory!!)
-            inventory.add(sku.inventory!!)
-            price.add(sku.price!!)
-        }
-        setSkuProduct(binding.tlSku,product,0)
-        setSkuData(binding.tlDataSku,date,category,subCategory,inventory,price,0)
-        createPager(listSku,binding.tlSku,binding.tlDataSku)
+        showTable()
         binding.btnFilterCat.setOnClickListener {
             showFilterDialog(categoryFilter)
         }
         return binding.root
     }
 
-    private fun setSkuProduct(tableLayout: TableLayout, data:ArrayList<String>, type:Int){
-        if(type>0)
-            tableLayout.removeViews(1, data.size)
+    private  fun showTable(){
+        removeArray()
+        binding.tlSku.removeViews(1,binding.tlSku.size-1)
+        binding.tlDataSku.removeViews(1,binding.tlDataSku.size-1)
+        numPages.removeAll(numPages)
+        pageNum = 0
+        listLimitedSku  = listSku.slice(0..4)
+        for(cate in listSku)
+            categoryFilter.add(cate.category!!)
+
+        addElements(listLimitedSku)
+        setSkuProduct(binding.tlSku,product)
+        setSkuData(binding.tlDataSku,date,category,subCategory,inventory,price)
+        createPager(listSku,binding.tlSku,binding.tlDataSku)
+    }
+
+    private  fun showTableFilter(list:ArrayList<String>){
+        listFilter.removeAll(listFilter)
+        for(i in list )
+            listFilter.addAll(listSku.filter { it.category == i })
+        removeArray()
+        binding.tlSku.removeViews(1,binding.tlSku.size-1)
+        binding.tlDataSku.removeViews(1,binding.tlDataSku.size-1)
+        numPages.removeAll(numPages)
+        pageNum = 0
+        if(listFilter.size<5)
+            listLimitedSku = listFilter.slice(0 until listFilter.size)
+        else
+            listLimitedSku = listFilter.slice(0..4)
+
+        addElements(listLimitedSku)
+        setSkuProduct(binding.tlSku,product)
+        setSkuData(binding.tlDataSku,date,category,subCategory,inventory,price)
+        createPager(listFilter,binding.tlSku,binding.tlDataSku)
+    }
+
+
+    private fun setSkuProduct(tableLayout: TableLayout, data:ArrayList<String>){
         for(name in data)
         {
             val row  = TableRow(context)
@@ -95,9 +114,7 @@ class SkuFragment : BaseFragment() {
         }
     }
 
-    private fun setSkuData(tableLayout: TableLayout, date:ArrayList<String>, category : ArrayList<String>,subcategory:ArrayList<String>,inventory:ArrayList<String>,price:ArrayList<String>,type:Int){
-        if(type>0)
-            tableLayout.removeViews(1,date.size)
+    private fun setSkuData(tableLayout: TableLayout, date:ArrayList<String>, category : ArrayList<String>,subcategory:ArrayList<String>,inventory:ArrayList<String>,price:ArrayList<String>){
 
         for((flag, dateUnit) in date.withIndex())
         {
@@ -124,6 +141,38 @@ class SkuFragment : BaseFragment() {
             textViewStyle(tvPrice,price[flag])
             row.addView(tvPrice)
 
+            val checkStock = CheckBox(context)
+            row.addView(checkStock)
+
+            val checkExhibition = CheckBox(context)
+            row.addView(checkExhibition)
+
+            val editTextPrice = EditText(context)
+            editTextPrice.hint = "0.00"
+            editTextPrice.inputType = InputType.TYPE_CLASS_NUMBER
+            editTextPrice.setBackgroundResource(R.drawable.rounded)
+            editTextPrice.width = 20f.toDips().toInt()
+            editTextPrice.setPadding(10f.toDips().toInt())
+            row.addView(editTextPrice)
+
+            val buttonObservations = Button(context)
+            buttonObservations.text = "+ Agregar"
+            buttonObservations.isAllCaps = false
+            buttonObservations.textSize = 18f
+            val params = TableRow.LayoutParams(
+                144f.toDips().toInt(),
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            params.marginStart = 35f.toDips().toInt()
+            params.marginEnd = 12f.toDips().toInt()
+            buttonObservations.layoutParams = params
+            buttonObservations.setBackgroundResource(R.drawable.bg_blue_button_sku)
+            buttonObservations.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+            row.addView(buttonObservations)
+            buttonObservations.setOnClickListener {
+                val arr = ArrayList<String>()
+                showObservationDialog(arr)
+            }
             tableLayout.addView(row)
         }
     }
@@ -133,17 +182,9 @@ class SkuFragment : BaseFragment() {
         removeArray()
         tl1.removeViews(1,tl1.size-1)
         tl2.removeViews(1,tl2.size-1)
-        for(sku in listLimitedSku)
-        {
-            category.add(sku.category!!)
-            date.add(sku.date!!)
-            product.add(sku.product!!)
-            subCategory.add(sku.subCategory!!)
-            inventory.add(sku.inventory!!)
-            price.add(sku.price!!)
-        }
-        setSkuProduct(binding.tlSku,product,0)
-        setSkuData(binding.tlDataSku,date,category,subCategory,inventory,price,0)
+        addElements(listLimitedSku)
+        setSkuProduct(binding.tlSku,product)
+        setSkuData(binding.tlDataSku,date,category,subCategory,inventory,price)
 
     }
 
@@ -183,6 +224,14 @@ class SkuFragment : BaseFragment() {
         }
 
     }
+    private fun addElements(list:List<Sku>){
+        list.forEach { category.add(it.category!!)
+                            date.add(it.date!!)
+                            product.add(it.product!!)
+                            subCategory.add(it.subCategory!!)
+                            inventory.add(it.inventory!!)
+                            price.add(it.price!!)}
+    }
 
     private fun removeArray(){
         product.removeAll(product)
@@ -206,30 +255,20 @@ class SkuFragment : BaseFragment() {
         dialog.show(childFragmentManager, "dialog")
         dialog.listener = object : FilterSkuDialogFragment.Callback{
             override fun onFilter(list:ArrayList<String>) {
-                listFilter.removeAll(listFilter)
-                for(i in list )
-                    listFilter.addAll(listSku.filter { it.category == i })
-                removeArray()
-                binding.tlSku.removeViews(1,binding.tlSku.size-1)
-                binding.tlDataSku.removeViews(1,binding.tlDataSku.size-1)
-                numPages.removeAll(numPages)
-                pageNum = 0
-                if(listFilter.size<5)
-                    listLimitedSku = listFilter.slice(0 until listFilter.size)
+                if(list.size==0)
+                    showTable()
                 else
-                    listLimitedSku = listFilter.slice(0..4)
-                for(sku in listLimitedSku)
-                {
-                    category.add(sku.category!!)
-                    date.add(sku.date!!)
-                    product.add(sku.product!!)
-                    subCategory.add(sku.subCategory!!)
-                    inventory.add(sku.inventory!!)
-                    price.add(sku.price!!)
-                }
-                setSkuProduct(binding.tlSku,product,0)
-                setSkuData(binding.tlDataSku,date,category,subCategory,inventory,price,0)
-                createPager(listFilter,binding.tlSku,binding.tlDataSku)
+                    showTableFilter(list)
+            }
+        }
+    }
+
+    private fun showObservationDialog(data:ArrayList<String>){
+        val dialog = ObservationsDialogFragment.newInstance(data)
+        dialog.show(childFragmentManager, "dialog")
+        dialog.listener = object : ObservationsDialogFragment.Callback{
+            override fun onClick(list:ArrayList<String>) {
+
             }
         }
     }

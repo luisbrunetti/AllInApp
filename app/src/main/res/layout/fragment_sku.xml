@@ -221,10 +221,10 @@
                                         android:layout_width="95dp"
                                         android:layout_height="wrap_content"
                                         android:layout_column="2"
+                                        android:layout_marginStart="15dp"
                                         android:layout_marginTop="12dp"
                                         android:layout_marginEnd="20dp"
                                         android:layout_marginBottom="12dp"
-                                        android:paddingStart="15dp"
                                         android:text="Subcategoria"
                                         android:textColor="@color/colorTextAll"
                                         android:textSize="12sp" />
@@ -257,10 +257,10 @@
 
                                     <TextView
                                         android:id="@+id/textView17"
-                                        android:layout_width="60dp"
+                                        android:layout_width="50dp"
                                         android:layout_height="wrap_content"
                                         android:layout_column="4"
-                                        android:layout_marginStart="15dp"
+                                        android:layout_marginStart="0dp"
                                         android:layout_marginTop="12dp"
                                         android:layout_marginEnd="20dp"
                                         android:layout_marginBottom="12dp"
@@ -273,7 +273,6 @@
                                         android:layout_width="70dp"
                                         android:layout_height="wrap_content"
                                         android:layout_column="4"
-                                        android:layout_marginStart="20dp"
                                         android:layout_marginTop="12dp"
                                         android:layout_marginEnd="20dp"
                                         android:layout_marginBottom="12dp"
@@ -283,10 +282,9 @@
 
                                     <TextView
                                         android:id="@+id/textView19"
-                                        android:layout_width="60dp"
+                                        android:layout_width="70dp"
                                         android:layout_height="wrap_content"
                                         android:layout_column="4"
-                                        android:layout_marginStart="15dp"
                                         android:layout_marginTop="12dp"
                                         android:layout_marginEnd="20dp"
                                         android:layout_marginBottom="12dp"
@@ -299,7 +297,7 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_column="4"
-                                        android:layout_marginStart="20dp"
+                                        android:layout_marginStart="35dp"
                                         android:layout_marginTop="12dp"
                                         android:layout_marginEnd="20dp"
                                         android:layout_marginBottom="12dp"
