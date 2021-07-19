@@ -10,6 +10,7 @@ import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import androidx.core.app.ActivityCompat
 import androidx.navigation.fragment.findNavController
 import com.tawa.allinapp.R
@@ -94,6 +95,7 @@ class InitFragment : BaseFragment() {
         binding.viewBtnReports.setOnClickListener {
             findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationReports())
         }
+
         return binding.root
     }
 
