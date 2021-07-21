@@ -57,6 +57,8 @@ class InitFragment : BaseFragment() {
             } }})
             observe(checkInMode, { it?.let {
                 checkIn = it
+                if(!checkIn)
+                    binding.tvCheckIn.text = _pv
                 hideProgressDialog()
             }})
             observe(idUser, { it?.let {

@@ -154,14 +154,14 @@
             android:scaleType="matrix"
             android:src="@drawable/ic_check"
             app:layout_constraintBottom_toTopOf="@+id/textView16"
-            app:layout_constraintEnd_toStartOf="@id/textView20"
+            app:layout_constraintEnd_toStartOf="@id/tvCheckIn"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="@+id/view8"
             app:layout_constraintTop_toTopOf="@+id/view8"
             app:layout_constraintVertical_bias="0.0" />
 
         <TextView
-            android:id="@+id/textView20"
+            android:id="@+id/tvCheckIn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="2dp"
