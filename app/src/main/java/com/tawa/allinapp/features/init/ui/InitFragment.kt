@@ -33,7 +33,7 @@ class InitFragment : BaseFragment() {
     private var checkIn:Boolean = true
     private var _user = ""
     private lateinit var _pvId: String
-    private lateinit var _pv: String
+    private var _pv: String = ""
     private lateinit var _lat: String
     private lateinit var _long: String
     private var selector = false
@@ -57,8 +57,7 @@ class InitFragment : BaseFragment() {
             } }})
             observe(checkInMode, { it?.let {
                 checkIn = it
-                if(!checkIn)
-                    binding.tvCheckIn.text = _pv
+                if(!checkIn) binding.tvCheckIn.text = _pv
                 hideProgressDialog()
             }})
             observe(idUser, { it?.let {

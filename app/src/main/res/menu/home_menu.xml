@@ -17,8 +17,5 @@
         android:id="@+id/navigation_routes"
         android:icon="@drawable/ic_rutas"
         android:title="@string/title_routes" />
-    <item
-        android:id="@+id/navigation_others"
-        android:icon="@drawable/ic_calendar"
-        android:title="@string/title_others" />
+
 </menu>
