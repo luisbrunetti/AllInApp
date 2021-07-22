@@ -23,4 +23,8 @@ class ReportsDataSource @Inject constructor(private val reportsDao: ReportsDao){
         return reportsDao.getPhotoReports()
     }
 
+    fun insertAudioReport(reportModel: AudioReportModel){
+        reportsDao.insertAudioReport(reportModel)
+    }
+
 }

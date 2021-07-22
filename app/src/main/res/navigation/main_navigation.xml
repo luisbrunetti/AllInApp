@@ -49,6 +49,9 @@
         <action
             android:id="@+id/action_navigation_reports_to_skuFragment"
             app:destination="@id/skuFragment" />
+        <action
+            android:id="@+id/action_navigation_reports_to_audioFragment"
+            app:destination="@id/audioFragment" />
     </fragment>
 
     <fragment
@@ -113,6 +116,10 @@
         android:name="com.tawa.allinapp.features.reports.userstatus.LastLocationFragment"
         android:label="fragment_last_location"
         tools:layout="@layout/fragment_last_location" />
+    <fragment
+        android:id="@+id/audioFragment"
+        android:name="com.tawa.allinapp.features.reports.audio.AudioFragment"
+        android:label="AudioFragment" />
 
 
 </navigation>
