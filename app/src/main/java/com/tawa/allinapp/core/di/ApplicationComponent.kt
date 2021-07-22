@@ -14,6 +14,7 @@ import com.tawa.allinapp.features.init.ui.InitFragment
 
 import com.tawa.allinapp.features.location.LocationFragment
 import com.tawa.allinapp.features.movies.ui.MoviesFragment
+import com.tawa.allinapp.features.reports.audio.AudioFragment
 import com.tawa.allinapp.features.reports.picture.PictureFragment
 import com.tawa.allinapp.features.reports.standard.CheckListFragment
 import com.tawa.allinapp.features.reports.reports.ReportsFragment
@@ -50,4 +51,5 @@ interface ApplicationComponent{
     fun inject(userStatusFragment: UserStatusFragment)
     fun inject(skuFragment: SkuFragment)
     fun inject(lastLocationFragment: LastLocationFragment)
+    fun inject(audioFragment: AudioFragment)
 }

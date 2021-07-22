@@ -6,7 +6,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.tawa.allinapp.features.reports.picture.PictureViewModel" />
+            type="com.tawa.allinapp.features.reports.audio.AudioViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -17,8 +17,8 @@
         <include
             android:id="@+id/iHeader"
             layout="@layout/header_report"
-            app:title="@{`Fotográfico`}"
-            app:sub="@{`Reporte`}"/>
+            app:title="@{`Reporte de Audios`}"
+            app:sub="@{`Informe:`}"/>
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/nestedScrollView"
@@ -40,157 +40,106 @@
                     android:layout_height="match_parent">
 
                     <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/tvLabelCode"
+                        android:id="@+id/tvLabelSelectAudio"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="36dp"
                         android:layout_marginTop="16dp"
                         android:layout_marginEnd="36dp"
-                        android:text="@string/code"
+                        android:text="@string/select_audio"
                         android:textColor="@color/text_dark"
                         android:textSize="16sp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/tvCode"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="36dp"
-                        android:layout_marginTop="12dp"
-                        android:layout_marginEnd="36dp"
-                        android:background="@drawable/bg_gray"
-                        android:padding="12dp"
-                        android:textColor="@color/text_dark"
-                        android:textSize="16sp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/tvLabelCode" />
-
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/tvLabelPV"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="36dp"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginEnd="36dp"
-                        android:text="Punto de Venta"
-                        android:textColor="@color/text_dark"
-                        android:textSize="16sp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/tvCode" />
-
                     <androidx.appcompat.widget.AppCompatButton
-                        android:id="@+id/btTakePhotoBefore"
+                        android:id="@+id/btTakeAudioSelect"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
                         android:background="@drawable/bg_blue_button_reports"
-                        android:drawableStart="@drawable/ic_report_photo"
+                        android:drawableStart="@drawable/ic_record"
+                        android:layout_marginTop="16dp"
                         android:drawablePadding="12dp"
                         android:paddingStart="36dp"
                         android:paddingEnd="36dp"
-                        android:text="@string/take_picture_before"
+                        android:text="@string/select_audio"
+                        android:onClick="@{()->viewModel.doSelectAudio()}"
                         android:textAllCaps="false"
                         android:textColor="@color/white"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/tvLabelPV" />
+                        app:layout_constraintTop_toBottomOf="@id/tvLabelSelectAudio" />
 
                     <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rvPhotoBefore"
+                        android:id="@+id/rvAudioSelect"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/btTakePhotoBefore"
-                        tools:itemCount="5" />
-
-                    <androidx.appcompat.widget.AppCompatButton
-                        android:id="@+id/btTakePhotoAfter"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:background="@drawable/bg_blue_button_reports"
-                        android:drawableStart="@drawable/ic_report_photo"
-                        android:drawablePadding="12dp"
-                        android:paddingStart="36dp"
-                        android:paddingEnd="36dp"
-                        android:text="@string/take_picture_after"
-                        android:textAllCaps="false"
-                        android:textColor="@color/white"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/rvPhotoBefore" />
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rvPhotoAfter"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/btTakePhotoAfter"
+                        app:layout_constraintTop_toBottomOf="@+id/btTakeAudioSelect"
                         tools:itemCount="5" />
 
                     <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/tvLabelComments"
+                        android:id="@+id/tvLabelRecordAudio"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="36dp"
                         android:layout_marginTop="16dp"
+                        android:layout_marginStart="36dp"
                         android:layout_marginEnd="36dp"
-                        android:text="@string/comments"
+                        android:text="@string/record_audio"
                         android:textColor="@color/text_dark"
                         android:textSize="16sp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/rvPhotoAfter" />
+                        app:layout_constraintTop_toBottomOf="@+id/rvAudioSelect" />
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/contentLayout"
-                        android:layout_width="match_parent"
-                        android:layout_height="54dp"
-                        android:layout_marginStart="36dp"
-                        android:layout_marginTop="12dp"
-                        android:layout_marginEnd="36dp"
-                        android:background="@drawable/selector"
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/btTakeAudioRecord"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_blue_button_reports"
+                        android:drawableStart="@drawable/ic_record"
+                        android:layout_marginTop="16dp"
+                        android:drawablePadding="12dp"
+                        android:paddingStart="36dp"
+                        android:paddingEnd="36dp"
+                        android:text="@string/record"
+                        android:onClick="@{()->viewModel.doRecordAudio()}"
+                        android:textAllCaps="false"
+                        android:textColor="@color/white"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/tvLabelComments">
+                        app:layout_constraintTop_toBottomOf="@+id/tvLabelRecordAudio" />
 
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/tvComments"
-                            android:layout_width="match_parent"
-                            android:layout_height="30dp"
-                            android:layout_marginStart="16dp"
-                            android:layout_marginEnd="16dp"
-                            android:background="@null"
-                            android:hint="@string/add_comment" />
-
-                    </com.google.android.material.textfield.TextInputLayout>
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvAudioRecord"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/btTakeAudioRecord"
+                        tools:itemCount="5" />
 
                     <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/btSavePictures"
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
                         android:layout_marginStart="16dp"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginBottom="16dp"
                         android:layout_marginEnd="16dp"
+                        android:layout_marginBottom="16dp"
                         android:background="@drawable/bg_blue_button_reports"
                         android:gravity="center"
-                        android:text="Grabar"
+                        android:text="@string/register_button"
                         android:textAllCaps="false"
                         android:textColor="@color/white"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/contentLayout" />
+                        app:layout_constraintTop_toBottomOf="@+id/rvAudioRecord" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

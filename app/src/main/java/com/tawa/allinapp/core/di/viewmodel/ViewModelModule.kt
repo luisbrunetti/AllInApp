@@ -7,6 +7,7 @@ import com.tawa.allinapp.features.calendar.CalendarViewModel
 import com.tawa.allinapp.features.informs.InformsViewModel
 import com.tawa.allinapp.features.init.InitViewModel
 import com.tawa.allinapp.features.movies.MoviesViewModel
+import com.tawa.allinapp.features.reports.audio.AudioViewModel
 import com.tawa.allinapp.features.reports.picture.PictureViewModel
 import com.tawa.allinapp.features.reports.standard.CheckListViewModel
 import com.tawa.allinapp.features.reports.reports.ReportsViewModel
@@ -76,5 +77,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(UserStatusViewModel::class)
     abstract fun bindsUserStatusViewModel(userStatusViewModel: UserStatusViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(AudioViewModel::class)
+    abstract fun bindsAudioViewModel(audioViewModel: AudioViewModel): ViewModel
+
 
 }

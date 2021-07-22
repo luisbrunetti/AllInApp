@@ -1,5 +1,6 @@
 package com.tawa.allinapp.core.platform
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -10,6 +11,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
+import com.karumi.dexter.Dexter
+import com.karumi.dexter.MultiplePermissionsReport
+import com.karumi.dexter.PermissionToken
+import com.karumi.dexter.listener.PermissionRequest
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import com.tawa.allinapp.AndroidApplication
 import com.tawa.allinapp.R
 import com.tawa.allinapp.core.di.ApplicationComponent
@@ -102,6 +108,17 @@ abstract class BaseFragment : Fragment() {
     open fun showMessage(message:String?){
         val dialog = MessageDialogFragment.newInstance(message ?:"")
         dialog.show(childFragmentManager, "dialog")
+    }
+
+    fun checkPermissions(){
+        Dexter.withActivity(activity)
+            .withPermissions(Manifest.permission.CAMERA,Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            .withListener(object: MultiplePermissionsListener {
+                override fun onPermissionsChecked(report: MultiplePermissionsReport?) {  }
+                override fun onPermissionRationaleShouldBeShown(permissions: MutableList<PermissionRequest>?, token: PermissionToken?) {
+                    token?.continuePermissionRequest()
+                }
+            }).check()
     }
 
     open fun handleFailure(failure: Failure?) {

@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.tawa.allinapp.data.local.models.AudioReportModel
 import com.tawa.allinapp.data.local.models.PhotoReportModel
 import com.tawa.allinapp.data.local.models.ReportModel
 
@@ -21,4 +22,7 @@ interface ReportsDao {
 
     @Query("SELECT * FROM reports_photo")
     fun getPhotoReports(): List<PhotoReportModel>
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun insertAudioReport(report:AudioReportModel)
 }
