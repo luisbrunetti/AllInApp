@@ -26,7 +26,7 @@ interface ParametersRepository {
             return when (networkHandler.isConnected) {
                 true ->{
                     try {
-                        val response = service.getCompanies(prefs.idUser!!, "Bearer ${prefs.token!!}").execute()
+                        val response = service.getCompanies("Bearer ${prefs.token!!}").execute()
                         when (response.isSuccessful) {
                             true -> {
                                 response.body()?.let { body ->

@@ -29,9 +29,9 @@ class Prefs
         get() = prefs.getString(USER,"")
         set(value) = prefs.edit().putString(USER,value).apply()
 
-    var suoervisor:Boolean
-        get() = prefs.getBoolean(SUPERVISOR,false)
-        set(value) = prefs.edit().putBoolean(SUPERVISOR,value).apply()
+    var suoervisor:String?
+        get() = prefs.getString(SUPERVISOR,"")
+        set(value) = prefs.edit().putString(SUPERVISOR,value).apply()
 
     var idUser:String?
         get() = prefs.getString(USERID,"")
