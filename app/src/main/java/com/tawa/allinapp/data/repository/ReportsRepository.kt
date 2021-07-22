@@ -10,11 +10,7 @@ import com.tawa.allinapp.data.remote.MovieDetailEntity
 import com.tawa.allinapp.data.remote.service.ParametersService
 import com.tawa.allinapp.data.remote.service.QuestionsService
 import com.tawa.allinapp.data.remote.service.ReportsService
-import com.tawa.allinapp.models.Company
-import com.tawa.allinapp.models.PV
-import com.tawa.allinapp.models.PhotoReport
-import com.tawa.allinapp.models.Report
-import com.tawa.allinapp.models.ReportStatus
+import com.tawa.allinapp.models.*
 import retrofit2.Call
 import javax.inject.Inject
 
@@ -24,6 +20,7 @@ interface ReportsRepository {
     fun getReports(): Either<Failure,List<Report>>
     fun savePhotoReport(): Either<Failure, Boolean>
     fun getReportStatus(): Either<Failure, List<ReportStatus>>
+    fun saveLocalAudioReport(report: AudioReport): Either<Failure, Boolean>
 
     class Network
     @Inject constructor(private val networkHandler: NetworkHandler,
@@ -120,6 +117,15 @@ interface ReportsRepository {
         override fun getReports(): Either<Failure, List<Report>> {
             return try {
                 Either.Right(reportsDataSource.getReports().map { it.toView() })
+            }catch (e:Exception){
+                Either.Left(Failure.DefaultError(e.message!!))
+            }
+        }
+
+        override fun saveLocalAudioReport(report: AudioReport): Either<Failure, Boolean> {
+            return try {
+                reportsDataSource.insertAudioReport(report.toModel())
+                Either.Right(true)
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))
             }

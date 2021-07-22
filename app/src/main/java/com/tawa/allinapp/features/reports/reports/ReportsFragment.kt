@@ -35,6 +35,7 @@ class ReportsFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        checkPermissions()
         binding.rvReports.layoutManager = LinearLayoutManager(context)
         binding.rvReports.adapter = reportsAdapter
         reportsAdapter.clickListener = {
@@ -43,6 +44,7 @@ class ReportsFragment : BaseFragment() {
                 "REPORTE FOTOGRAFICO" -> findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToPictureFragment())
                 "ESTATUS DE USUARIO" -> findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToUserStatusFragment())
                 "QUIEBRES Y SKU" -> findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToSkuFragment())
+                "AUDIO" -> findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToAudioFragment())
             }
         }
     }

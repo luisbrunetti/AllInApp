@@ -10,6 +10,7 @@ import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import androidx.core.app.ActivityCompat
 import androidx.navigation.fragment.findNavController
 import com.tawa.allinapp.R
@@ -32,7 +33,7 @@ class InitFragment : BaseFragment() {
     private var checkIn:Boolean = true
     private var _user = ""
     private lateinit var _pvId: String
-    private lateinit var _pv: String
+    private var _pv: String = ""
     private lateinit var _lat: String
     private lateinit var _long: String
     private var selector = false
@@ -56,6 +57,7 @@ class InitFragment : BaseFragment() {
             } }})
             observe(checkInMode, { it?.let {
                 checkIn = it
+                if(!checkIn) binding.tvCheckIn.text = _pv
                 hideProgressDialog()
             }})
             observe(idUser, { it?.let {
@@ -94,6 +96,7 @@ class InitFragment : BaseFragment() {
         binding.viewBtnReports.setOnClickListener {
             findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationReports())
         }
+
         return binding.root
     }
 
