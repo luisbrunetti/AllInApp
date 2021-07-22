@@ -11,8 +11,8 @@ import retrofit2.http.Path
 
 interface ParametersApi {
 
-    @GET("/api/empresa/user/{user_id}")
-    fun getCompanies(@Path("user_id") user: String, @Header("Authorization") token: String): Call<BaseResponse<List<CompanyRemote.Response>>>
+    @GET("/api/empresa/user/get")
+    fun getCompanies(@Header("Authorization") token: String): Call<BaseResponse<List<CompanyRemote.Response>>>
 
     @GET("https://run.mocky.io/v3/de3a5087-1ecb-4a62-8cca-f5aadb3228eb")
     fun getPV(): Call<BaseResponse<List<PVRemote.Response>>>
