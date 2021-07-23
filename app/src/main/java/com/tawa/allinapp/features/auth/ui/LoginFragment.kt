@@ -29,19 +29,19 @@ class LoginFragment : BaseFragment() {
         binding = FragmentLoginBinding.inflate(inflater)
         authViewModel= viewModel(viewModelFactory) {
             observe(successLogin, { it?.let {
-                if(it){
+                if(it)
                     authViewModel.getCompaniesRemote()
-                    authViewModel.getPVRemote()
-                }
             }})
             observe(startLogin, { it?.let {
                 if(it) showProgressDialog()
             }})
             observe(successGetCompanies, { it?.let {
-                if(it) authViewModel.endLogin()
+                if(it)
+                    authViewModel.getPVRemote()
             }})
             observe(successGetPV, { it?.let {
-                if(it) authViewModel.endLogin()
+                if(it)
+                    authViewModel.endLogin()
             }})
             observe(successEndLogin, { it?.let {
                 if (it) {
@@ -58,17 +58,10 @@ class LoginFragment : BaseFragment() {
             failure(failure, { it?.let {
                 hideProgressDialog()
                 when(it){
-                    is Failure.DefaultError -> {
-                        authViewModel.setErrorLogin(it.message ?: getString(R.string.error_unknown))
-                    }
-                    is Failure.NetworkConnection -> {
-                        authViewModel.setErrorLogin("")
-                        MessageDialogFragment.newInstance(getString(R.string.error_network))
-                    }
-                    else -> {
-                        authViewModel.setErrorLogin("")
-                        MessageDialogFragment.newInstance(getString(R.string.error_unknown))
-                    }
+                    is Failure.DefaultError         -> authViewModel.setErrorLogin(it.message ?: getString(R.string.error_unknown))
+                    is Failure.NetworkConnection    -> MessageDialogFragment.newInstance(getString(R.string.error_network)).show(childFragmentManager, "dialog")
+                    is Failure.ServerError          -> MessageDialogFragment.newInstance(getString(R.string.error_network)).show(childFragmentManager, "dialog")
+                    else                            -> MessageDialogFragment.newInstance(getString(R.string.error_unknown)).show(childFragmentManager, "dialog")
                 }
             }})
         }

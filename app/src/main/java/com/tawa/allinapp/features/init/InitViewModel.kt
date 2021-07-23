@@ -7,7 +7,7 @@ import com.tawa.allinapp.core.platform.BaseViewModel
 import com.tawa.allinapp.features.init.usecase.*
 import com.tawa.allinapp.features.reports.reports.GetReportsRemote
 import com.tawa.allinapp.models.Company
-import com.tawa.allinapp.models.PV
+import com.tawa.allinapp.models.Schedule
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
 import javax.inject.Inject
@@ -30,7 +30,6 @@ class InitViewModel
 ) : BaseViewModel()  {
     private  val formatter: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
     var timestamp: Timestamp = Timestamp(System.currentTimeMillis())
-
     private val _startHome = MutableLiveData(true)
     val startHome: LiveData<Boolean>
         get() = _startHome
@@ -87,9 +86,9 @@ class InitViewModel
     val positionPv: LiveData<Int>
         get()= _positionPv
 
-    private val _pv = MutableLiveData<List<PV>>()
-    val pv: LiveData<List<PV>>
-        get()= _pv
+    private val _schedule = MutableLiveData<List<Schedule>>()
+    val schedule: LiveData<List<Schedule>>
+        get()= _schedule
 
     private val _pvDesc = MutableLiveData<String>()
     val pvDesc: LiveData<String>
@@ -198,8 +197,8 @@ class InitViewModel
     private fun handleCompanyList(company: List<Company>) {
         this._companies.value = company.map { Company(it.id,it.ruc,it.name,it.description) }
     }
-    private fun handlePvList(pv: List<PV>) {
-        this._pv.value = pv.map { PV(it.id,it.description,it.zone,it.codGeo,it.idCompany, it.lat,it.long) }
+    private fun handlePvList(schedule: List<Schedule>) {
+        this._schedule.value = schedule.map { Schedule(it.id,it.description,it.zone,it.codGeo,it.idCompany, it.lat,it.long) }
     }
     private fun handleSetIdCompany(success: Boolean) {
         _setIdCompanySuccess.value = success

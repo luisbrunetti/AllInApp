@@ -9,7 +9,7 @@ import com.tawa.allinapp.features.movies.models.Movie
 @Database(entities = [
     Movie::class,
     CompanyModel::class,
-    PVModel::class,
+    ScheduleModel::class,
     CheckModel::class,
     ReportModel::class,
     QuestionModel::class,

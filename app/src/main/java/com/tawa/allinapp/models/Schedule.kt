@@ -1,6 +1,6 @@
 package com.tawa.allinapp.models
 
-data class PV(
+data class Schedule(
     val id: String,
     val description: String,
     val zone: String,

@@ -26,10 +26,9 @@ import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.DialogCheckinBinding
 import com.tawa.allinapp.features.init.InitViewModel
-import com.tawa.allinapp.models.PV
+import com.tawa.allinapp.models.Schedule
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
-import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
 
@@ -46,7 +45,7 @@ class CheckInDialogFragment
     var longitude :String= ""
     var idUsers = ""
     var checkState =false
-    lateinit var list: List<PV>
+    lateinit var list: List<Schedule>
     private var _pv: String = ""
     private var _pvId: String = ""
     var listener: Callback? = null
@@ -60,7 +59,7 @@ class CheckInDialogFragment
         val aaPv = ArrayAdapter(requireActivity(), android.R.layout.simple_spinner_dropdown_item, arrayListPv)
 
         initViewModel = viewModel(baseFragment.viewModelFactory){
-            observe(pv, { it?.let {
+            observe(schedule, { it?.let {
                 arrayListPv.addAll(toArrayPv(it))
                 binding.pdvSpinner.adapter = aaPv
                 list= it
@@ -241,7 +240,7 @@ class CheckInDialogFragment
         }
     }
 
-    private fun toArrayPv(list : List<PV>):ArrayList<String>{
+    private fun toArrayPv(list : List<Schedule>):ArrayList<String>{
         val arrayList = ArrayList<String>()
         for(element in list) {
             arrayList.add(element.description)
