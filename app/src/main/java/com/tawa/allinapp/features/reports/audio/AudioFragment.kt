@@ -18,8 +18,11 @@ import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import com.tawa.allinapp.R
+import com.tawa.allinapp.core.dialog.MessageDialogFragment
+import com.tawa.allinapp.core.extensions.failure
 import com.tawa.allinapp.core.extensions.observe
 import com.tawa.allinapp.core.extensions.viewModel
+import com.tawa.allinapp.core.functional.Failure
 import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.FragmentAudioBinding
 import com.tawa.allinapp.features.HomeActivity
@@ -49,6 +52,14 @@ class AudioFragment : BaseFragment() {
         audioViewModel = viewModel(viewModelFactory){
             observe(record,{ it?.let {
                 //TODO save record in adapter and make play in clickListener
+            }})
+            failure(failure, { it?.let {
+                hideProgressDialog()
+                when(it){
+                    is Failure.NetworkConnection    -> MessageDialogFragment.newInstance(getString(R.string.error_network)).show(childFragmentManager, "dialog")
+                    is Failure.ServerError          -> MessageDialogFragment.newInstance(getString(R.string.error_network)).show(childFragmentManager, "dialog")
+                    else                            -> MessageDialogFragment.newInstance(getString(R.string.error_unknown)).show(childFragmentManager, "dialog")
+                }
             }})
         }
         return binding.root

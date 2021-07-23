@@ -13,8 +13,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
 import com.tawa.allinapp.R
+import com.tawa.allinapp.core.dialog.MessageDialogFragment
+import com.tawa.allinapp.core.extensions.failure
 import com.tawa.allinapp.core.extensions.observe
 import com.tawa.allinapp.core.extensions.viewModel
+import com.tawa.allinapp.core.functional.Failure
 import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.FragmentReportsBinding
 import java.util.*
@@ -55,6 +58,14 @@ class ReportsFragment : BaseFragment() {
             observe(reports, { it?.let {
                 reportsAdapter.setData(it)
             } })
+            failure(failure, { it?.let {
+                hideProgressDialog()
+                when(it){
+                    is Failure.NetworkConnection    -> MessageDialogFragment.newInstance(getString(R.string.error_network)).show(childFragmentManager, "dialog")
+                    is Failure.ServerError          -> MessageDialogFragment.newInstance(getString(R.string.error_network)).show(childFragmentManager, "dialog")
+                    else                            -> MessageDialogFragment.newInstance(getString(R.string.error_unknown)).show(childFragmentManager, "dialog")
+                }
+            }})
         }
         reportsViewModel.getReports()
 
