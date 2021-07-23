@@ -32,7 +32,7 @@ interface AuthRepository {
                                         prefs.user = body.data.user
                                         prefs.token = body.data.token
                                         prefs.idUser = body.data.idUser
-                                        prefs.suoervisor = body.data.role[0]
+                                        prefs.role = body.data.role[0]
                                         prefs.session = true
                                         prefs.checkIn = true
                                         Either.Right(true)

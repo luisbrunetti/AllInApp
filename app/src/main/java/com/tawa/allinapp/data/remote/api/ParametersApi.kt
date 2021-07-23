@@ -12,7 +12,6 @@ interface ParametersApi {
     @GET("/api/empresa/user/get")
     fun getCompanies(@Header("Authorization") token: String): Call<BaseResponse<List<CompanyRemote.Response>>>
 
-    //@GET("/api/cronograma/1/")
     @GET("/api/cronograma/1")
     fun getSchedule(@Header("Authorization") token: String): Call<BaseResponse<List<ScheduleRemote.Response>>>
 }
