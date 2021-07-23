@@ -31,7 +31,8 @@ android {
         debug {
             minifyEnabled false
             signingConfig signingConfigs.debug
-            buildConfigField("String", "BASE_URL", "\"http://192.168.0.8:3000\"")
+            //buildConfigField("String", "BASE_URL", "\"http://192.168.0.8:3000\"")
+            buildConfigField("String", "BASE_URL", "\"http://tismart-alb-prd-us-east-001-1633035529.us-east-1.elb.amazonaws.com\"")
             buildConfigField('int', 'DEV', "$dev")
         }
         prod {

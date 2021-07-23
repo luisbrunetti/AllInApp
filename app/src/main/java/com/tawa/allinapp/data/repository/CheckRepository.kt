@@ -96,9 +96,7 @@ interface CheckRepository {
         override fun getStateCheck(IdPv:String): Either<Failure, Boolean> {
             return try {
                 if(checkDataSource.getStateCheck(IdPv)==0) Either.Right(true)
-                else
-                    Either.Right(false)
-
+                else Either.Right(false)
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))
             }

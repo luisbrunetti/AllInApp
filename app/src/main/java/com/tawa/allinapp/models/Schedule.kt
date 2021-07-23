@@ -6,6 +6,6 @@ data class Schedule(
     val zone: String,
     val codGeo: String,
     val idCompany: String,
-    val lat: String,
-    val long: String,
+    val lat: Double,
+    val long: Double,
 )
