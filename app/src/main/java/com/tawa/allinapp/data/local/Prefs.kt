@@ -29,7 +29,7 @@ class Prefs
         get() = prefs.getString(USER,"")
         set(value) = prefs.edit().putString(USER,value).apply()
 
-    var suoervisor:String?
+    var role:String?
         get() = prefs.getString(SUPERVISOR,"")
         set(value) = prefs.edit().putString(SUPERVISOR,value).apply()
 
