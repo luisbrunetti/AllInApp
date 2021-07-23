@@ -9,7 +9,7 @@ import retrofit2.http.Header
 
 interface ParametersApi {
 
-    @GET("/api/empresa/user/get")
+    @GET("/api/empresa")
     fun getCompanies(@Header("Authorization") token: String): Call<BaseResponse<List<CompanyRemote.Response>>>
 
     @GET("/api/cronograma/1")

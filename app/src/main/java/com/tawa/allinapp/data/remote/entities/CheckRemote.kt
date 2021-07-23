@@ -6,13 +6,21 @@ import com.tawa.allinapp.models.Company
 
 class CheckRemote {
     data class Request(
-        @SerializedName("_id") val id: String,
-        @SerializedName("NU_RUCS") val ruc: String,
-        @SerializedName("DE_NOMB") val name: String,
-        @SerializedName("DE_GIRO") val description: String,
-    ){
-        fun toView() = Company(id,ruc,name,description)
-        fun toModel() = CompanyModel(id,ruc,name,description)
-    }
+        @SerializedName("id_cronograma") val schedule: String?,
+        @SerializedName("latitud") val latitude: Double?,
+        @SerializedName("longitud") val longitude: Double?,
+    )
+
+    data class Response(
+        @SerializedName("_id") val id: String?,
+        @SerializedName("id_cronograma") val idCronograma: String?,
+        @SerializedName("latitud") val latitud: Double?,
+        @SerializedName("longitud") val longitud: Double?,
+        @SerializedName("id_empresa") val company: String?,
+        @SerializedName("id_punto_venta") val pv: String?,
+        @SerializedName("id_user_creador") val idUserCreate: String?,
+        @SerializedName("fe_creacion") val feCreated: String?,
+        @SerializedName("comentario") val comment: String?,
+    )
 
 }
