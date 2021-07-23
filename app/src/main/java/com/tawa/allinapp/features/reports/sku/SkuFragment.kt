@@ -16,7 +16,6 @@ import com.tawa.allinapp.R
 import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.FragmentSkuBinding
 import com.tawa.allinapp.models.Sku
-import kotlinx.android.synthetic.main.fragment_sku.*
 
 
 class SkuFragment : BaseFragment() {
@@ -28,12 +27,17 @@ class SkuFragment : BaseFragment() {
     private var product= ArrayList<String>()
     var date = ArrayList<String>()
     private var category = ArrayList<String>()
+    private var idSku = ArrayList<String>()
     private var categoryFilter = ArrayList<String>()
     var subCategory = ArrayList<String>()
     var inventory = ArrayList<String>()
     var price = ArrayList<String>()
     private val numPages  = ArrayList<Int>()
+    var listAnt= ArrayList<String>()
+    private val btnObs = ArrayList<Button>()
     private var pageNum = 0
+
+    val mapObservations = mutableMapOf<String,ArrayList<String>>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,12 +47,12 @@ class SkuFragment : BaseFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentSkuBinding.inflate(inflater)
         listSku = listOf(
-                               Sku("7UP 1500ml","22/06/2021","Bebida saborizada 1","7UP","35","1.00"),
-                               Sku("7UP 1500ml","22/06/2021","Bebida saborizada 2","7UP","35","1.00"),
-                               Sku("7UP 1500ml","22/06/2021","Bebida saborizada 3","7UP","35","1.00"),
-                               Sku("7UP 1500ml","22/06/2021","Bebida saborizada 4","7UP","35","1.00"),
-                               Sku("7UP 1500ml","22/06/2021","Bebida saborizada 5","7UP","35","1.00"),
-                               Sku("7UP 1500ml","22/06/2021","Bebida saborizada 5","7UP","35","1.00")
+                               Sku("1","7UP 1500ml","22/06/2021","Bebida saborizada 1","7UP","35","1.00"),
+                               Sku("2","7UP 1500ml","22/06/2021","Bebida saborizada 2","7UP","35","1.00"),
+                               Sku("3","7UP 1500ml","22/06/2021","Bebida saborizada 3","7UP","35","1.00"),
+                               Sku("4","7UP 1500ml","22/06/2021","Bebida saborizada 4","7UP","35","1.00"),
+                               Sku("5","7UP 1500ml","22/06/2021","Bebida saborizada 5","7UP","35","1.00"),
+                               Sku("6","7UP 1500ml","22/06/2021","Bebida saborizada 6","7UP","35","1.00")
         )
 
         showTable()
@@ -70,7 +74,7 @@ class SkuFragment : BaseFragment() {
 
         addElements(listLimitedSku)
         setSkuProduct(binding.tlSku,product)
-        setSkuData(binding.tlDataSku,date,category,subCategory,inventory,price)
+        setSkuData(binding.tlDataSku,date,category,subCategory,inventory,price,idSku)
         createPager(listSku,binding.tlSku,binding.tlDataSku)
     }
 
@@ -90,7 +94,7 @@ class SkuFragment : BaseFragment() {
 
         addElements(listLimitedSku)
         setSkuProduct(binding.tlSku,product)
-        setSkuData(binding.tlDataSku,date,category,subCategory,inventory,price)
+        setSkuData(binding.tlDataSku,date,category,subCategory,inventory,price,idSku)
         createPager(listFilter,binding.tlSku,binding.tlDataSku)
     }
 
@@ -114,7 +118,7 @@ class SkuFragment : BaseFragment() {
         }
     }
 
-    private fun setSkuData(tableLayout: TableLayout, date:ArrayList<String>, category : ArrayList<String>,subcategory:ArrayList<String>,inventory:ArrayList<String>,price:ArrayList<String>){
+    private fun setSkuData(tableLayout: TableLayout, date:ArrayList<String>, category : ArrayList<String>,subcategory:ArrayList<String>,inventory:ArrayList<String>,price:ArrayList<String>,idSku:ArrayList<String>){
 
         for((flag, dateUnit) in date.withIndex())
         {
@@ -156,23 +160,25 @@ class SkuFragment : BaseFragment() {
             row.addView(editTextPrice)
 
             val buttonObservations = Button(context)
-            buttonObservations.text = "+ Agregar"
-            buttonObservations.isAllCaps = false
-            buttonObservations.textSize = 18f
+            btnObs.add(buttonObservations)
+            btnObs[flag].text = "+ Agregar"
+            btnObs[flag].isAllCaps = false
+            btnObs[flag].textSize = 18f
             val params = TableRow.LayoutParams(
                 144f.toDips().toInt(),
                 LinearLayout.LayoutParams.WRAP_CONTENT
             )
             params.marginStart = 35f.toDips().toInt()
             params.marginEnd = 12f.toDips().toInt()
-            buttonObservations.layoutParams = params
-            buttonObservations.setBackgroundResource(R.drawable.bg_blue_button_sku)
-            buttonObservations.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
-            row.addView(buttonObservations)
-            buttonObservations.setOnClickListener {
-                val arr = ArrayList<String>()
-                showObservationDialog(arr)
+            btnObs[flag].layoutParams = params
+            btnObs[flag].setBackgroundResource(R.drawable.bg_blue_button_sku)
+            btnObs[flag].setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+            btnObs[flag].tag = idSku[flag]
+            btnObs[flag].setOnClickListener {
+                showObservationDialog(idSku[flag])
             }
+            row.addView(btnObs[flag])
+
             tableLayout.addView(row)
         }
     }
@@ -182,9 +188,10 @@ class SkuFragment : BaseFragment() {
         removeArray()
         tl1.removeViews(1,tl1.size-1)
         tl2.removeViews(1,tl2.size-1)
+        btnObs.removeAll(btnObs)
         addElements(listLimitedSku)
         setSkuProduct(binding.tlSku,product)
-        setSkuData(binding.tlDataSku,date,category,subCategory,inventory,price)
+        setSkuData(binding.tlDataSku,date,category,subCategory,inventory,price,idSku)
 
     }
 
@@ -230,7 +237,8 @@ class SkuFragment : BaseFragment() {
                             product.add(it.product!!)
                             subCategory.add(it.subCategory!!)
                             inventory.add(it.inventory!!)
-                            price.add(it.price!!)}
+                            price.add(it.price!!)
+                            idSku.add(it.id!!)}
     }
 
     private fun removeArray(){
@@ -240,6 +248,7 @@ class SkuFragment : BaseFragment() {
         subCategory.removeAll(subCategory)
         inventory.removeAll(inventory)
         price.removeAll(price)
+        idSku.removeAll(idSku)
     }
 
     private fun textViewStyle(textView: TextView, text:String){
@@ -263,12 +272,24 @@ class SkuFragment : BaseFragment() {
         }
     }
 
-    private fun showObservationDialog(data:ArrayList<String>){
-        val dialog = ObservationsDialogFragment.newInstance(data)
+    private fun showObservationDialog(id:String){
+        val dialog = ObservationsDialogFragment.newInstance(id,mapObservations)
         dialog.show(childFragmentManager, "dialog")
         dialog.listener = object : ObservationsDialogFragment.Callback{
-            override fun onClick(list:ArrayList<String>) {
+            override fun onClick(id:String,list:String) {
+                mapObservations.getOrPut(id) { arrayListOf() }.add(list)
+                for(btn in btnObs)
+                {
+                    if(btn.tag == id)
+                    {
+                        when(val count = mapObservations[id]?.size)
+                        {
+                            1-> "$count Observación".also { btn.text = it }
+                            else -> "$count Observaciones".also { btn.text = it }
+                        }
+                    }
 
+                }
             }
         }
     }

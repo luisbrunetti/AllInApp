@@ -1,5 +1,6 @@
 package com.tawa.allinapp.data.repository
 
+import android.widget.Toast
 import com.tawa.allinapp.core.functional.Either
 import com.tawa.allinapp.core.functional.Failure
 import com.tawa.allinapp.core.functional.NetworkHandler
@@ -91,7 +92,13 @@ interface ReportsRepository {
             return when (networkHandler.isConnected) {
                 true ->{
                     try {
-                        val response = service.getReportStatus().execute()
+                        val response = service.getReportStatus("Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlcyI6WyJTVVBFUlZJU09SIl0sImVtcHJlc2FzIjpbIjYwZjNjOTVmM" +
+                                "DI1NTMyNTAzODU3M2VlZSJdLCJmZV9tb2RpZmljYWNpb24iOiIyMDIxLTA3LTE4VDAwOjAwOjAwLjAwMFoiLCJpZF91c2VyX21vZGlmaWNhZG9yIjoiNjBmM2QzMzk0" +
+                                "YTk5MjI0MWRjZmIzNmVkIiwic3RhdHVzIjoiQUNUIiwiZmVfY29uZXhpb24iOm51bGwsInVsX2xhdGl0dWQiOm51bGwsInVsX2xvYmd1aXR1ZCI6bnVsbCwiYmF0ZXJp" +
+                                "YSI6bnVsbCwiX2lkIjoiNjBmNGE0ZTE0M2U2MTEyZjk4ZjVhYmRlIiwidXN1YXJpbyI6InN1cGVydiIsIm5vbWJyZV9hcGVsbGlkbyI6InN1cGVydmlzb3IiLCJjb250cmFzZcOx" +
+                                "YSI6IiQyYiQxMCRPTDJGZGhpSm5WeVRXcTczUi5Yclguc2p5RDNrcHN3YzY0ZDBLSmhqRjBLcnd3SjUwL210VyIsImVtYWlsIjoic3VwZXJ2aXNvckBnbWFpbC5jb20iLCJp" +
+                                "ZF91c2VyX2NyZWFkb3IiOiI2MGYzZDMzOTRhOTkyMjQxZGNmYjM2ZWQiLCJmZV9jcmVhY2lvbiI6IjIwMjEtMDctMThUMDA6MDA6MDAuMDAwWiIsIl9fdiI6MCwiaWF0Ij" +
+                                "oxNjI2NzIzMDA4fQ.JkdiKa_pRQ7eIDrxVO5KK9f6Fd9tJzRraQtsTTfSEXg").execute()
                         when (response.isSuccessful) {
                             true -> {
                                 response.body()?.let { body ->

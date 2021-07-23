@@ -5,12 +5,12 @@ import com.tawa.allinapp.models.ReportStatus
 
 class ReportsStatusRemote {
     data class Response(
-        @SerializedName("status") val status: String,
-        @SerializedName("fe_conexion") val lastConnection: String,
-        @SerializedName("ul_latitud") val lastLatitude: Double,
-        @SerializedName("ul_longitud") val lastLongitude: Double,
-        @SerializedName("bateria") val battery: Int,
-        @SerializedName("nombre_apellido") val name:String,
+        @SerializedName("status") val status: String? =null,
+        @SerializedName("fe_conexion") val lastConnection: String? =null,
+        @SerializedName("ul_latitud") val lastLatitude: Double? =null,
+        @SerializedName("ul_lobguitud") val lastLongitude: Double? =null,
+        @SerializedName("bateria") val battery: Int? =null,
+        @SerializedName("nombre_apellido") val name:String? =null,
 
         ){
         fun toView() = ReportStatus(status,lastConnection,lastLatitude,lastLongitude,battery,name)

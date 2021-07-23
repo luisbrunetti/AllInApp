@@ -1,6 +1,7 @@
 package com.tawa.allinapp.models
 
 data class Sku(
+    val id:String ,
     val product:String? =null,
     val date:String?=null,
     val category:String?=null,

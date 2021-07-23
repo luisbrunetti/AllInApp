@@ -34,6 +34,7 @@ import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.FragmentChecklistBinding
 import com.tawa.allinapp.models.Answer
+import com.tawa.allinapp.models.Question
 import java.io.File
 
 
@@ -46,6 +47,8 @@ class CheckListFragment: BaseFragment() {
     private var  listRadioButton = ArrayList<RadioButton>()
     private var  listCheckBox = ArrayList<CheckBox>()
     private var  listInput = ArrayList<EditText>()
+    private lateinit var  listInit:List<Question>
+
     val params = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
     var urlImage = ""
 
@@ -64,8 +67,9 @@ class CheckListFragment: BaseFragment() {
 
         checkListViewModel = viewModel(viewModelFactory) {
             observe(questions, { it?.let {
-                for(list in it)
-                    showQuestions(list.objectType,list.id,list.questionName,list.order)
+                listInit = it.sortedBy { it.order }
+                for(list in listInit)
+                   showQuestions(list.objectType,list.id,list.questionName,list.order)
             } })
 
             observe(answersRadio, { it?.let {
@@ -152,9 +156,9 @@ class CheckListFragment: BaseFragment() {
     }
 
     private fun showQuestions(type:String,id:String,questionName:String,order:Int){
-                if(type=="CHECKBOX")
+                if(type=="CHECK")
                     checkListViewModel.getAnswersRadio(id,questionName,order)
-                if(type=="CHECK BUTTON")
+                if(type=="CHECK LIST")
                     checkListViewModel.getAnswersCheck(id,questionName,order)
                 if(type=="INPUT")
                     checkListViewModel.getAnswersInput(id,questionName,order)
@@ -233,7 +237,7 @@ class CheckListFragment: BaseFragment() {
             editText.setPadding((16f).toDips().toInt(),0,(16f).toDips().toInt(),0)
             editText.height = (50f).toDips().toInt()
             val listTag =ArrayList<String>(2)
-            editText.hint = list.answerName
+            editText.hint = list.answerName.toLowerCase()
             listTag.add(list.id)
             listTag.add(list.idQuestion)
             listTag.add(nameQ)
