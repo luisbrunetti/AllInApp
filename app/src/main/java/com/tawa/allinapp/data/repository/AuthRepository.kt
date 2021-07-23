@@ -29,8 +29,10 @@ interface AuthRepository {
                                 response.body()?.let { body ->
                                     if(body.success) {
                                         prefs.name = username
+                                        prefs.user = body.data.user
                                         prefs.token = body.data.token
                                         prefs.idUser = body.data.idUser
+                                        prefs.suoervisor = body.data.role[0]
                                         prefs.session = true
                                         prefs.checkIn = true
                                         Either.Right(true)
