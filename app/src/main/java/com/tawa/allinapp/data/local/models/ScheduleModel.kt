@@ -2,10 +2,10 @@ package com.tawa.allinapp.data.local.models
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.tawa.allinapp.models.PV
+import com.tawa.allinapp.models.Schedule
 
-@Entity(tableName = "pv")
-data class PVModel (
+@Entity(tableName = "schedule")
+data class ScheduleModel (
     @PrimaryKey val id: String,
     val description: String?,
     val zone: String?,
@@ -14,5 +14,5 @@ data class PVModel (
     val latitude: String?,
     val longitude: String?,
 ){
-    fun toView() = PV(id,description?:"",zone?:"",codGeo?:"",idCompany?:"",latitude?:"",longitude?:"")
+    fun toView() = Schedule(id,description?:"",zone?:"",codGeo?:"",idCompany?:"",latitude?:"",longitude?:"")
 }

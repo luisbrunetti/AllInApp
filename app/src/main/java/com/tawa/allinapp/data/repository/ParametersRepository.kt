@@ -7,14 +7,14 @@ import com.tawa.allinapp.data.local.Prefs
 import com.tawa.allinapp.data.local.datasource.ParametersDataSource
 import com.tawa.allinapp.data.remote.service.ParametersService
 import com.tawa.allinapp.models.Company
-import com.tawa.allinapp.models.PV
+import com.tawa.allinapp.models.Schedule
 import javax.inject.Inject
 
 interface ParametersRepository {
     fun setCompanies(): Either<Failure, Boolean>
     fun getCompanies(): Either<Failure,List<Company>>
     fun setPV(): Either<Failure, Boolean>
-    fun getPV(company:String): Either<Failure, List<PV>>
+    fun getPV(company:String): Either<Failure, List<Schedule>>
 
     class Network
     @Inject constructor(private val networkHandler: NetworkHandler,
@@ -61,7 +61,7 @@ interface ParametersRepository {
             return when (networkHandler.isConnected) {
                 true ->{
                     try {
-                        val response = service.getPV().execute()
+                        val response = service.getSchedule("Bearer ${prefs.token!!}").execute()
                         when (response.isSuccessful) {
                             true -> {
                                 response.body()?.let { body ->
@@ -84,9 +84,12 @@ interface ParametersRepository {
             }
         }
 
-        override fun getPV(company:String): Either<Failure, List<PV>> {
+        override fun getPV(company:String): Either<Failure, List<Schedule>> {
             return try {
-                Either.Right(parametersDataSource.getPV(company).map { it.toView() })
+                if (parametersDataSource.getPV(company).isNotEmpty())
+                    Either.Right(parametersDataSource.getPV(company).map { it.toView() })
+                else
+                    Either.Right(emptyList())
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))
             }
