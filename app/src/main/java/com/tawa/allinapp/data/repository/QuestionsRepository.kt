@@ -30,7 +30,7 @@ interface QuestionsRepository {
             return when (networkHandler.isConnected) {
                 true ->{
                     try {
-                        val response = service.getQuestions().execute()
+                        val response = service.getQuestions("Bearer ${prefs.token!!}").execute()
                         when (response.isSuccessful) {
                             true -> {
                                 response.body()?.let { body ->

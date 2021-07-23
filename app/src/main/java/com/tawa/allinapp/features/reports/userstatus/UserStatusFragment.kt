@@ -119,7 +119,6 @@ class UserStatusFragment : BaseFragment() {
             createPager(listLimited,binding.pageNumber,binding.tlName,binding.tlGridTable)
         }
 
-
     }
 
     private fun showDataTable(listInit:List<ReportStatus>,order:Int){

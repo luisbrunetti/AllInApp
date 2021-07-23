@@ -12,7 +12,6 @@ import com.tawa.allinapp.models.Report
 @Entity(tableName = "questions")
 data class QuestionModel(
     @PrimaryKey val id: String,
-    val status: String,
     val questionName: String,
     val order : Int,
     val idReport: String,
@@ -23,5 +22,5 @@ data class QuestionModel(
     val dateCreation: String,
 
 ){
-    fun toView() = Question(id,status,questionName,order,idReport,objectType,idUserCreator,idUserModifier,dateModify,dateCreation)
+    fun toView() = Question(id,questionName,order,idReport,objectType,idUserCreator,idUserModifier,dateModify,dateCreation)
 }
