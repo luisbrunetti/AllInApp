@@ -5,10 +5,11 @@ import com.tawa.allinapp.data.remote.entities.QuestionsRemote
 import com.tawa.allinapp.data.remote.entities.ReportsRemote
 import retrofit2.Call
 import retrofit2.http.GET
+import retrofit2.http.Header
 
 interface QuestionsApi{
 
-    @GET("/api/pregunta/reporte/60f62ddfa6ac481ddcf23bdb")
-    fun getQuestions(): Call<BaseResponse<List<QuestionsRemote.Response>>>
+    @GET("/api/pregunta/reporte/60fb1c398b978f3c44e4ad11")
+    fun getQuestions(@Header("Authorization") token:String): Call<BaseResponse<List<QuestionsRemote.Response>>>
 
 }

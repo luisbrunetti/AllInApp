@@ -12,6 +12,6 @@ class QuestionsService
 @Inject constructor(retrofit: Retrofit) : QuestionsApi {
     private val questionsApi by lazy { retrofit.create(QuestionsApi::class.java) }
 
-    override fun getQuestions() = questionsApi.getQuestions()
+    override fun getQuestions(token:String) = questionsApi.getQuestions(token)
 
 }
