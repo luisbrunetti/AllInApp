@@ -15,7 +15,7 @@ class ReportsService
 
 
     override fun getReports(company:String) = reportsApi.getReports(company)
-    override fun getReportStatus() = reportsApi.getReportStatus()
+    override fun getReportStatus(token:String) = reportsApi.getReportStatus(token)
     override fun setPhotoReports(
         before1:String,before2:String,before3:String,before4:String,before5:String,
         after1:String,after2:String,after3:String,after4:String,after5:String,comment:String

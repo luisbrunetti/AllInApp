@@ -54,7 +54,11 @@ class UserStatusFragment : BaseFragment() {
             observe(reportStatus, { it?.let {
                 listStatus = it
                 showReporter(listStatus)
-                listLimited = it.slice(0..4)
+                listLimited = if(it.size<5)
+                    it.slice(it.indices)
+                else
+                    it.slice(0..4)
+
                 if(order.value==0)
                     showDataTable(listLimited,order.value!!)
                 createPager(it,binding.pageNumber,binding.tlName,binding.tlGridTable)
@@ -81,34 +85,63 @@ class UserStatusFragment : BaseFragment() {
             pageNum = 0
             if(reporter=="")
             {
-                listLimited = listStatus.slice(0..4)
+                listLimited = if(listStatus.size<5)
+                    listStatus.slice(listStatus.indices)
+                else
+                    listStatus.slice(0..4)
                 showDataTable(listLimited,0)
                 createPager(listStatus,binding.pageNumber,binding.tlName,binding.tlGridTable)
             }
             else
             { listLimited= listStatus.filter { it.name == reporter }
-                showDataTable(listLimited,0)
-                createPager(listLimited,binding.pageNumber,binding.tlName,binding.tlGridTable)
+                if(listLimited.isNotEmpty())
+                {
+                    showDataTable(listLimited,0)
+                    createPager(listLimited,binding.pageNumber,binding.tlName,binding.tlGridTable)
+                }
             }
-
-
         }
         return binding.root
     }
+
+    private  fun dateFilter(date:String){
+        removeArray()
+        binding.tlName.removeViews(1,listLimited.size)
+        binding.tlGridTable.removeViews(1,listLimited.size)
+        numPages.removeAll(numPages)
+        pageNum = 0
+        val input = Date(date)
+        val instant = input.toInstant()
+        listLimited= listStatus.filter { it.lastConnection?.subSequence(0,10)  == instant.toString().subSequence(0,10) }
+        if(listLimited.isNotEmpty())
+        {
+            showDataTable(listLimited,0)
+            createPager(listLimited,binding.pageNumber,binding.tlName,binding.tlGridTable)
+        }
+
+
+    }
+
     private fun showDataTable(listInit:List<ReportStatus>,order:Int){
         for(report in listInit)
         {
-            userStatus.add(report.name)
-            batteryStatus.add(report.battery)
-            if(report.status=="ACT")
-                state.add("Activo")
+            userStatus.add(report.name!!)
+            if(report.battery?.toString().isNullOrEmpty())
+            { batteryStatus.add(0)
+               state.add("Inactivo")}
             else
-                state.add("Inactivo")
-            stateGps.add("Encendido")
-            lastHour.add(getDate(report.lastConnection))
+            { batteryStatus.add(report.battery!!)
+                state.add("Activo")
+            }
+            if(report.lastLatitude?.toString().isNullOrEmpty())
+                stateGps.add("Apagado")
+            else
+                stateGps.add("Encendido")
+
+            lastHour.add(getDate(report.lastConnection ?:"Apagado"))
             val  coordinate  = ArrayList<String>(3)
-            coordinate.add(report.lastLatitude.toString())
-            coordinate.add(report.lastLongitude.toString())
+            coordinate.add(report.lastLatitude?.toString()?:"0")
+            coordinate.add(report.lastLongitude?.toString()?:"0")
             coordinate.add(report.name)
             lastPosition.add(coordinate)
         }
@@ -167,7 +200,7 @@ class UserStatusFragment : BaseFragment() {
         val listReporters  = ArrayList<String>()
         for(reporters in list)
         {
-            listReporters.add(reporters.name)
+            listReporters.add(reporters.name!!)
         }
         val reportAdapter = ArrayAdapter(requireContext(),android.R.layout.simple_list_item_1,listReporters)
         binding.edReporter.setAdapter(reportAdapter)
@@ -230,7 +263,10 @@ class UserStatusFragment : BaseFragment() {
             tvLastPosition[flag].tag = lastPosition[flag]
             tvLastPosition[flag].setOnClickListener{
                 val tag:ArrayList<String> = tvLastPosition[flag].tag as java.util.ArrayList<String>
-                showMapDialog(tag[0],tag[1],tag[2])
+                if(tag[0]=="0" || tag[1]=="0")
+                    Toast.makeText(context,"No se registró la ubicación",Toast.LENGTH_SHORT).show()
+                else
+                    showMapDialog(tag[0],tag[1],tag[2])
             }
             row.addView(tvLastPosition[flag])
             tableLayout.addView(row)
@@ -302,15 +338,22 @@ class UserStatusFragment : BaseFragment() {
         val month = c.get(Calendar.MONTH)
         val day = c.get(Calendar.DAY_OF_MONTH)
         val dpd = DatePickerDialog(requireContext(), DatePickerDialog.OnDateSetListener { _, _, monthOfYear, dayOfMonth ->
-            et.setText("" + dayOfMonth + "/" +getMonth(monthOfYear) + "/" + year) }, year, month, day)
+            et.setText("" + dayOfMonth + "/" +getMonth(monthOfYear) + "/" + year)
+            dateFilter("" + year + "/" +getMonth(monthOfYear) + "/" + dayOfMonth)
+                                                                                        }, year, month, day)
         dpd.show()
     }
 
 
     private fun getDate(text: String):String{
-        val instant: Instant = Instant.parse(text)
-        val myDate = Date.from(instant)
-        return formatter.format(myDate)
+        return if(text=="Apagado")
+            "Apagado"
+        else {
+            val instant: Instant = Instant.parse(text)
+            val myDate = Date.from(instant)
+            formatter.format(myDate)
+        }
+
     }
 
     private fun textViewStyle(textView: TextView, text:String){

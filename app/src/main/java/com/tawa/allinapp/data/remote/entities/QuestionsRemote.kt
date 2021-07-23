@@ -8,35 +8,38 @@ import com.tawa.allinapp.models.Question
 
 class QuestionsRemote {
     data class Response(
-        @SerializedName("_id") val id: String,
-        @SerializedName("status") val status: String,
-        @SerializedName("nombre_preg") val questionName: String,
-        @SerializedName("nu_orden") val order : Int,
-        @SerializedName("id_reporte") val idReport: String,
-        @SerializedName("objeto") val objectType: String,
-        @SerializedName("id_usua_cread") val idUserCreator: String,
-        @SerializedName("id_usua_modi") val idUserModifier: String?,
-        @SerializedName("fe_modi") val dateModify: String?,
-        @SerializedName("fe_creacion") val dateCreation: String,
+        @SerializedName("pregunta") val question: ResponseQuestion,
         @SerializedName("respuestas") val answers: List<ResponseAnswers>,
 
+    )
 
-    ){
-        fun toView() = Question(id,status,questionName,order,idReport,objectType,idUserCreator,idUserModifier,dateModify,dateCreation)
-        fun toModel() = QuestionModel(id,status,questionName,order,idReport,objectType,idUserCreator,idUserModifier,dateModify,dateCreation)
+    data class ResponseQuestion(
+        @SerializedName("_id") val id: String,
+        @SerializedName("status") val status: String,
+        @SerializedName("nombre_pregunta") val questionName: String,
+        @SerializedName("numero_orden") val order : Int,
+        @SerializedName("id_reporte") val idReport: String,
+        @SerializedName("objeto") val objectType: String,
+        @SerializedName("id_user_creador") val idUserCreator: String,
+        @SerializedName("id_user_modificador") val idUserModifier: String?,
+        @SerializedName("fe_modificacion") val dateModify: String?,
+        @SerializedName("fe_creacion") val dateCreation: String,
+        )
+    {
+          fun toView() = Question(id,status,questionName,order,idReport,objectType,idUserCreator,idUserModifier,dateModify,dateCreation)
+          fun toModel() = QuestionModel(id,status,questionName,order,idReport,objectType,idUserCreator,idUserModifier,dateModify,dateCreation)
     }
 
     data class ResponseAnswers(
         @SerializedName("_id") val id: String,
         @SerializedName("status") val status: String,
-        @SerializedName("nombre_respt") val answerName: String,
-        @SerializedName("nu_orden") val order : Int,
+        @SerializedName("nombre_respuesta") val answerName: String,
+        @SerializedName("numero_orden") val order : Int,
         @SerializedName("id_pregunta") val idQuestion: String,
-        @SerializedName("id_usua_cread") val idUserCreator: String,
-        @SerializedName("id_usua_modi") val idUserModifier: String?,
-        @SerializedName("fe_modi") val dateModify: String?,
+        @SerializedName("id_user_creador") val idUserCreator: String,
+        @SerializedName("id_user_modificador") val idUserModifier: String?,
+        @SerializedName("fe_modificacion") val dateModify: String?,
         @SerializedName("fe_creacion") val dateCreation: String,
-
 
         ){
         fun toView() = Answer(id,status,answerName,order,idQuestion,idUserCreator,idUserModifier,dateModify,dateCreation)

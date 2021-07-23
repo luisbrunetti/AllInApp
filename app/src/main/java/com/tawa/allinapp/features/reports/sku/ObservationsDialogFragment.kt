@@ -8,18 +8,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
+import android.widget.EditText
 import android.widget.LinearLayout
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
+import androidx.core.view.setPadding
 import androidx.fragment.app.DialogFragment
 import com.tawa.allinapp.R
-import com.tawa.allinapp.databinding.DialogFilterSkuBinding
 import com.tawa.allinapp.databinding.DialogObservationsSkuBinding
 
 
 class ObservationsDialogFragment: DialogFragment() {
 
     private lateinit var binding: DialogObservationsSkuBinding
+    private var listObservations = ArrayList<String>()
+    private lateinit var idSku:String
     var params = LinearLayout.LayoutParams(
         ViewGroup.LayoutParams.FILL_PARENT,
         ViewGroup.LayoutParams.WRAP_CONTENT
@@ -32,16 +34,17 @@ class ObservationsDialogFragment: DialogFragment() {
     var nameGen= ""
     companion object {
 
-        fun newInstance(dataExt : ArrayList<String>): ObservationsDialogFragment {
+        fun newInstance(idSku:String,map: MutableMap<String,ArrayList<String>>): ObservationsDialogFragment {
             val frag = ObservationsDialogFragment()
             val bundle = Bundle()
-            bundle.putStringArrayList("data", ArrayList(HashSet(dataExt).sorted()))
+            for (key in map.keys) {
+                bundle.putStringArrayList(key,map[key])
+            }
+            bundle.putString("data", idSku)
             frag.arguments = bundle
             return frag
         }
     }
-
-
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = DialogObservationsSkuBinding.inflate(inflater)
@@ -54,44 +57,37 @@ class ObservationsDialogFragment: DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         arguments?.let { bundle ->
-            bundle.getStringArrayList("data")?.let {
-                listCategoryFilter= it
-                //addCategories(it,binding.lnContent)
+            bundle.getString("data")?.let {
+                idSku= it
             }
-        }
-        binding.btnCloseModalFilter.setOnClickListener {
-            dismiss()
-        }
-        binding.btnCleanFilters.setOnClickListener {
-           // addCategories(listCategoryFilter,binding.lnContent)
-        }
-        binding.btnFilterSku.setOnClickListener {
-            val listSelected = ArrayList<String>()
-            for(filter in listCategory)
-            {
-                if(filter.isChecked)
+            bundle.getStringArrayList(idSku).let { observations->
+                if(!observations.isNullOrEmpty())
                 {
-                    listSelected.add(filter.text.toString())
+                    for(observation in observations)
+                    {
+                        addObservations(observation,binding.addObservations)
+                    }
                 }
             }
+        }
+        binding.btnCloseModalObservations.setOnClickListener {
             dismiss()
-            listener?.onClick(listSelected)
+        }
+        binding.btnSaveObservations.setOnClickListener {
+            dismiss()
+            listener?.onClick(idSku,binding.edObservation.text.toString())
         }
     }
 
-    private fun addCategories(list:ArrayList<String>,linearContent:LinearLayout){
-        linearContent.removeAllViews()
-        listCategory.removeAll(listCategory)
-        for(category in 0 until list.size)
-        {
-            val checkBox = CheckBox(context)
-            listCategory.add(checkBox)
-            listCategory[category].text = list[category]
-            listCategory[category].setTextColor(ContextCompat.getColor(requireContext(), R.color.colorTextAll))
-            params.bottomMargin = 11f.toDips().toInt()
-            listCategory[category].layoutParams = params
-            linearContent.addView(listCategory[category])
-        }
+    private fun addObservations(observations:String,linearContent:LinearLayout){
+        val editText = EditText(context)
+        editText.setText(observations)
+        editText.setBackgroundResource(R.drawable.rounded)
+        editText.isEnabled = false
+        editText.setPadding(10f.toDips().toInt())
+        params.bottomMargin = 15f.toDips().toInt()
+        editText.layoutParams = params
+        linearContent.addView(editText)
     }
     private fun Float.toDips() = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, this, resources.displayMetrics)
 
@@ -103,6 +99,6 @@ class ObservationsDialogFragment: DialogFragment() {
     }
 
     interface Callback {
-        fun onClick(list:ArrayList<String>)
+        fun onClick(id:String,list:String)
     }
 }

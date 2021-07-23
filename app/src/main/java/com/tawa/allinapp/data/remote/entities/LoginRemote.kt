@@ -4,8 +4,8 @@ import com.google.gson.annotations.SerializedName
 
 class LoginRemote {
     data class Request(
-        @SerializedName("username") val userName: String,
-        @SerializedName("password") val password: String
+        @SerializedName("usuario") val userName: String,
+        @SerializedName("contraseña") val password: String
     )
 
     data class Response(

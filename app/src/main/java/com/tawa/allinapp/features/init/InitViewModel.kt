@@ -159,7 +159,7 @@ class InitViewModel
         this._successGetReports.value = success
     }
 
-    fun getQuestionsRemote() = getQuestionsRemote(com.tawa.allinapp.core.interactor.UseCase.None()) {
+    fun getQuestionsRemote() = getQuestionsRemote(UseCase.None()) {
         it.either(::handleFailure, ::handleQuestionsRemote)
     }
     private fun handleQuestionsRemote(success: Boolean) {

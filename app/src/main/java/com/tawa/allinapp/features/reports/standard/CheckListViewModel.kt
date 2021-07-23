@@ -44,6 +44,10 @@ class CheckListViewModel
     val answersRadio: LiveData<List<Answer>>
         get()= _answersRadio
 
+    private val _answersAll = MutableLiveData<List<Answer>>()
+    val answersAll: LiveData<List<Answer>>
+        get()= _answersAll
+
     private val _answersInput = MutableLiveData<List<Answer>>()
     val answersInput: LiveData<List<Answer>>
         get()= _answersInput
@@ -81,6 +85,13 @@ class CheckListViewModel
 
     private fun handleAnswersRadio(answers : List<Answer>) {
         _answersRadio.value = answers
+    }
+
+    fun getAnswersAll(idQuestion:String) = getAnswers(GetAnswers.Params(idQuestion)) {
+        it.either(::handleFailure, ::handleAnswersAll) }
+
+    private fun handleAnswersAll(answers : List<Answer>) {
+        _answersAll.value = answers
     }
 
     fun getAnswersCheck(idQuestion:String,nameQ: String,order: Int) = getAnswers(GetAnswers.Params(idQuestion)) {

@@ -36,7 +36,8 @@ interface QuestionsRepository {
                                 response.body()?.let { body ->
                                     if(body.success) {
                                         body.data.map {
-                                            questionsDataSource.insertQuestions(it.toModel())
+                                            Log.d("PREGUNTAS",it.toString())
+                                            questionsDataSource.insertQuestions(it.question.toModel())
                                             for(answers in it.answers )
                                                 questionsDataSource.insertAnswers(answers.toModel()) }
                                         Either.Right(true)
