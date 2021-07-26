@@ -14,6 +14,7 @@ import android.widget.PopupMenu
 import androidx.core.app.ActivityCompat
 import androidx.navigation.fragment.findNavController
 import com.tawa.allinapp.R
+import com.tawa.allinapp.core.dialog.MessageDialogFragment
 import com.tawa.allinapp.core.extensions.failure
 import com.tawa.allinapp.core.extensions.observe
 import com.tawa.allinapp.core.extensions.viewModel
@@ -74,14 +75,28 @@ class InitFragment : BaseFragment() {
             observe(successCheckOut, { it?.let {
                 initViewModel.getCheckMode()
             } })
+            observe(userName, { it?.let {
+                binding.tvHeaderName.text = it
+                binding.btUser.text = if(it.isNotEmpty()) it.first().toString() else ""
+            } })
             failure(failure, ::handleFailure)
         }
         initViewModel.getIdUser()
+        initViewModel.getUserName()
         binding.btCheckIn.setOnClickListener{
             if(checkIn) showSelectorCheckIn()
             else {
                 initViewModel.getDescPV()
             }
+        }
+        binding.btUser.setOnClickListener {
+            val frag = UserMenuDialogFragment.newInstance()
+            frag.listener = object : UserMenuDialogFragment.Callback {
+                override fun onAccept() {
+                    showLogin(context)
+                }
+            }
+            frag.show(childFragmentManager, "participant")
         }
 
         binding.viewBtnRoutes.setOnClickListener {
