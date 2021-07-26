@@ -51,16 +51,15 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/textView14"
+            android:id="@+id/tvHeaderName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:text="Katherine Villanueva!"
             android:textColor="@color/colorTextPrimary"
             android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/view5"
-            app:layout_constraintEnd_toStartOf="@+id/view10"
+            app:layout_constraintEnd_toStartOf="@+id/btUser"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView13"
             app:layout_constraintVertical_bias="0.0" />
@@ -177,33 +176,21 @@
             app:layout_constraintTop_toTopOf="@+id/view8"
             app:layout_constraintVertical_bias="0.0" />
 
-        <View
-            android:id="@+id/view10"
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btUser"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginTop="30dp"
             android:layout_marginEnd="16dp"
-            android:background="@drawable/roundedlinear"
-            app:layout_constraintBottom_toBottomOf="@+id/view5"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/textView14"
-            app:layout_constraintTop_toTopOf="@+id/view5"
-            app:layout_constraintVertical_bias="0.0" />
-
-        <TextView
-            android:id="@+id/textView21"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="KV"
             android:textColor="@color/colorPrimary"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/view10"
-            app:layout_constraintEnd_toEndOf="@+id/view10"
-            app:layout_constraintStart_toStartOf="@+id/view10"
-            app:layout_constraintTop_toTopOf="@+id/view10" />
+            android:background="@drawable/roundedlinear"
+            app:layout_constraintBottom_toBottomOf="@+id/view5"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tvHeaderName"
+            app:layout_constraintTop_toTopOf="@+id/view5"
+            app:layout_constraintVertical_bias="0.0" />
 
         <ScrollView
             android:layout_width="0dp"
@@ -303,7 +290,7 @@
                         app:layout_constraintBottom_toBottomOf="@+id/viewBtnDocs"
                         app:layout_constraintEnd_toEndOf="@+id/viewBtnDocs"
                         app:layout_constraintStart_toStartOf="@+id/viewBtnDocs"
-                        app:layout_constraintTop_toBottomOf="@+id/imageView10"
+                        app:layout_constraintTop_toBottomOf="@+id/imageVie10"
                         app:layout_constraintVertical_bias="0.0" />
 
 
@@ -369,7 +356,7 @@
                         app:layout_constraintTop_toTopOf="@+id/viewBtnCalendar" />
 
                     <ImageView
-                        android:id="@+id/imageView10"
+                        android:id="@+id/imageVie10"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="26dp"

@@ -58,6 +58,9 @@ class ReportsFragment : BaseFragment() {
             observe(reports, { it?.let {
                 reportsAdapter.setData(it)
             } })
+            observe(pvName, { it?.let {
+                binding.tvHeaderPV.text = it
+            } })
             failure(failure, { it?.let {
                 hideProgressDialog()
                 when(it){
@@ -68,6 +71,7 @@ class ReportsFragment : BaseFragment() {
             }})
         }
         reportsViewModel.getReports()
+        reportsViewModel.getPVName()
 
         binding.etDate.setOnClickListener{
           getDay(binding.etDate)
@@ -75,10 +79,6 @@ class ReportsFragment : BaseFragment() {
         binding.btnBackReports.setOnClickListener{
             activity?.onBackPressed()
         }
-       //binding.btnCheckList.setOnClickListener{
-         //   findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToCheckListFragment("Probando"))
-        //}
-
         binding.appbar.addOnOffsetChangedListener(object : OnOffsetChangedListener {
             var isShow = true
             var scrollRange = -1

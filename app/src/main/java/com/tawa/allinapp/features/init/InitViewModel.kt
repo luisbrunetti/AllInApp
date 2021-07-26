@@ -26,6 +26,7 @@ class InitViewModel
     private val setCheckIn: SetCheckIn,
     private val setIdPv: SetIdPv,
     private val getIdUser: GetIdUser,
+    private val getUserName: GetUserName,
 ) : BaseViewModel()  {
     private  val formatter: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
     var timestamp: Timestamp = Timestamp(System.currentTimeMillis())
@@ -72,6 +73,10 @@ class InitViewModel
     private val _idUser= MutableLiveData<String>("")
     val idUser: LiveData<String>
         get()= _idUser
+
+    private val _userName= MutableLiveData<String>("")
+    val userName: LiveData<String>
+        get()= _userName
 
     private val _positionCompany= MutableLiveData<Int>(-1)
     val positionCompany: LiveData<Int>
@@ -141,6 +146,8 @@ class InitViewModel
 
     fun getIdUser() = getIdUser(UseCase.None()) { it.either(::handleFailure, ::handleGetIdUser) }
 
+    fun getUserName() = getUserName(UseCase.None()) { it.either(::handleFailure, ::handleGetUserName) }
+
     fun setIdCompany(idCompany:String) = setIdCompany(SetIdCompany.Params(idCompany)) { it.either(::handleFailure, ::handleSetIdCompany) }
 
     fun setPv(idPv:String,descPv:String) = setIdPv(SetIdPv.Params(idPv,descPv)) { it.either(::handleFailure, ::handleSetIdPv) }
@@ -202,6 +209,8 @@ class InitViewModel
     private fun handleGetIdUser(idCompany: String) {
         _idUser.value = idCompany
     }
-
+    private fun handleGetUserName(user: String) {
+        _userName.value = user
+    }
 
 }
