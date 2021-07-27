@@ -12,6 +12,6 @@ class ParametersService
     private val authApi by lazy { retrofit.create(ParametersApi::class.java) }
 
     override fun getCompanies(token:String) = authApi.getCompanies(token)
-    override fun getSchedule(token:String) = authApi.getSchedule(token)
+    override fun getSchedule(token:String, company:String) = authApi.getSchedule(token,company)
 
 }
