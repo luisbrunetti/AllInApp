@@ -3,6 +3,7 @@ package com.tawa.allinapp.features.reports.sku
 import android.graphics.Typeface
 import android.os.Bundle
 import android.text.InputType
+import android.util.Log
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -13,14 +14,18 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.setPadding
 import androidx.core.view.size
 import com.tawa.allinapp.R
+import com.tawa.allinapp.core.extensions.observe
+import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.FragmentSkuBinding
 import com.tawa.allinapp.models.Sku
+import org.json.JSONObject
 
 
 class SkuFragment : BaseFragment() {
 
     private lateinit var binding: FragmentSkuBinding
+    private lateinit var skuViewModel: SkuViewModel
     private lateinit var listSku:List<Sku>
     private lateinit var listLimitedSku:List<Sku>
     var listFilter:MutableList<Sku> = arrayListOf()
@@ -46,6 +51,14 @@ class SkuFragment : BaseFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentSkuBinding.inflate(inflater)
+        skuViewModel = viewModel(viewModelFactory) {
+            observe(successSku, { it?.let {
+                if(it.isNotEmpty())
+                {
+                }
+
+            } })
+        }
         listSku = listOf(
                                Sku("1","7UP 1500ml","22/06/2021","Bebida saborizada 1","7UP","35","1.00"),
                                Sku("2","7UP 1500ml","22/06/2021","Bebida saborizada 2","7UP","35","1.00"),
@@ -67,6 +80,7 @@ class SkuFragment : BaseFragment() {
         binding.tlSku.removeViews(1,binding.tlSku.size-1)
         binding.tlDataSku.removeViews(1,binding.tlDataSku.size-1)
         numPages.removeAll(numPages)
+        btnObs.removeAll(btnObs)
         pageNum = 0
         listLimitedSku  = listSku.slice(0..4)
         for(cate in listSku)
@@ -86,6 +100,7 @@ class SkuFragment : BaseFragment() {
         binding.tlSku.removeViews(1,binding.tlSku.size-1)
         binding.tlDataSku.removeViews(1,binding.tlDataSku.size-1)
         numPages.removeAll(numPages)
+        btnObs.removeAll(btnObs)
         pageNum = 0
         if(listFilter.size<5)
             listLimitedSku = listFilter.slice(0 until listFilter.size)

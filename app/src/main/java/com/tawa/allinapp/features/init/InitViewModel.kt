@@ -28,6 +28,8 @@ class InitViewModel
     private val setIdPv: SetIdPv,
     private val getIdUser: GetIdUser,
     private val getUserName: GetUserName,
+    private val updateStatus: UpdateStatus,
+    private  val getReportsSku: GetReportsSku
 ) : BaseViewModel()  {
     private  val formatter: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
     var timestamp: Timestamp = Timestamp(System.currentTimeMillis())
@@ -118,6 +120,14 @@ class InitViewModel
     val successGetQuestions: LiveData<Boolean>
         get() = _successGetQuestions
 
+    private val _successUpdate = MutableLiveData(false)
+    val successUpdate: LiveData<Boolean>
+        get() = _successUpdate
+
+    private val _successReportsSku = MutableLiveData(false)
+    val successReportsSku: LiveData<Boolean>
+        get() = _successReportsSku
+
     init {
         startHome()
         startCheckIn()
@@ -183,6 +193,11 @@ class InitViewModel
 
     fun getStateCheck(idPv:String) = getStateCheck(GetStateCheck.Params(idPv)) { it.either(::handleFailure, ::handleGetStateCheck) }
 
+    fun updateStatus(latitude:String,longitude:String,battery:String) = updateStatus(UpdateStatus.Params(latitude,longitude,battery)) { it.either(::handleFailure, ::handleUpdateStatus) }
+
+    fun getReportsSku() = getReportsSku(UseCase.None()) {
+        it.either(::handleFailure, ::handleReportsSku) }
+
     private fun handlePVDesc(checkIn:String) {
         this._pvDesc.value = checkIn
     }
@@ -221,6 +236,14 @@ class InitViewModel
     }
     private fun handleGetUserName(user: String) {
         _userName.value = user
+    }
+
+    private fun handleUpdateStatus(success: Boolean) {
+        this._successUpdate.value = success
+    }
+
+    private fun handleReportsSku(success: Boolean) {
+        this._successReportsSku.value = success
     }
 
 }

@@ -11,6 +11,7 @@ import com.tawa.allinapp.features.reports.audio.AudioViewModel
 import com.tawa.allinapp.features.reports.picture.PictureViewModel
 import com.tawa.allinapp.features.reports.standard.CheckListViewModel
 import com.tawa.allinapp.features.reports.reports.ReportsViewModel
+import com.tawa.allinapp.features.reports.sku.SkuViewModel
 import com.tawa.allinapp.features.reports.userstatus.UserStatusViewModel
 import com.tawa.allinapp.features.routes.RoutesViewModel
 import com.tawa.allinapp.features.splash.SplashViewModel
@@ -82,6 +83,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(AudioViewModel::class)
     abstract fun bindsAudioViewModel(audioViewModel: AudioViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(SkuViewModel::class)
+    abstract fun bindsSkuViewModel(skuViewModel: SkuViewModel): ViewModel
 
 
 }
