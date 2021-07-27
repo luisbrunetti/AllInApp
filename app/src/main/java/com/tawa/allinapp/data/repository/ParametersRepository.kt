@@ -61,7 +61,7 @@ interface ParametersRepository {
             return when (networkHandler.isConnected) {
                 true ->{
                     try {
-                        val response = service.getSchedule("Bearer ${prefs.token!!}").execute()
+                        val response = service.getSchedule("Bearer ${prefs.token!!}", "${prefs.companyId}").execute()
                         when (response.isSuccessful) {
                             true -> {
                                 response.body()?.let { body ->
