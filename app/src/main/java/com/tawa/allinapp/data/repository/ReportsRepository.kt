@@ -1,5 +1,6 @@
 package com.tawa.allinapp.data.repository
 
+import android.util.Log
 import android.widget.Toast
 import com.tawa.allinapp.core.functional.Either
 import com.tawa.allinapp.core.functional.Failure
@@ -8,6 +9,7 @@ import com.tawa.allinapp.data.local.Prefs
 import com.tawa.allinapp.data.local.datasource.ParametersDataSource
 import com.tawa.allinapp.data.local.datasource.ReportsDataSource
 import com.tawa.allinapp.data.remote.MovieDetailEntity
+import com.tawa.allinapp.data.remote.entities.UpdateStatusRemote
 import com.tawa.allinapp.data.remote.service.ParametersService
 import com.tawa.allinapp.data.remote.service.QuestionsService
 import com.tawa.allinapp.data.remote.service.ReportsService
@@ -19,9 +21,12 @@ interface ReportsRepository {
     fun setReports(company: String): Either<Failure, Boolean>
     fun saveLocalPhotoReport(report:PhotoReport): Either<Failure, Boolean>
     fun getReports(): Either<Failure,List<Report>>
+    fun getSku(): Either<Failure,String>
     fun savePhotoReport(): Either<Failure, Boolean>
     fun getReportStatus(): Either<Failure, List<ReportStatus>>
+    fun updateStatus(latitude:String,longitude:String,battery:String): Either<Failure, Boolean>
     fun saveLocalAudioReport(report: AudioReport): Either<Failure, Boolean>
+    fun getReportsSku():Either<Failure, Boolean>
 
     class Network
     @Inject constructor(private val networkHandler: NetworkHandler,
@@ -115,6 +120,54 @@ interface ReportsRepository {
 
         }
 
+        override fun updateStatus(latitude: String,longitude: String,battery: String): Either<Failure, Boolean> {
+            return when (networkHandler.isConnected) {
+                true ->{
+                    try {
+                        val response = service.updateStatus("Bearer ${prefs.token!!}",UpdateStatusRemote.Request(latitude,longitude,battery)).execute()
+                        when (response.isSuccessful) {
+                            true -> {
+                                response.body()?.let { body ->
+                                    if(body.success) {
+                                        Either.Right(true)
+                                    }
+                                    else Either.Left(Failure.DefaultError(body.message))
+                                }?: Either.Left(Failure.DefaultError(""))
+                            }
+                            false -> Either.Left(Failure.ServerError)
+                        }
+                    } catch (e: Exception) {
+                        Either.Left(Failure.DefaultError(e.message!!))
+                    }
+                }
+                false -> Either.Left(Failure.NetworkConnection)
+            }
+        }
+
+        override fun getReportsSku(): Either<Failure, Boolean> {
+            return when (networkHandler.isConnected) {
+                true ->{
+                    try {
+                        val response = service.getReportsSku("Bearer ${prefs.token!!}").execute()
+
+                        when (response.isSuccessful) {
+                            true -> {
+                                response.body()?.let { body ->
+                                    prefs.dataSku = body.data.toString()
+                                    Log.d("dataaaaa",body.data.toString())
+                                    Either.Right(true)
+                                }?: Either.Left(Failure.DefaultError(""))
+                            }
+                            false -> Either.Left(Failure.ServerError)
+                        }
+                    } catch (e: Exception) {
+                        Either.Left(Failure.DefaultError(e.message!!))
+                    }
+                }
+                false -> Either.Left(Failure.NetworkConnection)
+            }
+        }
+
         override fun getReports(): Either<Failure, List<Report>> {
             return try {
                 Either.Right(reportsDataSource.getReports().map { it.toView() })
@@ -127,6 +180,14 @@ interface ReportsRepository {
             return try {
                 reportsDataSource.insertAudioReport(report.toModel())
                 Either.Right(true)
+            }catch (e:Exception){
+                Either.Left(Failure.DefaultError(e.message!!))
+            }
+        }
+
+        override fun getSku(): Either<Failure, String> {
+            return try {
+                Either.Right(prefs.dataSku?:"")
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))
             }

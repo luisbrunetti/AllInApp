@@ -262,7 +262,7 @@ class UserStatusFragment : BaseFragment() {
             tvLastPosition[flag].tag = lastPosition[flag]
             tvLastPosition[flag].setOnClickListener{
                 val tag:ArrayList<String> = tvLastPosition[flag].tag as java.util.ArrayList<String>
-                if(tag[0]=="0" || tag[1]=="0")
+                if(tag[0]=="0")
                     Toast.makeText(context,"No se registró la ubicación",Toast.LENGTH_SHORT).show()
                 else
                     showMapDialog(tag[0],tag[1],tag[2])

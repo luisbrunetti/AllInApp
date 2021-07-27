@@ -18,6 +18,7 @@ class Prefs
         const val COMPANY_ID= "companyId"
         const val PV_ID = "pvId"
         const val PV_NAME = "pv_name"
+        const val DATA_SKU = "data_sku"
     }
 
     private val prefs  = context.getSharedPreferences(FILENAME, Context.MODE_PRIVATE)
@@ -60,4 +61,10 @@ class Prefs
     var session:Boolean
         get() = prefs.getBoolean(SESSION,false)
         set(value) = prefs.edit().putBoolean(SESSION,value).apply()
+
+    var dataSku:String?
+        get() = prefs.getString(DATA_SKU,"")
+        set(value) = prefs.edit().putString(DATA_SKU,value).apply()
+
+
 }

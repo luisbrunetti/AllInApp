@@ -75,6 +75,7 @@ class SelectorDialogFragment
             selectedCompany = listCompany[positionCompany].id
             initViewModel.setIdCompany(selectedCompany)
             initViewModel.getQuestionsRemote()
+            initViewModel.getReportsSku()
 
         }
     }
