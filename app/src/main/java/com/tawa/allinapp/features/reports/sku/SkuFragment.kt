@@ -80,6 +80,7 @@ class SkuFragment : BaseFragment() {
         binding.tlSku.removeViews(1,binding.tlSku.size-1)
         binding.tlDataSku.removeViews(1,binding.tlDataSku.size-1)
         numPages.removeAll(numPages)
+        btnObs.removeAll(btnObs)
         pageNum = 0
         listLimitedSku  = listSku.slice(0..4)
         for(cate in listSku)
@@ -99,6 +100,7 @@ class SkuFragment : BaseFragment() {
         binding.tlSku.removeViews(1,binding.tlSku.size-1)
         binding.tlDataSku.removeViews(1,binding.tlDataSku.size-1)
         numPages.removeAll(numPages)
+        btnObs.removeAll(btnObs)
         pageNum = 0
         if(listFilter.size<5)
             listLimitedSku = listFilter.slice(0 until listFilter.size)
