@@ -8,7 +8,7 @@ class ReportsStatusRemote {
         @SerializedName("status") val status: String? =null,
         @SerializedName("fe_conexion") val lastConnection: String? =null,
         @SerializedName("ul_latitud") val lastLatitude: Double? =null,
-        @SerializedName("ul_lobguitud") val lastLongitude: Double? =null,
+        @SerializedName("ul_longitud") val lastLongitude: Double? =null,
         @SerializedName("bateria") val battery: Int? =null,
         @SerializedName("nombre_apellido") val name:String? =null,
 

@@ -1,10 +1,7 @@
 package com.tawa.allinapp.data.remote.api
 
 import com.tawa.allinapp.core.platform.BaseResponse
-import com.tawa.allinapp.data.remote.entities.CompanyRemote
-import com.tawa.allinapp.data.remote.entities.LoginRemote
-import com.tawa.allinapp.data.remote.entities.ReportsRemote
-import com.tawa.allinapp.data.remote.entities.ReportsStatusRemote
+import com.tawa.allinapp.data.remote.entities.*
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -22,5 +19,12 @@ interface ReportsApi {
 
     @GET("/api/group/user/list/1")
     fun getReportStatus(@Header("Authorization") token:String): Call<BaseResponse<List<ReportsStatusRemote.Response>>>
+
+
+    @PUT("/api/user/estado")
+    fun updateStatus(@Header("Authorization") token: String, @Body  request: UpdateStatusRemote.Request):Call<BaseResponse<UpdateStatusRemote.Response>>
+
+    @GET("/api/reportepdv/1/")
+    fun getReportsSku(@Header("Authorization") token: String): Call<BaseResponse<List<ReportsSkuRemote.Response>>>
 
 }

@@ -102,7 +102,7 @@ class CheckInDialogFragment
 
         binding.btnDoCheckin.setOnClickListener {
             val positionPv  = binding.pdvSpinner.selectedItemPosition
-            Toast.makeText(context,getBatteryPercentage(requireContext()).toString()+" - "+getHour() + " - "+latitude+","+longitude,Toast.LENGTH_LONG).show()
+            //Toast.makeText(context,getBatteryPercentage(requireContext()).toString()+" - "+getHour() + " - "+latitude+","+longitude,Toast.LENGTH_LONG).show()
             if(checkState)
             {
                 if(getDistance("${list[positionPv].lat}","${list[positionPv].long}",latitude,longitude)<=250)
@@ -111,6 +111,7 @@ class CheckInDialogFragment
                     _pvId = list[positionPv].id
                     initViewModel.setPv(list[positionPv].id,list[positionPv].description)
                     initViewModel.setCheckIn(idUsers,list[positionPv].id,latitude,longitude)
+                    initViewModel.updateStatus(latitude,longitude,getBatteryPercentage(requireContext()).toString())
                     dismiss()
                 }
                 else
@@ -145,13 +146,13 @@ class CheckInDialogFragment
         val lonA = longitudeA.toDouble()
         val latB = latitudeB.toDouble()
         val lonB= longitudeB.toDouble()
-        val locationA = Location("point A")
+        val locationA = Location("pointA")
         locationA.latitude = latA
         locationA.longitude= lonA
-        val locationB = Location("point B")
+        val locationB = Location("pointA")
         locationB.latitude= latB
         locationB.longitude =lonB
-        return   locationA.distanceTo(locationB)
+        return   locationB.distanceTo(locationA)
 
     }
 
