@@ -75,6 +75,9 @@ class InitFragment : BaseFragment() {
             observe(successCheckOut, { it?.let {
                 initViewModel.getCheckMode()
             } })
+            observe(successSyncChecks, { it?.let {
+
+            } })
             observe(userName, { it?.let {
                 binding.tvHeaderName.text = it
                 binding.btUser.text = if(it.isNotEmpty()) it.first().toString() else ""
@@ -99,6 +102,9 @@ class InitFragment : BaseFragment() {
             frag.show(childFragmentManager, "participant")
         }
 
+        binding.btSync.setOnClickListener {
+            initViewModel.syncCheck()
+        }
         binding.viewBtnRoutes.setOnClickListener {
             findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationRoutes())
         }

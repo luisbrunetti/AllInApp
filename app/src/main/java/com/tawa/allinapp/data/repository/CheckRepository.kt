@@ -2,8 +2,11 @@ package com.tawa.allinapp.data.repository
 
 import com.tawa.allinapp.core.functional.Either
 import com.tawa.allinapp.core.functional.Failure
+import com.tawa.allinapp.core.functional.NetworkHandler
 import com.tawa.allinapp.data.local.Prefs
 import com.tawa.allinapp.data.local.datasource.CheckDataSource
+import com.tawa.allinapp.data.remote.service.CheckService
+import com.tawa.allinapp.data.remote.service.ParametersService
 import com.tawa.allinapp.models.Check
 import javax.inject.Inject
 
@@ -19,10 +22,13 @@ interface CheckRepository {
     fun getUserName(): Either<Failure, String>
     fun getCheckMode(): Either<Failure, Boolean>
     fun getStateCheck(idPv: String): Either<Failure, Boolean>
+    fun syncChecks(): Either<Failure, Boolean>
 
     class Network
-    @Inject constructor(private val checkDataSource: CheckDataSource,
+    @Inject constructor(private val networkHandler: NetworkHandler,
+                        private val checkDataSource: CheckDataSource,
                         private val prefs: Prefs,
+                        private val service: CheckService
     ): CheckRepository{
 
         override fun setCheck(id: Int,pv:String,idUser:String,registerDate:String,latitude:String,longitude:String,comment:String): Either<Failure, Boolean> {
@@ -42,6 +48,31 @@ interface CheckRepository {
                 Either.Right(true)
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))
+            }
+        }
+
+        override fun syncChecks(): Either<Failure, Boolean>{
+            return when (networkHandler.isConnected) {
+                true ->{
+                    try {
+                        val request = checkDataSource.getChecks().map { it.toRemote() }
+                        val response = service.syncChecks("Bearer ${prefs.token!!}", request).execute()
+                        when (response.isSuccessful) {
+                            true -> {
+                                response.body()?.let { body ->
+                                    if(body.success) {
+                                        Either.Right(true)
+                                    }
+                                    else Either.Left(Failure.DefaultError(body.message))
+                                }?: Either.Left(Failure.DefaultError(""))
+                            }
+                            false -> Either.Left(Failure.ServerError)
+                        }
+                    } catch (e: Exception) {
+                        Either.Left(Failure.DefaultError(e.message!!))
+                    }
+                }
+                false -> Either.Left(Failure.NetworkConnection)
             }
         }
 

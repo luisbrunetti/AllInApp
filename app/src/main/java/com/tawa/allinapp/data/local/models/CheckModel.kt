@@ -2,6 +2,7 @@ package com.tawa.allinapp.data.local.models
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.tawa.allinapp.data.remote.entities.CheckRemote
 import com.tawa.allinapp.models.Check
 
 @Entity(tableName = "check")
@@ -17,4 +18,5 @@ data class CheckModel (
     val comment: String,
 ){
     fun toView() = Check(id,schedule,company,pv,idUser,registerDate,latitude,longitude,comment)
+    fun toRemote() = CheckRemote.Request(schedule,company,pv,comment,registerDate,latitude.toDouble(),longitude.toDouble())
 }
