@@ -6,6 +6,7 @@ import com.tawa.allinapp.core.functional.Failure
 import com.tawa.allinapp.core.functional.NetworkHandler
 import com.tawa.allinapp.data.local.Prefs
 import com.tawa.allinapp.data.local.datasource.ReportsDataSource
+import com.tawa.allinapp.data.local.models.PhotoReportModel
 import com.tawa.allinapp.data.remote.entities.UpdateStatusRemote
 import com.tawa.allinapp.data.remote.service.ReportsService
 import com.tawa.allinapp.models.AudioReport
@@ -87,7 +88,25 @@ interface ReportsRepository {
 
         override fun saveLocalPhotoReport(report:PhotoReport): Either<Failure, Boolean> {
             return try {
-                reportsDataSource.insertPhotoReport(report.toModel())
+                reportsDataSource.insertPhotoReport(
+                    PhotoReportModel(
+                        0,
+                        prefs.companyId,
+                        prefs.pvId,
+                        report.before[0],
+                        report.before[1],
+                        report.before[2],
+                        report.before[3],
+                        report.before[4],
+                        report.after[0],
+                        report.after[1],
+                        report.after[2],
+                        report.after[3],
+                        report.after[4],
+                        report.comments,
+                        report.createAt
+                    )
+                )
                 Either.Right(true)
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))

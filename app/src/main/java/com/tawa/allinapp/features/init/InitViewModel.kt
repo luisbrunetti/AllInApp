@@ -209,7 +209,7 @@ class InitViewModel
 
     fun syncCheck() = syncCheck(UseCase.None()) { it.either(::handleFailure, ::handleSyncCheck) }
 
-    fun syncPhotoReport() = syncCheck(UseCase.None()) { it.either(::handleFailure, ::handleSyncPhotoReport) }
+    fun syncPhotoReport() = syncPhotoReports(UseCase.None()) { it.either(::handleFailure, ::handleSyncPhotoReport) }
 
     private fun handleSyncPhotoReport(success:Boolean) {
         this._successSyncPhotoReports.value = success
