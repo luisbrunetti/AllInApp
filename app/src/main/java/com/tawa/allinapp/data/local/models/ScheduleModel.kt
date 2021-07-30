@@ -7,6 +7,7 @@ import com.tawa.allinapp.models.Schedule
 @Entity(tableName = "schedule")
 data class ScheduleModel (
     @PrimaryKey val id: String,
+    val pv:String,
     val description: String?,
     val zone: String?,
     val codGeo: String?,
@@ -14,5 +15,5 @@ data class ScheduleModel (
     val latitude: Double?,
     val longitude: Double?,
 ){
-    fun toView() = Schedule(id,description?:"",zone?:"",codGeo?:"",idCompany?:"",latitude?:0.0,longitude?:0.0)
+    fun toView() = Schedule(id, pv,description?:"",zone?:"",codGeo?:"",idCompany?:"",latitude?:0.0,longitude?:0.0)
 }

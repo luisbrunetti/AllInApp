@@ -18,8 +18,8 @@ class ScheduleRemote {
         @SerializedName("fe_creacion") val feCreated: String?,
     ){
         //TODO change chekin latitude and longitude
-        //fun toModel() = ScheduleModel(id?:"",pv?.description,pv?.zone?.id,"",company?.id,pv?.zone?.latitude,pv?.zone?.longitude)
-        fun toModel() = ScheduleModel(id?:"",pv?.description,pv?.zone?.id,"",company?.id,-12.069630,-77.060643)
+        //fun toModel() = ScheduleModel(id?:"",pv?.id?:"",pv?.description,pv?.zone?.id,"",company?.id,pv?.zone?.latitude,pv?.zone?.longitude)
+        fun toModel() = ScheduleModel(id?:"",pv?.id?:"",pv?.description,pv?.zone?.id,"",company?.id,-12.069630,-77.060643)
     }
 
     data class Company (

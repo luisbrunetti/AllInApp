@@ -109,7 +109,7 @@ class CheckInDialogFragment
                 //{
                     _pv = list[positionPv].description
                     _pvId = list[positionPv].id
-                    initViewModel.setPv(list[positionPv].id,list[positionPv].description)
+                    initViewModel.setPv(list[positionPv].id,list[positionPv].pv,list[positionPv].description)
                     initViewModel.setCheckIn(idUsers,list[positionPv].id,latitude,longitude)
                     initViewModel.updateStatus(latitude,longitude,getBatteryPercentage(requireContext()).toString())
                     dismiss()

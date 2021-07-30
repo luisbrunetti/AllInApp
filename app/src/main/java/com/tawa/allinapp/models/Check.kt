@@ -4,12 +4,14 @@ import com.tawa.allinapp.data.local.models.CheckModel
 
 data class Check(
     val id: Int,
+    val schedule: String,
+    val company: String,
+    val pv: String,
     val idUser: String,
-    val idPuntoventa: String,
     val fechaRegistro: String,
     val latitud: String,
     val longitud: String,
     val comment: String,
 ){
-    fun toModel() = CheckModel(id,idUser,idPuntoventa,fechaRegistro,latitud,longitud,comment)
+    fun toModel() = CheckModel(id,schedule,company,pv,idUser,fechaRegistro,latitud,longitud,comment)
 }

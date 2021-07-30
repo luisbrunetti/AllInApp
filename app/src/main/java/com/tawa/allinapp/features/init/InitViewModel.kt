@@ -134,15 +134,15 @@ class InitViewModel
         getDay()
     }
 
-    fun setCheckIn(idUser:String,idPV:String,lat:String,lon:String) {
+    fun setCheckIn(idUser:String,pv:String,lat:String,lon:String) {
         _startSetCheckIn.value = true
-        setCheckIn(SetCheckIn.Params(0,idUser,idPV,formatter.format(timestamp),lat,lon,"CHECKIN")) {
+        setCheckIn(SetCheckIn.Params(0,pv,idUser,formatter.format(timestamp),lat,lon,"CHECKIN")) {
             it.either(::handleFailure, ::handleCheckIn)
         }
     }
-    fun setCheckOut(idUser:String,idPV:String,lat:String,long:String) {
+    fun setCheckOut(idUser:String,pv:String,lat:String,long:String) {
         _startSetCheckIn.value = false
-        setCheckIn(SetCheckIn.Params(0,idUser,idPV,formatter.format(timestamp),lat,long,"CHECKOUT")) {
+        setCheckIn(SetCheckIn.Params(0,pv,idUser,formatter.format(timestamp),lat,long,"CHECKOUT")) {
             it.either(::handleFailure, ::handleCheckOut)
         }
     }
@@ -165,7 +165,7 @@ class InitViewModel
 
     fun setIdCompany(idCompany:String) = setIdCompany(SetIdCompany.Params(idCompany)) { it.either(::handleFailure, ::handleSetIdCompany) }
 
-    fun setPv(idPv:String,descPv:String) = setIdPv(SetIdPv.Params(idPv,descPv)) { it.either(::handleFailure, ::handleSetIdPv) }
+    fun setPv(schedule:String,pv:String,descPv:String) = setIdPv(SetIdPv.Params(schedule,pv,descPv)) { it.either(::handleFailure, ::handleSetIdPv) }
 
     fun getDescPV() = getDescPV(UseCase.None()) { it.either(::handleFailure, ::handlePVDesc) }
 
@@ -220,7 +220,7 @@ class InitViewModel
         this._companies.value = company.map { Company(it.id,it.ruc,it.name,it.description) }
     }
     private fun handlePvList(schedule: List<Schedule>) {
-        this._schedule.value = schedule.map { Schedule(it.id,it.description,it.zone,it.codGeo,it.idCompany, it.lat,it.long) }
+        this._schedule.value = schedule.map { Schedule(it.id,it.pv,it.description,it.zone,it.codGeo,it.idCompany, it.lat,it.long) }
     }
     private fun handleSetIdCompany(success: Boolean) {
         _setIdCompanySuccess.value = success

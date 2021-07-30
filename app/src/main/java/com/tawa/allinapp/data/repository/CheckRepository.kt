@@ -9,9 +9,9 @@ import javax.inject.Inject
 
 interface CheckRepository {
 
-    fun setCheck(checkIn: Check): Either<Failure, Boolean>
+    fun setCheck(id: Int,pv:String,idUser:String,registerDate:String,latitude:String,longitude:String,comment:String): Either<Failure, Boolean>
     fun setIdCompany(idCompany:String): Either<Failure, Boolean>
-    fun setIdPv(idPv:String,namePv:String): Either<Failure, Boolean>
+    fun setIdPv(schedule:String,pv:String,namePv:String): Either<Failure, Boolean>
     fun getDescPv(): Either<Failure, String>
     fun getIdPv(): Either<Failure, String>
     fun getIdCompany(): Either<Failure, String>
@@ -25,9 +25,10 @@ interface CheckRepository {
                         private val prefs: Prefs,
     ): CheckRepository{
 
-        override fun setCheck(checkIn: Check): Either<Failure, Boolean> {
+        override fun setCheck(id: Int,pv:String,idUser:String,registerDate:String,latitude:String,longitude:String,comment:String): Either<Failure, Boolean> {
             return try {
-                checkDataSource.insertCheck(checkIn.toModel())
+                val check = Check(id,prefs.schedule?:"",prefs.companyId?:"",pv,idUser,registerDate,latitude,longitude,comment)
+                checkDataSource.insertCheck(check.toModel())
                 prefs.checkIn = !prefs.checkIn
                 Either.Right(true)
             }catch (e:Exception){
@@ -44,9 +45,10 @@ interface CheckRepository {
             }
         }
 
-        override fun setIdPv(idPv: String,namePv:String): Either<Failure, Boolean> {
+        override fun setIdPv(schedule:String,pv:String,namePv:String): Either<Failure, Boolean> {
             return try {
-                prefs.pvId = idPv
+                prefs.schedule = schedule
+                prefs.pvId = pv
                 prefs.pvName = namePv
                 Either.Right(true)
             }catch (e:Exception){
@@ -110,7 +112,6 @@ interface CheckRepository {
                 Either.Left(Failure.DefaultError(e.message!!))
             }
         }
-
     }
 }
 
