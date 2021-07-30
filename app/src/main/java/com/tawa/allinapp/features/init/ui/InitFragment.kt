@@ -78,6 +78,9 @@ class InitFragment : BaseFragment() {
             observe(successSyncChecks, { it?.let {
 
             } })
+            observe(successSyncPhotoReports, { it?.let {
+
+            } })
             observe(userName, { it?.let {
                 binding.tvHeaderName.text = it
                 binding.btUser.text = if(it.isNotEmpty()) it.first().toString() else ""
@@ -104,6 +107,7 @@ class InitFragment : BaseFragment() {
 
         binding.btSync.setOnClickListener {
             initViewModel.syncCheck()
+            initViewModel.syncPhotoReport()
         }
         binding.viewBtnRoutes.setOnClickListener {
             findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationRoutes())

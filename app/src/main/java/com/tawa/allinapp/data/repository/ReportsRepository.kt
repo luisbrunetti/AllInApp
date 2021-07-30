@@ -1,26 +1,24 @@
 package com.tawa.allinapp.data.repository
 
 import android.util.Log
-import android.widget.Toast
 import com.tawa.allinapp.core.functional.Either
 import com.tawa.allinapp.core.functional.Failure
 import com.tawa.allinapp.core.functional.NetworkHandler
 import com.tawa.allinapp.data.local.Prefs
-import com.tawa.allinapp.data.local.datasource.ParametersDataSource
 import com.tawa.allinapp.data.local.datasource.ReportsDataSource
-import com.tawa.allinapp.data.remote.MovieDetailEntity
 import com.tawa.allinapp.data.remote.entities.UpdateStatusRemote
-import com.tawa.allinapp.data.remote.service.ParametersService
-import com.tawa.allinapp.data.remote.service.QuestionsService
 import com.tawa.allinapp.data.remote.service.ReportsService
-import com.tawa.allinapp.models.*
-import retrofit2.Call
+import com.tawa.allinapp.models.AudioReport
+import com.tawa.allinapp.models.PhotoReport
+import com.tawa.allinapp.models.Report
+import com.tawa.allinapp.models.ReportStatus
 import javax.inject.Inject
 
 interface ReportsRepository {
     fun setReports(company: String): Either<Failure, Boolean>
     fun saveLocalPhotoReport(report:PhotoReport): Either<Failure, Boolean>
     fun getReports(): Either<Failure,List<Report>>
+    fun syncPhotoReports(): Either<Failure,Boolean>
     fun getSku(): Either<Failure,String>
     fun savePhotoReport(): Either<Failure, Boolean>
     fun getReportStatus(): Either<Failure, List<ReportStatus>>
@@ -47,6 +45,31 @@ interface ReportsRepository {
                                         body.data.map {
                                             reportsDataSource.insertReports(it.toModel())
                                         }
+                                        Either.Right(true)
+                                    }
+                                    else Either.Left(Failure.DefaultError(body.message))
+                                }?: Either.Left(Failure.DefaultError(""))
+                            }
+                            false -> Either.Left(Failure.ServerError)
+                        }
+                    } catch (e: Exception) {
+                        Either.Left(Failure.DefaultError(e.message!!))
+                    }
+                }
+                false -> Either.Left(Failure.NetworkConnection)
+            }
+        }
+
+        override fun syncPhotoReports(): Either<Failure,Boolean>{
+            return when (networkHandler.isConnected) {
+                true ->{
+                    try {
+                        val request = reportsDataSource.getPhotoReports().map { it.toRemote() }
+                        val response = service.syncPhotoReports("Bearer ${prefs.token!!}", request).execute()
+                        when (response.isSuccessful) {
+                            true -> {
+                                response.body()?.let { body ->
+                                    if(body.success) {
                                         Either.Right(true)
                                     }
                                     else Either.Left(Failure.DefaultError(body.message))

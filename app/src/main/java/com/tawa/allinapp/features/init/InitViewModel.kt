@@ -29,6 +29,7 @@ class InitViewModel
     private val getIdUser: GetIdUser,
     private val getUserName: GetUserName,
     private val syncCheck: SyncCheck,
+    private val syncPhotoReports: SyncPhotoReports,
     private val updateStatus: UpdateStatus,
     private  val getReportsSku: GetReportsSku
 ) : BaseViewModel()  {
@@ -41,6 +42,10 @@ class InitViewModel
     private val _startCheckIn = MutableLiveData(false)
     val startCheckIn: LiveData<Boolean>
         get() = _startCheckIn
+
+    private val _successSyncPhotoReports = MutableLiveData(false)
+    val successSyncPhotoReports: LiveData<Boolean>
+        get() = _successSyncPhotoReports
 
     private val _successSyncChecks = MutableLiveData(false)
     val successSyncChecks: LiveData<Boolean>
@@ -202,9 +207,15 @@ class InitViewModel
 
     fun getReportsSku() = getReportsSku(UseCase.None()) { it.either(::handleFailure, ::handleReportsSku) }
 
-    fun syncCheck() = syncCheck(UseCase.None()) { it.either(::handleFailure, ::handleSyncPV) }
+    fun syncCheck() = syncCheck(UseCase.None()) { it.either(::handleFailure, ::handleSyncCheck) }
 
-    private fun handleSyncPV(success:Boolean) {
+    fun syncPhotoReport() = syncCheck(UseCase.None()) { it.either(::handleFailure, ::handleSyncPhotoReport) }
+
+    private fun handleSyncPhotoReport(success:Boolean) {
+        this._successSyncPhotoReports.value = success
+    }
+
+    private fun handleSyncCheck(success:Boolean) {
         this._successSyncChecks.value = success
     }
 
