@@ -3,8 +3,10 @@ package com.tawa.allinapp.data.remote.service
 
 
 import com.tawa.allinapp.data.remote.api.ReportsApi
+import com.tawa.allinapp.data.remote.entities.ReportsPhotoRemote
 import com.tawa.allinapp.data.remote.entities.ReportsSkuRemote
 import com.tawa.allinapp.data.remote.entities.UpdateStatusRemote
+import com.tawa.allinapp.models.PhotoReport
 import retrofit2.Call
 import retrofit2.Retrofit
 import javax.inject.Inject
@@ -15,7 +17,6 @@ import javax.inject.Singleton
 class ReportsService
 @Inject constructor(retrofit: Retrofit) : ReportsApi {
     private val reportsApi by lazy { retrofit.create(ReportsApi::class.java) }
-
 
     override fun getReports(company:String) = reportsApi.getReports(company)
     override fun getReportStatus(token:String) = reportsApi.getReportStatus(token)
@@ -28,5 +29,7 @@ class ReportsService
         before1,before2,before3,before4,before5,
         after1,after2,after3,after4,after5,comment
     )
+
+    override fun syncPhotoReports(token:String,request:List<ReportsPhotoRemote.Request>) = reportsApi.syncPhotoReports(token,request)
 
 }
