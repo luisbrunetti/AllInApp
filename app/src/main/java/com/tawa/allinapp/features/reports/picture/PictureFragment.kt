@@ -28,6 +28,7 @@ import com.tawa.allinapp.core.functional.Failure
 import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.FragmentPictureBinding
 import com.tawa.allinapp.models.PhotoReport
+import java.util.*
 import javax.inject.Inject
 
 class PictureFragment : BaseFragment() {
@@ -100,7 +101,8 @@ class PictureFragment : BaseFragment() {
             val report = PhotoReport(
                 pictureBeforeAdapter.collection,
                 pictureAfterAdapter.collection,
-                binding.tvComments.text.toString()
+                binding.tvComments.text.toString(),
+                Calendar.getInstance().time.toString()
             )
             pictureViewModel.saveReport(report)
         }
