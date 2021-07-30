@@ -8,11 +8,11 @@ import javax.inject.Inject
 class SetCheckIn
 @Inject constructor(private val checkRepository: CheckRepository) : UseCase<Boolean, SetCheckIn.Params>() {
 
-    override suspend fun run(params: Params) = checkRepository.setCheck(Check(params.id,params.idUser,params.idPV,params.registerDate,params.latitude,params.longitude,params.comment))
+    override suspend fun run(params: Params) = checkRepository.setCheck(params.id,params.pv,params.idUser,params.registerDate,params.latitude,params.longitude,params.comment)
     data class Params(
         val id: Int,
+        val pv: String,
         val idUser: String,
-        val idPV: String,
         val registerDate: String,
         val latitude: String,
         val longitude: String,

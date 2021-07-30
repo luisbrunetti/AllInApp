@@ -11,6 +11,6 @@ interface CheckDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertCheck(checkIn: CheckModel)
 
-    @Query("SELECT COUNT(id) FROM `check`WHERE idPV=:idPv ")
+    @Query("SELECT COUNT(id) FROM `check`WHERE pv=:idPv")
     fun getStateCheck(idPv:String): Int
 }
