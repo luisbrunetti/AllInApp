@@ -13,4 +13,7 @@ interface CheckDao {
 
     @Query("SELECT COUNT(id) FROM `check`WHERE pv=:idPv")
     fun getStateCheck(idPv:String): Int
+
+    @Query("SELECT * FROM `check`")
+    fun getChecks(): List<CheckModel>
 }

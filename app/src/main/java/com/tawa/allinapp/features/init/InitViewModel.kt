@@ -28,6 +28,7 @@ class InitViewModel
     private val setIdPv: SetIdPv,
     private val getIdUser: GetIdUser,
     private val getUserName: GetUserName,
+    private val syncCheck: SyncCheck,
     private val updateStatus: UpdateStatus,
     private  val getReportsSku: GetReportsSku
 ) : BaseViewModel()  {
@@ -40,6 +41,10 @@ class InitViewModel
     private val _startCheckIn = MutableLiveData(false)
     val startCheckIn: LiveData<Boolean>
         get() = _startCheckIn
+
+    private val _successSyncChecks = MutableLiveData(false)
+    val successSyncChecks: LiveData<Boolean>
+        get() = _successSyncChecks
 
     private val _startSetCheckIn = MutableLiveData(false)
     val startSetCheckIn: LiveData<Boolean>
@@ -195,8 +200,13 @@ class InitViewModel
 
     fun updateStatus(latitude:String,longitude:String,battery:String) = updateStatus(UpdateStatus.Params(latitude,longitude,battery)) { it.either(::handleFailure, ::handleUpdateStatus) }
 
-    fun getReportsSku() = getReportsSku(UseCase.None()) {
-        it.either(::handleFailure, ::handleReportsSku) }
+    fun getReportsSku() = getReportsSku(UseCase.None()) { it.either(::handleFailure, ::handleReportsSku) }
+
+    fun syncCheck() = syncCheck(UseCase.None()) { it.either(::handleFailure, ::handleSyncPV) }
+
+    private fun handleSyncPV(success:Boolean) {
+        this._successSyncChecks.value = success
+    }
 
     private fun handlePVDesc(checkIn:String) {
         this._pvDesc.value = checkIn

@@ -305,8 +305,8 @@
                         android:textSize="16sp"
                         android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="@+id/viewBtnDocs"
-                        app:layout_constraintEnd_toEndOf="@+id/viewBtnSync"
-                        app:layout_constraintStart_toStartOf="@+id/viewBtnSync"
+                        app:layout_constraintEnd_toEndOf="@+id/btSync"
+                        app:layout_constraintStart_toStartOf="@+id/btSync"
                         app:layout_constraintTop_toBottomOf="@+id/imageView11"
                         app:layout_constraintVertical_bias="0.0" />
 
@@ -373,9 +373,9 @@
                         android:layout_marginTop="26dp"
                         android:elevation="4dp"
                         android:src="@drawable/ic_sync_home"
-                        app:layout_constraintEnd_toEndOf="@+id/viewBtnSync"
-                        app:layout_constraintStart_toStartOf="@+id/viewBtnSync"
-                        app:layout_constraintTop_toTopOf="@+id/viewBtnSync" />
+                        app:layout_constraintEnd_toEndOf="@+id/btSync"
+                        app:layout_constraintStart_toStartOf="@+id/btSync"
+                        app:layout_constraintTop_toTopOf="@+id/btSync" />
 
                     <View
                         android:id="@+id/viewBtnPV"
@@ -450,14 +450,14 @@
                         android:background="@drawable/bg_button_white"
                         android:elevation="2dp"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/viewBtnSync"
+                        app:layout_constraintEnd_toStartOf="@+id/btSync"
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/viewBtnRoutes"
                         app:layout_constraintVertical_bias="0.13999999" />
 
                     <View
-                        android:id="@+id/viewBtnSync"
+                        android:id="@+id/btSync"
                         android:layout_width="0dp"
                         android:layout_height="120dp"
                         android:layout_marginStart="18dp"
