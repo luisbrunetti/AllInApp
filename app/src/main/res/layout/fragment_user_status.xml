@@ -380,7 +380,6 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
-                                android:text="1 de 5 de 77 entradas"
                                 android:textColor="@color/colorTextAll"
                                 android:textSize="16sp" />
                         </LinearLayout>

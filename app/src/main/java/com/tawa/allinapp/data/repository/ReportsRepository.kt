@@ -7,25 +7,38 @@ import com.tawa.allinapp.core.functional.NetworkHandler
 import com.tawa.allinapp.data.local.Prefs
 import com.tawa.allinapp.data.local.datasource.ReportsDataSource
 import com.tawa.allinapp.data.local.models.PhotoReportModel
+import com.tawa.allinapp.data.local.models.SkuDetailModel
+import com.tawa.allinapp.data.local.models.SkuModel
+import com.tawa.allinapp.data.remote.MovieDetailEntity
+import com.tawa.allinapp.data.remote.entities.ReportsSkuRemote
 import com.tawa.allinapp.data.remote.entities.UpdateStatusRemote
 import com.tawa.allinapp.data.remote.service.ReportsService
 import com.tawa.allinapp.models.AudioReport
 import com.tawa.allinapp.models.PhotoReport
 import com.tawa.allinapp.models.Report
 import com.tawa.allinapp.models.ReportStatus
+import com.tawa.allinapp.features.init.usecase.GetIdCompany
+import com.tawa.allinapp.models.*
+import retrofit2.Call
 import javax.inject.Inject
+import kotlin.math.log
 
 interface ReportsRepository {
     fun setReports(company: String): Either<Failure, Boolean>
     fun saveLocalPhotoReport(report:PhotoReport): Either<Failure, Boolean>
     fun getReports(): Either<Failure,List<Report>>
+    fun getSkuDetail(idSku:String): Either<Failure,List<SkuDetail>>
+    fun getSku(): Either<Failure,List<Sku>>
     fun syncPhotoReports(): Either<Failure,Boolean>
-    fun getSku(): Either<Failure,String>
     fun savePhotoReport(): Either<Failure, Boolean>
     fun getReportStatus(): Either<Failure, List<ReportStatus>>
     fun updateStatus(latitude:String,longitude:String,battery:String): Either<Failure, Boolean>
     fun saveLocalAudioReport(report: AudioReport): Either<Failure, Boolean>
     fun getReportsSku():Either<Failure, Boolean>
+    fun insertSkuObservation(skuObservation: SkuObservation):Either<Failure, Boolean>
+    fun getSkuObservation(idSkuDetail: String):Either<Failure, List<SkuObservation>>
+    fun addSku(idReportPdv:String,idPv:String,idCompany: String,lines: List<Lines>):Either<Failure, Boolean>
+    fun updateSkuDetail(idSkuDetail: String,stock:Boolean,exhibition:Boolean,price:Float):Either<Failure, Boolean>
 
     class Network
     @Inject constructor(private val networkHandler: NetworkHandler,
@@ -195,8 +208,22 @@ interface ReportsRepository {
                         when (response.isSuccessful) {
                             true -> {
                                 response.body()?.let { body ->
-                                    prefs.dataSku = body.data.toString()
-                                    Log.d("dataaaaa",body.data.toString())
+                                    body.data.map {
+                                        reportsDataSource.insertSku(SkuModel(it.id,it.idPuntoVenta.id,it.idEmpresa.id))
+                                        for(products in it.lineas)
+                                        {
+                                            products.idProducto.nombreProducto?.let { it1 ->
+                                                products.idProducto.idSubsegmentoProd?.idSegmentoProd?.idSubcategoriaProd?.nombreSubcategoria?.let { it2 ->
+                                                    products.idProducto.idSubsegmentoProd?.idSegmentoProd?.idSubcategoriaProd?.idCategoriaProd?.nombreCategoria?.let { it3 ->
+                                                        SkuDetailModel(products.id,products.idProducto.feCreacion,products.idProducto.id,
+                                                            it1,
+                                                            it3,
+                                                            it2,products.inventario,products.precio,false,false,0.0f,it.id)
+                                                    }
+                                                }
+                                            }?.let { it2 -> reportsDataSource.insertSkuDetail(it2) }
+                                        }
+                                    }
                                     Either.Right(true)
                                 }?: Either.Left(Failure.DefaultError(""))
                             }
@@ -227,12 +254,81 @@ interface ReportsRepository {
             }
         }
 
-        override fun getSku(): Either<Failure, String> {
+        override fun getSkuDetail(idSku: String): Either<Failure, List<SkuDetail>> {
             return try {
-                Either.Right(prefs.dataSku?:"")
+                Either.Right(reportsDataSource.getSkuDetail(idSku).map { it.toView() })
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))
             }
         }
+
+        override fun insertSkuObservation(skuObservation: SkuObservation): Either<Failure, Boolean> {
+            return try {
+                reportsDataSource.insertSkuObservation(skuObservation.toModel())
+                Either.Right(true)
+            }catch (e:Exception){
+                Either.Left(Failure.DefaultError(e.message!!))
+            }
+        }
+
+        override fun getSkuObservation(idSkuDetail: String): Either<Failure, List<SkuObservation>> {
+            return try {
+                Either.Right(reportsDataSource.getSkuObservation(idSkuDetail).map { it.toView() })
+            }catch (e:Exception){
+                Either.Left(Failure.DefaultError(e.message!!))
+            }
+        }
+
+        override fun getSku(): Either<Failure, List<Sku>> {
+            return try {
+                Either.Right(reportsDataSource.getSku().map { it.toView() })
+            }catch (e:Exception){
+                Either.Left(Failure.DefaultError(e.message!!))
+            }
+        }
+
+        override fun addSku(
+            idReportPdv: String,
+            idPv: String,
+            idCompany: String,
+            lines: List<Lines>
+        ): Either<Failure, Boolean> {
+            return when (networkHandler.isConnected) {
+                true ->{
+                    try {
+                        val response = service.addSku("Bearer ${prefs.token!!}",ReportsSkuRemote.Request(idReportPdv,idPv,idCompany,lines.map { it.toRequest() })).execute()
+                        when (response.isSuccessful) {
+                            true -> {
+                                response.body()?.let { body ->
+                                    if(body.success) {
+                                        Either.Right(true)
+                                    }
+                                    else Either.Left(Failure.DefaultError(body.message))
+                                }?: Either.Left(Failure.DefaultError(""))
+                            }
+                            false -> Either.Left(Failure.ServerError)
+                        }
+                    } catch (e: Exception) {
+                        Either.Left(Failure.DefaultError(e.message!!))
+                    }
+                }
+                false -> Either.Left(Failure.NetworkConnection)
+            }
+        }
+
+        override fun updateSkuDetail(
+            idSkuDetail: String,
+            stock: Boolean,
+            exhibition: Boolean,
+            price: Float
+        ): Either<Failure, Boolean> {
+            return try {
+                reportsDataSource.updateSkuDetail(idSkuDetail,stock,exhibition,price)
+                Either.Right(true)
+            }catch (e:Exception){
+                Either.Left(Failure.DefaultError(e.message!!))
+            }
+        }
+
     }
 }
