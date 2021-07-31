@@ -2,6 +2,7 @@ package com.tawa.allinapp.data.remote.service
 
 
 
+import com.tawa.allinapp.core.platform.BaseResponse
 import com.tawa.allinapp.data.remote.api.ReportsApi
 import com.tawa.allinapp.data.remote.entities.ReportsPhotoRemote
 import com.tawa.allinapp.data.remote.entities.ReportsSkuRemote
@@ -22,6 +23,7 @@ class ReportsService
     override fun getReportStatus(token:String) = reportsApi.getReportStatus(token)
     override fun updateStatus(token: String, request: UpdateStatusRemote.Request) = reportsApi.updateStatus(token,request)
     override fun getReportsSku(token: String) = reportsApi.getReportsSku(token)
+    override fun addSku(token: String, request: ReportsSkuRemote.Request) = reportsApi.addSku(token,request)
     override fun setPhotoReports(
         before1:String,before2:String,before3:String,before4:String,before5:String,
         after1:String,after2:String,after3:String,after4:String,after5:String,comment:String

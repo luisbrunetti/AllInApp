@@ -1,15 +1,12 @@
 package com.tawa.allinapp.models
 
+
+import com.tawa.allinapp.data.local.models.SkuModel
+
 data class Sku(
     val id:String ,
-    val product:String? =null,
-    val date:String?=null,
-    val category:String?=null,
-    val subCategory:String?=null,
-    val inventory:String?=null,
-    val price:String?=null,
-    val stock:String?=null,
-    val exhibition:String?=null,
-    val price2:String?=null,
-    val observation:String?=null,
-)
+    val idPv :String,
+    val idCompany:String
+){
+    fun toModel() = SkuModel(id,idPv,idCompany)
+}

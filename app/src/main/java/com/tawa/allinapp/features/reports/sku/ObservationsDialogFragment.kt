@@ -10,16 +10,25 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.setPadding
 import androidx.fragment.app.DialogFragment
 import com.tawa.allinapp.R
+import com.tawa.allinapp.core.extensions.observe
+import com.tawa.allinapp.core.extensions.viewModel
+import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.DialogObservationsSkuBinding
+import javax.inject.Inject
 
 
-class ObservationsDialogFragment: DialogFragment() {
+class ObservationsDialogFragment
+@Inject constructor(
+    private val baseFragment: BaseFragment
+): DialogFragment() {
 
     private lateinit var binding: DialogObservationsSkuBinding
+    private lateinit var skuViewModel: SkuViewModel
     private var listObservations = ArrayList<String>()
     private lateinit var idSku:String
     var params = LinearLayout.LayoutParams(
@@ -34,12 +43,9 @@ class ObservationsDialogFragment: DialogFragment() {
     var nameGen= ""
     companion object {
 
-        fun newInstance(idSku:String,map: MutableMap<String,ArrayList<String>>): ObservationsDialogFragment {
-            val frag = ObservationsDialogFragment()
+        fun newInstance(idSku:String,baseFragment: BaseFragment): ObservationsDialogFragment {
+            val frag = ObservationsDialogFragment(baseFragment)
             val bundle = Bundle()
-            for (key in map.keys) {
-                bundle.putStringArrayList(key,map[key])
-            }
             bundle.putString("data", idSku)
             frag.arguments = bundle
             return frag
@@ -50,6 +56,39 @@ class ObservationsDialogFragment: DialogFragment() {
         binding = DialogObservationsSkuBinding.inflate(inflater)
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         isCancelable = false
+        skuViewModel = viewModel(baseFragment.viewModelFactory) {
+            observe(successGetSkuObservation, {
+                    it?.let {
+                        if(type.value==1)
+                        {
+                            if(it.isNotEmpty())
+                            {
+                                for(observation in it)
+                                {
+                                    addObservations(observation.observation,binding.addObservations)
+                                }
+                            }
+                        }
+                        if(type.value==2)
+                        {
+                            val count = it.size
+                            listener?.onClick(idSku,count)
+                            dismiss()
+                        }
+
+                    }
+            })
+            observe(successSetSkuObservation,{
+                it?.let {
+                    if (it)
+                        skuViewModel.getSkuObservation(idSku,2)
+                }
+
+            })
+
+
+        }
+
         return binding.root
     }
 
@@ -59,23 +98,15 @@ class ObservationsDialogFragment: DialogFragment() {
         arguments?.let { bundle ->
             bundle.getString("data")?.let {
                 idSku= it
-            }
-            bundle.getStringArrayList(idSku).let { observations->
-                if(!observations.isNullOrEmpty())
-                {
-                    for(observation in observations)
-                    {
-                        addObservations(observation,binding.addObservations)
-                    }
-                }
+                skuViewModel.getSkuObservation(idSku,1)
             }
         }
         binding.btnCloseModalObservations.setOnClickListener {
             dismiss()
         }
         binding.btnSaveObservations.setOnClickListener {
-            dismiss()
-            listener?.onClick(idSku,binding.edObservation.text.toString())
+            skuViewModel.setSkuObservation(idSku,binding.edObservation.text.toString())
+
         }
     }
 
@@ -99,6 +130,6 @@ class ObservationsDialogFragment: DialogFragment() {
     }
 
     interface Callback {
-        fun onClick(id:String,list:String)
+        fun onClick(id:String,count:Int)
     }
 }

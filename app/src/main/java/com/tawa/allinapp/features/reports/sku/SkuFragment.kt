@@ -18,31 +18,49 @@ import com.tawa.allinapp.core.extensions.observe
 import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.FragmentSkuBinding
-import com.tawa.allinapp.models.Sku
-import org.json.JSONObject
+import com.tawa.allinapp.models.Lines
+import com.tawa.allinapp.models.SkuDetail
+import java.text.SimpleDateFormat
+import java.time.Instant
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class SkuFragment : BaseFragment() {
 
     private lateinit var binding: FragmentSkuBinding
     private lateinit var skuViewModel: SkuViewModel
-    private lateinit var listSku:List<Sku>
-    private lateinit var listLimitedSku:List<Sku>
-    var listFilter:MutableList<Sku> = arrayListOf()
+    private lateinit var listSku:List<SkuDetail>
+    val formatter = SimpleDateFormat("dd/MM/yyyy")
+    private lateinit var listLimitedSku:List<SkuDetail>
+    var listFilter:MutableList<SkuDetail> = arrayListOf()
     private var product= ArrayList<String>()
     var date = ArrayList<String>()
     private var category = ArrayList<String>()
-    private var idSku = ArrayList<String>()
+    private var idSkuDetail = ArrayList<String>()
     private var categoryFilter = ArrayList<String>()
     var subCategory = ArrayList<String>()
-    var inventory = ArrayList<String>()
-    var price = ArrayList<String>()
+    var inventory = ArrayList<Int>()
+    var price = ArrayList<Float>()
+    var stockSaved = ArrayList<Boolean>()
+    var exhiSave= ArrayList<Boolean>()
+    var newPrice = ArrayList<Float>()
     private val numPages  = ArrayList<Int>()
     var listAnt= ArrayList<String>()
     private val btnObs = ArrayList<Button>()
+    private val checksStock = ArrayList<CheckBox>()
+    private val checkEx = ArrayList<CheckBox>()
+    private val edPrice = ArrayList<EditText>()
     private var pageNum = 0
 
-    val mapObservations = mutableMapOf<String,ArrayList<String>>()
+    private val mapCheckStock = mutableMapOf<String,Boolean?>()
+    private val mapCheckEx = mutableMapOf<String,Boolean?>()
+    private val mapEdPrice = mutableMapOf<String,Float?>()
+    private val mapObs = mutableMapOf<String,ArrayList<String>>()
+    var idReportPv:String = ""
+    var idPv:String= ""
+    var idCompany: String = ""
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,34 +71,104 @@ class SkuFragment : BaseFragment() {
         binding = FragmentSkuBinding.inflate(inflater)
         skuViewModel = viewModel(viewModelFactory) {
             observe(successSku, { it?.let {
-                if(it.isNotEmpty())
+               if(typeSku.value==1)
+               {
+                    listSku = it
+                    for(sku in it)
+                    {
+                        mapCheckStock[sku.id]=null
+                        mapCheckEx[sku.id]=null
+                        mapEdPrice[sku.id]=null
+                    }
+                    showTable()
+               }
+                if(typeSku.value==2)
                 {
+                    for(det in it)
+                    {
+                        skuViewModel.getSkuObservation(det.id,2)
+                    }
+                }
+            } })
+            observe(successGetSkuObservation, { it?.let {
+                if(typeSku.value==1)
+                {
+                    if(it.isNotEmpty())
+                    {
+                        for(btn in btnObs)
+                        {
+                            if (btn.tag==it[0].idSkuDetail)
+                            {
+                                when(it.size)
+                                {
+                                    1-> (it.size.toString()+" Observacion").also { btn.text = it }
+                                    else -> (it.size.toString()+" Observaciones").also { btn.text = it }
+                                }
+                            }
+                        }
+                    }
+                }
+                if(typeSku.value==2)
+                {
+                    for (data in it)
+                    {
+                        mapObs.getOrPut(data.idSkuDetail){ arrayListOf()}.add(data.observation)
+                    }
                 }
 
             } })
-        }
-        listSku = listOf(
-                               Sku("1","7UP 1500ml","22/06/2021","Bebida saborizada 1","7UP","35","1.00"),
-                               Sku("2","7UP 1500ml","22/06/2021","Bebida saborizada 2","7UP","35","1.00"),
-                               Sku("3","7UP 1500ml","22/06/2021","Bebida saborizada 3","7UP","35","1.00"),
-                               Sku("4","7UP 1500ml","22/06/2021","Bebida saborizada 4","7UP","35","1.00"),
-                               Sku("5","7UP 1500ml","22/06/2021","Bebida saborizada 5","7UP","35","1.00"),
-                               Sku("6","7UP 1500ml","22/06/2021","Bebida saborizada 6","7UP","35","1.00")
-        )
+            observe(successGetSku, { it?.let {
 
-        showTable()
+                if(typeIni.value==1)
+                {
+                    for(sku in it)
+                    {
+                        idReportPv = sku.id
+                        idPv = sku.idPv
+                        idCompany = sku.idCompany
+                        skuViewModel.getSkuDetail(sku.id,1)
+                    }
+                }
+                if(typeIni.value==2)
+                {
+                    for(sku in it)
+                        skuViewModel.getSkuDetail(sku.id,2)
+                }
+
+            } })
+
+        }
+        skuViewModel.getSku(1)
         binding.btnFilterCat.setOnClickListener {
             showFilterDialog(categoryFilter)
+        }
+        binding.btnSaveSku.setOnClickListener {
+            mapObs.clear()
+            for(check in checksStock)
+                mapCheckStock[check.tag.toString()] = check.isChecked
+            for(checkEx in checkEx)
+                mapCheckEx[checkEx.tag.toString()]= checkEx.isChecked
+            for(ed in edPrice) {
+                if (ed.text.toString().isNotEmpty()) {
+                    mapEdPrice[ed.tag.toString()] = ed.text.toString().toFloat()
+                }
+            }
+            skuViewModel.getSku(2)
+            showConfirmDialog()
+
         }
         return binding.root
     }
 
-    private  fun showTable(){
+    private fun showTable(){
         removeArray()
         binding.tlSku.removeViews(1,binding.tlSku.size-1)
         binding.tlDataSku.removeViews(1,binding.tlDataSku.size-1)
         numPages.removeAll(numPages)
         btnObs.removeAll(btnObs)
+        checksStock.removeAll(checksStock)
+        checkEx.removeAll(checkEx)
+        edPrice.removeAll(edPrice)
         pageNum = 0
         listLimitedSku  = listSku.slice(0..4)
         for(cate in listSku)
@@ -88,8 +176,9 @@ class SkuFragment : BaseFragment() {
 
         addElements(listLimitedSku)
         setSkuProduct(binding.tlSku,product)
-        setSkuData(binding.tlDataSku,date,category,subCategory,inventory,price,idSku)
+        setSkuData(binding.tlDataSku,date,category,subCategory,inventory,price,idSkuDetail)
         createPager(listSku,binding.tlSku,binding.tlDataSku)
+
     }
 
     private  fun showTableFilter(list:ArrayList<String>){
@@ -101,6 +190,10 @@ class SkuFragment : BaseFragment() {
         binding.tlDataSku.removeViews(1,binding.tlDataSku.size-1)
         numPages.removeAll(numPages)
         btnObs.removeAll(btnObs)
+        checksStock.removeAll(checksStock)
+        checkEx.removeAll(checkEx)
+        edPrice.removeAll(edPrice)
+
         pageNum = 0
         if(listFilter.size<5)
             listLimitedSku = listFilter.slice(0 until listFilter.size)
@@ -109,7 +202,7 @@ class SkuFragment : BaseFragment() {
 
         addElements(listLimitedSku)
         setSkuProduct(binding.tlSku,product)
-        setSkuData(binding.tlDataSku,date,category,subCategory,inventory,price,idSku)
+        setSkuData(binding.tlDataSku,date,category,subCategory,inventory,price,idSkuDetail)
         createPager(listFilter,binding.tlSku,binding.tlDataSku)
     }
 
@@ -133,7 +226,7 @@ class SkuFragment : BaseFragment() {
         }
     }
 
-    private fun setSkuData(tableLayout: TableLayout, date:ArrayList<String>, category : ArrayList<String>,subcategory:ArrayList<String>,inventory:ArrayList<String>,price:ArrayList<String>,idSku:ArrayList<String>){
+    private fun setSkuData(tableLayout: TableLayout, date:ArrayList<String>, category : ArrayList<String>,subcategory:ArrayList<String>,inventory:ArrayList<Int>,price:ArrayList<Float>,idSku:ArrayList<String>){
 
         for((flag, dateUnit) in date.withIndex())
         {
@@ -153,26 +246,51 @@ class SkuFragment : BaseFragment() {
             row.addView(tvSubCategory)
 
             val  tvInventory = TextView(context)
-            textViewStyle(tvInventory,inventory[flag])
+            textViewStyle(tvInventory,inventory[flag].toString())
             row.addView(tvInventory)
 
             val  tvPrice = TextView(context)
-            textViewStyle(tvPrice,price[flag])
+            textViewStyle(tvPrice,price[flag].toString())
             row.addView(tvPrice)
 
             val checkStock = CheckBox(context)
-            row.addView(checkStock)
+            checksStock.add(checkStock)
+            checksStock[flag].tag=idSku[flag]
+            val type = mapCheckStock[idSku[flag]]
+            if (type != null)
+                checksStock[flag].isChecked=type
+            else
+                checksStock[flag].isChecked=stockSaved[flag]
+            row.addView(checksStock[flag])
 
             val checkExhibition = CheckBox(context)
-            row.addView(checkExhibition)
+            checkEx.add(checkExhibition)
+            checkEx[flag].tag=idSku[flag]
+            val typeEx =mapCheckEx[idSku[flag]]
+            if (typeEx != null)
+                checkEx[flag].isChecked=typeEx
+            else
+                checkEx[flag].isChecked=exhiSave[flag]
+            row.addView(checkEx[flag])
 
             val editTextPrice = EditText(context)
-            editTextPrice.hint = "0.00"
-            editTextPrice.inputType = InputType.TYPE_CLASS_NUMBER
-            editTextPrice.setBackgroundResource(R.drawable.rounded)
-            editTextPrice.width = 20f.toDips().toInt()
-            editTextPrice.setPadding(10f.toDips().toInt())
-            row.addView(editTextPrice)
+            edPrice.add(editTextPrice)
+            edPrice[flag].hint = "0.00"
+            edPrice[flag].inputType = InputType.TYPE_CLASS_NUMBER
+            edPrice[flag].setBackgroundResource(R.drawable.rounded)
+            edPrice[flag].width = 20f.toDips().toInt()
+            edPrice[flag].setPadding(10f.toDips().toInt())
+            edPrice[flag].tag=idSku[flag]
+            val textPrice = mapEdPrice[idSku[flag]]
+            if(textPrice!=null)
+                edPrice[flag].setText(textPrice.toString())
+            else {
+                if(newPrice[flag]!=0.0f)
+                    edPrice[flag].setText(newPrice[flag].toString())
+                else
+                    edPrice[flag].setText("")
+            }
+            row.addView(edPrice[flag])
 
             val buttonObservations = Button(context)
             btnObs.add(buttonObservations)
@@ -189,6 +307,7 @@ class SkuFragment : BaseFragment() {
             btnObs[flag].setBackgroundResource(R.drawable.bg_blue_button_sku)
             btnObs[flag].setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
             btnObs[flag].tag = idSku[flag]
+            skuViewModel.getSkuObservation(idSku[flag],1)
             btnObs[flag].setOnClickListener {
                 showObservationDialog(idSku[flag])
             }
@@ -204,13 +323,16 @@ class SkuFragment : BaseFragment() {
         tl1.removeViews(1,tl1.size-1)
         tl2.removeViews(1,tl2.size-1)
         btnObs.removeAll(btnObs)
+        checksStock.removeAll(checksStock)
+        checkEx.removeAll(checkEx)
+        edPrice.removeAll(edPrice)
         addElements(listLimitedSku)
         setSkuProduct(binding.tlSku,product)
-        setSkuData(binding.tlDataSku,date,category,subCategory,inventory,price,idSku)
+        setSkuData(binding.tlDataSku,date,category,subCategory,inventory,price,idSkuDetail)
 
     }
 
-    private fun createPager(list:List<Sku>, tl1:TableLayout, tl2:TableLayout){
+    private fun createPager(list:List<SkuDetail>, tl1:TableLayout, tl2:TableLayout){
         val numPager: Int
         if(list.size%5==0) {
             numPager=  list.size/5
@@ -229,6 +351,17 @@ class SkuFragment : BaseFragment() {
         }
         "${pageNum*5+1} - ${pageNum*5+numPages[pageNum]} de ${list.size} entradas".also { binding.tvPager.text = it }
         binding.btnPrevPage.setOnClickListener{
+            for(check in checksStock)
+                mapCheckStock[check.tag.toString()] = check.isChecked
+            for(checkEx in checkEx)
+                mapCheckEx[checkEx.tag.toString()]= checkEx.isChecked
+            for(ed in edPrice)
+                if(ed.text.toString().isNotEmpty())
+                {
+                    mapEdPrice[ed.tag.toString()]=ed.text.toString().toFloat()
+                }
+
+
             if(pageNum>0)
             {
                 pageNum--
@@ -237,23 +370,41 @@ class SkuFragment : BaseFragment() {
             }
         }
         binding.btnNextPage.setOnClickListener{
+
+            for(check in checksStock)
+                mapCheckStock[check.tag.toString()] = check.isChecked
+            for(checkEx in checkEx)
+                mapCheckEx[checkEx.tag.toString()]= checkEx.isChecked
+            for(ed in edPrice)
+                if(ed.text.toString().isNotEmpty())
+                {
+                    mapEdPrice[ed.tag.toString()]=ed.text.toString().toFloat()
+                }
+
             if(pageNum<(numPager-1))
             {
                 pageNum++
                 "${pageNum*5+1} - ${pageNum*5+numPages[pageNum]} de ${list.size} entradas".also { binding.tvPager.text = it }
                 limitedTable(tl1,tl2,pageNum)
             }
+
+
+
         }
 
     }
-    private fun addElements(list:List<Sku>){
+    private fun addElements(list:List<SkuDetail>){
         list.forEach { category.add(it.category!!)
-                            date.add(it.date!!)
-                            product.add(it.product!!)
+                            date.add(getDate(it.dateCreation))
+                            product.add(it.nameProduct)
                             subCategory.add(it.subCategory!!)
-                            inventory.add(it.inventory!!)
-                            price.add(it.price!!)
-                            idSku.add(it.id!!)}
+                            inventory.add(it.inventory)
+                            price.add(it.price)
+                            idSkuDetail.add(it.id)
+                            stockSaved.add(it.stock)
+                            exhiSave.add(it.exhibition)
+                            newPrice.add(it.newPrice)
+        }
     }
 
     private fun removeArray(){
@@ -263,8 +414,13 @@ class SkuFragment : BaseFragment() {
         subCategory.removeAll(subCategory)
         inventory.removeAll(inventory)
         price.removeAll(price)
-        idSku.removeAll(idSku)
+        idSkuDetail.removeAll(idSkuDetail)
+        stockSaved.removeAll(stockSaved)
+        exhiSave.removeAll(exhiSave)
+        newPrice.removeAll(newPrice)
     }
+
+    private fun getDate(text: String) =  formatter.format(Date.from(Instant.parse(text)))
 
     private fun textViewStyle(textView: TextView, text:String){
         textView.text =text
@@ -274,13 +430,38 @@ class SkuFragment : BaseFragment() {
         textView.gravity = Gravity.START or Gravity.CENTER_VERTICAL
     }
 
+    private fun showConfirmDialog(){
+        val dialog = ConfirmDialogFragment()
+        dialog.show(childFragmentManager, "dialog")
+        dialog.listener = object  : ConfirmDialogFragment.Callback{
+            override fun onClick() {
+                for (data in mapCheckStock)
+                {
+                    val stock =data.value
+                    val exhibition = mapCheckEx[data.key]
+                    var price = mapEdPrice[data.key]
+                    if(price==null)
+                        price=0.0f
+                    if (exhibition != null) {
+                            if (stock != null) {
+                                skuViewModel.updateSkuDetail(data.key,stock,exhibition,price)
+                            }
+                    }
+                }
+            }
+        }
+
+    }
+
     private fun showFilterDialog(data:ArrayList<String>){
         val dialog = FilterSkuDialogFragment.newInstance(data)
         dialog.show(childFragmentManager, "dialog")
         dialog.listener = object : FilterSkuDialogFragment.Callback{
             override fun onFilter(list:ArrayList<String>) {
-                if(list.size==0)
+                if(list.size==0) {
+                    skuViewModel.getSku(1)
                     showTable()
+                }
                 else
                     showTableFilter(list)
             }
@@ -288,22 +469,20 @@ class SkuFragment : BaseFragment() {
     }
 
     private fun showObservationDialog(id:String){
-        val dialog = ObservationsDialogFragment.newInstance(id,mapObservations)
+        val dialog = ObservationsDialogFragment.newInstance(id,this)
         dialog.show(childFragmentManager, "dialog")
         dialog.listener = object : ObservationsDialogFragment.Callback{
-            override fun onClick(id:String,list:String) {
-                mapObservations.getOrPut(id) { arrayListOf() }.add(list)
+            override fun onClick(id:String,count:Int) {
                 for(btn in btnObs)
                 {
-                    if(btn.tag == id)
+                    if (btn.tag==id)
                     {
-                        when(val count = mapObservations[id]?.size)
+                        when(count)
                         {
-                            1-> "$count Observación".also { btn.text = it }
-                            else -> "$count Observaciones".also { btn.text = it }
+                            1-> ("$count Observacion").also { btn.text = it }
+                            else -> ("$count Observaciones").also { btn.text = it }
                         }
                     }
-
                 }
             }
         }

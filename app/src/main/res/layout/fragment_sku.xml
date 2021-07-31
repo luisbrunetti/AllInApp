@@ -95,6 +95,28 @@
                     android:layout_height="match_parent">
 
                     <Button
+                        android:id="@+id/btnSaveSku"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginBottom="120dp"
+                        android:background="@drawable/bg_blue_button_reports"
+                        android:gravity="center"
+                        android:paddingStart="36dp"
+                        android:paddingEnd="36dp"
+                        android:text="Guardar"
+                        android:textAllCaps="false"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+                        app:layout_constraintVertical_bias="0.0" />
+
+                    <Button
                         android:id="@+id/btnFilterCat"
                         android:layout_width="wrap_content"
                         android:layout_height="50dp"
@@ -313,6 +335,7 @@
                     </ScrollView>
 
                     <LinearLayout
+                        android:id="@+id/linearLayout"
                         android:layout_width="match_parent"
                         android:layout_height="90dp"
                         android:orientation="horizontal"
@@ -355,7 +378,6 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
-                                android:text="1 de 5 de 77 entradas"
                                 android:textColor="@color/colorTextAll"
                                 android:textSize="16sp" />
                         </LinearLayout>
