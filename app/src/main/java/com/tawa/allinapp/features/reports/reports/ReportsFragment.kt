@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.EditText
+import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.appbar.AppBarLayout
@@ -20,6 +21,7 @@ import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.functional.Failure
 import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.FragmentReportsBinding
+import com.tawa.allinapp.models.Report
 import java.util.*
 import javax.inject.Inject
 
@@ -28,7 +30,8 @@ class ReportsFragment : BaseFragment() {
 
     private lateinit var reportsViewModel: ReportsViewModel
     private lateinit var binding: FragmentReportsBinding
-
+    private  var  typeUser = ""
+    private  lateinit var  listReports:List<Report>
     @Inject lateinit var reportsAdapter: ReportsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,10 +59,24 @@ class ReportsFragment : BaseFragment() {
         binding = FragmentReportsBinding.inflate(inflater)
         reportsViewModel = viewModel(viewModelFactory) {
             observe(reports, { it?.let {
-                reportsAdapter.setData(it)
+                if(typeUser=="MERCADERISTA")
+                {
+                    listReports = it.filter { it.reportName!="ESTATUS DE USUARIO" }
+                    reportsAdapter.setData(listReports)
+                }
+                else
+                    reportsAdapter.setData(it)
+
             } })
             observe(pvName, { it?.let {
                 binding.tvHeaderPV.text = it
+            } })
+            observe(userType, { it?.let {
+                if(it.isNotEmpty())
+                {
+                    typeUser = it
+                    reportsViewModel.getReports()
+                }
             } })
             failure(failure, { it?.let {
                 hideProgressDialog()
@@ -70,7 +87,6 @@ class ReportsFragment : BaseFragment() {
                 }
             }})
         }
-        reportsViewModel.getReports()
         reportsViewModel.getPVName()
 
         binding.etDate.setOnClickListener{

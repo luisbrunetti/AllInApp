@@ -40,6 +40,7 @@ interface ReportsRepository {
     fun addSku(idReportPdv:String,idPv:String,idCompany: String,lines: List<Lines>):Either<Failure, Boolean>
     fun updateSkuDetail(idSkuDetail: String,stock:Boolean,exhibition:Boolean,price:Float):Either<Failure, Boolean>
     fun updateStateReport(idReport:String,state:String):Either<Failure, Boolean>
+    fun getUserType():Either<Failure, String>
 
     class Network
     @Inject constructor(private val networkHandler: NetworkHandler,
@@ -335,6 +336,14 @@ interface ReportsRepository {
             return try {
                 reportsDataSource.updateStateReports("60dc7d0c11bb190a40e28e87",state)
                 Either.Right(true)
+            }catch (e:Exception){
+                Either.Left(Failure.DefaultError(e.message!!))
+            }
+        }
+
+        override fun getUserType(): Either<Failure, String> {
+            return try {
+                Either.Right(prefs.role?:"")
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))
             }

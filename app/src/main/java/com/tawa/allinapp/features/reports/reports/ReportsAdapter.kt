@@ -3,6 +3,7 @@ package com.tawa.allinapp.features.reports.reports
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.tawa.allinapp.R
 import com.tawa.allinapp.core.extensions.loadFromResource
@@ -41,10 +42,19 @@ class ReportsAdapter
                     if (report.state == "En proceso") binding.ivIconReport.loadFromResource(R.drawable.ic_inprocess)
                 }
 
-                "REPORTE FOTOGRAFICO" -> binding.ivIconReport.loadFromResource(R.drawable.ic_noinit)
+                "REPORTE FOTOGRAFICO" -> {
+                    binding.ivIconReport.loadFromResource(R.drawable.ic_report_nostate)
+                    binding.tvPVSub.isVisible = false
+                }
 
-                "ESTATUS DE USUARIO"-> binding.ivIconReport.loadFromResource(R.drawable.ic_noinit)
-                "QUIEBRES Y SKU" -> binding.ivIconReport.loadFromResource(R.drawable.ic_noinit)
+                "ESTATUS DE USUARIO"-> {
+                    binding.ivIconReport.loadFromResource(R.drawable.ic_report_nostate)
+                    binding.tvPVSub.isVisible = false
+                }
+                "QUIEBRES Y SKU" -> {
+                    binding.ivIconReport.loadFromResource(R.drawable.ic_report_nostate)
+                    binding.tvPVSub.isVisible = false
+                }
                 "AUDIO" ->{
                     binding.tvPVSub.text = report.state
                     binding.ivIconReport.loadFromResource(R.drawable.ic_noinit)}

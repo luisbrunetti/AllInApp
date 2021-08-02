@@ -7,7 +7,7 @@ import retrofit2.http.*
 
 interface ReportsApi {
 
-    @GET("https://run.mocky.io/v3/85d0d838-c388-485f-8213-87039023c0c3/{id_empr}")
+    @GET("https://run.mocky.io/v3/cfb6570c-32f8-42ff-b511-40531381571d/{id_empr}")
     fun getReports(@Path("id_empr") company:String): Call<BaseResponse<List<ReportsRemote.Response>>>
 
     //TODO make multiparts with the real service

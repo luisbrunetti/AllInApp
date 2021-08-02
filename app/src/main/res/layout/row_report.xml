@@ -27,6 +27,7 @@
             android:layout_marginEnd="5dp"
             android:textColor="@color/colorTextAll"
             android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/tvPVSub"
             app:layout_constraintEnd_toStartOf="@+id/ivArrow"
             app:layout_constraintStart_toEndOf="@+id/ivIconReport"
             app:layout_constraintTop_toTopOf="parent" />
@@ -39,6 +40,8 @@
             android:layout_marginEnd="5dp"
             android:textColor="@color/colorTextAll"
             android:textSize="12sp"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/ivArrow"
             app:layout_constraintStart_toEndOf="@+id/ivIconReport"
             app:layout_constraintTop_toBottomOf="@+id/tvPVName" />
