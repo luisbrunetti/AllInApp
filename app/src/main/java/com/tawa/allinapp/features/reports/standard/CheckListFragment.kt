@@ -395,20 +395,6 @@ class CheckListFragment: BaseFragment() {
         }
     }
 
-    private fun getImageUri(inContext: Context, inImage: Bitmap?): Uri? {
-        val image = Bitmap.createScaledBitmap(inImage!!, 1080, 1920, true)
-        val path = MediaStore.Images.Media.insertImage(inContext.contentResolver, image, "picture", null)
-        val cursor = requireActivity().contentResolver.query(
-            Uri.parse(path),
-            Array(1) {android.provider.MediaStore.Images.ImageColumns.DATA},
-            null, null, null)
-        cursor?.moveToFirst()
-        val photoPath = cursor?.getString(0)
-        val file = File(photoPath)
-        urlImage = file.toString()
-        return Uri.parse(path)
-    }
-
     @Throws(IOException::class)
     private fun createImageFile(): File {
         // Create an image file name
@@ -420,7 +406,6 @@ class CheckListFragment: BaseFragment() {
             ".jpg", /* suffix */
             storageDir      /* directory */
         )
-
         mCurrentPhotoPath = image.absolutePath
         return image
     }
@@ -433,21 +418,11 @@ class CheckListFragment: BaseFragment() {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == CAPTURE_IMAGE_REQUEST && resultCode == Activity.RESULT_OK) {
-            val myBitmap = BitmapFactory.decodeFile(photoFile!!.absolutePath)
-            val height =1920
-            val width = 1080
-            val uri = getImageUri(activity?.applicationContext!!, myBitmap)
-            val request = ImageRequestBuilder.newBuilderWithSource(uri)
-                .setResizeOptions(ResizeOptions(width, height))
-                .build()
-            val controller = Fresco.newDraweeControllerBuilder()
-                .setOldController(binding.checkListPhoto?.controller)
-                .setImageRequest(request)
-                .build()
-            binding.checkListPhoto?.controller = controller
             binding.checkListPhoto.isVisible = true
             binding.deletePhoto.isVisible = true
             urlImage = photoFile!!.absolutePath
+            val imageUri = Uri.fromFile(File(urlImage))
+            binding.checkListPhoto.setImageURI(imageUri,"")
             statePhoto = 1
         } else {
             displayMessage(requireContext(), "Request cancelled or something went wrong.")
