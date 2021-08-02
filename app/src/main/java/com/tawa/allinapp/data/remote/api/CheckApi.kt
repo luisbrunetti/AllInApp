@@ -16,5 +16,5 @@ interface CheckApi {
     fun sendCheckOut(@Body request:CheckRemote.Request): Call<BaseResponse<CheckRemote.Response>>
 
     @POST("/api/asistencia/masivo/add")
-    fun syncChecks(@Header("Authorization") token: String, @Body request:List<CheckRemote.Request>): Call<BaseResponse<CheckRemote.Response>>
+    fun syncChecks(@Header("Authorization") token: String, @Body request:List<CheckRemote.Request>): Call<BaseResponse<List<CheckRemote.Response>>>
 }

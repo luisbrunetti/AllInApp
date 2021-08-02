@@ -20,9 +20,8 @@ interface ReportsApi {
     @GET("/api/group/user/list/1")
     fun getReportStatus(@Header("Authorization") token:String): Call<BaseResponse<List<ReportsStatusRemote.Response>>>
 
-    @GET("/api/fotografico/masivo/add")
-    fun syncPhotoReports(@Header("Authorization") token:String,@Body request:List<ReportsPhotoRemote.Request>): Call<BaseResponse<List<ReportsPhotoRemote.Response>>>
-
+    @POST("/api/fotografico/masivo/add")
+    fun syncPhotoReports(@Header("Authorization") token:String, @Body request:List<ReportsPhotoRemote.Request>): Call<BaseResponse<List<ReportsPhotoRemote.Response>>>
 
     @PUT("/api/user/estado")
     fun updateStatus(@Header("Authorization") token: String, @Body  request: UpdateStatusRemote.Request):Call<BaseResponse<UpdateStatusRemote.Response>>

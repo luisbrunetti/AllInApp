@@ -27,6 +27,7 @@ import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.functional.Failure
 import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.FragmentPictureBinding
+import com.tawa.allinapp.features.reports.sku.ConfirmDialogFragment
 import com.tawa.allinapp.models.PhotoReport
 import java.util.*
 import javax.inject.Inject
@@ -71,7 +72,11 @@ class PictureFragment : BaseFragment() {
         binding = FragmentPictureBinding.inflate(inflater)
         pictureViewModel = viewModel(viewModelFactory){
             observe(successReport,{ it?.let {
-                hideProgressDialog()
+                if(it){
+                    hideProgressDialog()
+                    ConfirmDialogFragment().show(childFragmentManager, "dialog")
+                    //MessageDialogFragment.newInstance("", title = R.string.ok_save_report, icon = R.drawable.ic_checkin).show(childFragmentManager, "dialog")
+                }
             }})
             failure(failure, { it?.let {
                 hideProgressDialog()

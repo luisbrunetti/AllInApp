@@ -76,10 +76,14 @@ class InitFragment : BaseFragment() {
                 initViewModel.getCheckMode()
             } })
             observe(successSyncChecks, { it?.let {
-
+                if (it) initViewModel.syncPhotoReport()
             } })
             observe(successSyncPhotoReports, { it?.let {
-
+                //TODO sync reports
+                if(it){
+                    hideProgressDialog()
+                    MessageDialogFragment.newInstance(message = "", title = R.string.end_sync,icon = R.drawable.ic_checkin).show(childFragmentManager, "dialog")
+                }
             } })
             observe(userName, { it?.let {
                 binding.tvHeaderName.text = it
@@ -106,8 +110,8 @@ class InitFragment : BaseFragment() {
         }
 
         binding.btSync.setOnClickListener {
+            showProgressDialog()
             initViewModel.syncCheck()
-            initViewModel.syncPhotoReport()
         }
         binding.viewBtnRoutes.setOnClickListener {
             findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationRoutes())
