@@ -10,6 +10,8 @@
     <string name="title_calendar">Calendario</string>
     <string name="title_others">Otros</string>
 
+    <string name="end_sync">Sincronizacion exitosa</string>
+    <string name="ok_save_report">Se ha guardado con exito el reporte</string>
     <string name="error_login">Usuario y/o Contrasena incorrecta</string>
     <string name="ok_login">Login correcto</string>
     <string name="error_network">Error de red</string>

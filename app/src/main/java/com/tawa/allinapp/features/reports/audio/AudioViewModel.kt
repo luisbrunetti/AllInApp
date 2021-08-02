@@ -29,15 +29,13 @@ class AudioViewModel
 
     private var recorder: MediaRecorder? = null
     private var player: MediaPlayer? = null
-    private var fileName: String = ""
 
     private val _recording = MutableLiveData(false)
     val recording: LiveData<Boolean>
         get()= _recording
 
     private val _record = MutableLiveData("")
-    val record: LiveData<String>
-        get()= _record
+    val record = _record
 
     private val _successRecord = MutableLiveData(false)
     val successRecord: LiveData<Boolean>
@@ -53,10 +51,9 @@ class AudioViewModel
     private fun startPlaying() {
         player = MediaPlayer().apply {
             try {
-                setDataSource(fileName)
+                setDataSource(_record.value)
                 prepare()
                 start()
-                _record.value = fileName
             } catch (e: IOException) {
                 Log.e("PLAYING ERROR", "prepare() failed")
             }
@@ -72,9 +69,9 @@ class AudioViewModel
             val outputFolder = File(Environment.getExternalStorageDirectory().toString() + "/audios/")
             val output = File(outputFolder.absolutePath +"out" + Date().time + ".3gpp")
             Log.i("DIRECTORIO", output.absolutePath)
-            fileName = output.absolutePath
+            _record.value = output.absolutePath
 
-            setOutputFile(fileName)
+            setOutputFile(_record.value)
             setMaxDuration(3000)
 
             try {

@@ -113,15 +113,37 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/tvLabelRecordAudio" />
 
-                    <androidx.recyclerview.widget.RecyclerView
+                    <androidx.appcompat.widget.LinearLayoutCompat
                         android:id="@+id/rvAudioRecord"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
+                        android:orientation="horizontal"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/btTakeAudioRecord"
-                        tools:itemCount="5" />
+                        app:layout_constraintTop_toBottomOf="@+id/btTakeAudioRecord">
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:src="@drawable/ic_clip"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tvRecord"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_gravity="center"
+                            android:text="@={viewModel.record}"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:src="@drawable/ic_close"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
 
                     <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/btSavePictures"

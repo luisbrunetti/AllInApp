@@ -46,7 +46,7 @@ class MessageDialogFragment : DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         arguments?.let { bundle ->
             bundle.getInt(TITLE).let { binding.tvTitle.text = context?.getString(it) }
-            bundle.getString(MESSAGE)?.let { binding.tvMessage.text = it }
+            bundle.getString(MESSAGE)?.let { if (it.isNotEmpty()) binding.tvMessage.text = it else binding.tvMessage.visibility = View.INVISIBLE }
             bundle.getInt(BUTTON).let { binding.btAccept.text = context?.getString(it) }
             bundle.getInt(ICON).let {
                 if(it == NO_ICON) binding.ivIcon.invisible() else {
