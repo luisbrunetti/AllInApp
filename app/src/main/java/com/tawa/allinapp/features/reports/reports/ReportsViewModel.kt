@@ -13,6 +13,7 @@ class ReportsViewModel
 @Inject constructor (
     private val getReports: GetReports,
     private val getDescPV: GetDescPV,
+    private val getUserType: GetUserType
 ):BaseViewModel() {
 
     private val _reports = MutableLiveData<List<Report>>()
@@ -23,9 +24,19 @@ class ReportsViewModel
     val pvName:LiveData<String>
         get() = _pvName
 
+    private val _userType = MutableLiveData("")
+    val userType:LiveData<String>
+        get() = _userType
+
+    init {
+        getUserType()
+    }
+
     fun getReports() = getReports(UseCase.None()) { it.either(::handleFailure, ::handleReports) }
 
     fun getPVName() = getDescPV(UseCase.None()) { it.either(::handleFailure, ::handleReportName) }
+
+    private fun getUserType() = getUserType(UseCase.None()) { it.either(::handleFailure, ::handleGetUserType) }
 
     private fun handleReports(reports: List<Report>) {
         _reports.value = reports
@@ -33,6 +44,10 @@ class ReportsViewModel
 
     private fun handleReportName(reports: String) {
         _pvName.value = reports
+    }
+
+    private fun handleGetUserType(user :String) {
+        _userType.value = user
     }
 
 }
