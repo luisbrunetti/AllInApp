@@ -5,6 +5,7 @@ import android.app.AlertDialog
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
@@ -17,6 +18,7 @@ import android.widget.*
 import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
+import androidx.core.view.isVisible
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.imagepipeline.common.ResizeOptions
 import com.facebook.imagepipeline.request.ImageRequestBuilder
@@ -36,18 +38,32 @@ import com.tawa.allinapp.databinding.FragmentChecklistBinding
 import com.tawa.allinapp.models.Answer
 import com.tawa.allinapp.models.Question
 import java.io.File
+import android.os.Environment
+import android.graphics.BitmapFactory
+import androidx.core.app.ActivityCompat
+import androidx.core.content.FileProvider
+import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.*
+import java.util.jar.Manifest
+import kotlin.collections.ArrayList
 
 
 class CheckListFragment: BaseFragment() {
 
     private lateinit var binding: FragmentChecklistBinding
     private val TAKE_PHOTO_REQUEST = 101
-    private var mCurrentPhotoPath: String = ""
+    var photoFile: File? = null
+    val CAPTURE_IMAGE_REQUEST = 1
+    var mCurrentPhotoPath: String? = null
     private lateinit var checkListViewModel: CheckListViewModel
     private var  listRadioButton = ArrayList<RadioButton>()
     private var  listCheckBox = ArrayList<CheckBox>()
     private var  listInput = ArrayList<EditText>()
     private lateinit var  listInit:List<Question>
+    private var state:Boolean = false
+    private var verify:Boolean = false
+    private  var idPhoto = ""
 
     val params = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
     var urlImage = ""
@@ -66,6 +82,17 @@ class CheckListFragment: BaseFragment() {
         //Toast.makeText(context,id,Toast.LENGTH_SHORT).show()
 
         checkListViewModel = viewModel(viewModelFactory) {
+            observe(stateCheckList,{
+                it?.let {
+                    if(type.value==1)
+                    {
+                        state = it[0]
+                        verify = it[1]
+                        checkListViewModel.getQuestions()
+                    }
+
+                }
+            })
             observe(questions, { it?.let {
                 listInit = it.sortedBy { it.order }
                 for(list in listInit)
@@ -84,6 +111,26 @@ class CheckListFragment: BaseFragment() {
             observe(answersInput, { it?.let {
                 if(orderInput.value!! >0)
                     addAnswersInput(it,binding.contentCheckList,nameQuestion.value!!,orderInput.value!!)
+
+            } })
+
+            observe(answersPhoto, { it?.let {
+                for(photo in it)
+                {
+                    idPhoto = photo.id
+                    if(state)
+                    {
+                        if(photo.data!="VACIO" && photo.data!="")
+                        {
+                            binding.checkListPhoto.isVisible = true
+                            binding.deletePhoto.isVisible = true
+                            urlImage = photo.data
+                            val imageUri = Uri.fromFile(File(photo.data))
+                            binding.checkListPhoto.setImageURI(imageUri,"")
+                        }
+
+                    }
+                }
             } })
             observe(stateRadio, { it?.let {
                 if(it)
@@ -99,21 +146,68 @@ class CheckListFragment: BaseFragment() {
             } })
         }
 
-        checkListViewModel.getQuestions()
         binding.btnTakePhoto.setOnClickListener{
            validatePermissions()
+          //captureImage()
         }
         binding.deletePhoto.setOnClickListener{
             binding.checkListPhoto.visibility = View.GONE
             binding.deletePhoto.visibility = View.GONE
             statePhoto = 0
+            urlImage=""
         }
         binding.btnSaveReport.setOnClickListener{
-           findElements()
-            Toast.makeText(context,urlImage,Toast.LENGTH_SHORT).show()
+            //checkListViewModel.updateState(true)
+            if(!verify) {
+                checkListViewModel.updateState(true, true)
+                checkListViewModel.updateStateReport("", "En proceso")
+                for (radio in listRadioButton) {
+                    val tag = radio.tag as ArrayList<String>
+                    checkListViewModel.updateAnswers(tag[0], radio.isChecked.toString())
+                }
+                for (check in listCheckBox) {
+                    val tag = check.tag as ArrayList<String>
+                    checkListViewModel.updateAnswers(tag[0], check.isChecked.toString())
+                }
+                for (input in listInput) {
+                    val tag = input.tag as ArrayList<String>
+                    checkListViewModel.updateAnswers(tag[0], input.text.toString())
+
+                }
+                checkListViewModel.updateAnswers(idPhoto, urlImage)
+
+                findElements()
+                activity?.onBackPressed()
+            }
+            else
+                Toast.makeText(context,"Ya se registró",Toast.LENGTH_SHORT).show()
         }
         binding.btnBackCheckList.setOnClickListener{
             activity?.onBackPressed()
+        }
+        binding.btnBr.setOnClickListener {
+            if(!verify) {
+                checkListViewModel.updateState(true, false)
+                checkListViewModel.updateStateReport("", "En proceso")
+                for (radio in listRadioButton) {
+                    val tag = radio.tag as ArrayList<String>
+                    checkListViewModel.updateAnswers(tag[0], radio.isChecked.toString())
+                }
+                for (check in listCheckBox) {
+                    val tag = check.tag as ArrayList<String>
+                    checkListViewModel.updateAnswers(tag[0], check.isChecked.toString())
+                }
+                for (input in listInput) {
+                    val tag = input.tag as ArrayList<String>
+                    checkListViewModel.updateAnswers(tag[0], input.text.toString())
+
+                }
+                checkListViewModel.updateAnswers(idPhoto, urlImage)
+
+                activity?.onBackPressed()
+            }
+            else
+                Toast.makeText(context,"Ya se registró",Toast.LENGTH_SHORT).show()
         }
         return binding.root
     }
@@ -130,7 +224,7 @@ class CheckListFragment: BaseFragment() {
             if(radio.isChecked)
             {
                 val tag = radio.tag as ArrayList<String>
-                checkListViewModel.setReadyAnswers(tag[1],tag[2],tag[0],radio.text.toString())
+                checkListViewModel.setReadyAnswers(tag[1],tag[2],tag[0],radio.text.toString(),urlImage)
             }
         }
     }
@@ -141,7 +235,7 @@ class CheckListFragment: BaseFragment() {
             if(check.isChecked)
             {
                 val tag = check.tag as ArrayList<String>
-                checkListViewModel.setReadyAnswers(tag[1],tag[2],tag[0],check.text.toString())
+                checkListViewModel.setReadyAnswers(tag[1],tag[2],tag[0],check.text.toString(),urlImage)
             }
         }
     }
@@ -150,7 +244,7 @@ class CheckListFragment: BaseFragment() {
         for(input in listInput)
         {
             val tag = input.tag as ArrayList<String>
-            checkListViewModel.setReadyAnswers(tag[1],tag[2],tag[0],input.text.toString())
+            checkListViewModel.setReadyAnswers(tag[1],tag[2],tag[0],input.text.toString(),urlImage)
 
         }
     }
@@ -162,6 +256,8 @@ class CheckListFragment: BaseFragment() {
                     checkListViewModel.getAnswersCheck(id,questionName,order)
                 if(type=="INPUT")
                     checkListViewModel.getAnswersInput(id,questionName,order)
+                if(type=="FOTO")
+                    checkListViewModel.getAnswersPhoto(id)
     }
 
     private fun addAnswersRadio(listAnswers:List<Answer>, linear: LinearLayout, nameQ:String,order: Int){
@@ -184,6 +280,8 @@ class CheckListFragment: BaseFragment() {
                 listTag.add(list.idQuestion)
                 listTag.add(nameQ)
                 radioButton.tag = listTag
+                if(state)
+                    radioButton.isChecked = list.data.toBoolean()
                 listRadioButton.add(radioButton)
                 radioGroup.addView(radioButton)
             }
@@ -202,7 +300,6 @@ class CheckListFragment: BaseFragment() {
             textView.textSize = 16f
             textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_dark))
             linearL.addView(textView)
-
             for(list in listAnswers)
             {
                 val checkBox  = CheckBox(context)
@@ -212,6 +309,9 @@ class CheckListFragment: BaseFragment() {
                 listTag.add(list.idQuestion)
                 listTag.add(nameQ)
                 checkBox.tag = listTag
+                if(state)
+                    checkBox.isChecked=list.data.toBoolean()
+
                 listCheckBox.add(checkBox)
                 linearL.addView(checkBox)
             }
@@ -242,6 +342,8 @@ class CheckListFragment: BaseFragment() {
             listTag.add(list.idQuestion)
             listTag.add(nameQ)
             editText.tag = listTag
+            if(state)
+                editText.setText(list.data)
             listInput.add(editText)
             linearL.addView(editText)
         }
@@ -273,39 +375,28 @@ class CheckListFragment: BaseFragment() {
 
     private fun launchCamera() {
 
-        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        startActivityForResult(intent, TAKE_PHOTO_REQUEST)
-
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int,
-                                  data: Intent?) {
-        if (resultCode == Activity.RESULT_OK
-            && requestCode == TAKE_PHOTO_REQUEST) {
-            //processCapturedPhoto()
-            val bitmap = data!!.extras?.get("data") as Bitmap
-            val uri = getImageUri(activity?.applicationContext!!, bitmap)
-            val height =200
-            val width = 300
-            val request = ImageRequestBuilder.newBuilderWithSource(uri)
-                .setResizeOptions(ResizeOptions(width, height))
-                .build()
-            val controller = Fresco.newDraweeControllerBuilder()
-                .setOldController(binding.checkListPhoto?.controller)
-                .setImageRequest(request)
-                .build()
-            binding.checkListPhoto?.controller = controller
-            //Toast.makeText(context, file.toString(), Toast.LENGTH_SHORT).show()
-            binding.checkListPhoto.visibility = View.VISIBLE
-            binding.deletePhoto.visibility = View.VISIBLE
-            statePhoto = 1
-        } else {
-            super.onActivityResult(requestCode, resultCode, data)
+        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        // Create the File where the photo should go
+        try {
+            photoFile = createImageFile()
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                val photoURI = FileProvider.getUriForFile(
+                    requireContext(),
+                    "com.tawa.captureimage.fileprovider",
+                    photoFile!!
+                )
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+                startActivityForResult(takePictureIntent, CAPTURE_IMAGE_REQUEST)
+            }
+        } catch (ex: Exception) {
+            // Error occurred while creating the File
+            displayMessage(requireContext(), ex.message.toString())
         }
     }
 
     private fun getImageUri(inContext: Context, inImage: Bitmap?): Uri? {
-        val image = Bitmap.createScaledBitmap(inImage!!, 300, 300, true)
+        val image = Bitmap.createScaledBitmap(inImage!!, 1080, 1920, true)
         val path = MediaStore.Images.Media.insertImage(inContext.contentResolver, image, "picture", null)
         val cursor = requireActivity().contentResolver.query(
             Uri.parse(path),
@@ -318,29 +409,49 @@ class CheckListFragment: BaseFragment() {
         return Uri.parse(path)
     }
 
-    private fun processCapturedPhoto() {
-        val cursor = requireActivity().contentResolver.query(
-            Uri.parse(mCurrentPhotoPath),
-            Array(1) {android.provider.MediaStore.Images.ImageColumns.DATA},
-            null, null, null)
-        cursor?.moveToFirst()
-        val photoPath = cursor?.getString(0)
-        cursor?.close()
-        val file = File(photoPath)
-        val uri = Uri.fromFile(file)
+    @Throws(IOException::class)
+    private fun createImageFile(): File {
+        // Create an image file name
+        val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+        val imageFileName = "JPEG_" + timeStamp + "_"
+        val storageDir = requireActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        val image = File.createTempFile(
+            imageFileName, /* prefix */
+            ".jpg", /* suffix */
+            storageDir      /* directory */
+        )
 
-        val height =200
-        val width = 300
+        mCurrentPhotoPath = image.absolutePath
+        return image
+    }
 
-        val request = ImageRequestBuilder.newBuilderWithSource(uri)
-            .setResizeOptions(ResizeOptions(width, height))
-            .build()
-        val controller = Fresco.newDraweeControllerBuilder()
-            .setOldController(binding.checkListPhoto?.controller)
-            .setImageRequest(request)
-            .build()
-        binding.checkListPhoto?.controller = controller
-        Toast.makeText(context, file.toString(), Toast.LENGTH_SHORT).show()
+    private fun displayMessage(context: Context, message: String) {
+        Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == CAPTURE_IMAGE_REQUEST && resultCode == Activity.RESULT_OK) {
+            val myBitmap = BitmapFactory.decodeFile(photoFile!!.absolutePath)
+            val height =1920
+            val width = 1080
+            val uri = getImageUri(activity?.applicationContext!!, myBitmap)
+            val request = ImageRequestBuilder.newBuilderWithSource(uri)
+                .setResizeOptions(ResizeOptions(width, height))
+                .build()
+            val controller = Fresco.newDraweeControllerBuilder()
+                .setOldController(binding.checkListPhoto?.controller)
+                .setImageRequest(request)
+                .build()
+            binding.checkListPhoto?.controller = controller
+            binding.checkListPhoto.isVisible = true
+            binding.deletePhoto.isVisible = true
+            urlImage = photoFile!!.absolutePath
+            statePhoto = 1
+        } else {
+            displayMessage(requireContext(), "Request cancelled or something went wrong.")
+        }
     }
 
 

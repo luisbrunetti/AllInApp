@@ -17,6 +17,6 @@ class ReportsRemote {
         @SerializedName("fe_creacion") val feCreate: String?,
 
     ){
-        fun toModel() = ReportModel(id?:"",reportName?:"",idCompany?:"",idUser?:"",idUserMod?:"",feMod?:"",feCreate?:"")
+        fun toModel() = ReportModel(id?:"",reportName?:"",idCompany?:"",idUser?:"",idUserMod?:"",feMod?:"",feCreate?:"","No iniciado")
     }
 }

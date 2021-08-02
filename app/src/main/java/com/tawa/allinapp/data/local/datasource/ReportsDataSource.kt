@@ -3,6 +3,7 @@ package com.tawa.allinapp.data.local.datasource
 import com.tawa.allinapp.data.local.dao.ParametersDao
 import com.tawa.allinapp.data.local.dao.ReportsDao
 import com.tawa.allinapp.data.local.models.*
+import com.tawa.allinapp.features.init.usecase.GetIdPV
 import com.tawa.allinapp.models.Sku
 import javax.inject.Inject
 
@@ -14,6 +15,11 @@ class ReportsDataSource @Inject constructor(private val reportsDao: ReportsDao){
 
     fun getReports():List<ReportModel> {
         return reportsDao.getReports()
+    }
+
+    fun updateStateReports(idReport:String,state:String)
+    {
+        reportsDao.updateStateReports(idReport,state)
     }
 
     fun insertPhotoReport(reportModel: PhotoReportModel){
@@ -40,8 +46,8 @@ class ReportsDataSource @Inject constructor(private val reportsDao: ReportsDao){
         return reportsDao.getSkuDetail(idSku)
     }
 
-    fun getSku():List<SkuModel>{
-        return reportsDao.getSku()
+    fun getSku(idPV: String):List<SkuModel>{
+        return reportsDao.getSku(idPV)
     }
 
     fun insertSkuObservation(skuObservationModel: SkuObservationModel){

@@ -20,6 +20,8 @@ class Prefs
         const val SCHEDULE_ID = "scheduleId"
         const val PV_NAME = "pv_name"
         const val DATA_SKU = "data_sku"
+        const val STATE_CHECKLIST = "stateChecklist"
+        const val VERIFY_CHECKLIST = "verifyChecklist"
     }
 
     private val prefs  = context.getSharedPreferences(FILENAME, Context.MODE_PRIVATE)
@@ -66,6 +68,14 @@ class Prefs
     var session:Boolean
         get() = prefs.getBoolean(SESSION,false)
         set(value) = prefs.edit().putBoolean(SESSION,value).apply()
+
+    var stateChecklist:Boolean
+        get() = prefs.getBoolean(STATE_CHECKLIST,false)
+        set(value) = prefs.edit().putBoolean(STATE_CHECKLIST,value).apply()
+
+    var verifyChecklist:Boolean
+        get() = prefs.getBoolean(VERIFY_CHECKLIST,false)
+        set(value) = prefs.edit().putBoolean(VERIFY_CHECKLIST,value).apply()
 
     var dataSku:String?
         get() = prefs.getString(DATA_SKU,"")

@@ -30,4 +30,8 @@ class QuestionsDataSource @Inject constructor(private val questionsDao: Question
     fun getAnswers(idQuestion:String):List<AnswerModel> {
         return questionsDao.getAnswers(idQuestion)
     }
+
+    fun updateAnswers(idAnswer:String,data:String){
+        questionsDao.updateAnswers(idAnswer,data)
+    }
 }

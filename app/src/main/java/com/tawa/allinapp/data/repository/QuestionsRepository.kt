@@ -18,6 +18,9 @@ interface QuestionsRepository {
     fun setReadyAnswers(readyAnswer: ReadyAnswer): Either<Failure, Boolean>
     fun getQuestions(): Either<Failure,List<Question>>
     fun getAnswers(idQuestion: String): Either<Failure,List<Answer>>
+    fun updateAnswers(idAnswer:String,data:String): Either<Failure, Boolean>
+    fun changeState(state: Boolean,verify:Boolean):Either<Failure, Boolean>
+    fun getStateChecklist():Either<Failure, ArrayList<Boolean>>
 
     class Network
     @Inject constructor(private val networkHandler: NetworkHandler,
@@ -76,6 +79,35 @@ interface QuestionsRepository {
         override fun getAnswers(idQuestion:String): Either<Failure, List<Answer>> {
             return try {
                 Either.Right(questionsDataSource.getAnswers(idQuestion).map { it.toView() })
+            }catch (e:Exception){
+                Either.Left(Failure.DefaultError(e.message!!))
+            }
+        }
+
+        override fun updateAnswers(idAnswer: String, data: String): Either<Failure, Boolean> {
+
+            return try {
+                questionsDataSource.updateAnswers(idAnswer,data)
+                Either.Right(true)
+            }catch (e:Exception){
+                Either.Left(Failure.DefaultError(e.message!!))
+            }
+        }
+
+        override fun changeState(state:Boolean,verify: Boolean): Either<Failure, Boolean> {
+            return try {
+                prefs.stateChecklist =state
+                prefs.verifyChecklist = verify
+                Either.Right(true)
+            }catch (e:Exception){
+                Either.Left(Failure.DefaultError(e.message!!))
+            }
+        }
+
+        override fun getStateChecklist(): Either<Failure, ArrayList<Boolean>> {
+            return try {
+                val data  = arrayListOf(prefs.stateChecklist,prefs.verifyChecklist)
+                Either.Right(data)
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))
             }

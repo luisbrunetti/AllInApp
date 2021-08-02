@@ -35,14 +35,21 @@ class ReportsAdapter
 
         fun bind(context: Context, report: Report, clickListener: (Report) -> Unit) {
             when(report.reportName){
-                "CHECK LIST PUNTO DE VENTA" -> binding.ivIconReport.loadFromResource(R.drawable.ic_noinit)
+                "CHECK LIST PUNTO DE VENTA" -> {
+                    binding.tvPVSub.text = report.state
+                    if (report.state == "No iniciado") binding.ivIconReport.loadFromResource(R.drawable.ic_noinit)
+                    if (report.state == "En proceso") binding.ivIconReport.loadFromResource(R.drawable.ic_inprocess)
+                }
+
                 "REPORTE FOTOGRAFICO" -> binding.ivIconReport.loadFromResource(R.drawable.ic_noinit)
+
                 "ESTATUS DE USUARIO"-> binding.ivIconReport.loadFromResource(R.drawable.ic_noinit)
                 "QUIEBRES Y SKU" -> binding.ivIconReport.loadFromResource(R.drawable.ic_noinit)
-                else -> binding.ivIconReport.loadFromResource(R.drawable.ic_noinit)
+                "AUDIO" ->{
+                    binding.tvPVSub.text = report.state
+                    binding.ivIconReport.loadFromResource(R.drawable.ic_noinit)}
             }
             binding.tvPVName.text = report.reportName
-            binding.tvPVSub.text = report.reportName
             binding.clReport.setOnClickListener {
                 clickListener(report)
             }
