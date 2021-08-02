@@ -13,6 +13,7 @@ data class ReadyAnswerModel(
     val nameQuestion: String,
     val idAnswer : String,
     val nameAnswer: String,
+    val img:String
 ){
-    fun toView() = ReadyAnswer(id,idQuestion,nameQuestion,idAnswer,nameAnswer)
+    fun toView() = ReadyAnswer(id,idQuestion,nameQuestion,idAnswer,nameAnswer,img)
 }

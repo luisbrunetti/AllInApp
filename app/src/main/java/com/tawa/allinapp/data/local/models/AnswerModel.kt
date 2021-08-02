@@ -20,6 +20,7 @@ data class AnswerModel(
     val idUserModifier: String?,
     val dateModify: String?,
     val dateCreation: String,
+    val data:String
 ){
-    fun toView() = Answer(id,status,answerName,order,idQuestion,idUserCreator,idUserModifier,dateModify,dateCreation)
+    fun toView() = Answer(id,status,answerName,order,idQuestion,idUserCreator,idUserModifier,dateModify,dateCreation,data)
 }

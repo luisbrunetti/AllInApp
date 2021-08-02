@@ -9,6 +9,7 @@ data class ReadyAnswer(
     val nameQuestion: String,
     val idAnswer : String,
     val nameAnswer: String,
+    val img:String
 ){
-    fun toModel() = ReadyAnswerModel(id,idQuestion,nameQuestion,idAnswer,nameAnswer)
+    fun toModel() = ReadyAnswerModel(id,idQuestion,nameQuestion,idAnswer,nameAnswer,img)
 }

@@ -39,6 +39,7 @@ interface ReportsRepository {
     fun getSkuObservation(idSkuDetail: String):Either<Failure, List<SkuObservation>>
     fun addSku(idReportPdv:String,idPv:String,idCompany: String,lines: List<Lines>):Either<Failure, Boolean>
     fun updateSkuDetail(idSkuDetail: String,stock:Boolean,exhibition:Boolean,price:Float):Either<Failure, Boolean>
+    fun updateStateReport(idReport:String,state:String):Either<Failure, Boolean>
 
     class Network
     @Inject constructor(private val networkHandler: NetworkHandler,
@@ -281,7 +282,7 @@ interface ReportsRepository {
 
         override fun getSku(): Either<Failure, List<Sku>> {
             return try {
-                Either.Right(reportsDataSource.getSku().map { it.toView() })
+                Either.Right(reportsDataSource.getSku("60fb181d8b978fb259e4acb8").map { it.toView() })
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))
             }
@@ -324,6 +325,15 @@ interface ReportsRepository {
         ): Either<Failure, Boolean> {
             return try {
                 reportsDataSource.updateSkuDetail(idSkuDetail,stock,exhibition,price)
+                Either.Right(true)
+            }catch (e:Exception){
+                Either.Left(Failure.DefaultError(e.message!!))
+            }
+        }
+
+        override fun updateStateReport(idReport: String, state: String): Either<Failure, Boolean> {
+            return try {
+                reportsDataSource.updateStateReports("60dc7d0c11bb190a40e28e87",state)
                 Either.Right(true)
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))

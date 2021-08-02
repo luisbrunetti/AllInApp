@@ -25,4 +25,7 @@ interface QuestionsDao {
 
     @Query("SELECT * FROM answers where idQuestion=:idQuestion")
     fun getAnswers(idQuestion : String): List<AnswerModel>
+
+    @Query("UPDATE answers set data=:data where id=:idAnswer")
+    fun updateAnswers(idAnswer:String,data:String)
 }

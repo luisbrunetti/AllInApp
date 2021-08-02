@@ -16,6 +16,9 @@ interface ReportsDao {
     @Query("SELECT * FROM reports")
     fun getReports(): List<ReportModel>
 
+    @Query("UPDATE reports set state=:state WHERE id=:idReport")
+    fun updateStateReports(idReport:String,state:String)
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertPhotoReport(report:PhotoReportModel)
 
@@ -34,8 +37,8 @@ interface ReportsDao {
     @Query("SELECT * FROM sku_detail WHERE idSku=:idSku")
     fun getSkuDetail(idSku:String): List<SkuDetailModel>
 
-    @Query("SELECT * FROM sku")
-    fun getSku(): List<SkuModel>
+    @Query("SELECT * FROM sku WHERE idPv=:idPv")
+    fun getSku(idPv:String): List<SkuModel>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertSkuObservation(skuObservationModel: SkuObservationModel)
