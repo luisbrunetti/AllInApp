@@ -1,6 +1,7 @@
 package com.tawa.allinapp.data.repository
 
 import android.util.Log
+import com.tawa.allinapp.core.dialog.MessageDialogFragment
 import com.tawa.allinapp.core.functional.Either
 import com.tawa.allinapp.core.functional.Failure
 import com.tawa.allinapp.core.functional.NetworkHandler
@@ -102,30 +103,33 @@ interface ReportsRepository {
         }
 
         override fun saveLocalPhotoReport(report:PhotoReport): Either<Failure, Boolean> {
-            return try {
-                reportsDataSource.insertPhotoReport(
-                    PhotoReportModel(
-                        0,
-                        prefs.companyId,
-                        prefs.pvId,
-                        report.before[0],
-                        report.before[1],
-                        report.before[2],
-                        report.before[3],
-                        report.before[4],
-                        report.after[0],
-                        report.after[1],
-                        report.after[2],
-                        report.after[3],
-                        report.after[4],
-                        report.comments,
-                        report.createAt
+            if (prefs.pvId!!.isEmpty())
+                return Either.Left(Failure.DefaultError("Debe seleccionar hacer Checkin en un Punto de Venta"))
+            else
+                return try {
+                    reportsDataSource.insertPhotoReport(
+                        PhotoReportModel(
+                            0,
+                            prefs.companyId,
+                            prefs.pvId,
+                            report.before[0],
+                            report.before[1],
+                            report.before[2],
+                            report.before[3],
+                            report.before[4],
+                            report.after[0],
+                            report.after[1],
+                            report.after[2],
+                            report.after[3],
+                            report.after[4],
+                            report.comments,
+                            report.createAt
+                        )
                     )
-                )
-                Either.Right(true)
-            }catch (e:Exception){
-                Either.Left(Failure.DefaultError(e.message!!))
-            }
+                    Either.Right(true)
+                }catch (e:Exception){
+                    Either.Left(Failure.DefaultError(e.message!!))
+                }
         }
 
         override fun savePhotoReport(): Either<Failure, Boolean> {
