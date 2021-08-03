@@ -34,7 +34,7 @@ class AudioFragment : BaseFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentAudioBinding.inflate(inflater)
         audioViewModel = viewModel(viewModelFactory){
-            observe(record,{ it?.let {
+            observe(file,{ it?.let {
                 Log.w("sdasd",it)
                 //TODO save record in adapter and make play in clickListener
             }})
