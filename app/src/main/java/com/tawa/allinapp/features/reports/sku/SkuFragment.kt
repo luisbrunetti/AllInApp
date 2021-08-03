@@ -52,7 +52,6 @@ class SkuFragment : BaseFragment() {
     private val checkEx = ArrayList<CheckBox>()
     private val edPrice = ArrayList<EditText>()
     private var pageNum = 0
-
     private val mapCheckStock = mutableMapOf<String,Boolean?>()
     private val mapCheckEx = mutableMapOf<String,Boolean?>()
     private val mapEdPrice = mutableMapOf<String,Float?>()
@@ -276,7 +275,7 @@ class SkuFragment : BaseFragment() {
             val editTextPrice = EditText(context)
             edPrice.add(editTextPrice)
             edPrice[flag].hint = "0.00"
-            edPrice[flag].inputType = InputType.TYPE_CLASS_NUMBER
+            edPrice[flag].inputType = InputType.TYPE_NUMBER_FLAG_DECIMAL
             edPrice[flag].setBackgroundResource(R.drawable.rounded)
             edPrice[flag].width = 20f.toDips().toInt()
             edPrice[flag].setPadding(10f.toDips().toInt())
