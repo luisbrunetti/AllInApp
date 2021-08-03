@@ -126,6 +126,7 @@
                         <androidx.appcompat.widget.AppCompatImageView
                             android:src="@drawable/ic_clip"
                             android:layout_width="wrap_content"
+                            android:onClick="@{()->viewModel.doSelectAudio()}"
                             android:layout_height="wrap_content"/>
 
                         <androidx.appcompat.widget.AppCompatTextView
@@ -134,6 +135,7 @@
                             android:layout_marginEnd="8dp"
                             android:layout_gravity="center"
                             android:text="@={viewModel.file}"
+                            android:onClick="@{()->viewModel.doSelectAudio()}"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
 

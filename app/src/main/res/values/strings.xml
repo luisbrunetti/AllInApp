@@ -126,5 +126,5 @@
     <string name="select_audio">Selecciona Audio</string>
     <string name="record">Grabar</string>
     <string name="record_audio">Grabar un audio</string>
-    <string name="logout">Cerrar Session</string>
+    <string name="logout">Cerrar Sesión</string>
 </resources>

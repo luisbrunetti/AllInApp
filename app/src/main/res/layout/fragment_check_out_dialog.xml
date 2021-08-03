@@ -43,7 +43,7 @@
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="24dp"
-                android:src="@drawable/ic_checkin" />
+                android:src="@drawable/ic_iconcheckout" />
 
             <TextView
                 android:id="@+id/textView"
