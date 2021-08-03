@@ -160,7 +160,7 @@ class CheckListFragment: BaseFragment() {
             //checkListViewModel.updateState(true)
             if(!verify) {
                 checkListViewModel.updateState(true, true)
-                checkListViewModel.updateStateReport("", "En proceso")
+                checkListViewModel.updateStateReport("60dc7d0c11bb190a40e28e87", "En proceso")
                 for (radio in listRadioButton) {
                     val tag = radio.tag as ArrayList<String>
                     checkListViewModel.updateAnswers(tag[0], radio.isChecked.toString())
@@ -188,7 +188,7 @@ class CheckListFragment: BaseFragment() {
         binding.btnBr.setOnClickListener {
             if(!verify) {
                 checkListViewModel.updateState(true, false)
-                checkListViewModel.updateStateReport("", "En proceso")
+                checkListViewModel.updateStateReport("60dc7d0c11bb190a40e28e87", "En proceso")
                 for (radio in listRadioButton) {
                     val tag = radio.tag as ArrayList<String>
                     checkListViewModel.updateAnswers(tag[0], radio.isChecked.toString())

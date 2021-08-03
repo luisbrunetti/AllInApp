@@ -21,6 +21,12 @@ import com.tawa.allinapp.models.AudioReport
 import java.io.ByteArrayOutputStream
 import java.io.File
 import android.util.Base64
+import com.tawa.allinapp.core.interactor.UseCase
+import com.tawa.allinapp.features.reports.standard.GetAnswers
+import com.tawa.allinapp.features.reports.standard.SetReadyAnswers
+import com.tawa.allinapp.features.reports.standard.UpdateStateReport
+import com.tawa.allinapp.models.Answer
+import com.tawa.allinapp.models.Question
 import java.io.IOException
 import java.util.*
 import javax.inject.Inject
@@ -28,6 +34,10 @@ import javax.inject.Inject
 class AudioViewModel
 @Inject constructor(
     private val setAudioReport: SetAudioReport,
+    private val getAudioQuestion: GetAudioQuestion,
+    private val getAnswers: GetAnswers,
+    private  val setReadyAnswers: SetReadyAnswers,
+    private  val updateStateReport: UpdateStateReport
 ): BaseViewModel(){
 
     private var recorder: MediaRecorder? = null
@@ -45,9 +55,29 @@ class AudioViewModel
     private val _file = MutableLiveData("")
     val file = _file
 
+    private val _fileString = MutableLiveData("")
+    val fileString = _fileString
+
     private val _successRecord = MutableLiveData(false)
     val successRecord: LiveData<Boolean>
         get()= _successRecord
+
+    private val _successAudio = MutableLiveData<List<Question>>()
+    val successAudio: LiveData<List<Question>>
+        get()= _successAudio
+
+    private val _answersAudio = MutableLiveData<List<Answer>>()
+    val answersAudio: LiveData<List<Answer>>
+        get()= _answersAudio
+
+    private val _successReadyAnswers = MutableLiveData<Boolean>(false)
+    val successReadyAnswers: LiveData<Boolean>
+        get()= _successReadyAnswers
+
+    private val _updateReportState = MutableLiveData<Boolean>(false)
+    val updateReportState: LiveData<Boolean>
+        get()= _updateReportState
+
 
     fun doRecordAudio(){
         if (_recording.value==true)
@@ -86,7 +116,7 @@ class AudioViewModel
             setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
 
             val outputFolder = File(Environment.getExternalStorageDirectory().toString() + "/documents/")
-            output = File(outputFolder.absolutePath +"out" + Date().time + ".3gpp")
+            output = File(outputFolder.absolutePath +"/out" + Date().time + ".3gpp")
             Log.i("DIRECTORIO", output!!.absolutePath)
             _record.value = output!!.absolutePath
 
@@ -107,7 +137,8 @@ class AudioViewModel
         recorder?.apply {
             stop()
             release()
-            _file.value = convertImageFileToBase64(output!!)
+            _file.value = output.toString()
+            _fileString.value = convertImageFileToBase64(output!!)
             _recording.value=false
         }
         recorder = null
@@ -121,5 +152,36 @@ class AudioViewModel
 
     private fun handleReports(reports: Boolean) {
         _successRecord.value = reports
+    }
+
+    fun getAudioQuestions() = getAudioQuestion(UseCase.None()) { it.either(::handleFailure, ::handleAudioQuestions) }
+
+    private fun handleAudioQuestions(audioQuestions: List<Question>) {
+        _successAudio.value = audioQuestions
+    }
+
+    fun getAnswersAudio(idQuestion:String) = getAnswers(GetAnswers.Params(idQuestion)) {
+        it.either(::handleFailure, ::handleAnswersPhoto) }
+
+    private fun handleAnswersPhoto(answers : List<Answer>) {
+        _answersAudio.value = answers
+    }
+
+    fun setReadyAnswers(idQuestion: String,nameQuestion: String,idAnswer:String,nameAnswer: String,img:String) {
+        setReadyAnswers(SetReadyAnswers.Params(0,idQuestion,nameQuestion,idAnswer,nameAnswer,img)) {
+            it.either(::handleFailure, ::handleReadyAnswers)
+        }
+    }
+
+    private fun handleReadyAnswers(success: Boolean) {
+        this._successReadyAnswers.value = success
+    }
+
+    fun updateStateReport(idReport:String,state:String) { updateStateReport(UpdateStateReport.Params(idReport,state)) {
+        it.either(::handleFailure, ::handleUpdateStateReport)
+    }
+    }
+    private fun handleUpdateStateReport(success: Boolean) {
+        this._updateReportState.value = success
     }
 }

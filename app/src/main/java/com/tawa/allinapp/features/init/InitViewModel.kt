@@ -6,6 +6,7 @@ import com.tawa.allinapp.core.interactor.UseCase
 import com.tawa.allinapp.core.platform.BaseViewModel
 import com.tawa.allinapp.features.init.usecase.*
 import com.tawa.allinapp.features.reports.reports.GetReportsRemote
+import com.tawa.allinapp.features.reports.sku.SyncSku
 import com.tawa.allinapp.models.Company
 import com.tawa.allinapp.models.Schedule
 import java.sql.Timestamp
@@ -31,7 +32,12 @@ class InitViewModel
     private val syncCheck: SyncCheck,
     private val syncPhotoReports: SyncPhotoReports,
     private val updateStatus: UpdateStatus,
-    private  val getReportsSku: GetReportsSku
+    private  val getReportsSku: GetReportsSku,
+    private val syncStandardReports: SyncStandardReports,
+    private  val syncSku: SyncSku,
+    private val syncAudio: SyncAudio,
+    private val getAudioRemote: GetAudioRemote
+
 ) : BaseViewModel()  {
     private  val formatter: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
     var timestamp: Timestamp = Timestamp(System.currentTimeMillis())
@@ -137,6 +143,18 @@ class InitViewModel
     private val _successReportsSku = MutableLiveData(false)
     val successReportsSku: LiveData<Boolean>
         get() = _successReportsSku
+
+    private val _successSyncReportStandard = MutableLiveData(false)
+    val successSyncReportStandard : LiveData<Boolean>
+        get() = _successSyncReportStandard
+
+    private val _successSyncAudio = MutableLiveData(false)
+    val successSyncAudio : LiveData<Boolean>
+        get() = _successSyncAudio
+
+    private val _successGetAudioRemote = MutableLiveData(false)
+    val successGetAudioRemote: LiveData<Boolean>
+        get() = _successGetAudioRemote
 
     init {
         startHome()
@@ -265,6 +283,31 @@ class InitViewModel
 
     private fun handleReportsSku(success: Boolean) {
         this._successReportsSku.value = success
+    }
+
+    fun syncStandardReports() = syncStandardReports(UseCase.None()) { it.either(::handleFailure, ::handleSyncStandardReport) }
+
+    private fun handleSyncStandardReport(success:Boolean) {
+        this._successSyncReportStandard.value = success
+    }
+
+    fun syncSku() = syncSku(UseCase.None()) { it.either(::handleFailure, ::handleSyncSku) }
+
+    private fun handleSyncSku(success:Boolean) {
+        this._successSyncReportStandard.value = success
+    }
+
+    fun getAudioRemote() = getAudioRemote(UseCase.None()) {
+        it.either(::handleFailure, ::handleGetAudioRemote) }
+
+    private fun handleGetAudioRemote(success:Boolean) {
+        this._successGetAudioRemote.value = success
+    }
+
+    fun syncAudio() = syncAudio(UseCase.None()) { it.either(::handleFailure, ::handleSyncAudio) }
+
+    private fun handleSyncAudio(success:Boolean) {
+        this._successSyncAudio.value = success
     }
 
 }

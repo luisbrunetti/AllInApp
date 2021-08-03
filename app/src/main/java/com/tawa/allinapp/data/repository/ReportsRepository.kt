@@ -5,12 +5,14 @@ import com.tawa.allinapp.core.functional.Either
 import com.tawa.allinapp.core.functional.Failure
 import com.tawa.allinapp.core.functional.NetworkHandler
 import com.tawa.allinapp.data.local.Prefs
+import com.tawa.allinapp.data.local.datasource.QuestionsDataSource
 import com.tawa.allinapp.data.local.datasource.ReportsDataSource
 import com.tawa.allinapp.data.local.models.PhotoReportModel
 import com.tawa.allinapp.data.local.models.SkuDetailModel
 import com.tawa.allinapp.data.local.models.SkuModel
 import com.tawa.allinapp.data.remote.MovieDetailEntity
 import com.tawa.allinapp.data.remote.entities.ReportsSkuRemote
+import com.tawa.allinapp.data.remote.entities.SynReportStandardRemote
 import com.tawa.allinapp.data.remote.entities.UpdateStatusRemote
 import com.tawa.allinapp.data.remote.service.ReportsService
 import com.tawa.allinapp.models.AudioReport
@@ -37,14 +39,17 @@ interface ReportsRepository {
     fun getReportsSku():Either<Failure, Boolean>
     fun insertSkuObservation(skuObservation: SkuObservation):Either<Failure, Boolean>
     fun getSkuObservation(idSkuDetail: String):Either<Failure, List<SkuObservation>>
-    fun addSku(idReportPdv:String,idPv:String,idCompany: String,lines: List<Lines>):Either<Failure, Boolean>
+    fun syncSku():Either<Failure, Boolean>
     fun updateSkuDetail(idSkuDetail: String,stock:Boolean,exhibition:Boolean,price:Float):Either<Failure, Boolean>
     fun updateStateReport(idReport:String,state:String):Either<Failure, Boolean>
     fun getUserType():Either<Failure, String>
+    fun syncReportStandard():Either<Failure, Boolean>
+    fun syncReportAudio():Either<Failure, Boolean>
 
     class Network
     @Inject constructor(private val networkHandler: NetworkHandler,
                         private val reportsDataSource: ReportsDataSource,
+                        private  val questionsDataSource: QuestionsDataSource,
                         private val prefs: Prefs,
                         private val service: ReportsService,
     ): ReportsRepository{
@@ -289,20 +294,39 @@ interface ReportsRepository {
             }
         }
 
-        override fun addSku(
-            idReportPdv: String,
-            idPv: String,
-            idCompany: String,
-            lines: List<Lines>
-        ): Either<Failure, Boolean> {
+        override fun syncSku(): Either<Failure, Boolean> {
             return when (networkHandler.isConnected) {
                 true ->{
                     try {
-                        val response = service.addSku("Bearer ${prefs.token!!}",ReportsSkuRemote.Request(idReportPdv,idPv,idCompany,lines.map { it.toRequest() })).execute()
+                        var id = ""
+                        var idPv = ""
+                        var idCompany = ""
+                        val linesAnswer = mutableListOf<Lines>()
+                        val skus = reportsDataSource.getSku("60fb181d8b978fb259e4acb8").map { it.toView() }
+                        for (sku in skus)
+                        {
+                            id = sku.id
+                            idPv = sku.idPv
+                            idCompany = sku.idCompany
+                            val skuDetails = reportsDataSource.getSkuDetail(sku.id).map { it.toView() }
+                            for(skuDetail in skuDetails)
+                            {
+                                val observationSku = reportsDataSource.getSkuObservation(skuDetail.id).map { it.toView() }
+                                val observation = arrayListOf<String>()
+                                for(obs in observationSku)
+                                {
+                                    observation.add(obs.observation)
+                                }
+                                linesAnswer.add(Lines(skuDetail.id,skuDetail.stock,skuDetail.exhibition,skuDetail.newPrice,observation))
+                            }
+                        }
+                        Log.d("lineas",linesAnswer.toString())
+                        val response = service.syncSku("Bearer ${prefs.token!!}",ReportsSkuRemote.Request(id,idPv,idCompany,linesAnswer.map { it.toRequest() })).execute()
                         when (response.isSuccessful) {
                             true -> {
                                 response.body()?.let { body ->
                                     if(body.success) {
+                                        Log.d("message",body.message.toString())
                                         Either.Right(true)
                                     }
                                     else Either.Left(Failure.DefaultError(body.message))
@@ -334,7 +358,7 @@ interface ReportsRepository {
 
         override fun updateStateReport(idReport: String, state: String): Either<Failure, Boolean> {
             return try {
-                reportsDataSource.updateStateReports("60dc7d0c11bb190a40e28e87",state)
+                reportsDataSource.updateStateReports(idReport,state)
                 Either.Right(true)
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))
@@ -346,6 +370,100 @@ interface ReportsRepository {
                 Either.Right(prefs.role?:"")
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))
+            }
+        }
+
+        override fun syncReportStandard(): Either<Failure, Boolean> {
+            return when (networkHandler.isConnected) {
+                true ->{
+                    try {
+
+                        val reportData = mutableListOf<ReportStandard>()
+                        var image =""
+                        val questions  = questionsDataSource.getQuestionsByIdReport("60fb1c398b978f3c44e4ad11").map { it.toView() }
+                        for(question in questions)
+                        {
+                           if(question.questionName!="SI TIENE EXHIBIDOR COLOQUE FOTO")
+                           {
+                               val answerData= mutableListOf<AnswerStandard>()
+                               val answers = questionsDataSource.getReadyAnswers(question.id).map { it.toView() }
+                               for(answer in answers)
+                               {
+                                   answerData.add(AnswerStandard(answer.idAnswer,"",answer.nameAnswer))
+                                   if(answer.img.isNotEmpty())
+                                   {
+                                       image = answer.img
+                                   }
+                               }
+                               reportData.add(ReportStandard(question.id,question.questionName,answerData))
+                           }
+                        }
+                        Log.d("report", "$reportData - $image")
+                        val response = service.synStandardReports("Bearer ${prefs.token!!}",SynReportStandardRemote.Request("60fb1c398b978f3c44e4ad11",prefs.pvId?:"",prefs.companyId?:"",reportData.map { it.toRequestRemote() },image)).execute()
+                        when (response.isSuccessful) {
+                            true -> {
+                                response.body()?.let { body ->
+                                    if(body.success) {
+                                        Log.d("success",body.message.toString())
+                                        updateStateReport("60dc7d0c11bb190a40e28e87","Enviado")
+                                        Either.Right(true)
+                                    }
+                                    else Either.Left(Failure.DefaultError(body.message))
+                                }?: Either.Left(Failure.DefaultError(""))
+                            }
+                            false -> Either.Left(Failure.ServerError)
+                        }
+                    } catch (e: Exception) {
+                        Either.Left(Failure.DefaultError(e.message!!))
+                    }
+                }
+                false -> Either.Left(Failure.NetworkConnection)
+            }
+        }
+
+        override fun syncReportAudio(): Either<Failure, Boolean> {
+            return when (networkHandler.isConnected) {
+                true ->{
+                    try {
+
+                        val reportData = mutableListOf<ReportStandard>()
+                        var image =""
+                        val questions  = questionsDataSource.getQuestionsByIdReport("61080334ad6bca97e82d94a9").map { it.toView() }
+                        for(question in questions)
+                        {
+                                val answerData= mutableListOf<AnswerStandard>()
+                                val answers = questionsDataSource.getReadyAnswers(question.id).map { it.toView() }
+                                for(answer in answers)
+                                {
+                                    answerData.add(AnswerStandard(answer.idAnswer,"INGRESE EL AUDIO",answer.nameAnswer))
+                                    if(answer.img.isNotEmpty())
+                                    {
+                                        image = answer.img
+                                    }
+                                }
+                                reportData.add(ReportStandard(question.id,question.questionName,answerData))
+
+                        }
+                        Log.d("reportAudio", "$reportData - $image")
+                        val response = service.synStandardReports("Bearer ${prefs.token!!}",SynReportStandardRemote.Request("61080334ad6bca97e82d94a9",prefs.pvId?:"",prefs.companyId?:"",reportData.map { it.toRequestRemote() },image)).execute()
+                        when (response.isSuccessful) {
+                            true -> {
+                                response.body()?.let { body ->
+                                    if(body.success) {
+                                        Log.d("successAudio",body.message.toString())
+                                        updateStateReport("60dc7d0c11bb190a40e28e91","Enviado")
+                                        Either.Right(true)
+                                    }
+                                    else Either.Left(Failure.DefaultError(body.message))
+                                }?: Either.Left(Failure.DefaultError(""))
+                            }
+                            false -> Either.Left(Failure.ServerError)
+                        }
+                    } catch (e: Exception) {
+                        Either.Left(Failure.DefaultError(e.message!!))
+                    }
+                }
+                false -> Either.Left(Failure.NetworkConnection)
             }
         }
 

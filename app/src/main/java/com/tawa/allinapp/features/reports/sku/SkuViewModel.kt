@@ -3,9 +3,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.tawa.allinapp.core.interactor.UseCase
 import com.tawa.allinapp.core.platform.BaseViewModel
-import com.tawa.allinapp.data.local.models.SkuDetailModel
-import com.tawa.allinapp.features.init.usecase.GetIdCompany
-import com.tawa.allinapp.features.reports.userstatus.GetReportStatus
 import com.tawa.allinapp.models.*
 import javax.inject.Inject
 
@@ -14,7 +11,7 @@ class SkuViewModel
     private val getSkuDetail: GetSkuDetail,
     private val setSkuObservation: SetSkuObservation,
     private val getSkuObservation: GetSkuObservation,
-    private val addSku: AddSku,
+    private val SyncSku: SyncSku,
     private val getSku: GetSku,
     private val updateSkuDetail: UpdateSkuDetail
 ) : BaseViewModel() {
@@ -82,12 +79,12 @@ class SkuViewModel
         _successGetSku.value = sku
     }
 
-    fun addSku(idReportPv:String,idPv:String,idCompany: String,lines: List<Lines>) = addSku(AddSku.Params(idReportPv,idPv,idCompany,lines)) {
+   /* fun addSku(idReportPv:String,idPv:String,idCompany: String,lines: List<Lines>) = SyncSku(SyncSku.Params(idReportPv,idPv,idCompany,lines)) {
         it.either(::handleFailure, ::handleAddSku) }
 
     private fun handleAddSku(success: Boolean) {
         _successAddSku.value = success
-    }
+    }*/
 
     fun setSkuObservation(idSkuDetail: String,observation: String) = setSkuObservation(SetSkuObservation.Params(
         SkuObservation(0,idSkuDetail,observation)

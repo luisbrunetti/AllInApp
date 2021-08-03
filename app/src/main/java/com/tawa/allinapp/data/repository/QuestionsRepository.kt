@@ -15,12 +15,14 @@ import javax.inject.Inject
 
 interface QuestionsRepository {
     fun setQuestions(): Either<Failure, Boolean>
+    fun setAudioQuestion(): Either<Failure, Boolean>
     fun setReadyAnswers(readyAnswer: ReadyAnswer): Either<Failure, Boolean>
     fun getQuestions(): Either<Failure,List<Question>>
     fun getAnswers(idQuestion: String): Either<Failure,List<Answer>>
     fun updateAnswers(idAnswer:String,data:String): Either<Failure, Boolean>
     fun changeState(state: Boolean,verify:Boolean):Either<Failure, Boolean>
     fun getStateChecklist():Either<Failure, ArrayList<Boolean>>
+    fun getAudioQuestions(): Either<Failure,List<Question>>
 
     class Network
     @Inject constructor(private val networkHandler: NetworkHandler,
@@ -58,6 +60,35 @@ interface QuestionsRepository {
             }
         }
 
+        override fun setAudioQuestion(): Either<Failure, Boolean> {
+            return when (networkHandler.isConnected) {
+                true ->{
+                    try {
+                        val response = service.getAudioQuestion("Bearer ${prefs.token!!}").execute()
+                        when (response.isSuccessful) {
+                            true -> {
+                                response.body()?.let { body ->
+                                    if(body.success) {
+                                        body.data.map {
+                                            Log.d("AUDIO",it.toString())
+                                            questionsDataSource.insertQuestions(it.question.toModel())
+                                            for(answers in it.answers )
+                                                questionsDataSource.insertAnswers(answers.toModel()) }
+                                        Either.Right(true)
+                                    }
+                                    else Either.Left(Failure.DefaultError(body.message))
+                                }?: Either.Left(Failure.DefaultError(""))
+                            }
+                            false -> Either.Left(Failure.ServerError)
+                        }
+                    } catch (e: Exception) {
+                        Either.Left(Failure.DefaultError(e.message!!))
+                    }
+                }
+                false -> Either.Left(Failure.NetworkConnection)
+            }
+        }
+
         override fun setReadyAnswers(readyAnswer: ReadyAnswer): Either<Failure, Boolean> {
             return try {
                 questionsDataSource.insertReadyAnswers(readyAnswer.toModel())
@@ -71,6 +102,14 @@ interface QuestionsRepository {
         override fun getQuestions(): Either<Failure, List<Question>> {
             return try {
                 Either.Right(questionsDataSource.getQuestions().map { it.toView() })
+            }catch (e:Exception){
+                Either.Left(Failure.DefaultError(e.message!!))
+            }
+        }
+
+        override fun getAudioQuestions(): Either<Failure, List<Question>> {
+            return try {
+                Either.Right(questionsDataSource.getAudioQuestions().map { it.toView() })
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))
             }

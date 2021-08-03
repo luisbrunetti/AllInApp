@@ -111,6 +111,10 @@ class InitFragment : BaseFragment() {
         binding.btSync.setOnClickListener {
             showProgressDialog()
             initViewModel.syncCheck()
+            initViewModel.syncPhotoReport()
+            initViewModel.syncStandardReports()
+            initViewModel.syncSku()
+            initViewModel.syncAudio()
         }
         binding.viewBtnRoutes.setOnClickListener {
             findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationRoutes())

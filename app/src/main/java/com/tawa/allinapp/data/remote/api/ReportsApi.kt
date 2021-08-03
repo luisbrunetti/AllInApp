@@ -30,6 +30,9 @@ interface ReportsApi {
     fun getReportsSku(@Header("Authorization") token: String): Call<BaseResponse<List<ReportsSkuRemote.Response>>>
 
     @POST("/api/registropdv/add")
-    fun addSku(@Header("Authorization") token: String,@Body request: ReportsSkuRemote.Request): Call<BaseResponse<List<ReportsSkuRemote.Message>>>
+    fun syncSku(@Header("Authorization") token: String,@Body request: ReportsSkuRemote.Request): Call<BaseResponse<ReportsSkuRemote.Message>>
+
+    @POST("/api/registroreporte/add")
+    fun synStandardReports(@Header("Authorization") token: String,@Body request: SynReportStandardRemote.Request): Call<BaseResponse<SynReportStandardRemote.Message>>
 
 }

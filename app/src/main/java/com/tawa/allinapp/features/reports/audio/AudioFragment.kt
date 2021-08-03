@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.tawa.allinapp.R
 import com.tawa.allinapp.core.dialog.MessageDialogFragment
 import com.tawa.allinapp.core.extensions.failure
@@ -19,6 +20,12 @@ class AudioFragment : BaseFragment() {
 
     private lateinit var binding: FragmentAudioBinding
     private lateinit var audioViewModel: AudioViewModel
+    private  var idQuestion = ""
+    private  var nameQuestion = ""
+    private  var idAnswer =""
+    private  var nameAnswer = ""
+    private  var audio64 = ""
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,10 +41,30 @@ class AudioFragment : BaseFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentAudioBinding.inflate(inflater)
         audioViewModel = viewModel(viewModelFactory){
-            observe(file,{ it?.let {
+            observe(fileString,{ it?.let {
                 Log.w("sdasd",it)
-                //TODO save record in adapter and make play in clickListener
+                audio64 = it
+
             }})
+            observe(successAudio,{
+                it?.let {
+                    for(audio in it)
+                    {
+                        idQuestion = audio.id
+                        nameQuestion = audio.questionName
+                        audioViewModel.getAnswersAudio(audio.id)
+                    }
+                }
+            })
+            observe(answersAudio,{
+                it?.let {
+                    for(ans in it)
+                    {
+                        idAnswer = ans.id
+                        nameAnswer = ans.answerName
+                    }
+                }
+            })
             failure(failure, { it?.let {
                 hideProgressDialog()
                 when(it){
@@ -47,6 +74,13 @@ class AudioFragment : BaseFragment() {
                 }
             }})
         }
+        binding.btSavePictures.setOnClickListener {
+            audioViewModel.setReadyAnswers(idQuestion,nameQuestion,idAnswer,audio64,"")
+            audioViewModel.updateStateReport("60dc7d0c11bb190a40e28e91", "En proceso")
+            activity?.onBackPressed()
+        }
+
+        audioViewModel.getAudioQuestions()
         return binding.root
     }
 

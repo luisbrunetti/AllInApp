@@ -27,8 +27,24 @@ class QuestionsDataSource @Inject constructor(private val questionsDao: Question
         return questionsDao.getQuestions()
     }
 
+    fun getAudioQuestions():List<QuestionModel> {
+        return questionsDao.getAudioQuestions()
+    }
+
+    fun getQuestionsByIdReport(idReport:String):List<QuestionModel> {
+        return questionsDao.getQuestionsByIdReport(idReport)
+    }
+
     fun getAnswers(idQuestion:String):List<AnswerModel> {
         return questionsDao.getAnswers(idQuestion)
+    }
+
+    fun getReadyAnswers(idQuestion:String):List<ReadyAnswerModel> {
+        return questionsDao.getReadyAnswers(idQuestion)
+    }
+
+    fun getReadyAnswersImage(idQuestion:String):String {
+        return questionsDao.getReadyAnswersImage(idQuestion)
     }
 
     fun updateAnswers(idAnswer:String,data:String){

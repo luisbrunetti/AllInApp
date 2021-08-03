@@ -40,7 +40,7 @@ class ReportsAdapter
                     binding.tvPVSub.text = report.state
                     if (report.state == "No iniciado") binding.ivIconReport.loadFromResource(R.drawable.ic_noinit)
                     if (report.state == "En proceso") binding.ivIconReport.loadFromResource(R.drawable.ic_inprocess)
-                }
+                    if (report.state == "Enviado") binding.ivIconReport.loadFromResource(R.drawable.ic_sended)                }
 
                 "REPORTE FOTOGRAFICO" -> {
                     binding.ivIconReport.loadFromResource(R.drawable.ic_report_nostate)
@@ -57,7 +57,9 @@ class ReportsAdapter
                 }
                 "AUDIO" ->{
                     binding.tvPVSub.text = report.state
-                    binding.ivIconReport.loadFromResource(R.drawable.ic_noinit)}
+                    if (report.state == "No iniciado") binding.ivIconReport.loadFromResource(R.drawable.ic_noinit)
+                    if (report.state == "En proceso") binding.ivIconReport.loadFromResource(R.drawable.ic_inprocess)
+                    if (report.state == "Enviado") binding.ivIconReport.loadFromResource(R.drawable.ic_sended)   }
             }
             binding.tvPVName.text = report.reportName
             binding.clReport.setOnClickListener {
