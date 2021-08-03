@@ -105,7 +105,7 @@ class AudioViewModel
     }
 
     fun doSelectAudio(){
-        //startPlaying()
+        startPlaying()
     }
 
     fun saveReport(report: AudioReport) = setAudioReport(SetAudioReport.Params(report)) { it.either(::handleFailure, ::handleReports) }
