@@ -112,21 +112,23 @@ interface ReportsRepository {
                 return Either.Left(Failure.DefaultError("Debe seleccionar hacer Checkin en un Punto de Venta"))
             else
                 return try {
+                    val before = report.before.size
+                    val after = report.after.size
                     reportsDataSource.insertPhotoReport(
                         PhotoReportModel(
                             0,
                             prefs.companyId,
                             prefs.pvId,
-                            report.before[0],
-                            report.before[1],
-                            report.before[2],
-                            report.before[3],
-                            report.before[4],
-                            report.after[0],
-                            report.after[1],
-                            report.after[2],
-                            report.after[3],
-                            report.after[4],
+                            if (before >1) report.before[0] else "",
+                            if (before >2) report.before[1] else "",
+                            if (before >3) report.before[2] else "",
+                            if (before >4) report.before[3] else "",
+                            if (before >5) report.before[4] else "",
+                            if (after >1) report.after[0] else "",
+                            if (after >2) report.after[1] else "",
+                            if (after >3) report.after[2] else "",
+                            if (after >4) report.after[3] else "",
+                            if (after >5) report.after[4] else "",
                             report.comments,
                             report.createAt
                         )
