@@ -99,14 +99,7 @@ class PictureFragment : BaseFragment() {
         }
         binding.btSavePictures.setOnClickListener {
             showProgressDialog()
-            val before = 5 -pictureBeforeAdapter.collection.size
-            for (i in 0..before){
-                if(i!=0) pictureBeforeAdapter.collection.add("")
-            }
-            val after = 5- pictureAfterAdapter.collection.size
-            for (i in 0..after){
-                if(i!=0) pictureAfterAdapter.collection.add("")
-            }
+
             val report = PhotoReport(
                 pictureBeforeAdapter.collection,
                 pictureAfterAdapter.collection,
