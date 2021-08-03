@@ -5,6 +5,7 @@ import android.app.Application
 import android.media.MediaPlayer
 import android.media.MediaRecorder
 import android.os.Environment
+import android.util.Base64OutputStream
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -17,7 +18,9 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import com.tawa.allinapp.core.platform.BaseViewModel
 import com.tawa.allinapp.features.HomeActivity
 import com.tawa.allinapp.models.AudioReport
+import java.io.ByteArrayOutputStream
 import java.io.File
+import android.util.Base64
 import java.io.IOException
 import java.util.*
 import javax.inject.Inject
@@ -29,6 +32,8 @@ class AudioViewModel
 
     private var recorder: MediaRecorder? = null
     private var player: MediaPlayer? = null
+    private var fileName: String? = ""
+    private var output: File? = null
 
     private val _recording = MutableLiveData(false)
     val recording: LiveData<Boolean>
@@ -36,6 +41,9 @@ class AudioViewModel
 
     private val _record = MutableLiveData("")
     val record = _record
+
+    private val _file = MutableLiveData("")
+    val file = _file
 
     private val _successRecord = MutableLiveData(false)
     val successRecord: LiveData<Boolean>
@@ -60,16 +68,27 @@ class AudioViewModel
         }
     }
 
+    private fun convertImageFileToBase64(file: File): String {
+        return ByteArrayOutputStream().use { outputStream ->
+            Base64OutputStream(outputStream, Base64.DEFAULT).use { base64FilterStream ->
+                file.inputStream().use { inputStream ->
+                    inputStream.copyTo(base64FilterStream)
+                }
+            }
+            return@use outputStream.toString()
+        }
+    }
+
     private fun startRecord(){
         recorder = MediaRecorder().apply {
             setAudioSource(MediaRecorder.AudioSource.MIC)
             setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
             setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
 
-            val outputFolder = File(Environment.getExternalStorageDirectory().toString() + "/audios/")
-            val output = File(outputFolder.absolutePath +"out" + Date().time + ".3gpp")
-            Log.i("DIRECTORIO", output.absolutePath)
-            _record.value = output.absolutePath
+            val outputFolder = File(Environment.getExternalStorageDirectory().toString() + "/documents/")
+            output = File(outputFolder.absolutePath +"out" + Date().time + ".3gpp")
+            Log.i("DIRECTORIO", output!!.absolutePath)
+            _record.value = output!!.absolutePath
 
             setOutputFile(_record.value)
             setMaxDuration(3000)
@@ -88,20 +107,10 @@ class AudioViewModel
         recorder?.apply {
             stop()
             release()
+            _file.value = convertImageFileToBase64(output!!)
             _recording.value=false
         }
         recorder = null
-    }
-
-    private fun checkRecordPermissions(){
-        Dexter.withActivity(HomeActivity())
-            .withPermissions(Manifest.permission.RECORD_AUDIO,Manifest.permission.WRITE_EXTERNAL_STORAGE)
-            .withListener(object: MultiplePermissionsListener {
-                override fun onPermissionsChecked(report: MultiplePermissionsReport?) { startRecord() }
-                override fun onPermissionRationaleShouldBeShown(permissions: MutableList<PermissionRequest>?, token: PermissionToken?) {
-                    token?.continuePermissionRequest()
-                }
-            }).check()
     }
 
     fun doSelectAudio(){
