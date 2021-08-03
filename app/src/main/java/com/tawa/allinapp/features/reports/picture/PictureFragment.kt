@@ -78,9 +78,13 @@ class PictureFragment : BaseFragment() {
                     //MessageDialogFragment.newInstance("", title = R.string.ok_save_report, icon = R.drawable.ic_checkin).show(childFragmentManager, "dialog")
                 }
             }})
+            observe(errorMessage, { it?.let {
+                if (it.isNotEmpty()) MessageDialogFragment.newInstance(it).show(childFragmentManager, "dialog")
+            }})
             failure(failure, { it?.let {
                 hideProgressDialog()
                 when(it){
+                    is Failure.DefaultError         -> pictureViewModel.setError(it.message ?: getString(R.string.error_unknown))
                     is Failure.NetworkConnection    -> MessageDialogFragment.newInstance(getString(R.string.error_network)).show(childFragmentManager, "dialog")
                     is Failure.ServerError          -> MessageDialogFragment.newInstance(getString(R.string.error_network)).show(childFragmentManager, "dialog")
                     else                            -> MessageDialogFragment.newInstance(getString(R.string.error_unknown)).show(childFragmentManager, "dialog")
