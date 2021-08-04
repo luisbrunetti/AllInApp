@@ -10,7 +10,7 @@ import com.tawa.allinapp.features.movies.MoviesViewModel
 import com.tawa.allinapp.features.reports.audio.AudioViewModel
 import com.tawa.allinapp.features.reports.picture.PictureViewModel
 import com.tawa.allinapp.features.reports.standard.CheckListViewModel
-import com.tawa.allinapp.features.reports.reports.ReportsViewModel
+import com.tawa.allinapp.features.reports.ReportsViewModel
 import com.tawa.allinapp.features.reports.sku.SkuViewModel
 import com.tawa.allinapp.features.reports.userstatus.UserStatusViewModel
 import com.tawa.allinapp.features.routes.RoutesViewModel

@@ -1,11 +1,10 @@
-package com.tawa.allinapp.features.reports.reports
+package com.tawa.allinapp.features.reports
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.tawa.allinapp.core.interactor.UseCase
 import com.tawa.allinapp.core.platform.BaseViewModel
 import com.tawa.allinapp.features.init.usecase.GetDescPV
-import com.tawa.allinapp.models.Question
 import com.tawa.allinapp.models.Report
 import javax.inject.Inject
 

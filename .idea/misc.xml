@@ -19,6 +19,13 @@
         <entry key="..\:/DESARROLLO/tawa-android-changes/app/src/main/res/layout/fragment_user_status.xml" value="0.36666666666666664" />
         <entry key="..\:/DESARROLLO/tawa-android-changes/app/src/main/res/layout/row_report.xml" value="0.67" />
         <entry key="..\:/DESARROLLO/tawa-android-changes/app/src/main/res/xml/xml.xml" value="0.36666666666666664" />
+        <entry key="app/src/main/res/drawable/ic_companies.xml" value="0.20520833333333333" />
+        <entry key="app/src/main/res/drawable/spinner_emp.xml" value="0.20520833333333333" />
+        <entry key="app/src/main/res/layout/dialog_home.xml" value="0.45" />
+        <entry key="app/src/main/res/layout/fragment_audio.xml" value="0.2203125" />
+        <entry key="app/src/main/res/layout/fragment_init.xml" value="0.1890625" />
+        <entry key="app/src/main/res/layout/fragment_login.xml" value="0.1890625" />
+        <entry key="app/src/main/res/layout/fragment_picture.xml" value="0.215625" />
       </map>
     </option>
   </component>

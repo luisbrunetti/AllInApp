@@ -1,17 +1,19 @@
 package com.tawa.allinapp.features.reports.picture
 
 import android.content.Context
+import android.graphics.BitmapFactory
+import android.util.Base64
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.tawa.allinapp.core.extensions.loadFromUrl
+import com.tawa.allinapp.core.extensions.loadBitmap
 import com.tawa.allinapp.databinding.RowPictureBinding
 import javax.inject.Inject
 
 class PictureBeforeAdapter
 @Inject constructor(val context: Context) : RecyclerView.Adapter<PictureBeforeAdapter.PictureBeforeViewHolder>() {
 
-    var collection = ArrayList<String?>()
+    var collection = ArrayList<String>()
 
     internal var clickListener: (String) -> Unit = { _ -> }
     internal var deleteListener: (String) -> Unit = { _ -> }
@@ -33,7 +35,8 @@ class PictureBeforeAdapter
     class PictureBeforeViewHolder(val binding : RowPictureBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(context: Context, picture: String, clickListener: (String) -> Unit,deleteListener: (String) -> Unit) {
-            binding.ivPicture.loadFromUrl(picture)
+            val image = Base64.decode(picture, 0)
+            binding.ivPicture.loadBitmap(BitmapFactory.decodeByteArray(image, 0, image.size))
             binding.ivPicture.setOnClickListener {
                 clickListener(picture)
             }

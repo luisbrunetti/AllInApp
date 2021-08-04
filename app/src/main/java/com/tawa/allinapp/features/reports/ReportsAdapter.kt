@@ -1,4 +1,4 @@
-package com.tawa.allinapp.features.reports.reports
+package com.tawa.allinapp.features.reports
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -68,7 +68,7 @@ class ReportsAdapter
         }
 
         companion object{
-            fun from(parent : ViewGroup) : ReportsViewHolder{
+            fun from(parent : ViewGroup) : ReportsViewHolder {
                 val inflater = LayoutInflater.from(parent.context)
                 val binding = RowReportBinding.inflate(inflater,parent,false)
                 return ReportsViewHolder(binding)

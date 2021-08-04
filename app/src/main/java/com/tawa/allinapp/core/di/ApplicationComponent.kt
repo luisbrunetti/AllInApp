@@ -17,7 +17,7 @@ import com.tawa.allinapp.features.movies.ui.MoviesFragment
 import com.tawa.allinapp.features.reports.audio.AudioFragment
 import com.tawa.allinapp.features.reports.picture.PictureFragment
 import com.tawa.allinapp.features.reports.standard.CheckListFragment
-import com.tawa.allinapp.features.reports.reports.ReportsFragment
+import com.tawa.allinapp.features.reports.ReportsFragment
 import com.tawa.allinapp.features.reports.sku.SkuFragment
 import com.tawa.allinapp.features.reports.userstatus.LastLocationFragment
 import com.tawa.allinapp.features.reports.userstatus.UserStatusFragment

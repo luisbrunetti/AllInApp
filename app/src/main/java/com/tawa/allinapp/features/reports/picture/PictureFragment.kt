@@ -8,6 +8,8 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Base64
+import android.util.Base64OutputStream
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,6 +31,8 @@ import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.FragmentPictureBinding
 import com.tawa.allinapp.features.reports.sku.ConfirmDialogFragment
 import com.tawa.allinapp.models.PhotoReport
+import java.io.ByteArrayOutputStream
+import java.io.File
 import java.util.*
 import javax.inject.Inject
 
@@ -66,6 +70,7 @@ class PictureFragment : BaseFragment() {
             pictureAfterAdapter.collection.remove(it)
             pictureAfterAdapter.notifyDataSetChanged()
         }
+        pictureViewModel.getPhotoReport()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -80,6 +85,11 @@ class PictureFragment : BaseFragment() {
             }})
             observe(errorMessage, { it?.let {
                 if (it.isNotEmpty()) MessageDialogFragment.newInstance(it).show(childFragmentManager, "dialog")
+            }})
+            observe(report, { it?.let {
+                pictureAfterAdapter.setData(it.after)
+                pictureBeforeAdapter.setData(it.before)
+                binding.tvComments.setText(it.comments)
             }})
             failure(failure, { it?.let {
                 hideProgressDialog()
@@ -99,7 +109,6 @@ class PictureFragment : BaseFragment() {
         }
         binding.btSavePictures.setOnClickListener {
             showProgressDialog()
-
             val report = PhotoReport(
                 pictureBeforeAdapter.collection,
                 pictureAfterAdapter.collection,
@@ -117,12 +126,14 @@ class PictureFragment : BaseFragment() {
             before -> if(resultCode==Activity.RESULT_OK) {
                 val bitmap = data!!.extras?.get("data") as Bitmap
                 val uri = getImageUri(activity?.applicationContext!!, bitmap)
-                pictureBeforeAdapter.collection.add(uri.toString())
+                pictureBeforeAdapter.collection.add(convertBase64(bitmap)!!)
+                pictureBeforeAdapter.notifyDataSetChanged()
             }
             after -> if(resultCode==Activity.RESULT_OK) {
                 val bitmap = data!!.extras?.get("data") as Bitmap
                 val uri = getImageUri(activity?.applicationContext!!, bitmap)
-                pictureAfterAdapter.collection.add(uri.toString())
+                pictureAfterAdapter.collection.add(convertBase64(bitmap)!!)
+                pictureAfterAdapter.notifyDataSetChanged()
             }
         }
     }
@@ -145,6 +156,12 @@ class PictureFragment : BaseFragment() {
             }).check()
     }
 
+    private fun convertBase64(bitmap: Bitmap): String? {
+        val outputStream = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+        return Base64.encodeToString(outputStream.toByteArray(), Base64.DEFAULT)
+    }
+
     private fun launchCamera(origin:Int){
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         startActivityForResult(intent, origin)
@@ -152,7 +169,7 @@ class PictureFragment : BaseFragment() {
 
     private fun getImageUri(inContext: Context, inImage: Bitmap?): Uri? {
         val image = Bitmap.createScaledBitmap(inImage!!, 300, 300, true)
-        val path = MediaStore.Images.Media.insertImage(inContext.contentResolver, image, "picture", null)
+        val path = MediaStore.Images.Media.insertImage(inContext.contentResolver, image, "documents", null)
         return Uri.parse(path)
     }
 

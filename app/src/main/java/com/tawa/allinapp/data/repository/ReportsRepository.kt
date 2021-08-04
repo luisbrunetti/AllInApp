@@ -46,6 +46,7 @@ interface ReportsRepository {
     fun getUserType():Either<Failure, String>
     fun syncReportStandard():Either<Failure, Boolean>
     fun syncReportAudio():Either<Failure, Boolean>
+    fun getLocalPhotoReport(): Either<Failure, PhotoReport>
 
     class Network
     @Inject constructor(private val networkHandler: NetworkHandler,
@@ -86,7 +87,7 @@ interface ReportsRepository {
             return when (networkHandler.isConnected) {
                 true ->{
                     try {
-                        val request = reportsDataSource.getPhotoReports().map { it.toRemote() }
+                        val request = reportsDataSource.getAllPhotoReports().map { it.toRemote() }
                         val response = service.syncPhotoReports("Bearer ${prefs.token!!}", request).execute()
                         when (response.isSuccessful) {
                             true -> {
@@ -116,19 +117,18 @@ interface ReportsRepository {
                     val after = report.after.size
                     reportsDataSource.insertPhotoReport(
                         PhotoReportModel(
-                            0,
-                            prefs.companyId,
-                            prefs.pvId,
-                            if (before >1) report.before[0] else "",
-                            if (before >2) report.before[1] else "",
-                            if (before >3) report.before[2] else "",
-                            if (before >4) report.before[3] else "",
-                            if (before >5) report.before[4] else "",
-                            if (after >1) report.after[0] else "",
-                            if (after >2) report.after[1] else "",
-                            if (after >3) report.after[2] else "",
-                            if (after >4) report.after[3] else "",
-                            if (after >5) report.after[4] else "",
+                            prefs.companyId?:"",
+                            prefs.pvId?:"",
+                            if (before >0) report.before[0] else "",
+                            if (before >1) report.before[1] else "",
+                            if (before >2) report.before[2] else "",
+                            if (before >3) report.before[3] else "",
+                            if (before >4) report.before[4] else "",
+                            if (after >0) report.after[0] else "",
+                            if (after >1) report.after[1] else "",
+                            if (after >2) report.after[2] else "",
+                            if (after >3) report.after[3] else "",
+                            if (after >4) report.after[4] else "",
                             report.comments,
                             report.createAt
                         )
@@ -139,11 +139,23 @@ interface ReportsRepository {
                 }
         }
 
+        override fun getLocalPhotoReport(): Either<Failure, PhotoReport> {
+            return try {
+                val response = reportsDataSource.getPhotoReports(prefs.pvId?:"",prefs.companyId?:"")
+                if(response.isEmpty())
+                    Either.Right( PhotoReport(emptyList(), emptyList(),"","") )
+                else
+                    Either.Right( response.first().toView() )
+            }catch (e:Exception){
+                Either.Left(Failure.DefaultError(e.message!!))
+            }
+        }
+
         override fun savePhotoReport(): Either<Failure, Boolean> {
             return when (networkHandler.isConnected) {
                 true ->{
                     try {
-                        val reports = reportsDataSource.getPhotoReports()
+                        val reports = reportsDataSource.getPhotoReports(prefs.pvId?:"",prefs.companyId?:"")
                         var regs = 0
                         reports.map {
                             val response = service.setPhotoReports(

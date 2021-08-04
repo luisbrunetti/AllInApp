@@ -26,7 +26,7 @@
 
     <fragment
         android:id="@+id/navigation_reports"
-        android:name="com.tawa.allinapp.features.reports.reports.ReportsFragment"
+        android:name="com.tawa.allinapp.features.reports.ReportsFragment"
         android:label="@string/title_reports"
         tools:layout="@layout/fragment_reports" >
 

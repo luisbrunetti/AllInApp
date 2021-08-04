@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.tawa.allinapp.core.interactor.UseCase
 import com.tawa.allinapp.core.platform.BaseViewModel
 import com.tawa.allinapp.features.init.usecase.*
-import com.tawa.allinapp.features.reports.reports.GetReportsRemote
+import com.tawa.allinapp.features.reports.GetReportsRemote
 import com.tawa.allinapp.features.reports.sku.SyncSku
 import com.tawa.allinapp.models.Company
 import com.tawa.allinapp.models.Schedule
@@ -147,6 +147,10 @@ class InitViewModel
     private val _successSyncReportStandard = MutableLiveData(false)
     val successSyncReportStandard : LiveData<Boolean>
         get() = _successSyncReportStandard
+
+    private val _successSyncSku = MutableLiveData(false)
+    val successSyncSku : LiveData<Boolean>
+        get() = _successSyncSku
 
     private val _successSyncAudio = MutableLiveData(false)
     val successSyncAudio : LiveData<Boolean>
@@ -294,7 +298,7 @@ class InitViewModel
     fun syncSku() = syncSku(UseCase.None()) { it.either(::handleFailure, ::handleSyncSku) }
 
     private fun handleSyncSku(success:Boolean) {
-        this._successSyncReportStandard.value = success
+        this._successSyncSku.value = success
     }
 
     fun getAudioRemote() = getAudioRemote(UseCase.None()) {

@@ -2,12 +2,10 @@ package com.tawa.allinapp.features
 
 import android.os.Bundle
 import android.provider.Settings
-import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
@@ -18,9 +16,6 @@ import com.tawa.allinapp.BuildConfig
 import com.tawa.allinapp.R
 import com.tawa.allinapp.core.di.ApplicationComponent
 import com.tawa.allinapp.databinding.ActivityHomeBinding
-import com.tawa.allinapp.features.init.ui.InitFragment
-import com.tawa.allinapp.features.init.ui.InitFragmentDirections
-import com.tawa.allinapp.features.reports.reports.ReportsFragmentDirections
 
 class HomeActivity : AppCompatActivity() {
 
