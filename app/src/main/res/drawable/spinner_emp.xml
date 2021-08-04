@@ -27,7 +27,7 @@
 
 
     <item
-        android:drawable="@drawable/ic_emp"
+        android:drawable="@drawable/ic_bandeja"
         android:width="24dp"
         android:height="24dp"
         android:left="10dp"

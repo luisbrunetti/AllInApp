@@ -78,7 +78,15 @@ class InitFragment : BaseFragment() {
                 if (it) initViewModel.syncPhotoReport()
             } })
             observe(successSyncPhotoReports, { it?.let {
-                //TODO sync reports
+                if (it) initViewModel.syncStandardReports()
+            } })
+            observe(successSyncSku, { it?.let {
+                if (it) initViewModel.syncAudio()
+            } })
+            observe(successSyncReportStandard, { it?.let {
+                if (it) initViewModel.syncSku()
+            }})
+            observe(successSyncAudio, { it?.let {
                 if(it){
                     hideProgressDialog()
                     MessageDialogFragment.newInstance(message = "", title = R.string.end_sync,icon = R.drawable.ic_checkin).show(childFragmentManager, "dialog")
@@ -111,10 +119,6 @@ class InitFragment : BaseFragment() {
         binding.btSync.setOnClickListener {
             showProgressDialog()
             initViewModel.syncCheck()
-            initViewModel.syncPhotoReport()
-            initViewModel.syncStandardReports()
-            initViewModel.syncSku()
-            initViewModel.syncAudio()
         }
         binding.viewBtnRoutes.setOnClickListener {
             findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationRoutes())

@@ -35,16 +35,6 @@
             android:textSize="20sp"
             android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/tvDivision"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:gravity="center"
-            android:text="@string/trade_marketing"
-            android:textColor="@color/design_default_color_on_secondary"
-            android:textSize="18sp" />
-
         <Spinner
             android:id="@+id/spinnerCompany"
             android:layout_width="match_parent"

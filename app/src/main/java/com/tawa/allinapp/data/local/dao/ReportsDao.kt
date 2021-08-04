@@ -19,11 +19,14 @@ interface ReportsDao {
     @Query("UPDATE reports set state=:state WHERE id=:idReport")
     fun updateStateReports(idReport:String,state:String)
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertPhotoReport(report:PhotoReportModel)
 
+    @Query("SELECT * FROM reports_photo WHERE pv=:pv AND company=:company")
+    fun getPhotoReports(pv:String, company:String): List<PhotoReportModel>
+
     @Query("SELECT * FROM reports_photo")
-    fun getPhotoReports(): List<PhotoReportModel>
+    fun getAllPhotoReports(): List<PhotoReportModel>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertAudioReport(report:AudioReportModel)
