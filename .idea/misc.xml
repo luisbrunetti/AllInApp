@@ -3,7 +3,17 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/DESARROLLO/tawa-android-changes/app/src/main/res/drawable/bg_button_white.xml" value="0.3828125" />
+        <entry key="..\:/DESARROLLO/tawa-android-changes/app/src/main/res/drawable/bg_item_view.xml" value="0.3828125" />
+        <entry key="..\:/DESARROLLO/tawa-android-changes/app/src/main/res/drawable/bg_top_view.xml" value="0.3828125" />
+        <entry key="..\:/DESARROLLO/tawa-android-changes/app/src/main/res/drawable/ic_infor.xml" value="0.3828125" />
+        <entry key="..\:/DESARROLLO/tawa-android-changes/app/src/main/res/drawable/ic_informs.xml" value="0.3828125" />
+        <entry key="..\:/DESARROLLO/tawa-android-changes/app/src/main/res/drawable/ic_informs_home.xml" value="0.3828125" />
         <entry key="..\:/DESARROLLO/tawa-android-changes/app/src/main/res/drawable/ic_noinit.xml" value="0.3828125" />
+        <entry key="..\:/DESARROLLO/tawa-android-changes/app/src/main/res/drawable/ic_report_nostate.xml" value="0.3828125" />
+        <entry key="..\:/DESARROLLO/tawa-android-changes/app/src/main/res/drawable/ic_rutas.xml" value="0.3828125" />
+        <entry key="..\:/DESARROLLO/tawa-android-changes/app/src/main/res/drawable/ic_sync_home.xml" value="0.3828125" />
+        <entry key="..\:/DESARROLLO/tawa-android-changes/app/src/main/res/layout/activity_home.xml" value="0.3612108773730118" />
         <entry key="..\:/DESARROLLO/tawa-android-changes/app/src/main/res/layout/dialog_checkin.xml" value="0.36666666666666664" />
         <entry key="..\:/DESARROLLO/tawa-android-changes/app/src/main/res/layout/dialog_confirm_sku.xml" value="0.36666666666666664" />
         <entry key="..\:/DESARROLLO/tawa-android-changes/app/src/main/res/layout/dialog_error_location.xml" value="0.36666666666666664" />
@@ -11,22 +21,19 @@
         <entry key="..\:/DESARROLLO/tawa-android-changes/app/src/main/res/layout/dialog_observations_sku.xml" value="0.36666666666666664" />
         <entry key="..\:/DESARROLLO/tawa-android-changes/app/src/main/res/layout/dialog_user_menu.xml" value="0.36666666666666664" />
         <entry key="..\:/DESARROLLO/tawa-android-changes/app/src/main/res/layout/fragment_audio.xml" value="0.36666666666666664" />
+        <entry key="..\:/DESARROLLO/tawa-android-changes/app/src/main/res/layout/fragment_calendar.xml" value="0.36666666666666664" />
         <entry key="..\:/DESARROLLO/tawa-android-changes/app/src/main/res/layout/fragment_check_out_dialog.xml" value="0.36666666666666664" />
         <entry key="..\:/DESARROLLO/tawa-android-changes/app/src/main/res/layout/fragment_checklist.xml" value="0.36666666666666664" />
+        <entry key="..\:/DESARROLLO/tawa-android-changes/app/src/main/res/layout/fragment_informs.xml" value="0.36666666666666664" />
         <entry key="..\:/DESARROLLO/tawa-android-changes/app/src/main/res/layout/fragment_init.xml" value="0.36666666666666664" />
+        <entry key="..\:/DESARROLLO/tawa-android-changes/app/src/main/res/layout/fragment_login.xml" value="0.36666666666666664" />
         <entry key="..\:/DESARROLLO/tawa-android-changes/app/src/main/res/layout/fragment_reports.xml" value="0.5" />
         <entry key="..\:/DESARROLLO/tawa-android-changes/app/src/main/res/layout/fragment_sku.xml" value="0.36666666666666664" />
         <entry key="..\:/DESARROLLO/tawa-android-changes/app/src/main/res/layout/fragment_user_status.xml" value="0.36666666666666664" />
-        <entry key="..\:/DESARROLLO/tawa-android-changes/app/src/main/res/layout/row_report.xml" value="0.67" />
+        <entry key="..\:/DESARROLLO/tawa-android-changes/app/src/main/res/layout/row_report.xml" value="0.5" />
+        <entry key="..\:/DESARROLLO/tawa-android-changes/app/src/main/res/menu/home_menu.xml" value="0.36666666666666664" />
+        <entry key="..\:/DESARROLLO/tawa-android-changes/app/src/main/res/menu/home_menu_list.xml" value="0.36666666666666664" />
         <entry key="..\:/DESARROLLO/tawa-android-changes/app/src/main/res/xml/xml.xml" value="0.36666666666666664" />
-        <entry key="app/src/main/res/drawable/ic_companies.xml" value="0.20520833333333333" />
-        <entry key="app/src/main/res/drawable/ic_record.xml" value="0.265625" />
-        <entry key="app/src/main/res/drawable/spinner_emp.xml" value="0.20520833333333333" />
-        <entry key="app/src/main/res/layout/dialog_home.xml" value="0.45" />
-        <entry key="app/src/main/res/layout/fragment_audio.xml" value="0.375" />
-        <entry key="app/src/main/res/layout/fragment_init.xml" value="0.1890625" />
-        <entry key="app/src/main/res/layout/fragment_login.xml" value="0.1890625" />
-        <entry key="app/src/main/res/layout/fragment_picture.xml" value="0.215625" />
       </map>
     </option>
   </component>

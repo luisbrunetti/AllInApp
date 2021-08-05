@@ -19,6 +19,7 @@ interface CheckRepository {
     fun getIdPv(): Either<Failure, String>
     fun getIdCompany(): Either<Failure, String>
     fun getIdUser(): Either<Failure, String>
+    fun getRoleUser(): Either<Failure, String>
     fun getUserName(): Either<Failure, String>
     fun getCheckMode(): Either<Failure, Boolean>
     fun getStateCheck(idPv: String): Either<Failure, Boolean>
@@ -139,6 +140,14 @@ interface CheckRepository {
             return try {
                 if(checkDataSource.getStateCheck(idPv)==0) Either.Right(true)
                 else Either.Right(false)
+            }catch (e:Exception){
+                Either.Left(Failure.DefaultError(e.message!!))
+            }
+        }
+
+        override fun getRoleUser(): Either<Failure, String> {
+            return try {
+                 Either.Right(prefs.role?:"")
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))
             }
