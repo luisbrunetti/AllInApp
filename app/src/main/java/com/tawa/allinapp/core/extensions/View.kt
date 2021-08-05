@@ -57,6 +57,14 @@ fun View.setButtonEnabled(value: Boolean?){
     }
 }
 
+@BindingAdapter("visibleView")
+fun View.setVisibility(value: Boolean?){
+    value?.let { enable ->
+        if (enable) visible()
+        else invisible()
+    }
+}
+
 @BindingAdapter("bgError")
 fun View.setErrorBg(value: Boolean?){
     value?.let { enable ->

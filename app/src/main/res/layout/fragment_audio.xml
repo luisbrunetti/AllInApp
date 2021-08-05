@@ -46,10 +46,10 @@
                         android:layout_marginStart="36dp"
                         android:layout_marginTop="16dp"
                         android:layout_marginEnd="36dp"
-                        android:visibility="gone"
                         android:text="@string/select_audio"
                         android:textColor="@color/text_dark"
                         android:textSize="16sp"
+                        android:visibility="gone"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -58,17 +58,17 @@
                         android:id="@+id/btTakeAudioSelect"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
                         android:background="@drawable/bg_blue_button_reports"
                         android:drawableStart="@drawable/ic_record"
-                        android:layout_marginTop="16dp"
                         android:drawablePadding="12dp"
+                        android:onClick="@{()->viewModel.doSelectAudio()}"
                         android:paddingStart="36dp"
                         android:paddingEnd="36dp"
-                        android:visibility="gone"
                         android:text="@string/select_audio"
-                        android:onClick="@{()->viewModel.doSelectAudio()}"
                         android:textAllCaps="false"
                         android:textColor="@color/white"
+                        android:visibility="gone"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/tvLabelSelectAudio" />
@@ -88,8 +88,8 @@
                         android:id="@+id/tvLabelRecordAudio"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
                         android:layout_marginStart="36dp"
+                        android:layout_marginTop="16dp"
                         android:layout_marginEnd="36dp"
                         android:text="@string/record_audio"
                         android:textColor="@color/text_dark"
@@ -98,23 +98,59 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/rvAudioSelect" />
 
-                    <androidx.appcompat.widget.AppCompatButton
+                    <androidx.appcompat.widget.LinearLayoutCompat
                         android:id="@+id/btTakeAudioRecord"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginStart="32dp"
+                        android:layout_marginEnd="32dp"
                         android:background="@drawable/bg_blue_button_reports"
                         android:drawableStart="@drawable/ic_record"
-                        android:layout_marginTop="16dp"
                         android:drawablePadding="12dp"
+                        android:onClick="@{()->viewModel.doRecordAudio()}"
                         android:paddingStart="36dp"
                         android:paddingEnd="36dp"
-                        android:text="@string/record"
-                        android:onClick="@{()->viewModel.doRecordAudio()}"
-                        android:textAllCaps="false"
-                        android:textColor="@color/white"
+                        android:orientation="horizontal"
+                        android:gravity="center"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/tvLabelRecordAudio" />
+                        app:layout_constraintTop_toBottomOf="@+id/tvLabelRecordAudio" >
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:src="@drawable/ic_record"
+                            visibleView="@{!viewModel.recording}"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            visibleView="@{!viewModel.recording}"
+                            android:textAllCaps="false"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/white"
+                            android:text="@string/record"
+                            />
+                        <Chronometer
+                            android:id="@+id/chronometer"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            visibleView="@{viewModel.recording}"
+                            android:textAllCaps="false"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/white"
+                            />
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:src="@drawable/ic_recording"
+                            visibleView="@{viewModel.recording}"
+                            android:layout_marginStart="10dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
 
                     <androidx.appcompat.widget.LinearLayoutCompat
                         android:id="@+id/rvAudioRecord"
@@ -122,39 +158,59 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         android:orientation="horizontal"
+                        android:visibility="gone"
+                        android:onClick="@{()->viewModel.doRecordAudio()}"
+                        android:gravity="center_horizontal"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/btTakeAudioRecord">
 
                         <androidx.appcompat.widget.AppCompatImageView
-                            android:src="@drawable/ic_clip"
                             android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:onClick="@{()->viewModel.doSelectAudio()}"
-                            android:layout_height="wrap_content"/>
+                            android:src="@drawable/ic_clip" />
 
                         <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/tvRecord"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
                             android:layout_marginStart="8dp"
                             android:layout_marginEnd="8dp"
-                            android:layout_gravity="center"
-                            android:text="@={viewModel.file}"
                             android:onClick="@{()->viewModel.doSelectAudio()}"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
+                            android:text="@string/record_one" />
 
                         <androidx.appcompat.widget.AppCompatImageView
-                            android:src="@drawable/ic_close"
+                            android:id="@+id/ivClose"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
-
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_close" />
 
                     </androidx.appcompat.widget.LinearLayoutCompat>
 
                     <androidx.appcompat.widget.AppCompatButton
-                        android:id="@+id/btSavePictures"
-                        android:layout_width="match_parent"
-                        android:layout_height="48dp"
+                        android:id="@+id/btErraser"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_white_button_border"
+                        android:text="@string/eraser"
+                        android:textAllCaps="false"
+                        android:textColor="@color/colorLayoutTop"
+                        android:textSize="18sp"
                         android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginBottom="16dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/btSavePictures"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/rvAudioRecord" />
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/btSavePictures"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
                         android:layout_marginEnd="16dp"
                         android:layout_marginBottom="16dp"
                         android:background="@drawable/bg_blue_button_reports"
@@ -164,8 +220,8 @@
                         android:textColor="@color/white"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toEndOf="@+id/btErraser"
                         app:layout_constraintTop_toBottomOf="@+id/rvAudioRecord" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>

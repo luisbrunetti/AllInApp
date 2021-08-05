@@ -46,14 +46,13 @@ class AudioViewModel
     private var output: File? = null
 
     private val _recording = MutableLiveData(false)
-    val recording: LiveData<Boolean>
-        get()= _recording
+    val recording = _recording
+
+    private val _timeRecord = MutableLiveData("0:00")
+    val timeRecord = _timeRecord
 
     private val _record = MutableLiveData("")
     val record = _record
-
-    private val _file = MutableLiveData("")
-    val file = _file
 
     private val _fileString = MutableLiveData("")
     val fileString = _fileString
@@ -137,7 +136,6 @@ class AudioViewModel
         recorder?.apply {
             stop()
             release()
-            _file.value = output.toString()
             _fileString.value = convertImageFileToBase64(output!!)
             _recording.value=false
         }
