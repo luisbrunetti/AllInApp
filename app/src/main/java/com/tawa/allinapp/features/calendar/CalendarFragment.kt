@@ -24,7 +24,7 @@ class CalendarFragment : BaseFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return ComposeView(requireContext()).apply {
             setContent {
-                Text( "DASHBOARD COMPOSE")
+                Text( "CALENDAR")
             }
         }
     }
