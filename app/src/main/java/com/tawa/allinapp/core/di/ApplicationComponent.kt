@@ -7,6 +7,7 @@ import com.tawa.allinapp.features.auth.ui.LoginFragment
 import com.tawa.allinapp.features.HomeActivity
 import com.tawa.allinapp.features.auth.ui.LoginActivity
 import com.tawa.allinapp.features.calendar.CalendarFragment
+import com.tawa.allinapp.features.informs.InformsFragment
 import com.tawa.allinapp.features.informs.PDVFragment
 import com.tawa.allinapp.features.init.ui.CheckInDialogFragment
 import com.tawa.allinapp.features.init.ui.InitFragment
@@ -52,4 +53,5 @@ interface ApplicationComponent{
     fun inject(skuFragment: SkuFragment)
     fun inject(lastLocationFragment: LastLocationFragment)
     fun inject(audioFragment: AudioFragment)
+    fun inject(informsFragment: InformsFragment)
 }

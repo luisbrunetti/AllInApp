@@ -2,6 +2,7 @@ package com.tawa.allinapp.features
 
 import android.os.Bundle
 import android.provider.Settings
+import android.view.Menu
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -48,11 +49,12 @@ class HomeActivity : AppCompatActivity() {
                 R.id.navigation_reports,
                 R.id.navigation_pdv,
                 R.id.navigation_routes,
+                R.id.navigation_informs,
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-
+        binding.navView.menu.findItem(R.id.navigation_informs).isVisible = false
     }
 
     private fun devMod():Int{
@@ -71,5 +73,7 @@ class HomeActivity : AppCompatActivity() {
     fun hideNavBar(){ binding.navView.visibility = View.GONE }
 
     fun showNavBar(){ binding.navView.visibility = View.VISIBLE }
+
+    fun showInforms(){ binding.navView.menu.findItem(R.id.navigation_informs).isVisible = true}
 
 }

@@ -8,10 +8,13 @@ import android.location.LocationManager
 import android.os.Bundle
 import android.provider.Settings
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
+import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 import com.tawa.allinapp.R
 import com.tawa.allinapp.core.dialog.MessageDialogFragment
@@ -96,6 +99,19 @@ class InitFragment : BaseFragment() {
                 binding.tvHeaderName.text = it
                 binding.btUser.text = if(it.isNotEmpty()) it.first().toString() else ""
             } })
+            observe(successGetRole,{
+                it?.let {
+                    if(it.isNotEmpty())
+                    {
+                        if(it=="SUPERVISOR") {
+                            (activity as HomeActivity).showInforms()
+                            binding.viewBtnInforms.isVisible = true
+                            binding.imageViewInforms.isVisible = true
+                            binding.textViewInforms.isVisible = true
+                        }
+                    }
+                }
+            })
             failure(failure, ::handleFailure)
         }
         initViewModel.getIdUser()
@@ -132,7 +148,9 @@ class InitFragment : BaseFragment() {
         binding.viewBtnReports.setOnClickListener {
             findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationReports())
         }
-
+        binding.viewBtnInforms.setOnClickListener{
+            findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationInforms())
+        }
         return binding.root
     }
 
@@ -191,6 +209,7 @@ class InitFragment : BaseFragment() {
     override fun onResume() {
         super.onResume()
         (activity as HomeActivity).hideNavBar()
+        initViewModel.getRoleUser()
     }
 
     private fun setUpBinding() {

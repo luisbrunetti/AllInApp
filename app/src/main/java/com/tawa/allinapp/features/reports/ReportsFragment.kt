@@ -47,7 +47,7 @@ class ReportsFragment : BaseFragment() {
             when(it.reportName){
                 "CHECK LIST PUNTO DE VENTA" -> findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToCheckListFragment("Probando"))
                 "REPORTE FOTOGRAFICO" -> findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToPictureFragment())
-                "ESTATUS DE USUARIO" -> findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToUserStatusFragment())
+               // "ESTATUS DE USUARIO" -> findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToUserStatusFragment())
                 "QUIEBRES Y SKU" -> findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToSkuFragment())
                 "AUDIO" -> findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToAudioFragment())
             }
@@ -58,14 +58,8 @@ class ReportsFragment : BaseFragment() {
         binding = FragmentReportsBinding.inflate(inflater)
         reportsViewModel = viewModel(viewModelFactory) {
             observe(reports, { it?.let {
-                if(typeUser=="MERCADERISTA")
-                {
-                    listReports = it.filter { it.reportName!="ESTATUS DE USUARIO" }
-                    reportsAdapter.setData(listReports)
-                }
-                else
-                    reportsAdapter.setData(it)
-
+                listReports = it.filter { it.reportName!="ESTATUS DE USUARIO" }
+                reportsAdapter.setData(listReports)
             } })
             observe(pvName, { it?.let {
                 binding.tvHeaderPV.text = it
