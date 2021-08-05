@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.material.Text
+import androidx.compose.ui.platform.ComposeView
 import com.tawa.allinapp.core.extensions.observe
 import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.platform.BaseFragment
@@ -20,14 +22,10 @@ class CalendarFragment : BaseFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        binding = FragmentCalendarBinding.inflate(inflater, container, false)
-        calendarViewModel = viewModel(viewModelFactory) {
-            observe(text, {
-                it?.let {
-                    binding.tvCalendar.text = it
-                }
-            })
+        return ComposeView(requireContext()).apply {
+            setContent {
+                Text( "DASHBOARD COMPOSE")
+            }
         }
-        return binding.root
     }
 }
