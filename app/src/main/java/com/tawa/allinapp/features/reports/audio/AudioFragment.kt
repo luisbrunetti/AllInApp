@@ -1,6 +1,7 @@
 package com.tawa.allinapp.features.reports.audio
 
 import android.os.Bundle
+import android.os.SystemClock
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -8,9 +9,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.tawa.allinapp.R
 import com.tawa.allinapp.core.dialog.MessageDialogFragment
-import com.tawa.allinapp.core.extensions.failure
-import com.tawa.allinapp.core.extensions.observe
-import com.tawa.allinapp.core.extensions.viewModel
+import com.tawa.allinapp.core.extensions.*
 import com.tawa.allinapp.core.functional.Failure
 import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.FragmentAudioBinding
@@ -42,9 +41,23 @@ class AudioFragment : BaseFragment() {
         binding = FragmentAudioBinding.inflate(inflater)
         audioViewModel = viewModel(viewModelFactory){
             observe(fileString,{ it?.let {
-                Log.w("sdasd",it)
-                audio64 = it
-
+                if (it.isNotEmpty()){
+                    audio64 = it
+                    binding.rvAudioRecord.visible()
+                }else
+                    binding.rvAudioRecord.invisible()
+            }})
+            observe(recording,{ it?.let {
+                if (it){
+                    binding.chronometer.base = SystemClock.elapsedRealtime()
+                    binding.chronometer.start()
+                    binding.rvAudioRecord.invisible()
+                }
+                else{
+                    binding.chronometer.base = SystemClock.elapsedRealtime()
+                    binding.chronometer.stop()
+                    binding.rvAudioRecord.visible()
+                }
             }})
             observe(successAudio,{
                 it?.let {
@@ -74,7 +87,14 @@ class AudioFragment : BaseFragment() {
                 }
             }})
         }
+        binding.ivClose.setOnClickListener { binding.rvAudioRecord.invisible() }
         binding.btSavePictures.setOnClickListener {
+            audioViewModel.setReadyAnswers(idQuestion,nameQuestion,idAnswer,audio64,"")
+            audioViewModel.updateStateReport("60dc7d0c11bb190a40e28e91", "En proceso")
+            activity?.onBackPressed()
+        }
+
+        binding.btErraser.setOnClickListener {
             audioViewModel.setReadyAnswers(idQuestion,nameQuestion,idAnswer,audio64,"")
             audioViewModel.updateStateReport("60dc7d0c11bb190a40e28e91", "En proceso")
             activity?.onBackPressed()
