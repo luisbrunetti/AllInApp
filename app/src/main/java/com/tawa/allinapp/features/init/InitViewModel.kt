@@ -28,6 +28,7 @@ class InitViewModel
     private val setCheckIn: SetCheckIn,
     private val setIdPv: SetIdPv,
     private val getIdUser: GetIdUser,
+    private val getRoleUser: GetRoleUser,
     private val getUserName: GetUserName,
     private val syncCheck: SyncCheck,
     private val syncPhotoReports: SyncPhotoReports,
@@ -159,6 +160,10 @@ class InitViewModel
     private val _successGetAudioRemote = MutableLiveData(false)
     val successGetAudioRemote: LiveData<Boolean>
         get() = _successGetAudioRemote
+
+    private val _successGetRole = MutableLiveData("")
+    val successGetRole: LiveData<String>
+        get() = _successGetRole
 
     init {
         startHome()
@@ -312,6 +317,12 @@ class InitViewModel
 
     private fun handleSyncAudio(success:Boolean) {
         this._successSyncAudio.value = success
+    }
+
+    fun getRoleUser() = getRoleUser(UseCase.None()) { it.either(::handleFailure, ::handleGetRole) }
+
+    private fun handleGetRole(role:String) {
+        this._successGetRole.value = role
     }
 
 }

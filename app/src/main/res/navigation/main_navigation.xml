@@ -22,6 +22,9 @@
         <action
             android:id="@+id/action_navigation_init_to_navigation_pdv"
             app:destination="@id/navigation_pdv" />
+        <action
+            android:id="@+id/action_navigation_init_to_navigation_informs"
+            app:destination="@id/navigation_informs" />
     </fragment>
 
     <fragment
@@ -43,9 +46,6 @@
         <action
             android:id="@+id/action_navigation_reports_to_pictureFragment"
             app:destination="@id/pictureFragment" />
-        <action
-            android:id="@+id/action_navigation_reports_to_userStatusFragment"
-            app:destination="@id/userStatusFragment" />
         <action
             android:id="@+id/action_navigation_reports_to_skuFragment"
             app:destination="@id/skuFragment" />
@@ -120,6 +120,15 @@
         android:id="@+id/audioFragment"
         android:name="com.tawa.allinapp.features.reports.audio.AudioFragment"
         android:label="AudioFragment" />
+    <fragment
+        android:id="@+id/navigation_informs"
+        android:name="com.tawa.allinapp.features.informs.InformsFragment"
+        android:label="fragment_informs"
+        tools:layout="@layout/fragment_informs" >
+        <action
+            android:id="@+id/action_navigation_informs_to_userStatusFragment"
+            app:destination="@id/userStatusFragment" />
+    </fragment>
 
 
 </navigation>

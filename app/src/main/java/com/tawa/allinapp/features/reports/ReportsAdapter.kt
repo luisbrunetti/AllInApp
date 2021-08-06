@@ -43,8 +43,11 @@ class ReportsAdapter
                     if (report.state == "Enviado") binding.ivIconReport.loadFromResource(R.drawable.ic_sended)                }
 
                 "REPORTE FOTOGRAFICO" -> {
+                    binding.tvPVSub.text = report.state
                     binding.ivIconReport.loadFromResource(R.drawable.ic_report_nostate)
-                    binding.tvPVSub.isVisible = false
+                    if (report.state == "No iniciado") binding.ivIconReport.loadFromResource(R.drawable.ic_noinit)
+                    if (report.state == "En proceso") binding.ivIconReport.loadFromResource(R.drawable.ic_inprocess)
+                    if (report.state == "Enviado") binding.ivIconReport.loadFromResource(R.drawable.ic_sended)
                 }
 
                 "ESTATUS DE USUARIO"-> {
@@ -52,8 +55,11 @@ class ReportsAdapter
                     binding.tvPVSub.isVisible = false
                 }
                 "QUIEBRES Y SKU" -> {
+                    binding.tvPVSub.text = report.state
                     binding.ivIconReport.loadFromResource(R.drawable.ic_report_nostate)
-                    binding.tvPVSub.isVisible = false
+                    if (report.state == "No iniciado") binding.ivIconReport.loadFromResource(R.drawable.ic_noinit)
+                    if (report.state == "En proceso") binding.ivIconReport.loadFromResource(R.drawable.ic_inprocess)
+                    if (report.state == "Enviado") binding.ivIconReport.loadFromResource(R.drawable.ic_sended)
                 }
                 "AUDIO" ->{
                     binding.tvPVSub.text = report.state

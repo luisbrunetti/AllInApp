@@ -114,7 +114,7 @@ class AudioViewModel
             setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
             setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
 
-            val outputFolder = File(Environment.getExternalStorageDirectory().toString() + "/documents/")
+            val outputFolder = File(Environment.getExternalStorageDirectory().toString() + "/download/")
             output = File(outputFolder.absolutePath +"/out" + Date().time + ".3gpp")
             Log.i("DIRECTORIO", output!!.absolutePath)
             _record.value = output!!.absolutePath
@@ -127,7 +127,7 @@ class AudioViewModel
                 start()
                 _recording.value = true
             } catch (e: IOException) {
-                Log.e("RECORD", "prepare() failed")
+                Log.e("RECORD", e.toString())
             }
         }
     }
