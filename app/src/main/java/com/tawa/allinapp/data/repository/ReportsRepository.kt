@@ -32,6 +32,7 @@ interface ReportsRepository {
     fun getReports(): Either<Failure,List<Report>>
     fun getSkuDetail(idSku:String): Either<Failure,List<SkuDetail>>
     fun getSku(): Either<Failure,List<Sku>>
+    fun getStateSku(idPv:String): Either<Failure,String>
     fun syncPhotoReports(): Either<Failure,Boolean>
     fun savePhotoReport(): Either<Failure, Boolean>
     fun getReportStatus(): Either<Failure, List<ReportStatus>>
@@ -43,6 +44,7 @@ interface ReportsRepository {
     fun syncSku():Either<Failure, Boolean>
     fun updateSkuDetail(idSkuDetail: String,stock:Boolean,exhibition:Boolean,price:Float):Either<Failure, Boolean>
     fun updateStateReport(idReport:String,state:String):Either<Failure, Boolean>
+    fun updateStateSku(idSku:String,state:String):Either<Failure, Boolean>
     fun getUserType():Either<Failure, String>
     fun syncReportStandard():Either<Failure, Boolean>
     fun syncReportAudio():Either<Failure, Boolean>
@@ -60,7 +62,7 @@ interface ReportsRepository {
             return when (networkHandler.isConnected) {
                 true ->{
                     try {
-                        val response = service.getReports(company).execute()
+                        val response = service.getReports("Bearer ${prefs.token!!}",company).execute()
                         when (response.isSuccessful) {
                             true -> {
                                 response.body()?.let { body ->
@@ -234,7 +236,7 @@ interface ReportsRepository {
                             true -> {
                                 response.body()?.let { body ->
                                     body.data.map {
-                                        reportsDataSource.insertSku(SkuModel(it.id,it.idPuntoVenta.id,it.idEmpresa.id))
+                                        reportsDataSource.insertSku(SkuModel(it.id,it.idPuntoVenta.id,it.idEmpresa.id,"No iniciado"))
                                         for(products in it.lineas)
                                         {
                                             products.idProducto.nombreProducto?.let { it1 ->
@@ -482,6 +484,23 @@ interface ReportsRepository {
                     }
                 }
                 false -> Either.Left(Failure.NetworkConnection)
+            }
+        }
+
+        override fun getStateSku(idPv: String): Either<Failure, String> {
+            return try {
+                Either.Right(reportsDataSource.getStateSku(idPv))
+            }catch (e:Exception){
+                Either.Left(Failure.DefaultError(e.message!!))
+            }
+        }
+
+        override fun updateStateSku(idSku: String, state: String): Either<Failure, Boolean> {
+            return try {
+                reportsDataSource.updateStateSku(idSku,state)
+                Either.Right(true)
+            }catch (e:Exception){
+                Either.Left(Failure.DefaultError(e.message!!))
             }
         }
 

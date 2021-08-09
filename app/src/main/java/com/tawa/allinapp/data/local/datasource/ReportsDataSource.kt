@@ -22,6 +22,11 @@ class ReportsDataSource @Inject constructor(private val reportsDao: ReportsDao){
         reportsDao.updateStateReports(idReport,state)
     }
 
+    fun updateStateSku(idSku:String,state:String)
+    {
+        reportsDao.updateStateSku(idSku,state)
+    }
+
     fun insertPhotoReport(reportModel: PhotoReportModel){
         reportsDao.insertPhotoReport(reportModel)
     }
@@ -52,6 +57,10 @@ class ReportsDataSource @Inject constructor(private val reportsDao: ReportsDao){
 
     fun getSku(idPV: String):List<SkuModel>{
         return reportsDao.getSku(idPV)
+    }
+
+    fun getStateSku(idPV: String):String{
+        return reportsDao.getStateSku(idPV)
     }
 
     fun insertSkuObservation(skuObservationModel: SkuObservationModel){

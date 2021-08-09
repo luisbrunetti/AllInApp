@@ -7,6 +7,7 @@ import com.tawa.allinapp.core.functional.Failure
 import com.tawa.allinapp.core.functional.NetworkHandler
 import com.tawa.allinapp.data.local.Prefs
 import com.tawa.allinapp.data.local.datasource.QuestionsDataSource
+import com.tawa.allinapp.data.local.datasource.ReportsDataSource
 import com.tawa.allinapp.data.remote.service.QuestionsService
 import com.tawa.allinapp.models.Answer
 import com.tawa.allinapp.models.Question
@@ -17,7 +18,7 @@ interface QuestionsRepository {
     fun setQuestions(): Either<Failure, Boolean>
     fun setAudioQuestion(): Either<Failure, Boolean>
     fun setReadyAnswers(readyAnswer: ReadyAnswer): Either<Failure, Boolean>
-    fun getQuestions(): Either<Failure,List<Question>>
+    fun getQuestions(idReport: String): Either<Failure,List<Question>>
     fun getAnswers(idQuestion: String): Either<Failure,List<Answer>>
     fun updateAnswers(idAnswer:String,data:String): Either<Failure, Boolean>
     fun changeState(state: Boolean,verify:Boolean):Either<Failure, Boolean>
@@ -27,6 +28,7 @@ interface QuestionsRepository {
     class Network
     @Inject constructor(private val networkHandler: NetworkHandler,
                         private val questionsDataSource: QuestionsDataSource,
+                        private val reportsDataSource: ReportsDataSource,
                         private val prefs: Prefs,
                         private val service: QuestionsService,
     ): QuestionsRepository{
@@ -99,9 +101,9 @@ interface QuestionsRepository {
         }
 
 
-        override fun getQuestions(): Either<Failure, List<Question>> {
+        override fun getQuestions(idReport :String): Either<Failure, List<Question>> {
             return try {
-                Either.Right(questionsDataSource.getQuestions().map { it.toView() })
+                Either.Right(questionsDataSource.getQuestionsByIdReport(idReport).map { it.toView() })
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))
             }

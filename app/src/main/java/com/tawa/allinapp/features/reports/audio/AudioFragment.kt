@@ -24,6 +24,7 @@ class AudioFragment : BaseFragment() {
     private  var idAnswer =""
     private  var nameAnswer = ""
     private  var audio64 = ""
+    private var idReport = ""
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,6 +40,9 @@ class AudioFragment : BaseFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentAudioBinding.inflate(inflater)
+        arguments?.getString("id").toString().also {idRep->
+            idReport=idRep
+        }
         audioViewModel = viewModel(viewModelFactory){
             observe(fileString,{ it?.let {
                 if (it.isNotEmpty()){
@@ -90,13 +94,13 @@ class AudioFragment : BaseFragment() {
         binding.ivClose.setOnClickListener { binding.rvAudioRecord.invisible() }
         binding.btSavePictures.setOnClickListener {
             audioViewModel.setReadyAnswers(idQuestion,nameQuestion,idAnswer,audio64,"")
-            audioViewModel.updateStateReport("60dc7d0c11bb190a40e28e91", "En proceso")
+            audioViewModel.updateStateReport(idReport, "En proceso")
             activity?.onBackPressed()
         }
 
         binding.btErraser.setOnClickListener {
             audioViewModel.setReadyAnswers(idQuestion,nameQuestion,idAnswer,audio64,"")
-            audioViewModel.updateStateReport("60dc7d0c11bb190a40e28e91", "En proceso")
+            audioViewModel.updateStateReport(idReport, "En proceso")
             activity?.onBackPressed()
         }
 

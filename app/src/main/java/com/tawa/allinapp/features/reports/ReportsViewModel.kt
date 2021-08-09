@@ -12,7 +12,8 @@ class ReportsViewModel
 @Inject constructor (
     private val getReports: GetReports,
     private val getDescPV: GetDescPV,
-    private val getUserType: GetUserType
+    private val getUserType: GetUserType,
+    private val getStateSku: GetStateSku
 ):BaseViewModel() {
 
     private val _reports = MutableLiveData<List<Report>>()
@@ -26,6 +27,10 @@ class ReportsViewModel
     private val _userType = MutableLiveData("")
     val userType:LiveData<String>
         get() = _userType
+
+    private val _successStateSku = MutableLiveData("")
+    val successStateSku:LiveData<String>
+        get() = _successStateSku
 
     init {
         getUserType()
@@ -47,6 +52,12 @@ class ReportsViewModel
 
     private fun handleGetUserType(user :String) {
         _userType.value = user
+    }
+
+    fun getStateSku(idPv:String) = getStateSku(GetStateSku.Params(idPv)) { it.either(::handleFailure, ::handleSuccessSku) }
+
+    private fun handleSuccessSku(state:String) {
+        _successStateSku.value = state
     }
 
 }

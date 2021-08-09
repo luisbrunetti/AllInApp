@@ -9,11 +9,12 @@ data class ReportModel(
     @PrimaryKey val id: String,
     val reportName: String,
     val idCompany: String,
+    val nameCompany:String,
     val idUser: String,
     val idUserMod: String,
     val feMod: String,
     val feCreate: String,
     val state:String
 ){
-    fun toView() = Report(id,reportName,idCompany,idUser,idUserMod,feMod,feCreate,state)
+    fun toView() = Report(id,reportName,idCompany,nameCompany,idUser,idUserMod,feMod,feCreate,state)
 }
