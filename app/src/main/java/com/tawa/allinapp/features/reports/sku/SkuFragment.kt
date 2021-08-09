@@ -59,6 +59,7 @@ class SkuFragment : BaseFragment() {
     var idReportPv:String = ""
     var idPv:String= ""
     var idCompany: String = ""
+    var idSkuUpdate  = ""
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -122,6 +123,7 @@ class SkuFragment : BaseFragment() {
                 {
                     for(sku in it)
                     {
+                        idSkuUpdate = sku.id
                         idReportPv = sku.id
                         idPv = sku.idPv
                         idCompany = sku.idCompany
@@ -447,6 +449,9 @@ class SkuFragment : BaseFragment() {
                             }
                     }
                 }
+
+                skuViewModel.updateStateSku(idSkuUpdate,"En proceso")
+                activity?.onBackPressed()
             }
         }
 

@@ -42,26 +42,13 @@ class ReportsAdapter
                     if (report.state == "En proceso") binding.ivIconReport.loadFromResource(R.drawable.ic_inprocess)
                     if (report.state == "Enviado") binding.ivIconReport.loadFromResource(R.drawable.ic_sended)                }
 
-                "REPORTE FOTOGRAFICO" -> {
+                "REPORTE DE AUDIO" ->{
                     binding.tvPVSub.text = report.state
-                    binding.ivIconReport.loadFromResource(R.drawable.ic_report_nostate)
                     if (report.state == "No iniciado") binding.ivIconReport.loadFromResource(R.drawable.ic_noinit)
                     if (report.state == "En proceso") binding.ivIconReport.loadFromResource(R.drawable.ic_inprocess)
-                    if (report.state == "Enviado") binding.ivIconReport.loadFromResource(R.drawable.ic_sended)
-                }
+                    if (report.state == "Enviado") binding.ivIconReport.loadFromResource(R.drawable.ic_sended)   }
 
-                "ESTATUS DE USUARIO"-> {
-                    binding.ivIconReport.loadFromResource(R.drawable.ic_report_nostate)
-                    binding.tvPVSub.isVisible = false
-                }
-                "QUIEBRES Y SKU" -> {
-                    binding.tvPVSub.text = report.state
-                    binding.ivIconReport.loadFromResource(R.drawable.ic_report_nostate)
-                    if (report.state == "No iniciado") binding.ivIconReport.loadFromResource(R.drawable.ic_noinit)
-                    if (report.state == "En proceso") binding.ivIconReport.loadFromResource(R.drawable.ic_inprocess)
-                    if (report.state == "Enviado") binding.ivIconReport.loadFromResource(R.drawable.ic_sended)
-                }
-                "AUDIO" ->{
+                "LEVANTAMIENTO DE INFORMACIÓN" ->{
                     binding.tvPVSub.text = report.state
                     if (report.state == "No iniciado") binding.ivIconReport.loadFromResource(R.drawable.ic_noinit)
                     if (report.state == "En proceso") binding.ivIconReport.loadFromResource(R.drawable.ic_inprocess)

@@ -103,7 +103,7 @@ class CheckListViewModel
 
 
 
-    fun getQuestions() = getQuestions(UseCase.None()) { it.either(::handleFailure, ::handleQuestions) }
+    fun getQuestions(idReport: String) = getQuestions(GetQuestions.Params(idReport)) { it.either(::handleFailure, ::handleQuestions) }
 
     private fun handleQuestions(questions : List<Question>) {
         _questions.value = questions

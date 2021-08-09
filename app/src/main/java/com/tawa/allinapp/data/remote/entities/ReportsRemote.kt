@@ -9,14 +9,20 @@ import com.tawa.allinapp.models.Report
 class ReportsRemote {
     data class Response(
         @SerializedName("_id") val id: String?,
-        @SerializedName("nombre_rpte") val reportName: String?,
-        @SerializedName("id_empr") val idCompany: String?,
-        @SerializedName("id_usua_cread") val idUser: String?,
-        @SerializedName("id_usua_modi") val idUserMod: String?,
-        @SerializedName("fe_modi") val feMod: String?,
+        @SerializedName("nombre_reporte") val reportName: String?,
+        @SerializedName("id_empresa") val idCompany: Company,
+        @SerializedName("id_user_creador") val idUser: String?,
+        @SerializedName("id_user_modificador") val idUserMod: String?,
+        @SerializedName("fe_modificacion") val feMod: String?,
         @SerializedName("fe_creacion") val feCreate: String?,
 
     ){
-        fun toModel() = ReportModel(id?:"",reportName?:"",idCompany?:"",idUser?:"",idUserMod?:"",feMod?:"",feCreate?:"","No iniciado")
+        fun toModel() = ReportModel(id?:"",reportName?:"",idCompany.id?:"",idCompany.nameCompany?:"",idUser?:"",idUserMod?:"",feMod?:"",feCreate?:"","No iniciado")
     }
+
+    data class  Company(
+        @SerializedName("_id") val id: String?,
+        @SerializedName("nombre_empresa") val nameCompany: String?,
+
+    )
 }

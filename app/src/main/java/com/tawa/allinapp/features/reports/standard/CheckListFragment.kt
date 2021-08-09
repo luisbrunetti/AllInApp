@@ -64,6 +64,7 @@ class CheckListFragment: BaseFragment() {
     private var state:Boolean = false
     private var verify:Boolean = false
     private  var idPhoto = ""
+    private var idReport=""
 
     val params = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
     var urlImage = ""
@@ -78,8 +79,7 @@ class CheckListFragment: BaseFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentChecklistBinding.inflate(inflater)
-        val id = arguments?.getString("id")
-        //Toast.makeText(context,id,Toast.LENGTH_SHORT).show()
+
 
         checkListViewModel = viewModel(viewModelFactory) {
             observe(stateCheckList,{
@@ -88,7 +88,10 @@ class CheckListFragment: BaseFragment() {
                     {
                         state = it[0]
                         verify = it[1]
-                        checkListViewModel.getQuestions()
+                        arguments?.getString("id").toString().also {idRep->
+                            idReport=idRep
+                            checkListViewModel.getQuestions(idReport)
+                        }
                     }
 
                 }
@@ -160,7 +163,7 @@ class CheckListFragment: BaseFragment() {
             //checkListViewModel.updateState(true)
             if(!verify) {
                 checkListViewModel.updateState(true, true)
-                checkListViewModel.updateStateReport("60dc7d0c11bb190a40e28e87", "En proceso")
+                checkListViewModel.updateStateReport(idReport, "En proceso")
                 for (radio in listRadioButton) {
                     val tag = radio.tag as ArrayList<String>
                     checkListViewModel.updateAnswers(tag[0], radio.isChecked.toString())
@@ -188,7 +191,7 @@ class CheckListFragment: BaseFragment() {
         binding.btnBr.setOnClickListener {
             if(!verify) {
                 checkListViewModel.updateState(true, false)
-                checkListViewModel.updateStateReport("60dc7d0c11bb190a40e28e87", "En proceso")
+                checkListViewModel.updateStateReport(idReport, "En proceso")
                 for (radio in listRadioButton) {
                     val tag = radio.tag as ArrayList<String>
                     checkListViewModel.updateAnswers(tag[0], radio.isChecked.toString())
