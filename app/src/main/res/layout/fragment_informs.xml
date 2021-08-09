@@ -158,7 +158,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/textView21" />
 
                 <View
-                    android:id="@+id/view9"
+                    android:id="@+id/btDashboard"
                     android:layout_width="0dp"
                     android:layout_height="64dp"
                     android:layout_marginStart="36dp"
@@ -189,9 +189,9 @@
                     android:layout_marginStart="14dp"
                     android:elevation="6dp"
                     android:src="@drawable/ic_dashboard"
-                    app:layout_constraintBottom_toBottomOf="@+id/view9"
-                    app:layout_constraintStart_toStartOf="@+id/view9"
-                    app:layout_constraintTop_toTopOf="@+id/view9" />
+                    app:layout_constraintBottom_toBottomOf="@+id/btDashboard"
+                    app:layout_constraintStart_toStartOf="@+id/btDashboard"
+                    app:layout_constraintTop_toTopOf="@+id/btDashboard" />
 
                 <TextView
                     android:id="@+id/textView28"
@@ -215,9 +215,9 @@
                     android:text="Dashboard de cobertura"
                     android:textColor="@color/colorTextAll"
                     android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="@+id/view9"
+                    app:layout_constraintBottom_toBottomOf="@+id/btDashboard"
                     app:layout_constraintStart_toEndOf="@+id/imageView14"
-                    app:layout_constraintTop_toTopOf="@+id/view9" />
+                    app:layout_constraintTop_toTopOf="@+id/btDashboard" />
 
                 <ImageView
                     android:id="@+id/imageView13"
@@ -237,9 +237,9 @@
                     android:layout_marginEnd="14dp"
                     android:elevation="6dp"
                     android:src="@drawable/ic_arright"
-                    app:layout_constraintBottom_toBottomOf="@+id/view9"
-                    app:layout_constraintEnd_toEndOf="@+id/view9"
-                    app:layout_constraintTop_toTopOf="@+id/view9" />
+                    app:layout_constraintBottom_toBottomOf="@+id/btDashboard"
+                    app:layout_constraintEnd_toEndOf="@+id/btDashboard"
+                    app:layout_constraintTop_toTopOf="@+id/btDashboard" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.core.widget.NestedScrollView>
 

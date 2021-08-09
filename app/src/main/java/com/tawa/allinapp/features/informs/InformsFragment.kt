@@ -38,6 +38,9 @@ class InformsFragment : BaseFragment() {
         binding.btnStatusUser.setOnClickListener {
             findNavController().navigate(InformsFragmentDirections.actionNavigationInformsToUserStatusFragment())
         }
+        binding.btDashboard.setOnClickListener {
+            findNavController().navigate(InformsFragmentDirections.actionNavigationInformsToUserStatusFragment())
+        }
         return binding.root
     }
 

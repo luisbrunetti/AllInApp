@@ -3,6 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="../../../../../layout/compose-model-1628279987343.xml" value="1.0" />
+        <entry key="../../../../../layout/compose-model-1628347169116.xml" value="0.335" />
+        <entry key="../../../../../layout/compose-model-1628464745207.xml" value="0.33614864864864863" />
         <entry key="..\:/DESARROLLO/tawa-android-changes/app/src/main/res/drawable/bg_button_white.xml" value="0.3828125" />
         <entry key="..\:/DESARROLLO/tawa-android-changes/app/src/main/res/drawable/bg_item_view.xml" value="0.3828125" />
         <entry key="..\:/DESARROLLO/tawa-android-changes/app/src/main/res/drawable/bg_top_view.xml" value="0.3828125" />
@@ -34,6 +37,8 @@
         <entry key="..\:/DESARROLLO/tawa-android-changes/app/src/main/res/menu/home_menu.xml" value="0.36666666666666664" />
         <entry key="..\:/DESARROLLO/tawa-android-changes/app/src/main/res/menu/home_menu_list.xml" value="0.36666666666666664" />
         <entry key="..\:/DESARROLLO/tawa-android-changes/app/src/main/res/xml/xml.xml" value="0.36666666666666664" />
+        <entry key="app/src/main/res/layout/fragment_calendar.xml" value="0.25555555555555554" />
+        <entry key="app/src/main/res/layout/fragment_informs.xml" value="0.382051282051282" />
       </map>
     </option>
   </component>
