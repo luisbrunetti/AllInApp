@@ -39,7 +39,7 @@ class InformsFragment : BaseFragment() {
             findNavController().navigate(InformsFragmentDirections.actionNavigationInformsToUserStatusFragment())
         }
         binding.btDashboard.setOnClickListener {
-            findNavController().navigate(InformsFragmentDirections.actionNavigationInformsToUserStatusFragment())
+            findNavController().navigate(InformsFragmentDirections.actionNavigationInformsToCoverageBoardFragment())
         }
         return binding.root
     }

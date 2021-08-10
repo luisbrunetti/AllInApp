@@ -9,6 +9,7 @@
     <color name="colorTextPrimary">#FFFFFF</color>
     <color name="colorTextSecondary">#7f1a18</color>
     <color name="colorLayoutTop">#004987</color>
+    <color name="colorLayoutTopGradient">#0061B2</color>
     <color name="colorButtonCheckIn">#04CB77</color>
     <color name="colorButtonCheckOut">#EB5757</color>
     <color name="colorSplash">#F4F6F8</color>
