@@ -85,6 +85,18 @@ class ReportsFragment : BaseFragment() {
                     }
                 }
             })
+            observe(successStatePicture,{
+                it?.let {
+                    if(it.isNotEmpty())
+                    {
+                        binding.tvPVSub2.text = it
+                        if(it=="En proceso")
+                        {
+                            binding.iconSku.setImageResource(R.drawable.ic_inprocess)
+                        }
+                    }
+                }
+            })
             failure(failure, { it?.let {
                 hideProgressDialog()
                 when(it){
@@ -133,6 +145,7 @@ class ReportsFragment : BaseFragment() {
             }
         })
         reportsViewModel.getStateSku("60fb181d8b978fb259e4acb8")
+        reportsViewModel.getStatePicture("60fb181d8b978fb259e4acb8")
         return binding.root
     }
 
