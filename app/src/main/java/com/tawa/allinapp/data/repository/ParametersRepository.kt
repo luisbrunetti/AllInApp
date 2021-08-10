@@ -34,6 +34,7 @@ interface ParametersRepository {
                                         body.data.map {
                                             parametersDataSource.insertCompanies(it.toModel())
                                         }
+                                        prefs.companyId = body.data[0].id
                                         Either.Right(true)
                                     }
                                     else Either.Left(Failure.DefaultError(body.message))

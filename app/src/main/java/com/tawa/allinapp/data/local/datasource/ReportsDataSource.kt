@@ -63,6 +63,10 @@ class ReportsDataSource @Inject constructor(private val reportsDao: ReportsDao){
         return reportsDao.getStateSku(idPV)
     }
 
+    fun getStatePhoto(pv: String):String{
+        return reportsDao.getStatePhoto(pv)
+    }
+
     fun insertSkuObservation(skuObservationModel: SkuObservationModel){
         reportsDao.insertSkuObservation(skuObservationModel)
     }

@@ -49,6 +49,7 @@ interface ReportsRepository {
     fun syncReportStandard():Either<Failure, Boolean>
     fun syncReportAudio():Either<Failure, Boolean>
     fun getLocalPhotoReport(): Either<Failure, PhotoReport>
+    fun getStatePhotoReport(idPv: String): Either<Failure, String>
 
     class Network
     @Inject constructor(private val networkHandler: NetworkHandler,
@@ -110,6 +111,14 @@ interface ReportsRepository {
             }
         }
 
+        override fun getStatePhotoReport(idPv: String): Either<Failure, String> {
+            return try {
+                Either.Right(reportsDataSource.getStatePhoto(idPv))
+            }catch (e:Exception){
+                Either.Left(Failure.DefaultError(e.message!!))
+            }
+        }
+
         override fun saveLocalPhotoReport(report:PhotoReport): Either<Failure, Boolean> {
             if (prefs.pvId!!.isEmpty())
                 return Either.Left(Failure.DefaultError("Debe seleccionar hacer Checkin en un Punto de Venta"))
@@ -132,7 +141,8 @@ interface ReportsRepository {
                             if (after >3) report.after[3] else "",
                             if (after >4) report.after[4] else "",
                             report.comments,
-                            report.createAt
+                            report.createAt,
+                            "No iniciado"
                         )
                     )
                     Either.Right(true)
