@@ -49,6 +49,9 @@ interface ReportsDao {
     @Query("SELECT state FROM sku WHERE idPv=:idPv")
     fun getStateSku(idPv:String): String
 
+    @Query("SELECT state FROM reports_photo WHERE pv=:pv")
+    fun getStatePhoto(pv:String): String
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertSkuObservation(skuObservationModel: SkuObservationModel)
 
