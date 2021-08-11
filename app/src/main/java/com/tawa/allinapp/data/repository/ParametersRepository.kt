@@ -68,7 +68,9 @@ interface ParametersRepository {
                                 response.body()?.let { body ->
                                     if(body.success) {
                                         body.data.map {
-                                            parametersDataSource.insertPV(it.toModel())
+                                            it.pv?.map { pv ->
+                                                parametersDataSource.insertPV(pv.toModel(it.company?.id))
+                                            }
                                         }
                                         Either.Right(true)
                                     }
