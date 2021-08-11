@@ -17,14 +17,17 @@ interface ReportsDao {
     @Query("SELECT * FROM reports")
     fun getReports(): List<ReportModel>
 
+    @Query("SELECT type FROM reports WHERE id=:idReport")
+    fun getStateReport(idReport: String): String
+
     @Query("SELECT * FROM reports where idCompany=:idCompany")
     fun listReports(idCompany: String): List<ReportModel>
 
-    @Query("UPDATE reports set state=:state WHERE id=:idReport")
-    fun updateStateReports(idReport:String,state:String)
+    @Query("UPDATE reports set state=:state, type=:type,idPv=:idPv WHERE id=:idReport")
+    fun updateStateReports(idReport:String,state:String,type:String,idPv: String)
 
-    @Query("UPDATE sku set state=:state WHERE id=:idSku")
-    fun updateStateSku(idSku:String,state:String)
+    @Query("UPDATE sku set state=:state, type=:type WHERE id=:idSku")
+    fun updateStateSku(idSku:String,state:String,type: String)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertPhotoReport(report:PhotoReportModel)

@@ -175,7 +175,7 @@ class AudioViewModel
         this._successReadyAnswers.value = success
     }
 
-    fun updateStateReport(idReport:String,state:String) { updateStateReport(UpdateStateReport.Params(idReport,state)) {
+    fun updateStateReport(idReport:String,state:String,type:String) { updateStateReport(UpdateStateReport.Params(idReport,state,type)) {
         it.either(::handleFailure, ::handleUpdateStateReport)
     }
     }

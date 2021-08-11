@@ -7,7 +7,8 @@ data class Sku(
     val id:String ,
     val idPv :String,
     val idCompany:String,
-    val state : String
+    val state : String,
+    val type:String
 ){
-    fun toModel() = SkuModel(id,idPv,idCompany,state)
+    fun toModel() = SkuModel(id,idPv,idCompany,state,type)
 }

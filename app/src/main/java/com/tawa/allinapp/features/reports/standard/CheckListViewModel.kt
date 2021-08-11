@@ -16,7 +16,7 @@ class CheckListViewModel
     private val setReadyAnswers: SetReadyAnswers,
     private val updateAnswers: UpdateAnswers,
     private val updateState: UpdateState,
-    private val getStateChecklist: GetStateChecklist,
+    private val getStateReport: GetStateReport,
     private val updateStateReport: UpdateStateReport
     ):BaseViewModel() {
 
@@ -93,13 +93,20 @@ class CheckListViewModel
         get()= _type
 
 
-    private val _stateCheckList = MutableLiveData<ArrayList<Boolean>>(arrayListOf(false,false))
-    val stateCheckList: LiveData<ArrayList<Boolean>>
-        get()= _stateCheckList
+    private val _stateReport = MutableLiveData("")
+    val stateReport: LiveData<String>
+        get()= _stateReport
 
     private val _updateReportState = MutableLiveData<Boolean>(false)
     val updateReportState: LiveData<Boolean>
         get()= _updateReportState
+
+    private val _errorMessage = MutableLiveData("")
+    val errorMessage = _errorMessage
+
+    fun setError(error:String){
+        _errorMessage.value = error
+    }
 
 
 
@@ -112,7 +119,7 @@ class CheckListViewModel
 
 
     init {
-        getStateCheckList(1)
+       // getStateCheckList(1)
     }
 
     fun getAnswersRadio(idQuestion:String,nameQ: String,order:Int) = getAnswers(GetAnswers.Params(idQuestion)) {
@@ -194,16 +201,16 @@ class CheckListViewModel
         this._successUpdateState.value = success
     }
 
-    private fun getStateCheckList(type:Int) { getStateChecklist(UseCase.None()) {
+    fun getStateReport(idReport: String,type:Int) { getStateReport(GetStateReport.Params(idReport)) {
         _type.value=type
-        it.either(::handleFailure, ::handleGetStateCheckList)
+        it.either(::handleFailure, ::handleGetStateReport)
         }
     }
-    private fun handleGetStateCheckList(success: ArrayList<Boolean>) {
-        this._stateCheckList.value = success
+    private fun handleGetStateReport(type: String) {
+        this._stateReport.value = type
     }
 
-    fun updateStateReport(idReport:String,state:String) { updateStateReport(UpdateStateReport.Params(idReport,state)) {
+    fun updateStateReport(idReport:String,state:String,type:String) { updateStateReport(UpdateStateReport.Params(idReport,state,type)) {
         it.either(::handleFailure, ::handleUpdateStateReport)
         }
     }

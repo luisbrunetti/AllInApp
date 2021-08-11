@@ -189,7 +189,7 @@
                     android:visibility="visible"
                     app:layout_constraintBottom_toBottomOf="@+id/btnReportPictures"
                     app:layout_constraintEnd_toEndOf="@+id/btnReportPictures"
-                    app:layout_constraintStart_toEndOf="@+id/imageView16"
+                    app:layout_constraintStart_toEndOf="@+id/iconPicture"
                     app:layout_constraintTop_toBottomOf="@+id/textView32"
                     app:layout_constraintVertical_bias="0.0" />
 
@@ -236,7 +236,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/btnReportPictures" />
 
                 <ImageView
-                    android:id="@+id/imageView16"
+                    android:id="@+id/iconPicture"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="14dp"
@@ -269,7 +269,7 @@
                     app:layout_constraintBottom_toBottomOf="@+id/btnReportPictures"
                     app:layout_constraintEnd_toEndOf="@+id/btnReportPictures"
                     app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toEndOf="@+id/imageView16"
+                    app:layout_constraintStart_toEndOf="@+id/iconPicture"
                     app:layout_constraintTop_toTopOf="@+id/btnReportPictures"
                     app:layout_constraintVertical_bias="0.29000002" />
 
