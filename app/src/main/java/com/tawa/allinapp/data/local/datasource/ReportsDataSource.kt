@@ -17,6 +17,10 @@ class ReportsDataSource @Inject constructor(private val reportsDao: ReportsDao){
         return reportsDao.getReports()
     }
 
+    fun listReports(idCompany:String):List<ReportModel> {
+        return reportsDao.listReports(idCompany)
+    }
+
     fun updateStateReports(idReport:String,state:String)
     {
         reportsDao.updateStateReports(idReport,state)

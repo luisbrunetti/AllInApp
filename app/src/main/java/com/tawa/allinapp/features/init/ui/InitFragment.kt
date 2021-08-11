@@ -25,11 +25,13 @@ import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.FragmentInitBinding
 import com.tawa.allinapp.features.HomeActivity
 import com.tawa.allinapp.features.init.InitViewModel
+import com.tawa.allinapp.features.reports.picture.PictureViewModel
 
 
 class InitFragment : BaseFragment() {
 
     private lateinit var initViewModel: InitViewModel
+    private  lateinit var pictureViewModel: PictureViewModel
     private lateinit var binding: FragmentInitBinding
     private lateinit var locationManager:LocationManager
 

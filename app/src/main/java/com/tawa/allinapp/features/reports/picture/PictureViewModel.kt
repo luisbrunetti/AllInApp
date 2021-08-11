@@ -28,7 +28,8 @@ class PictureViewModel
         _errorMessage.value = error
     }
 
-    fun saveReport(report: PhotoReport) = setPhotoReport(SetPhotoReport.Params(report)) { it.either(::handleFailure, ::handleReports) }
+    fun saveReport(report: PhotoReport) = setPhotoReport(SetPhotoReport.Params(report)) {
+        it.either(::handleFailure, ::handleReports) }
 
     fun getPhotoReport() = getLocalPhotoReport(UseCase.None()) { it.either(::handleFailure, ::handlePhotoReport) }
 
