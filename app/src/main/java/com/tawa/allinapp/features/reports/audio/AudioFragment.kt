@@ -94,13 +94,13 @@ class AudioFragment : BaseFragment() {
         binding.ivClose.setOnClickListener { binding.rvAudioRecord.invisible() }
         binding.btSavePictures.setOnClickListener {
             audioViewModel.setReadyAnswers(idQuestion,nameQuestion,idAnswer,audio64,"")
-            audioViewModel.updateStateReport(idReport, "En proceso")
+            audioViewModel.updateStateReport(idReport, "En proceso","Terminado")
             activity?.onBackPressed()
         }
 
         binding.btErraser.setOnClickListener {
             audioViewModel.setReadyAnswers(idQuestion,nameQuestion,idAnswer,audio64,"")
-            audioViewModel.updateStateReport(idReport, "En proceso")
+            audioViewModel.updateStateReport(idReport, "En proceso","Borrador")
             activity?.onBackPressed()
         }
 

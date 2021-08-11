@@ -45,12 +45,13 @@ interface ReportsRepository {
     fun getSkuObservation(idSkuDetail: String):Either<Failure, List<SkuObservation>>
     fun syncSku():Either<Failure, Boolean>
     fun updateSkuDetail(idSkuDetail: String,stock:Boolean,exhibition:Boolean,price:Float):Either<Failure, Boolean>
-    fun updateStateReport(idReport:String,state:String):Either<Failure, Boolean>
-    fun updateStateSku(idSku:String,state:String):Either<Failure, Boolean>
+    fun updateStateReport(idReport:String,state:String,type:String):Either<Failure, Boolean>
+    fun updateStateSku(idSku:String,state:String,type:String):Either<Failure, Boolean>
     fun getUserType():Either<Failure, String>
     fun syncReportStandard():Either<Failure, Boolean>
     fun syncReportAudio():Either<Failure, Boolean>
     fun getLocalPhotoReport(): Either<Failure, PhotoReport>
+    fun getStateReport(idReport: String): Either<Failure,String>
     fun getStatePhotoReport(): Either<Failure, String>
 
     class Network
@@ -75,7 +76,7 @@ interface ReportsRepository {
                                             for(type in it.reports)
                                             {
                                                 Log.d("type",type.reportName.toString())
-                                                reportsDataSource.insertReports(ReportModel(type.id?:"",type.reportName?:"",it.idCompany.id?:"",it.idCompany.nameCompany?:"",it.idUser?:"",it.idUserMod?:"",it.feMod?:"",it.feCreate?:"","No iniciado"))
+                                                reportsDataSource.insertReports(ReportModel(type.id?:"",type.reportName?:"",it.idCompany.id?:"",it.idCompany.nameCompany?:"",it.idUser?:"",it.idUserMod?:"",it.feMod?:"",it.feCreate?:"","No iniciado","0",""))
                                             }
                                            // reportsDataSource.insertReports(it.toModel())
                                             Log.d("reportes",it.toString())
@@ -255,7 +256,7 @@ interface ReportsRepository {
                             true -> {
                                 response.body()?.let { body ->
                                     body.data.map {
-                                        reportsDataSource.insertSku(SkuModel(it.id,it.idPuntoVenta.id,it.idEmpresa.id,"No iniciado"))
+                                        reportsDataSource.insertSku(SkuModel(it.id,it.idPuntoVenta.id,it.idEmpresa.id,"No iniciado","0"))
                                         for(products in it.lineas)
                                         {
                                             products.idProducto.nombreProducto?.let { it1 ->
@@ -395,12 +396,16 @@ interface ReportsRepository {
             }
         }
 
-        override fun updateStateReport(idReport: String, state: String): Either<Failure, Boolean> {
-            return try {
-                reportsDataSource.updateStateReports(idReport,state)
-                Either.Right(true)
-            }catch (e:Exception){
-                Either.Left(Failure.DefaultError(e.message!!))
+        override fun updateStateReport(idReport: String, state: String,type:String): Either<Failure, Boolean> {
+            return if (prefs.pvId!!.isEmpty())
+                Either.Left(Failure.DefaultError("Debe seleccionar hacer Checkin en un Punto de Venta"))
+            else {
+                try {
+                    reportsDataSource.updateStateReports(idReport, state, type, prefs.pvId ?: "")
+                    Either.Right(true)
+                } catch (e: Exception) {
+                    Either.Left(Failure.DefaultError(e.message!!))
+                }
             }
         }
 
@@ -444,7 +449,7 @@ interface ReportsRepository {
                                 response.body()?.let { body ->
                                     if(body.success) {
                                         Log.d("success",body.message.toString())
-                                        updateStateReport("60dc7d0c11bb190a40e28e87","Enviado")
+                                        updateStateReport("60dc7d0c11bb190a40e28e87","Enviado","Terminado")
                                         Either.Right(true)
                                     }
                                     else Either.Left(Failure.DefaultError(body.message))
@@ -490,7 +495,7 @@ interface ReportsRepository {
                                 response.body()?.let { body ->
                                     if(body.success) {
                                         Log.d("successAudio",body.message.toString())
-                                        updateStateReport("60dc7d0c11bb190a40e28e91","Enviado")
+                                        updateStateReport("60dc7d0c11bb190a40e28e91","Enviado","Terminado")
                                         Either.Right(true)
                                     }
                                     else Either.Left(Failure.DefaultError(body.message))
@@ -514,9 +519,9 @@ interface ReportsRepository {
             }
         }
 
-        override fun updateStateSku(idSku: String, state: String): Either<Failure, Boolean> {
+        override fun updateStateSku(idSku: String, state: String,type:String): Either<Failure, Boolean> {
             return try {
-                reportsDataSource.updateStateSku(idSku,state)
+                reportsDataSource.updateStateSku(idSku,state,type)
                 Either.Right(true)
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))
@@ -526,6 +531,14 @@ interface ReportsRepository {
         override fun listReports(idCompany: String): Either<Failure, List<Report>> {
             return try {
                 Either.Right(reportsDataSource.listReports(idCompany).map { it.toView() })
+            }catch (e:Exception){
+                Either.Left(Failure.DefaultError(e.message!!))
+            }
+        }
+
+        override fun getStateReport(idReport: String): Either<Failure, String> {
+            return try {
+                Either.Right(reportsDataSource.getStateReport(idReport))
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))
             }

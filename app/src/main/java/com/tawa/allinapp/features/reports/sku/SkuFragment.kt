@@ -155,7 +155,22 @@ class SkuFragment : BaseFragment() {
                 }
             }
             skuViewModel.getSku(2)
-            showConfirmDialog()
+            showConfirmDialog("Terminado")
+
+        }
+        binding.btnBrSku.setOnClickListener {
+            mapObs.clear()
+            for(check in checksStock)
+                mapCheckStock[check.tag.toString()] = check.isChecked
+            for(checkEx in checkEx)
+                mapCheckEx[checkEx.tag.toString()]= checkEx.isChecked
+            for(ed in edPrice) {
+                if (ed.text.toString().isNotEmpty()) {
+                    mapEdPrice[ed.tag.toString()] = ed.text.toString().toFloat()
+                }
+            }
+            skuViewModel.getSku(2)
+            showConfirmDialog("Borrador")
 
         }
         return binding.root
@@ -431,7 +446,7 @@ class SkuFragment : BaseFragment() {
         textView.gravity = Gravity.START or Gravity.CENTER_VERTICAL
     }
 
-    private fun showConfirmDialog(){
+    private fun showConfirmDialog(type:String){
         val dialog = ConfirmDialogFragment()
         dialog.show(childFragmentManager, "dialog")
         dialog.listener = object  : ConfirmDialogFragment.Callback{
@@ -450,7 +465,7 @@ class SkuFragment : BaseFragment() {
                     }
                 }
 
-                skuViewModel.updateStateSku(idSkuUpdate,"En proceso")
+                skuViewModel.updateStateSku(idSkuUpdate,"En proceso",type)
                 activity?.onBackPressed()
             }
         }

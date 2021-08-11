@@ -27,7 +27,7 @@ interface ReportsApi {
     @PUT("/api/user/estado")
     fun updateStatus(@Header("Authorization") token: String, @Body  request: UpdateStatusRemote.Request):Call<BaseResponse<UpdateStatusRemote.Response>>
 
-    @GET("/api/reportepdv/1/")
+    @GET("/api/reportepdv/1/?_id=6111f3849035a5f29a26d656")
     fun getReportsSku(@Header("Authorization") token: String): Call<BaseResponse<List<ReportsSkuRemote.Response>>>
 
     @POST("/api/registropdv/add")

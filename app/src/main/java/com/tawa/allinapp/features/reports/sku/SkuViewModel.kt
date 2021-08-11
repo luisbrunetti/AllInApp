@@ -108,7 +108,7 @@ class SkuViewModel
         _successGetSkuObservation.value = skuObservation
     }
 
-    fun updateStateSku(idSku: String,state:String) = updateStateSku(UpdateStateSku.Params(idSku,state)) {
+    fun updateStateSku(idSku: String,state:String,type: String) = updateStateSku(UpdateStateSku.Params(idSku,state,type)) {
         it.either(::handleFailure, ::handleSuccessUpdateStateSku) }
 
     private fun handleSuccessUpdateStateSku(success: Boolean) {

@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.tawa.allinapp.data.remote.entities.QuestionsRemote
 import com.tawa.allinapp.features.init.usecase.SetIdCompany
+import com.tawa.allinapp.features.init.usecase.SetIdPv
 import com.tawa.allinapp.models.*
 
 @Entity(tableName = "ready_answers")
@@ -13,7 +14,8 @@ data class ReadyAnswerModel(
     val nameQuestion: String,
     val idAnswer : String,
     val nameAnswer: String,
-    val img:String
+    val img:String,
+    val idPv: String
 ){
-    fun toView() = ReadyAnswer(id,idQuestion,nameQuestion,idAnswer,nameAnswer,img)
+    fun toView() = ReadyAnswer(id,idQuestion,nameQuestion,idAnswer,nameAnswer,img,idPv)
 }

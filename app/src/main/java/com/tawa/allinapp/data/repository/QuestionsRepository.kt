@@ -8,6 +8,7 @@ import com.tawa.allinapp.core.functional.NetworkHandler
 import com.tawa.allinapp.data.local.Prefs
 import com.tawa.allinapp.data.local.datasource.QuestionsDataSource
 import com.tawa.allinapp.data.local.datasource.ReportsDataSource
+import com.tawa.allinapp.data.local.models.ReadyAnswerModel
 import com.tawa.allinapp.data.remote.service.QuestionsService
 import com.tawa.allinapp.models.Answer
 import com.tawa.allinapp.models.Question
@@ -17,12 +18,11 @@ import javax.inject.Inject
 interface QuestionsRepository {
     fun setQuestions(idReport: String): Either<Failure, Boolean>
     fun setAudioQuestion(): Either<Failure, Boolean>
-    fun setReadyAnswers(readyAnswer: ReadyAnswer): Either<Failure, Boolean>
+    fun setReadyAnswers(id: Int, idQuestion: String, nameQuestion: String, idAnswer : String, nameAnswer: String, img : String): Either<Failure, Boolean>
     fun getQuestions(idReport: String): Either<Failure,List<Question>>
     fun getAnswers(idQuestion: String): Either<Failure,List<Answer>>
     fun updateAnswers(idAnswer:String,data:String): Either<Failure, Boolean>
     fun changeState(state: Boolean,verify:Boolean):Either<Failure, Boolean>
-    fun getStateChecklist():Either<Failure, ArrayList<Boolean>>
     fun getAudioQuestions(): Either<Failure,List<Question>>
 
     class Network
@@ -91,9 +91,9 @@ interface QuestionsRepository {
             }
         }
 
-        override fun setReadyAnswers(readyAnswer: ReadyAnswer): Either<Failure, Boolean> {
+        override fun setReadyAnswers(id: Int, idQuestion: String, nameQuestion: String, idAnswer : String, nameAnswer: String, img : String): Either<Failure, Boolean> {
             return try {
-                questionsDataSource.insertReadyAnswers(readyAnswer.toModel())
+                questionsDataSource.insertReadyAnswers(ReadyAnswerModel(id,idQuestion,nameQuestion,idAnswer,nameAnswer,img,prefs.pvId?:""))
                 Either.Right(true)
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))
@@ -144,16 +144,5 @@ interface QuestionsRepository {
                 Either.Left(Failure.DefaultError(e.message!!))
             }
         }
-
-        override fun getStateChecklist(): Either<Failure, ArrayList<Boolean>> {
-            return try {
-                val data  = arrayListOf(prefs.stateChecklist,prefs.verifyChecklist)
-                Either.Right(data)
-            }catch (e:Exception){
-                Either.Left(Failure.DefaultError(e.message!!))
-            }
-        }
-
-
     }
 }

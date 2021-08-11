@@ -92,7 +92,7 @@ class ReportsFragment : BaseFragment() {
                         binding.tvPVSub2.text = it
                         if(it=="En proceso")
                         {
-                            binding.iconSku.setImageResource(R.drawable.ic_inprocess)
+                            binding.iconPicture.setImageResource(R.drawable.ic_inprocess)
                         }
                     }
                 }

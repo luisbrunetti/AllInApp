@@ -17,18 +17,22 @@ class ReportsDataSource @Inject constructor(private val reportsDao: ReportsDao){
         return reportsDao.getReports()
     }
 
+    fun getStateReport(idReport: String):String {
+        return reportsDao.getStateReport(idReport)
+    }
+
     fun listReports(idCompany:String):List<ReportModel> {
         return reportsDao.listReports(idCompany)
     }
 
-    fun updateStateReports(idReport:String,state:String)
+    fun updateStateReports(idReport:String,state:String,type:String,idPV: String)
     {
-        reportsDao.updateStateReports(idReport,state)
+        reportsDao.updateStateReports(idReport,state,type,idPV)
     }
 
-    fun updateStateSku(idSku:String,state:String)
+    fun updateStateSku(idSku:String,state:String,type: String)
     {
-        reportsDao.updateStateSku(idSku,state)
+        reportsDao.updateStateSku(idSku,state,type)
     }
 
     fun insertPhotoReport(reportModel: PhotoReportModel){

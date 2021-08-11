@@ -42,6 +42,9 @@ import android.os.Environment
 import android.graphics.BitmapFactory
 import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
+import com.tawa.allinapp.core.dialog.MessageDialogFragment
+import com.tawa.allinapp.core.extensions.failure
+import com.tawa.allinapp.core.functional.Failure
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -65,6 +68,7 @@ class CheckListFragment: BaseFragment() {
     private var verify:Boolean = false
     private  var idPhoto = ""
     private var idReport=""
+    private var typeReport = ""
 
     val params = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
     var urlImage = ""
@@ -82,26 +86,18 @@ class CheckListFragment: BaseFragment() {
 
 
         checkListViewModel = viewModel(viewModelFactory) {
-            observe(stateCheckList,{
-                it?.let {
-                    if(type.value==1)
-                    {
-                        state = it[0]
-                        verify = it[1]
-                        arguments?.getString("id").toString().also {idRep->
-                            idReport=idRep
-                            checkListViewModel.getQuestions(idReport)
-                        }
-                    }
-
-                }
-            })
             observe(questions, { it?.let {
                 listInit = it.sortedBy { it.order }
                 for(list in listInit)
                    showQuestions(list.objectType,list.id,list.questionName,list.order)
             } })
-
+            observe(stateReport,{it?.let {
+                if(it.isNotEmpty())
+                {
+                    typeReport=it
+                    checkListViewModel.getQuestions(idReport)
+                }
+            } })
             observe(answersRadio, { it?.let {
                 if(orderRadio.value!! >0)
                     addAnswersRadio(it,binding.contentCheckList,nameQuestion.value!!,orderRadio.value!!)
@@ -147,6 +143,16 @@ class CheckListFragment: BaseFragment() {
                if(it)
                    findInput()
             } })
+            observe(updateReportState,{it?.let {
+            } })
+            failure(failure, { it?.let {
+                Toast.makeText(context,"Debe seleccionar un punto de venta",Toast.LENGTH_SHORT).show()
+            }})
+        }
+
+        arguments?.getString("id").toString().also {idRep->
+            idReport=idRep
+            checkListViewModel.getStateReport(idReport,1)
         }
 
         binding.btnTakePhoto.setOnClickListener{
@@ -161,9 +167,9 @@ class CheckListFragment: BaseFragment() {
         }
         binding.btnSaveReport.setOnClickListener{
             //checkListViewModel.updateState(true)
-            if(!verify) {
-                checkListViewModel.updateState(true, true)
-                checkListViewModel.updateStateReport(idReport, "En proceso")
+            if(typeReport!="Terminado") {
+                //checkListViewModel.updateState(true, true)
+                checkListViewModel.updateStateReport(idReport, "En proceso","Terminado")
                 for (radio in listRadioButton) {
                     val tag = radio.tag as ArrayList<String>
                     checkListViewModel.updateAnswers(tag[0], radio.isChecked.toString())
@@ -189,9 +195,9 @@ class CheckListFragment: BaseFragment() {
             activity?.onBackPressed()
         }
         binding.btnBr.setOnClickListener {
-            if(!verify) {
-                checkListViewModel.updateState(true, false)
-                checkListViewModel.updateStateReport(idReport, "En proceso")
+            if(typeReport!="Terminado") {
+                //checkListViewModel.updateState(true, false)
+                checkListViewModel.updateStateReport(idReport, "En proceso","Borrador")
                 for (radio in listRadioButton) {
                     val tag = radio.tag as ArrayList<String>
                     checkListViewModel.updateAnswers(tag[0], radio.isChecked.toString())
@@ -283,7 +289,7 @@ class CheckListFragment: BaseFragment() {
                 listTag.add(list.idQuestion)
                 listTag.add(nameQ)
                 radioButton.tag = listTag
-                if(state)
+                if(typeReport!="0")
                     radioButton.isChecked = list.data.toBoolean()
                 listRadioButton.add(radioButton)
                 radioGroup.addView(radioButton)
@@ -312,7 +318,7 @@ class CheckListFragment: BaseFragment() {
                 listTag.add(list.idQuestion)
                 listTag.add(nameQ)
                 checkBox.tag = listTag
-                if(state)
+                if(typeReport!="0")
                     checkBox.isChecked=list.data.toBoolean()
 
                 listCheckBox.add(checkBox)
@@ -345,7 +351,7 @@ class CheckListFragment: BaseFragment() {
             listTag.add(list.idQuestion)
             listTag.add(nameQ)
             editText.tag = listTag
-            if(state)
+            if(typeReport!="0")
                 editText.setText(list.data)
             listInput.add(editText)
             linearL.addView(editText)
