@@ -5,10 +5,8 @@ import com.tawa.allinapp.data.repository.ReportsRepository
 import javax.inject.Inject
 
 class GetStatePicture
-@Inject constructor(private val reportsRepository: ReportsRepository) : UseCase<String, GetStatePicture.Params>() {
+@Inject constructor(private val reportsRepository: ReportsRepository) : UseCase<String, UseCase.None>() {
 
-    override suspend fun run(params: Params) = reportsRepository.getStatePhotoReport(params.idPv)
-
-    class Params(val idPv:String)
+    override suspend fun run(params: None)= reportsRepository.getStatePhotoReport()
 
 }

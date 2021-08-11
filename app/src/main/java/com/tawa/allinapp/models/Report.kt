@@ -9,5 +9,5 @@ data class Report(
     val idUserMod: String,
     val feMod: String,
     val feCreate: String,
-    val state:String
+    val state:String = "No Iniciado"
 )

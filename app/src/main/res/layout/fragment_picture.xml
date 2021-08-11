@@ -44,8 +44,8 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="36dp"
-                        android:layout_marginEnd="36dp"
                         android:layout_marginTop="16dp"
+                        android:layout_marginEnd="36dp"
                         android:text="Punto de Venta"
                         android:textColor="@color/text_dark"
                         android:textSize="16sp"
@@ -145,21 +145,36 @@
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <androidx.appcompat.widget.AppCompatButton
-                        android:id="@+id/btSavePictures"
-                        android:layout_width="match_parent"
+                        android:id="@+id/btSendPictures"
+                        android:layout_width="0dp"
                         android:layout_height="48dp"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginBottom="16dp"
-                        android:layout_marginEnd="16dp"
                         android:background="@drawable/bg_blue_button_reports"
                         android:gravity="center"
+                        android:layout_marginEnd="36dp"
+                        android:layout_marginStart="12dp"
                         android:text="Grabar"
                         android:textAllCaps="false"
                         android:textColor="@color/white"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toEndOf="@+id/btSavePictures"
+                        app:layout_constraintTop_toBottomOf="@+id/contentLayout" />
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/btSavePictures"
+                        android:layout_width="0dp"
+                        android:layout_height="48dp"
+                        android:layout_marginStart="36dp"
+                        android:layout_marginEnd="12dp"
+                        android:background="@drawable/bg_white_button_border"
+                        android:gravity="center"
+                        android:text="Borrador"
+                        android:textAllCaps="false"
+                        android:textColor="@color/colorLayoutTop"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/btSendPictures"
+                        app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/contentLayout" />
 

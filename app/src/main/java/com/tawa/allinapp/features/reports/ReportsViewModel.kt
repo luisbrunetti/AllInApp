@@ -62,13 +62,13 @@ class ReportsViewModel
 
     fun getStateSku(idPv:String) = getStateSku(GetStateSku.Params(idPv)) { it.either(::handleFailure, ::handleSuccessSku) }
 
-    fun getStatePicture(idPv:String) = getStatePicture(GetStatePicture.Params(idPv)) { it.either(::handleFailure, ::handleSuccessPicture) }
+    fun getStatePicture() = getStatePicture(UseCase.None()) { it.either(::handleFailure, ::handleSuccessPicture) }
 
     private fun handleSuccessSku(state:String) {
         _successStateSku.value = state
     }
 
-    private fun handleSuccessPicture(state:String) {
+    private fun handleSuccessPicture(state:String?) {
         _successStatePicture.value = state
     }
 

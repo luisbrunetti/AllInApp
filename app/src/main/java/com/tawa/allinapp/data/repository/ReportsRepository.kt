@@ -30,7 +30,7 @@ import kotlin.math.log
 interface ReportsRepository {
     fun setReports(company: String): Either<Failure, Boolean>
     fun listReports(idCompany: String): Either<Failure, List<Report>>
-    fun saveLocalPhotoReport(report:PhotoReport): Either<Failure, Boolean>
+    fun saveLocalPhotoReport(report:PhotoReport,state:String): Either<Failure, Boolean>
     fun getReports(): Either<Failure,List<Report>>
     fun getSkuDetail(idSku:String): Either<Failure,List<SkuDetail>>
     fun getSku(): Either<Failure,List<Sku>>
@@ -51,7 +51,7 @@ interface ReportsRepository {
     fun syncReportStandard():Either<Failure, Boolean>
     fun syncReportAudio():Either<Failure, Boolean>
     fun getLocalPhotoReport(): Either<Failure, PhotoReport>
-    fun getStatePhotoReport(idPv: String): Either<Failure, String>
+    fun getStatePhotoReport(): Either<Failure, String>
 
     class Network
     @Inject constructor(private val networkHandler: NetworkHandler,
@@ -120,15 +120,15 @@ interface ReportsRepository {
             }
         }
 
-        override fun getStatePhotoReport(idPv: String): Either<Failure, String> {
+        override fun getStatePhotoReport(): Either<Failure, String> {
             return try {
-                Either.Right(reportsDataSource.getStatePhoto(idPv))
+                Either.Right(reportsDataSource.getStatePhoto(prefs.pvId!!)?:"No iniciado")
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))
             }
         }
 
-        override fun saveLocalPhotoReport(report:PhotoReport): Either<Failure, Boolean> {
+        override fun saveLocalPhotoReport(report:PhotoReport,state:String): Either<Failure, Boolean> {
             if (prefs.pvId!!.isEmpty())
                 return Either.Left(Failure.DefaultError("Debe seleccionar hacer Checkin en un Punto de Venta"))
             else
@@ -151,7 +151,7 @@ interface ReportsRepository {
                             if (after >4) report.after[4] else "",
                             report.comments,
                             report.createAt,
-                            "No iniciado"
+                            state
                         )
                     )
                     Either.Right(true)
