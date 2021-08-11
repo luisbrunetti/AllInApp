@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.DialogFragment
@@ -15,6 +16,7 @@ import com.tawa.allinapp.core.extensions.observe
 import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.DialogHomeBinding
+import com.tawa.allinapp.features.auth.AuthViewModel
 import com.tawa.allinapp.features.init.InitViewModel
 import com.tawa.allinapp.models.Company
 import javax.inject.Inject
@@ -27,6 +29,7 @@ class SelectorDialogFragment
 
     private lateinit var binding: DialogHomeBinding
     private lateinit var initViewModel: InitViewModel
+    private lateinit var authViewModel: AuthViewModel
     private lateinit var selectedCompany: String
 
     var listener: Callback? = null
@@ -51,11 +54,25 @@ class SelectorDialogFragment
             observe(positionCompany, { it?.let {
                 getCompanies()
             } })
-            observe(setIdCompanySuccess, { it?.let { if (it)
+            observe(setIdCompanySuccess, { it?.let { if (it) {
                 initViewModel.getReportsRemote(selectedCompany)
+
+            }
             } })
             observe(successGetReports, { it?.let { if (it)
+                {
+                    initViewModel.listReports(selectedCompany)
+
+                }
+
+            } })
+            observe(successListReport,{it?.let {
+                for(report in it)
+                {
+                    initViewModel.getQuestionsRemote(report.id)
+                }
                 dismiss()
+
             } })
         }
         return binding.root
@@ -74,8 +91,8 @@ class SelectorDialogFragment
             val positionCompany = binding.spinnerCompany.selectedItemPosition
             selectedCompany = listCompany[positionCompany].id
             initViewModel.setIdCompany(selectedCompany)
-            initViewModel.getQuestionsRemote()
-            initViewModel.getAudioRemote()
+
+           // initViewModel.getAudioRemote()
             initViewModel.getReportsSku()
 
         }

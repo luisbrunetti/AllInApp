@@ -15,7 +15,7 @@ import com.tawa.allinapp.models.ReadyAnswer
 import javax.inject.Inject
 
 interface QuestionsRepository {
-    fun setQuestions(): Either<Failure, Boolean>
+    fun setQuestions(idReport: String): Either<Failure, Boolean>
     fun setAudioQuestion(): Either<Failure, Boolean>
     fun setReadyAnswers(readyAnswer: ReadyAnswer): Either<Failure, Boolean>
     fun getQuestions(idReport: String): Either<Failure,List<Question>>
@@ -33,11 +33,11 @@ interface QuestionsRepository {
                         private val service: QuestionsService,
     ): QuestionsRepository{
 
-        override fun setQuestions(): Either<Failure, Boolean> {
+        override fun setQuestions(idReport: String): Either<Failure, Boolean> {
             return when (networkHandler.isConnected) {
                 true ->{
                     try {
-                        val response = service.getQuestions("Bearer ${prefs.token!!}").execute()
+                        val response = service.getQuestions("Bearer ${prefs.token!!}",idReport).execute()
                         when (response.isSuccessful) {
                             true -> {
                                 response.body()?.let { body ->

@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.tawa.allinapp.data.local.models.*
+import com.tawa.allinapp.features.init.usecase.GetIdCompany
 import com.tawa.allinapp.models.Sku
 
 @Dao
@@ -15,6 +16,9 @@ interface ReportsDao {
 
     @Query("SELECT * FROM reports")
     fun getReports(): List<ReportModel>
+
+    @Query("SELECT * FROM reports where idCompany=:idCompany")
+    fun listReports(idCompany: String): List<ReportModel>
 
     @Query("UPDATE reports set state=:state WHERE id=:idReport")
     fun updateStateReports(idReport:String,state:String)

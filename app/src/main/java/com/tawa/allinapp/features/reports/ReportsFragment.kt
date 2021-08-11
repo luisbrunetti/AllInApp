@@ -50,7 +50,7 @@ class ReportsFragment : BaseFragment() {
                 "CHECK LIST PUNTO DE VENTA" -> findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToCheckListFragment(it.id))
                 //"REPORTE FOTOGRAFICO" -> findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToPictureFragment())
                // "ESTATUS DE USUARIO" -> findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToUserStatusFragment())
-                //"QUIEBRES Y SKU" -> findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToSkuFragment())
+                "LEVANTAMIENTO DE INFORMACIÓN" -> findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToCheckListFragment(it.id))
                 "REPORTE DE AUDIO" -> findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToAudioFragment(it.id))
             }
         }

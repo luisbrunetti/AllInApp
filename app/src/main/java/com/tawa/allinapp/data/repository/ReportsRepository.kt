@@ -9,6 +9,7 @@ import com.tawa.allinapp.data.local.Prefs
 import com.tawa.allinapp.data.local.datasource.QuestionsDataSource
 import com.tawa.allinapp.data.local.datasource.ReportsDataSource
 import com.tawa.allinapp.data.local.models.PhotoReportModel
+import com.tawa.allinapp.data.local.models.ReportModel
 import com.tawa.allinapp.data.local.models.SkuDetailModel
 import com.tawa.allinapp.data.local.models.SkuModel
 import com.tawa.allinapp.data.remote.MovieDetailEntity
@@ -28,6 +29,7 @@ import kotlin.math.log
 
 interface ReportsRepository {
     fun setReports(company: String): Either<Failure, Boolean>
+    fun listReports(idCompany: String): Either<Failure, List<Report>>
     fun saveLocalPhotoReport(report:PhotoReport): Either<Failure, Boolean>
     fun getReports(): Either<Failure,List<Report>>
     fun getSkuDetail(idSku:String): Either<Failure,List<SkuDetail>>
@@ -69,7 +71,14 @@ interface ReportsRepository {
                                 response.body()?.let { body ->
                                     if(body.success) {
                                         body.data.map {
-                                            reportsDataSource.insertReports(it.toModel())
+
+                                            for(type in it.reports)
+                                            {
+                                                Log.d("type",type.reportName.toString())
+                                                reportsDataSource.insertReports(ReportModel(type.id?:"",type.reportName?:"",it.idCompany.id?:"",it.idCompany.nameCompany?:"",it.idUser?:"",it.idUserMod?:"",it.feMod?:"",it.feCreate?:"","No iniciado"))
+                                            }
+                                           // reportsDataSource.insertReports(it.toModel())
+                                            Log.d("reportes",it.toString())
                                         }
                                         Either.Right(true)
                                     }
@@ -509,6 +518,14 @@ interface ReportsRepository {
             return try {
                 reportsDataSource.updateStateSku(idSku,state)
                 Either.Right(true)
+            }catch (e:Exception){
+                Either.Left(Failure.DefaultError(e.message!!))
+            }
+        }
+
+        override fun listReports(idCompany: String): Either<Failure, List<Report>> {
+            return try {
+                Either.Right(reportsDataSource.listReports(idCompany).map { it.toView() })
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))
             }
