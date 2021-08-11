@@ -49,6 +49,7 @@
         <entry key="app/src/main/res/drawable/ic_header_dashboard.xml" value="0.23177083333333334" />
         <entry key="app/src/main/res/drawable/ic_informsicon.xml" value="0.23177083333333334" />
         <entry key="app/src/main/res/drawable/ic_less.xml" value="0.29259259259259257" />
+        <entry key="app/src/main/res/layout/dialog_checkin.xml" value="0.1421875" />
         <entry key="app/src/main/res/layout/fragment_audio.xml" value="0.215625" />
         <entry key="app/src/main/res/layout/fragment_calendar.xml" value="0.25555555555555554" />
         <entry key="app/src/main/res/layout/fragment_informs.xml" value="0.382051282051282" />

@@ -12,16 +12,11 @@ class ScheduleRemote {
         @SerializedName("fe_final") val feEnd: String?,
         @SerializedName("id_user_asig") val userAssigned: User,
         @SerializedName("observacion") val observation: String?,
-        @SerializedName("id_punto_venta") val pv: PV?,
+        @SerializedName("ids_punto_venta") val pv: List<PV>?,
         @SerializedName("id_empresa") val company: Company?,
         @SerializedName("id_user_creador") val idUserCreator: String?,
         @SerializedName("fe_creacion") val feCreated: String?,
-    ){
-        //TODO change chekin latitude and longitude
-        //fun toModel() = ScheduleModel(id?:"",pv?.id?:"",pv?.description,pv?.zone?.id,"",company?.id,pv?.zone?.latitude,pv?.zone?.longitude)
-        fun toModel() = ScheduleModel(id?:"",pv?.id?:"",pv?.description,pv?.zone?.id,"",company?.id,-12.069630,-77.060643)
-    }
-
+    )
     data class Company (
         @SerializedName("_id") val id: String?,
         @SerializedName("nombre_empresa") val name: String
@@ -46,7 +41,9 @@ class ScheduleRemote {
         @SerializedName("id_ptv_corp") val corp: String?,
         @SerializedName("id_user_creador") val idUserCreator: String?,
         @SerializedName("fe_creacion") val feCreated: String?,
-    )
+    ){
+        fun toModel(id:String?,) = ScheduleModel(id?:"",this.id?:"",description?:"",zone?.id,"",company?:"", zone?.latitude?:0.0,zone?.longitude?:0.0)
+    }
     data class Zone(
         @SerializedName("id_user_modificador") val idUserModify: Any? = null,
         @SerializedName("fe_creacion") val feCreated: String?,
