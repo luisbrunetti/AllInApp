@@ -52,7 +52,9 @@
         <entry key="app/src/main/res/layout/dialog_checkin.xml" value="0.1421875" />
         <entry key="app/src/main/res/layout/fragment_audio.xml" value="0.215625" />
         <entry key="app/src/main/res/layout/fragment_calendar.xml" value="0.25555555555555554" />
+        <entry key="app/src/main/res/layout/fragment_checklist.xml" value="0.215625" />
         <entry key="app/src/main/res/layout/fragment_informs.xml" value="0.382051282051282" />
+        <entry key="app/src/main/res/layout/fragment_picture.xml" value="0.215625" />
         <entry key="app/src/main/res/layout/fragment_reports.xml" value="0.196875" />
       </map>
     </option>

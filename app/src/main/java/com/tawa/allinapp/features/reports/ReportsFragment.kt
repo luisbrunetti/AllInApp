@@ -145,7 +145,7 @@ class ReportsFragment : BaseFragment() {
             }
         })
         reportsViewModel.getStateSku("60fb181d8b978fb259e4acb8")
-        reportsViewModel.getStatePicture("60fb181d8b978fb259e4acb8")
+        reportsViewModel.getStatePicture()
         return binding.root
     }
 

@@ -115,7 +115,17 @@ class PictureFragment : BaseFragment() {
                 binding.tvComments.text.toString(),
                 Calendar.getInstance().time.toString()
             )
-            pictureViewModel.saveReport(report)
+            pictureViewModel.saveReport(report,"En Proceso")
+        }
+        binding.btSendPictures.setOnClickListener {
+            showProgressDialog()
+            val report = PhotoReport(
+                pictureBeforeAdapter.collection,
+                pictureAfterAdapter.collection,
+                binding.tvComments.text.toString(),
+                Calendar.getInstance().time.toString()
+            )
+            pictureViewModel.saveReport(report,"Enviado")
         }
 
         return binding.root

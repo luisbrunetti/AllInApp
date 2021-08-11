@@ -35,25 +35,10 @@ class ReportsAdapter
     class ReportsViewHolder(val binding : RowReportBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(context: Context, report: Report, clickListener: (Report) -> Unit) {
-            when(report.reportName){
-                "CHECK LIST PUNTO DE VENTA" -> {
-                    binding.tvPVSub.text = report.state
-                    if (report.state == "No iniciado") binding.ivIconReport.loadFromResource(R.drawable.ic_noinit)
-                    if (report.state == "En proceso") binding.ivIconReport.loadFromResource(R.drawable.ic_inprocess)
-                    if (report.state == "Enviado") binding.ivIconReport.loadFromResource(R.drawable.ic_sended)                }
-
-                "REPORTE DE AUDIO" ->{
-                    binding.tvPVSub.text = report.state
-                    if (report.state == "No iniciado") binding.ivIconReport.loadFromResource(R.drawable.ic_noinit)
-                    if (report.state == "En proceso") binding.ivIconReport.loadFromResource(R.drawable.ic_inprocess)
-                    if (report.state == "Enviado") binding.ivIconReport.loadFromResource(R.drawable.ic_sended)   }
-
-                "LEVANTAMIENTO DE INFORMACIÓN" ->{
-                    binding.tvPVSub.text = report.state
-                    if (report.state == "No iniciado") binding.ivIconReport.loadFromResource(R.drawable.ic_noinit)
-                    if (report.state == "En proceso") binding.ivIconReport.loadFromResource(R.drawable.ic_inprocess)
-                    if (report.state == "Enviado") binding.ivIconReport.loadFromResource(R.drawable.ic_sended)   }
-            }
+            binding.tvPVSub.text = report.state
+            if (report.state == "No iniciado") binding.ivIconReport.loadFromResource(R.drawable.ic_noinit)
+            if (report.state == "En proceso") binding.ivIconReport.loadFromResource(R.drawable.ic_inprocess)
+            if (report.state == "Enviado") binding.ivIconReport.loadFromResource(R.drawable.ic_sended)
             binding.tvPVName.text = report.reportName
             binding.clReport.setOnClickListener {
                 clickListener(report)
