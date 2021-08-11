@@ -6,8 +6,8 @@ import com.tawa.allinapp.models.Schedule
 
 @Entity(tableName = "schedule")
 data class ScheduleModel (
-    @PrimaryKey val id: String,
-    val pv:String,
+    val id: String,
+    @PrimaryKey val pv:String,
     val description: String?,
     val zone: String?,
     val codGeo: String?,
