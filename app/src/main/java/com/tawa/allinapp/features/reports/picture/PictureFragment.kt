@@ -115,7 +115,7 @@ class PictureFragment : BaseFragment() {
                 binding.tvComments.text.toString(),
                 Calendar.getInstance().time.toString()
             )
-            pictureViewModel.saveReport(report,"En Proceso")
+            pictureViewModel.saveReport(report,"En proceso")
         }
         binding.btSendPictures.setOnClickListener {
             showProgressDialog()
