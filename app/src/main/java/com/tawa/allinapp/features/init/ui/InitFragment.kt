@@ -31,14 +31,13 @@ import com.tawa.allinapp.features.reports.picture.PictureViewModel
 class InitFragment : BaseFragment() {
 
     private lateinit var initViewModel: InitViewModel
-    private  lateinit var pictureViewModel: PictureViewModel
     private lateinit var binding: FragmentInitBinding
     private lateinit var locationManager:LocationManager
 
     private var checkOutDialog: CheckOutDialogFragment? = null
     private var checkIn:Boolean = true
     private var _user = ""
-    private lateinit var _pvId: String
+    private var _pvId = ""
     private var _pv: String = ""
     private lateinit var _lat: String
     private lateinit var _long: String
@@ -148,7 +147,10 @@ class InitFragment : BaseFragment() {
             findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationCalendar())
         }
         binding.viewBtnReports.setOnClickListener {
-            findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationReports())
+            if(_pvId.isNotEmpty())
+                findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationReports())
+            else
+                MessageDialogFragment.newInstance("Debes seleccionar o hacer chekIn en un punto de venta").show(childFragmentManager, "errorDialog")
         }
         binding.viewBtnInforms.setOnClickListener{
             findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationInforms())
