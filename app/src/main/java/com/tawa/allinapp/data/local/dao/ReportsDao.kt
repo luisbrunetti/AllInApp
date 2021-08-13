@@ -14,11 +14,14 @@ interface ReportsDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertReports(reportModel: ReportModel)
 
-    @Query("SELECT * FROM reports")
-    fun getReports(): List<ReportModel>
+    @Query("SELECT * FROM reports WHERE idCompany=:idCompany")
+    fun getReports(idCompany: String): List<ReportModel>
 
-    @Query("SELECT type FROM reports WHERE id=:idReport")
-    fun getStateReport(idReport: String): String
+    @Query("SELECT reports.id,reports.reportName,reports.idCompany,reports.nameCompany,reports.idUser,reports.idUserMod,reports.feMod,reports.feCreate,report_pv.state,report_pv.type,report_pv.idPv FROM reports,report_pv WHERE reports.id=report_pv.idReport and  reports.idCompany=:idCompany and report_pv.idPv=:idPv")
+    fun getReportsPv(idCompany: String,idPv: String): List<ReportModel>
+
+    @Query("SELECT report_pv.type FROM reports,report_pv WHERE reports.id=report_pv.idReport and  reports.id=:idReport and report_pv.idPv=:idPv")
+    fun getStateReport(idReport: String,idPv: String): String
 
     @Query("SELECT * FROM reports where idCompany=:idCompany")
     fun listReports(idCompany: String): List<ReportModel>
@@ -67,5 +70,17 @@ interface ReportsDao {
 
     @Query("UPDATE sku_detail set stock=:stock , exhibition=:exhi,newPrice=:price WHERE id=:idSkuDetail")
     fun updateSkuDetail(idSkuDetail:String,stock:Boolean,exhi:Boolean,price:Float)
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun insertReportPv(reportPvModel: ReportPvModel)
+
+    @Query("SELECT count(id) FROM report_pv WHERE idReport = :idReport and idPv = :idPv   ")
+    fun reportPvCount(idReport: String,idPv: String):Int
+
+    @Query("SELECT count(reports.id) FROM reports,report_pv WHERE reports.id=report_pv.idReport and  reports.idCompany=:idCompany and report_pv.idPv=:idPv")
+    fun getReportPvCount(idCompany: String,idPv: String):Int
+
+    @Query("UPDATE report_pv SET state=:state , type = :type WHERE idReport = :idReport and idPv = :idPv")
+    fun updateReportPv(idReport: String,idPv: String,state: String,type:String)
 
 }

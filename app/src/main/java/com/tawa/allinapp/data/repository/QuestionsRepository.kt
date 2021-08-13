@@ -8,6 +8,7 @@ import com.tawa.allinapp.core.functional.NetworkHandler
 import com.tawa.allinapp.data.local.Prefs
 import com.tawa.allinapp.data.local.datasource.QuestionsDataSource
 import com.tawa.allinapp.data.local.datasource.ReportsDataSource
+import com.tawa.allinapp.data.local.models.AnswersPvModel
 import com.tawa.allinapp.data.local.models.ReadyAnswerModel
 import com.tawa.allinapp.data.remote.service.QuestionsService
 import com.tawa.allinapp.models.Answer
@@ -23,6 +24,7 @@ interface QuestionsRepository {
     fun getAnswers(idQuestion: String): Either<Failure,List<Answer>>
     fun updateAnswers(idAnswer:String,data:String): Either<Failure, Boolean>
     fun changeState(state: Boolean,verify:Boolean):Either<Failure, Boolean>
+    fun setAnswersPv(idAnswer: String,idQuestion: String,nameAnswer: String,img: String):Either<Failure, Boolean>
     fun getAudioQuestions(): Either<Failure,List<Question>>
 
     class Network
@@ -119,7 +121,13 @@ interface QuestionsRepository {
 
         override fun getAnswers(idQuestion:String): Either<Failure, List<Answer>> {
             return try {
-                Either.Right(questionsDataSource.getAnswers(idQuestion).map { it.toView() })
+                val count  = questionsDataSource.getCountPvAnswers(prefs.pvId?:"",idQuestion)
+                Log.d("count",count.toString())
+                if(count==0)
+                    Either.Right(questionsDataSource.getAnswers(idQuestion).map { it.toView() })
+                else
+                    Either.Right(questionsDataSource.getAnswersPv(idQuestion,prefs.pvId?:"").map { it.toView() })
+
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))
             }
@@ -139,6 +147,19 @@ interface QuestionsRepository {
             return try {
                 prefs.stateChecklist =state
                 prefs.verifyChecklist = verify
+                Either.Right(true)
+            }catch (e:Exception){
+                Either.Left(Failure.DefaultError(e.message!!))
+            }
+        }
+
+        override fun setAnswersPv(idAnswer: String, idQuestion: String, nameAnswer: String, img: String): Either<Failure, Boolean> {
+            return try {
+                val count = questionsDataSource.getCountPvAnswer(prefs.pvId?:"",idAnswer)
+                if(count==0)
+                    questionsDataSource.insertAnswersPv(AnswersPvModel(0,prefs.pvId?:"",idAnswer,idQuestion,nameAnswer,img))
+                else
+                    questionsDataSource.updateAnswersPv(idAnswer,prefs.pvId?:"",nameAnswer,img)
                 Either.Right(true)
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))

@@ -60,8 +60,7 @@ class ReportsFragment : BaseFragment() {
         binding = FragmentReportsBinding.inflate(inflater)
         reportsViewModel = viewModel(viewModelFactory) {
             observe(reports, { it?.let {
-                listReports = it.filter { it.reportName!="ESTATUS DE USUARIO" }
-                reportsAdapter.setData(listReports)
+                reportsAdapter.setData(it)
             } })
             observe(pvName, { it?.let {
                 binding.tvHeaderPV.text = it
