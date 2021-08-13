@@ -20,7 +20,7 @@ class ReportsService
 @Inject constructor(retrofit: Retrofit) : ReportsApi {
     private val reportsApi by lazy { retrofit.create(ReportsApi::class.java) }
 
-    override fun getReports(company:String) = reportsApi.getReports(company)
+    override fun getReports(token:String,company:String) = reportsApi.getReports(token,company)
     override fun getReportStatus(token:String) = reportsApi.getReportStatus(token)
     override fun updateStatus(token: String, request: UpdateStatusRemote.Request) = reportsApi.updateStatus(token,request)
     override fun getReportsSku(token: String) = reportsApi.getReportsSku(token)

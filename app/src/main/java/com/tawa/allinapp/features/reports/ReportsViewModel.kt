@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.tawa.allinapp.core.interactor.UseCase
 import com.tawa.allinapp.core.platform.BaseViewModel
 import com.tawa.allinapp.features.init.usecase.GetDescPV
+import com.tawa.allinapp.features.reports.picture.GetStatePicture
 import com.tawa.allinapp.models.Report
 import javax.inject.Inject
 
@@ -12,7 +13,9 @@ class ReportsViewModel
 @Inject constructor (
     private val getReports: GetReports,
     private val getDescPV: GetDescPV,
-    private val getUserType: GetUserType
+    private val getUserType: GetUserType,
+    private val getStateSku: GetStateSku,
+    private val getStatePicture: GetStatePicture
 ):BaseViewModel() {
 
     private val _reports = MutableLiveData<List<Report>>()
@@ -26,6 +29,14 @@ class ReportsViewModel
     private val _userType = MutableLiveData("")
     val userType:LiveData<String>
         get() = _userType
+
+    private val _successStateSku = MutableLiveData("")
+    val successStateSku:LiveData<String>
+        get() = _successStateSku
+
+    private val _successStatePicture = MutableLiveData("")
+    val successStatePicture:LiveData<String>
+        get() = _successStatePicture
 
     init {
         getUserType()
@@ -47,6 +58,18 @@ class ReportsViewModel
 
     private fun handleGetUserType(user :String) {
         _userType.value = user
+    }
+
+    fun getStateSku(idPv:String) = getStateSku(GetStateSku.Params(idPv)) { it.either(::handleFailure, ::handleSuccessSku) }
+
+    fun getStatePicture() = getStatePicture(UseCase.None()) { it.either(::handleFailure, ::handleSuccessPicture) }
+
+    private fun handleSuccessSku(state:String) {
+        _successStateSku.value = state
+    }
+
+    private fun handleSuccessPicture(state:String?) {
+        _successStatePicture.value = state
     }
 
 }

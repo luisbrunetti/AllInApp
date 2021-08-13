@@ -35,38 +35,10 @@ class ReportsAdapter
     class ReportsViewHolder(val binding : RowReportBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(context: Context, report: Report, clickListener: (Report) -> Unit) {
-            when(report.reportName){
-                "CHECK LIST PUNTO DE VENTA" -> {
-                    binding.tvPVSub.text = report.state
-                    if (report.state == "No iniciado") binding.ivIconReport.loadFromResource(R.drawable.ic_noinit)
-                    if (report.state == "En proceso") binding.ivIconReport.loadFromResource(R.drawable.ic_inprocess)
-                    if (report.state == "Enviado") binding.ivIconReport.loadFromResource(R.drawable.ic_sended)                }
-
-                "REPORTE FOTOGRAFICO" -> {
-                    binding.tvPVSub.text = report.state
-                    binding.ivIconReport.loadFromResource(R.drawable.ic_report_nostate)
-                    if (report.state == "No iniciado") binding.ivIconReport.loadFromResource(R.drawable.ic_noinit)
-                    if (report.state == "En proceso") binding.ivIconReport.loadFromResource(R.drawable.ic_inprocess)
-                    if (report.state == "Enviado") binding.ivIconReport.loadFromResource(R.drawable.ic_sended)
-                }
-
-                "ESTATUS DE USUARIO"-> {
-                    binding.ivIconReport.loadFromResource(R.drawable.ic_report_nostate)
-                    binding.tvPVSub.isVisible = false
-                }
-                "QUIEBRES Y SKU" -> {
-                    binding.tvPVSub.text = report.state
-                    binding.ivIconReport.loadFromResource(R.drawable.ic_report_nostate)
-                    if (report.state == "No iniciado") binding.ivIconReport.loadFromResource(R.drawable.ic_noinit)
-                    if (report.state == "En proceso") binding.ivIconReport.loadFromResource(R.drawable.ic_inprocess)
-                    if (report.state == "Enviado") binding.ivIconReport.loadFromResource(R.drawable.ic_sended)
-                }
-                "AUDIO" ->{
-                    binding.tvPVSub.text = report.state
-                    if (report.state == "No iniciado") binding.ivIconReport.loadFromResource(R.drawable.ic_noinit)
-                    if (report.state == "En proceso") binding.ivIconReport.loadFromResource(R.drawable.ic_inprocess)
-                    if (report.state == "Enviado") binding.ivIconReport.loadFromResource(R.drawable.ic_sended)   }
-            }
+            binding.tvPVSub.text = report.state
+            if (report.state == "No iniciado") binding.ivIconReport.loadFromResource(R.drawable.ic_noinit)
+            if (report.state == "En proceso") binding.ivIconReport.loadFromResource(R.drawable.ic_inprocess)
+            if (report.state == "Enviado") binding.ivIconReport.loadFromResource(R.drawable.ic_sended)
             binding.tvPVName.text = report.reportName
             binding.clReport.setOnClickListener {
                 clickListener(report)

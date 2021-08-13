@@ -96,7 +96,7 @@ class CheckInDialogFragment
         binding.pdvSpinner?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
             override fun onNothingSelected(parent: AdapterView<*>?) {  }
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                initViewModel.getStateCheck(list[position].id)
+                initViewModel.getStateCheck(list[position].pv)
             }
         }
 
@@ -110,7 +110,7 @@ class CheckInDialogFragment
                     _pv = list[positionPv].description
                     _pvId = list[positionPv].id
                     initViewModel.setPv(list[positionPv].id,list[positionPv].pv,list[positionPv].description)
-                    initViewModel.setCheckIn(idUsers,list[positionPv].id,latitude,longitude)
+                    initViewModel.setCheckIn(idUsers,list[positionPv].pv,latitude,longitude)
                     initViewModel.updateStatus(latitude,longitude,getBatteryPercentage(requireContext()).toString())
                     dismiss()
                 //}

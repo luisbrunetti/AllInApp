@@ -10,7 +10,7 @@ import javax.inject.Inject
 class SetReadyAnswers
 @Inject constructor(private val questionsRepository: QuestionsRepository) : UseCase<Boolean, SetReadyAnswers.Params>() {
 
-    override suspend fun run(params: Params) = questionsRepository.setReadyAnswers(ReadyAnswer(params.id,params.idQuestion,params.nameQuestion,params.idAnswer,params.nameAnswer,params.img))
+    override suspend fun run(params: Params) = questionsRepository.setReadyAnswers(params.id,params.idQuestion,params.nameQuestion,params.idAnswer,params.nameAnswer,params.img)
     data class Params(
         val id: Int,
         val idQuestion: String,

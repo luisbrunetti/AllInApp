@@ -8,9 +8,7 @@ import com.tawa.allinapp.core.functional.NetworkHandler
 import com.tawa.allinapp.data.local.Prefs
 import com.tawa.allinapp.data.local.datasource.QuestionsDataSource
 import com.tawa.allinapp.data.local.datasource.ReportsDataSource
-import com.tawa.allinapp.data.local.models.PhotoReportModel
-import com.tawa.allinapp.data.local.models.SkuDetailModel
-import com.tawa.allinapp.data.local.models.SkuModel
+import com.tawa.allinapp.data.local.models.*
 import com.tawa.allinapp.data.remote.MovieDetailEntity
 import com.tawa.allinapp.data.remote.entities.ReportsSkuRemote
 import com.tawa.allinapp.data.remote.entities.SynReportStandardRemote
@@ -28,10 +26,12 @@ import kotlin.math.log
 
 interface ReportsRepository {
     fun setReports(company: String): Either<Failure, Boolean>
-    fun saveLocalPhotoReport(report:PhotoReport): Either<Failure, Boolean>
+    fun listReports(idCompany: String): Either<Failure, List<Report>>
+    fun saveLocalPhotoReport(report:PhotoReport,state:String): Either<Failure, Boolean>
     fun getReports(): Either<Failure,List<Report>>
     fun getSkuDetail(idSku:String): Either<Failure,List<SkuDetail>>
     fun getSku(): Either<Failure,List<Sku>>
+    fun getStateSku(idPv:String): Either<Failure,String>
     fun syncPhotoReports(): Either<Failure,Boolean>
     fun savePhotoReport(): Either<Failure, Boolean>
     fun getReportStatus(): Either<Failure, List<ReportStatus>>
@@ -42,11 +42,15 @@ interface ReportsRepository {
     fun getSkuObservation(idSkuDetail: String):Either<Failure, List<SkuObservation>>
     fun syncSku():Either<Failure, Boolean>
     fun updateSkuDetail(idSkuDetail: String,stock:Boolean,exhibition:Boolean,price:Float):Either<Failure, Boolean>
-    fun updateStateReport(idReport:String,state:String):Either<Failure, Boolean>
+    fun updateStateReport(idReport:String,state:String,type:String):Either<Failure, Boolean>
+    fun updateStateSku(idSku:String,state:String,type:String):Either<Failure, Boolean>
     fun getUserType():Either<Failure, String>
     fun syncReportStandard():Either<Failure, Boolean>
     fun syncReportAudio():Either<Failure, Boolean>
     fun getLocalPhotoReport(): Either<Failure, PhotoReport>
+    fun getStateReport(idReport: String): Either<Failure,String>
+    fun getStatePhotoReport(): Either<Failure, String>
+    fun updateReportPv(idReport: String,state: String,type: String):Either<Failure, Boolean>
 
     class Network
     @Inject constructor(private val networkHandler: NetworkHandler,
@@ -60,13 +64,20 @@ interface ReportsRepository {
             return when (networkHandler.isConnected) {
                 true ->{
                     try {
-                        val response = service.getReports(company).execute()
+                        val response = service.getReports("Bearer ${prefs.token!!}",company).execute()
                         when (response.isSuccessful) {
                             true -> {
                                 response.body()?.let { body ->
                                     if(body.success) {
                                         body.data.map {
-                                            reportsDataSource.insertReports(it.toModel())
+
+                                            for(type in it.reports)
+                                            {
+                                                Log.d("type",type.reportName.toString())
+                                                reportsDataSource.insertReports(ReportModel(type.id?:"",type.reportName?:"",it.idCompany.id?:"",it.idCompany.nameCompany?:"",it.idUser?:"",it.idUserMod?:"",it.feMod?:"",it.feCreate?:"","No iniciado","0",""))
+                                            }
+                                           // reportsDataSource.insertReports(it.toModel())
+                                            Log.d("reportes",it.toString())
                                         }
                                         Either.Right(true)
                                     }
@@ -108,7 +119,15 @@ interface ReportsRepository {
             }
         }
 
-        override fun saveLocalPhotoReport(report:PhotoReport): Either<Failure, Boolean> {
+        override fun getStatePhotoReport(): Either<Failure, String> {
+            return try {
+                Either.Right(reportsDataSource.getStatePhoto(prefs.pvId!!)?:"No iniciado")
+            }catch (e:Exception){
+                Either.Left(Failure.DefaultError(e.message!!))
+            }
+        }
+
+        override fun saveLocalPhotoReport(report:PhotoReport,state:String): Either<Failure, Boolean> {
             if (prefs.pvId!!.isEmpty())
                 return Either.Left(Failure.DefaultError("Debe seleccionar hacer Checkin en un Punto de Venta"))
             else
@@ -130,7 +149,8 @@ interface ReportsRepository {
                             if (after >3) report.after[3] else "",
                             if (after >4) report.after[4] else "",
                             report.comments,
-                            report.createAt
+                            report.createAt,
+                            state
                         )
                     )
                     Either.Right(true)
@@ -234,7 +254,7 @@ interface ReportsRepository {
                             true -> {
                                 response.body()?.let { body ->
                                     body.data.map {
-                                        reportsDataSource.insertSku(SkuModel(it.id,it.idPuntoVenta.id,it.idEmpresa.id))
+                                        reportsDataSource.insertSku(SkuModel(it.id,it.idPuntoVenta.id,it.idEmpresa.id,"No iniciado","0"))
                                         for(products in it.lineas)
                                         {
                                             products.idProducto.nombreProducto?.let { it1 ->
@@ -264,7 +284,23 @@ interface ReportsRepository {
 
         override fun getReports(): Either<Failure, List<Report>> {
             return try {
-                Either.Right(reportsDataSource.getReports().map { it.toView() })
+                val idPv = prefs.pvId!!
+
+                if(idPv.isEmpty())
+                    Either.Right(reportsDataSource.getReports(prefs.companyId?:"").map { it.toView() })
+                else{
+                    val count = reportsDataSource.getReportPvCount(prefs.companyId?:"",prefs.pvId?:"")
+                    if(count==0)
+                    {
+                        val reports = reportsDataSource.getReports(prefs.companyId?:"").map { it.toView() }
+                        for(report in reports)
+                        {
+                            reportsDataSource.insertReportPv(ReportPvModel(0,prefs.pvId?:"",report.id,"No iniciado","0"))
+                        }
+                    }
+                    Either.Right(reportsDataSource.getReportsPv(prefs.companyId?:"",prefs.pvId?:"").map { it.toView() })
+                }
+
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))
             }
@@ -374,12 +410,16 @@ interface ReportsRepository {
             }
         }
 
-        override fun updateStateReport(idReport: String, state: String): Either<Failure, Boolean> {
-            return try {
-                reportsDataSource.updateStateReports(idReport,state)
-                Either.Right(true)
-            }catch (e:Exception){
-                Either.Left(Failure.DefaultError(e.message!!))
+        override fun updateStateReport(idReport: String, state: String,type:String): Either<Failure, Boolean> {
+            return if (prefs.pvId!!.isEmpty())
+                Either.Left(Failure.DefaultError("Debe seleccionar hacer Checkin en un Punto de Venta"))
+            else {
+                try {
+                    reportsDataSource.updateStateReports(idReport, state, type, prefs.pvId ?: "")
+                    Either.Right(true)
+                } catch (e: Exception) {
+                    Either.Left(Failure.DefaultError(e.message!!))
+                }
             }
         }
 
@@ -423,7 +463,7 @@ interface ReportsRepository {
                                 response.body()?.let { body ->
                                     if(body.success) {
                                         Log.d("success",body.message.toString())
-                                        updateStateReport("60dc7d0c11bb190a40e28e87","Enviado")
+                                        updateStateReport("60dc7d0c11bb190a40e28e87","Enviado","Terminado")
                                         Either.Right(true)
                                     }
                                     else Either.Left(Failure.DefaultError(body.message))
@@ -469,7 +509,7 @@ interface ReportsRepository {
                                 response.body()?.let { body ->
                                     if(body.success) {
                                         Log.d("successAudio",body.message.toString())
-                                        updateStateReport("60dc7d0c11bb190a40e28e91","Enviado")
+                                        updateStateReport("60dc7d0c11bb190a40e28e91","Enviado","Terminado")
                                         Either.Right(true)
                                     }
                                     else Either.Left(Failure.DefaultError(body.message))
@@ -482,6 +522,52 @@ interface ReportsRepository {
                     }
                 }
                 false -> Either.Left(Failure.NetworkConnection)
+            }
+        }
+
+        override fun getStateSku(idPv: String): Either<Failure, String> {
+            return try {
+                Either.Right(reportsDataSource.getStateSku(idPv))
+            }catch (e:Exception){
+                Either.Left(Failure.DefaultError(e.message!!))
+            }
+        }
+
+        override fun updateStateSku(idSku: String, state: String,type:String): Either<Failure, Boolean> {
+            return try {
+                reportsDataSource.updateStateSku(idSku,state,type)
+                Either.Right(true)
+            }catch (e:Exception){
+                Either.Left(Failure.DefaultError(e.message!!))
+            }
+        }
+
+        override fun listReports(idCompany: String): Either<Failure, List<Report>> {
+            return try {
+                Either.Right(reportsDataSource.listReports(idCompany).map { it.toView() })
+            }catch (e:Exception){
+                Either.Left(Failure.DefaultError(e.message!!))
+            }
+        }
+
+        override fun getStateReport(idReport: String): Either<Failure, String> {
+            return try {
+                val count = reportsDataSource.getReportPvCount(prefs.companyId?:"",prefs.pvId?:"")
+                if(count==0)
+                    Either.Right("0")
+                else
+                    Either.Right(reportsDataSource.getStateReport(idReport,prefs.pvId?:""))
+            }catch (e:Exception){
+                Either.Left(Failure.DefaultError(e.message!!))
+            }
+        }
+
+        override fun updateReportPv(idReport: String, state: String,type:String): Either<Failure, Boolean> {
+            return try {
+                reportsDataSource.updateReportPv(idReport,prefs.pvId?:"",state,type)
+                Either.Right(true)
+            }catch (e:Exception){
+                Either.Left(Failure.DefaultError(e.message!!))
             }
         }
 

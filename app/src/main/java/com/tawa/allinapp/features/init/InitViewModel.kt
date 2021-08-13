@@ -8,6 +8,7 @@ import com.tawa.allinapp.features.init.usecase.*
 import com.tawa.allinapp.features.reports.GetReportsRemote
 import com.tawa.allinapp.features.reports.sku.SyncSku
 import com.tawa.allinapp.models.Company
+import com.tawa.allinapp.models.Report
 import com.tawa.allinapp.models.Schedule
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
@@ -37,7 +38,8 @@ class InitViewModel
     private val syncStandardReports: SyncStandardReports,
     private  val syncSku: SyncSku,
     private val syncAudio: SyncAudio,
-    private val getAudioRemote: GetAudioRemote
+    private val getAudioRemote: GetAudioRemote,
+    private val listReports: ListReports
 
 ) : BaseViewModel()  {
     private  val formatter: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
@@ -145,6 +147,10 @@ class InitViewModel
     val successReportsSku: LiveData<Boolean>
         get() = _successReportsSku
 
+    private val _successListReport = MutableLiveData<List<Report>>()
+    val successListReport: LiveData<List<Report>>
+        get() = _successListReport
+
     private val _successSyncReportStandard = MutableLiveData(false)
     val successSyncReportStandard : LiveData<Boolean>
         get() = _successSyncReportStandard
@@ -217,7 +223,7 @@ class InitViewModel
         this._successGetReports.value = success
     }
 
-    fun getQuestionsRemote() = getQuestionsRemote(UseCase.None()) {
+    fun getQuestionsRemote(idReport: String) = getQuestionsRemote(GetQuestionsRemote.Params(idReport)) {
         it.either(::handleFailure, ::handleQuestionsRemote)
     }
     private fun handleQuestionsRemote(success: Boolean) {
@@ -323,6 +329,12 @@ class InitViewModel
 
     private fun handleGetRole(role:String) {
         this._successGetRole.value = role
+    }
+
+    fun listReports(idCompany: String) = listReports(ListReports.Params(idCompany)) { it.either(::handleFailure, ::handleListReports) }
+
+    private fun handleListReports(reports:List<Report>) {
+        this._successListReport.value = reports
     }
 
 }

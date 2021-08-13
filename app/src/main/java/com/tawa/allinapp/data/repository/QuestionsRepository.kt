@@ -7,6 +7,9 @@ import com.tawa.allinapp.core.functional.Failure
 import com.tawa.allinapp.core.functional.NetworkHandler
 import com.tawa.allinapp.data.local.Prefs
 import com.tawa.allinapp.data.local.datasource.QuestionsDataSource
+import com.tawa.allinapp.data.local.datasource.ReportsDataSource
+import com.tawa.allinapp.data.local.models.AnswersPvModel
+import com.tawa.allinapp.data.local.models.ReadyAnswerModel
 import com.tawa.allinapp.data.remote.service.QuestionsService
 import com.tawa.allinapp.models.Answer
 import com.tawa.allinapp.models.Question
@@ -14,28 +17,29 @@ import com.tawa.allinapp.models.ReadyAnswer
 import javax.inject.Inject
 
 interface QuestionsRepository {
-    fun setQuestions(): Either<Failure, Boolean>
+    fun setQuestions(idReport: String): Either<Failure, Boolean>
     fun setAudioQuestion(): Either<Failure, Boolean>
-    fun setReadyAnswers(readyAnswer: ReadyAnswer): Either<Failure, Boolean>
-    fun getQuestions(): Either<Failure,List<Question>>
+    fun setReadyAnswers(id: Int, idQuestion: String, nameQuestion: String, idAnswer : String, nameAnswer: String, img : String): Either<Failure, Boolean>
+    fun getQuestions(idReport: String): Either<Failure,List<Question>>
     fun getAnswers(idQuestion: String): Either<Failure,List<Answer>>
     fun updateAnswers(idAnswer:String,data:String): Either<Failure, Boolean>
     fun changeState(state: Boolean,verify:Boolean):Either<Failure, Boolean>
-    fun getStateChecklist():Either<Failure, ArrayList<Boolean>>
+    fun setAnswersPv(idAnswer: String,idQuestion: String,nameAnswer: String,img: String):Either<Failure, Boolean>
     fun getAudioQuestions(): Either<Failure,List<Question>>
 
     class Network
     @Inject constructor(private val networkHandler: NetworkHandler,
                         private val questionsDataSource: QuestionsDataSource,
+                        private val reportsDataSource: ReportsDataSource,
                         private val prefs: Prefs,
                         private val service: QuestionsService,
     ): QuestionsRepository{
 
-        override fun setQuestions(): Either<Failure, Boolean> {
+        override fun setQuestions(idReport: String): Either<Failure, Boolean> {
             return when (networkHandler.isConnected) {
                 true ->{
                     try {
-                        val response = service.getQuestions("Bearer ${prefs.token!!}").execute()
+                        val response = service.getQuestions("Bearer ${prefs.token!!}",idReport).execute()
                         when (response.isSuccessful) {
                             true -> {
                                 response.body()?.let { body ->
@@ -89,9 +93,9 @@ interface QuestionsRepository {
             }
         }
 
-        override fun setReadyAnswers(readyAnswer: ReadyAnswer): Either<Failure, Boolean> {
+        override fun setReadyAnswers(id: Int, idQuestion: String, nameQuestion: String, idAnswer : String, nameAnswer: String, img : String): Either<Failure, Boolean> {
             return try {
-                questionsDataSource.insertReadyAnswers(readyAnswer.toModel())
+                questionsDataSource.insertReadyAnswers(ReadyAnswerModel(id,idQuestion,nameQuestion,idAnswer,nameAnswer,img,prefs.pvId?:""))
                 Either.Right(true)
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))
@@ -99,9 +103,9 @@ interface QuestionsRepository {
         }
 
 
-        override fun getQuestions(): Either<Failure, List<Question>> {
+        override fun getQuestions(idReport :String): Either<Failure, List<Question>> {
             return try {
-                Either.Right(questionsDataSource.getQuestions().map { it.toView() })
+                Either.Right(questionsDataSource.getQuestionsByIdReport(idReport).map { it.toView() })
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))
             }
@@ -117,7 +121,13 @@ interface QuestionsRepository {
 
         override fun getAnswers(idQuestion:String): Either<Failure, List<Answer>> {
             return try {
-                Either.Right(questionsDataSource.getAnswers(idQuestion).map { it.toView() })
+                val count  = questionsDataSource.getCountPvAnswers(prefs.pvId?:"",idQuestion)
+                Log.d("count",count.toString())
+                if(count==0)
+                    Either.Right(questionsDataSource.getAnswers(idQuestion).map { it.toView() })
+                else
+                    Either.Right(questionsDataSource.getAnswersPv(idQuestion,prefs.pvId?:"").map { it.toView() })
+
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))
             }
@@ -143,15 +153,17 @@ interface QuestionsRepository {
             }
         }
 
-        override fun getStateChecklist(): Either<Failure, ArrayList<Boolean>> {
+        override fun setAnswersPv(idAnswer: String, idQuestion: String, nameAnswer: String, img: String): Either<Failure, Boolean> {
             return try {
-                val data  = arrayListOf(prefs.stateChecklist,prefs.verifyChecklist)
-                Either.Right(data)
+                val count = questionsDataSource.getCountPvAnswer(prefs.pvId?:"",idAnswer)
+                if(count==0)
+                    questionsDataSource.insertAnswersPv(AnswersPvModel(0,prefs.pvId?:"",idAnswer,idQuestion,nameAnswer,img))
+                else
+                    questionsDataSource.updateAnswersPv(idAnswer,prefs.pvId?:"",nameAnswer,img)
+                Either.Right(true)
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))
             }
         }
-
-
     }
 }

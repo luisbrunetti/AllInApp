@@ -4,7 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.appbar.AppBarLayout
+import com.tawa.allinapp.R
 import com.tawa.allinapp.core.extensions.observe
 import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.platform.BaseFragment
@@ -38,6 +42,30 @@ class InformsFragment : BaseFragment() {
         binding.btnStatusUser.setOnClickListener {
             findNavController().navigate(InformsFragmentDirections.actionNavigationInformsToUserStatusFragment())
         }
+        binding.appbar.addOnOffsetChangedListener(object : AppBarLayout.OnOffsetChangedListener {
+            var isShow = true
+            var scrollRange = -1
+            override fun onOffsetChanged(appBarLayout: AppBarLayout, verticalOffset: Int) {
+                if (scrollRange == -1) {
+                    scrollRange = appBarLayout.totalScrollRange
+                }
+                if (scrollRange + verticalOffset == 0) {
+                    isShow = true
+                    val animation: Animation =
+                        AnimationUtils.loadAnimation(context, R.anim.scale_down)
+                    binding.imageView5.startAnimation(animation)
+                    binding.imageView5.setImageResource(R.drawable.ic_informsicon_resize)
+                } else if (isShow) {
+                    val animation: Animation =
+                        AnimationUtils.loadAnimation(context, R.anim.scale_up)
+                    binding.imageView5.startAnimation(animation)
+                    binding.imageView5.visibility = View.VISIBLE
+                    binding.imageView5.visibility = View.VISIBLE
+                    binding.imageView5.setImageResource(R.drawable.ic_informsicon)
+                    isShow = false
+                }
+            }
+        })
         binding.btDashboard.setOnClickListener {
             findNavController().navigate(InformsFragmentDirections.actionNavigationInformsToCoverageBoardFragment())
         }

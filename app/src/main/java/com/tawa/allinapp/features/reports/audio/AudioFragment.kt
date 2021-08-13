@@ -13,17 +13,20 @@ import com.tawa.allinapp.core.extensions.*
 import com.tawa.allinapp.core.functional.Failure
 import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.FragmentAudioBinding
+import com.tawa.allinapp.features.reports.standard.CheckListViewModel
 
 
 class AudioFragment : BaseFragment() {
 
     private lateinit var binding: FragmentAudioBinding
     private lateinit var audioViewModel: AudioViewModel
+    private lateinit var checkListViewModel: CheckListViewModel
     private  var idQuestion = ""
     private  var nameQuestion = ""
     private  var idAnswer =""
     private  var nameAnswer = ""
     private  var audio64 = ""
+    private var idReport = ""
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,6 +42,14 @@ class AudioFragment : BaseFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentAudioBinding.inflate(inflater)
+        arguments?.getString("id").toString().also {idRep->
+            idReport=idRep
+        }
+
+        checkListViewModel = viewModel(viewModelFactory){
+
+        }
+
         audioViewModel = viewModel(viewModelFactory){
             observe(fileString,{ it?.let {
                 if (it.isNotEmpty()){
@@ -90,13 +101,17 @@ class AudioFragment : BaseFragment() {
         binding.ivClose.setOnClickListener { binding.rvAudioRecord.invisible() }
         binding.btSavePictures.setOnClickListener {
             audioViewModel.setReadyAnswers(idQuestion,nameQuestion,idAnswer,audio64,"")
-            audioViewModel.updateStateReport("60dc7d0c11bb190a40e28e91", "En proceso")
+            checkListViewModel.updateReportPv(idReport,"En proceso","Terminado")
+            checkListViewModel.setAnswerPv(idAnswer,idQuestion,nameAnswer,"")
+            audioViewModel.updateStateReport(idReport, "En proceso","Terminado")
             activity?.onBackPressed()
         }
 
         binding.btErraser.setOnClickListener {
             audioViewModel.setReadyAnswers(idQuestion,nameQuestion,idAnswer,audio64,"")
-            audioViewModel.updateStateReport("60dc7d0c11bb190a40e28e91", "En proceso")
+            checkListViewModel.setAnswerPv(idAnswer,idQuestion,nameAnswer,"")
+            checkListViewModel.updateReportPv(idReport,"En proceso","Borrador")
+            audioViewModel.updateStateReport(idReport, "En proceso","Borrador")
             activity?.onBackPressed()
         }
 

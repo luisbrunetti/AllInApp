@@ -21,6 +21,7 @@ data class PhotoReportModel(
     val after5: String?="",
     val comments: String?,
     val createAt: String?,
+    val state: String?,
 ){
     fun toRemote() = ReportsPhotoRemote.Request(company, pv, before1, before2, before3, before4, before5, after1, after2, after3, after4, after5, comments, createAt,)
     fun toView():PhotoReport{

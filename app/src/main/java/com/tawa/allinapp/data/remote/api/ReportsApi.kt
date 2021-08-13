@@ -7,9 +7,9 @@ import retrofit2.http.*
 
 interface ReportsApi {
 
-    //@GET("/api/reporte/1/")
-    @GET("https://run.mocky.io/v3/cfb6570c-32f8-42ff-b511-40531381571d/{id_empr}")
-    fun getReports(@Path("id_empr") company:String): Call<BaseResponse<List<ReportsRemote.Response>>>
+    @GET("/api/asignacionreporte/estandar/user/get")
+    //@GET("https://run.mocky.io/v3/cfb6570c-32f8-42ff-b511-40531381571d/{id_empr}")
+    fun getReports(@Header("Authorization") token:String,@Query("id_empresa") company:String): Call<BaseResponse<List<ReportsRemote.Response>>>
 
     //TODO make multiparts with the real service
     @GET("https://run.mocky.io/v3/26d7c983-fbee-45ae-9a65-990aa317d5dd")
@@ -27,7 +27,7 @@ interface ReportsApi {
     @PUT("/api/user/estado")
     fun updateStatus(@Header("Authorization") token: String, @Body  request: UpdateStatusRemote.Request):Call<BaseResponse<UpdateStatusRemote.Response>>
 
-    @GET("/api/reportepdv/1/?_id=60fb25dc8b978f3b9ae4ae32")
+    @GET("/api/reportepdv/1/?_id=6111f3849035a5f29a26d656")
     fun getReportsSku(@Header("Authorization") token: String): Call<BaseResponse<List<ReportsSkuRemote.Response>>>
 
     @POST("/api/registropdv/add")

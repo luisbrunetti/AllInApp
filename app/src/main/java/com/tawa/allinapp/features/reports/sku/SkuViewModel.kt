@@ -13,7 +13,8 @@ class SkuViewModel
     private val getSkuObservation: GetSkuObservation,
     private val SyncSku: SyncSku,
     private val getSku: GetSku,
-    private val updateSkuDetail: UpdateSkuDetail
+    private val updateSkuDetail: UpdateSkuDetail,
+    private  val updateStateSku: UpdateStateSku
 ) : BaseViewModel() {
 
     private val _successSku = MutableLiveData<List<SkuDetail>>()
@@ -35,6 +36,10 @@ class SkuViewModel
     private val _successUpdateSkuDetail = MutableLiveData<Boolean>(false)
     val successUpdateSkuDetail: LiveData<Boolean>
         get()= _successUpdateSkuDetail
+
+    private val _successUpdateStateSku = MutableLiveData<Boolean>(false)
+    val successUpdateStateSku: LiveData<Boolean>
+        get()= _successUpdateStateSku
 
     private val _successGetSkuObservation = MutableLiveData<List<SkuObservation>>()
     val successGetSkuObservation: LiveData<List<SkuObservation>>
@@ -101,6 +106,13 @@ class SkuViewModel
 
     private fun handleGetSkuObservation(skuObservation:List<SkuObservation>) {
         _successGetSkuObservation.value = skuObservation
+    }
+
+    fun updateStateSku(idSku: String,state:String,type: String) = updateStateSku(UpdateStateSku.Params(idSku,state,type)) {
+        it.either(::handleFailure, ::handleSuccessUpdateStateSku) }
+
+    private fun handleSuccessUpdateStateSku(success: Boolean) {
+        _successUpdateStateSku.value = success
     }
 
 }

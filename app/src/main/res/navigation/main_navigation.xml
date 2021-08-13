@@ -51,7 +51,13 @@
             app:destination="@id/skuFragment" />
         <action
             android:id="@+id/action_navigation_reports_to_audioFragment"
-            app:destination="@id/audioFragment" />
+            app:destination="@id/audioFragment">
+
+            <argument
+                android:name="id"
+                app:argType="string"/>
+
+            </action>
     </fragment>
 
     <fragment

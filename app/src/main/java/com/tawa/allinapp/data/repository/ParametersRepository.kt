@@ -34,6 +34,7 @@ interface ParametersRepository {
                                         body.data.map {
                                             parametersDataSource.insertCompanies(it.toModel())
                                         }
+                                        prefs.companyId = body.data[0].id
                                         Either.Right(true)
                                     }
                                     else Either.Left(Failure.DefaultError(body.message))
@@ -67,7 +68,9 @@ interface ParametersRepository {
                                 response.body()?.let { body ->
                                     if(body.success) {
                                         body.data.map {
-                                            parametersDataSource.insertPV(it.toModel())
+                                            it.pv?.map { pv ->
+                                                parametersDataSource.insertPV(pv.toModel(it.company?.id))
+                                            }
                                         }
                                         Either.Right(true)
                                     }

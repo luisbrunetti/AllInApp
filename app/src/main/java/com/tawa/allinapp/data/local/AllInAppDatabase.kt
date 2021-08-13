@@ -19,7 +19,9 @@ import com.tawa.allinapp.features.movies.models.Movie
     AudioReportModel::class,
     SkuModel::class,
     SkuDetailModel::class,
-    SkuObservationModel::class
+    SkuObservationModel::class,
+    ReportPvModel::class,
+    AnswersPvModel::class
 ],version = 1)
 abstract class AllInAppDatabase: RoomDatabase(){
     abstract fun movieDao(): MovieDao

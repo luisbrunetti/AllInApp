@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.EditText
+import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.appbar.AppBarLayout
@@ -15,6 +16,7 @@ import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
 import com.tawa.allinapp.R
 import com.tawa.allinapp.core.dialog.MessageDialogFragment
 import com.tawa.allinapp.core.extensions.failure
+import com.tawa.allinapp.core.extensions.loadFromResource
 import com.tawa.allinapp.core.extensions.observe
 import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.functional.Failure
@@ -45,11 +47,11 @@ class ReportsFragment : BaseFragment() {
         binding.rvReports.adapter = reportsAdapter
         reportsAdapter.clickListener = {
             when(it.reportName){
-                "CHECK LIST PUNTO DE VENTA" -> findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToCheckListFragment("Probando"))
-                "REPORTE FOTOGRAFICO" -> findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToPictureFragment())
+                "CHECK LIST PUNTO DE VENTA" -> findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToCheckListFragment(it.id))
+                //"REPORTE FOTOGRAFICO" -> findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToPictureFragment())
                // "ESTATUS DE USUARIO" -> findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToUserStatusFragment())
-                "QUIEBRES Y SKU" -> findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToSkuFragment())
-                "AUDIO" -> findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToAudioFragment())
+                "LEVANTAMIENTO DE INFORMACIÓN" -> findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToCheckListFragment(it.id))
+                "REPORTE DE AUDIO" -> findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToAudioFragment(it.id))
             }
         }
     }
@@ -58,8 +60,7 @@ class ReportsFragment : BaseFragment() {
         binding = FragmentReportsBinding.inflate(inflater)
         reportsViewModel = viewModel(viewModelFactory) {
             observe(reports, { it?.let {
-                listReports = it.filter { it.reportName!="ESTATUS DE USUARIO" }
-                reportsAdapter.setData(listReports)
+                reportsAdapter.setData(it)
             } })
             observe(pvName, { it?.let {
                 binding.tvHeaderPV.text = it
@@ -71,6 +72,30 @@ class ReportsFragment : BaseFragment() {
                     reportsViewModel.getReports()
                 }
             } })
+            observe(successStateSku,{
+                it?.let {
+                    if(it.isNotEmpty())
+                    {
+                        binding.tvPVSub3.text = it
+                        if(it=="En proceso")
+                        {
+                           binding.iconSku.setImageResource(R.drawable.ic_inprocess)
+                        }
+                    }
+                }
+            })
+            observe(successStatePicture,{
+                it?.let {
+                    if(it.isNotEmpty())
+                    {
+                        binding.tvPVSub2.text = it
+                        if(it=="En proceso")
+                        {
+                            binding.iconPicture.setImageResource(R.drawable.ic_inprocess)
+                        }
+                    }
+                }
+            })
             failure(failure, { it?.let {
                 hideProgressDialog()
                 when(it){
@@ -87,6 +112,12 @@ class ReportsFragment : BaseFragment() {
         }
         binding.btnBackReports.setOnClickListener{
             activity?.onBackPressed()
+        }
+        binding.btnSku.setOnClickListener {
+            findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToSkuFragment())
+        }
+        binding.btnReportPictures.setOnClickListener {
+            findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToPictureFragment())
         }
         binding.appbar.addOnOffsetChangedListener(object : OnOffsetChangedListener {
             var isShow = true
@@ -112,6 +143,8 @@ class ReportsFragment : BaseFragment() {
                 }
             }
         })
+        reportsViewModel.getStateSku("60fb181d8b978fb259e4acb8")
+        reportsViewModel.getStatePicture()
         return binding.root
     }
 
