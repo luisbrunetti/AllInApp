@@ -4,14 +4,19 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun DateFilter(){
+fun DateFilter(
+    startDate:String,
+    endDate:String,
+    onStart: (start:String) ->Unit,
+    onEnd: (end:String) ->Unit
+){
     Surface(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -24,22 +29,20 @@ fun DateFilter(){
                 horizontalArrangement = Arrangement.SpaceAround
             ) {
                 TextField(
-                    modifier = Modifier.weight(1f).padding(5.dp),
-                    value = "Inicio",
-                    onValueChange = {}
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(5.dp),
+                    value = startDate,
+                    onValueChange = { onStart(it) }
                 )
                 TextField(
-                    modifier = Modifier.weight(1f).padding(5.dp),
-                    value = "Final",
-                    onValueChange = {}
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(5.dp),
+                    value = endDate,
+                    onValueChange = { onEnd(it) }
                 )
             }
         }
     }
-}
-
-@Composable
-@Preview
-fun DefaultPreviewDateFilter(){
-    DateFilter()
 }

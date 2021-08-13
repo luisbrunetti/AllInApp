@@ -67,5 +67,6 @@ class ApplicationModule(private val application: Application){
     @Provides @Singleton fun provideCheckRepository(dataSource: CheckRepository.Network): CheckRepository = dataSource
     @Provides @Singleton fun provideReportRepository(dataSource: ReportsRepository.Network): ReportsRepository = dataSource
     @Provides @Singleton fun provideQuestionRepository(dataSource: QuestionsRepository.Network): QuestionsRepository = dataSource
+    @Provides @Singleton fun provideDashboardRepository(dataSource: DashboardRepository.Network): DashboardRepository = dataSource
 
 }

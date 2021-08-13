@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.tawa.allinapp.features.auth.AuthViewModel
 import com.tawa.allinapp.features.calendar.CalendarViewModel
+import com.tawa.allinapp.features.coverage.CoverageViewModel
 import com.tawa.allinapp.features.informs.InformsViewModel
 import com.tawa.allinapp.features.init.InitViewModel
 import com.tawa.allinapp.features.movies.MoviesViewModel
@@ -89,5 +90,9 @@ abstract class ViewModelModule {
     @ViewModelKey(SkuViewModel::class)
     abstract fun bindsSkuViewModel(skuViewModel: SkuViewModel): ViewModel
 
+    @Binds
+    @IntoMap
+    @ViewModelKey(CoverageViewModel::class)
+    abstract fun bindsCoverageViewModel(coverageViewModel: CoverageViewModel): ViewModel
 
 }
