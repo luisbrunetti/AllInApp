@@ -67,6 +67,7 @@ class CheckListFragment: BaseFragment() {
     private var state:Boolean = false
     private var verify:Boolean = false
     private  var idPhoto = ""
+    private var idQuestion = ""
     private var idReport=""
     private var typeReport = ""
 
@@ -88,6 +89,7 @@ class CheckListFragment: BaseFragment() {
         checkListViewModel = viewModel(viewModelFactory) {
             observe(questions, { it?.let {
                 listInit = it.sortedBy { it.order }
+                listInit = listInit.filter { filter -> filter.questionName!="TIENE FOTO"}
                 for(list in listInit)
                    showQuestions(list.objectType,list.id,list.questionName,list.order)
             } })
@@ -114,21 +116,16 @@ class CheckListFragment: BaseFragment() {
             } })
 
             observe(answersPhoto, { it?.let {
-                for(photo in it)
+                binding.tvPhoto.text = nameQuestion.value
+                idPhoto = it[0].id
+                idQuestion = it[0].idQuestion
+                if( it[0].data!="VACIO" &&  it[0].data!="")
                 {
-                    idPhoto = photo.id
-                    if(state)
-                    {
-                        if(photo.data!="VACIO" && photo.data!="")
-                        {
-                            binding.checkListPhoto.isVisible = true
-                            binding.deletePhoto.isVisible = true
-                            urlImage = photo.data
-                            val imageUri = Uri.fromFile(File(photo.data))
-                            binding.checkListPhoto.setImageURI(imageUri,"")
-                        }
-
-                    }
+                    binding.checkListPhoto.isVisible = true
+                    binding.deletePhoto.isVisible = true
+                    urlImage =  it[0].data
+                    val imageUri = Uri.fromFile(File( it[0].data))
+                    binding.checkListPhoto.setImageURI(imageUri,"")
                 }
             } })
             observe(stateRadio, { it?.let {
@@ -170,20 +167,25 @@ class CheckListFragment: BaseFragment() {
             if(typeReport!="Terminado") {
                 //checkListViewModel.updateState(true, true)
                 checkListViewModel.updateStateReport(idReport, "En proceso","Terminado")
+                checkListViewModel.updateReportPv(idReport,"En proceso","Terminado")
                 for (radio in listRadioButton) {
                     val tag = radio.tag as ArrayList<String>
-                    checkListViewModel.updateAnswers(tag[0], radio.isChecked.toString())
+                    checkListViewModel.setAnswerPv(tag[0],tag[1],radio.isChecked.toString(),urlImage)
+                //checkListViewModel.updateAnswers(tag[0], radio.isChecked.toString())
                 }
                 for (check in listCheckBox) {
                     val tag = check.tag as ArrayList<String>
-                    checkListViewModel.updateAnswers(tag[0], check.isChecked.toString())
+                    checkListViewModel.setAnswerPv(tag[0],tag[1],check.isChecked.toString(),urlImage)
+                //checkListViewModel.updateAnswers(tag[0], check.isChecked.toString())
                 }
                 for (input in listInput) {
                     val tag = input.tag as ArrayList<String>
-                    checkListViewModel.updateAnswers(tag[0], input.text.toString())
+                    checkListViewModel.setAnswerPv(tag[0],tag[1],input.text.toString(),urlImage)
+                    //checkListViewModel.updateAnswers(tag[0], input.text.toString())
 
                 }
-                checkListViewModel.updateAnswers(idPhoto, urlImage)
+                checkListViewModel.setAnswerPv(idPhoto,idQuestion,urlImage,urlImage)
+                //checkListViewModel.updateAnswers(idPhoto, urlImage)
 
                 findElements()
                 activity?.onBackPressed()
@@ -198,20 +200,25 @@ class CheckListFragment: BaseFragment() {
             if(typeReport!="Terminado") {
                 //checkListViewModel.updateState(true, false)
                 checkListViewModel.updateStateReport(idReport, "En proceso","Borrador")
+                checkListViewModel.updateReportPv(idReport,"En proceso","Borrador")
                 for (radio in listRadioButton) {
                     val tag = radio.tag as ArrayList<String>
-                    checkListViewModel.updateAnswers(tag[0], radio.isChecked.toString())
+                    checkListViewModel.setAnswerPv(tag[0],tag[1],radio.isChecked.toString(),urlImage)
+                   // checkListViewModel.updateAnswers(tag[0], radio.isChecked.toString())
                 }
                 for (check in listCheckBox) {
                     val tag = check.tag as ArrayList<String>
-                    checkListViewModel.updateAnswers(tag[0], check.isChecked.toString())
+                    checkListViewModel.setAnswerPv(tag[0],tag[1],check.isChecked.toString(),urlImage)
+                   // checkListViewModel.updateAnswers(tag[0], check.isChecked.toString())
                 }
                 for (input in listInput) {
                     val tag = input.tag as ArrayList<String>
-                    checkListViewModel.updateAnswers(tag[0], input.text.toString())
+                    checkListViewModel.setAnswerPv(tag[0],tag[1],input.text.toString(),urlImage)
+                    //checkListViewModel.updateAnswers(tag[0], input.text.toString())
 
                 }
-                checkListViewModel.updateAnswers(idPhoto, urlImage)
+                //checkListViewModel.updateAnswers(idPhoto, urlImage)
+                checkListViewModel.setAnswerPv(idPhoto,idQuestion,urlImage,urlImage)
 
                 activity?.onBackPressed()
             }
@@ -266,7 +273,7 @@ class CheckListFragment: BaseFragment() {
                 if(type=="INPUT")
                     checkListViewModel.getAnswersInput(id,questionName,order)
                 if(type=="FOTO")
-                    checkListViewModel.getAnswersPhoto(id)
+                    checkListViewModel.getAnswersPhoto(id,questionName)
     }
 
     private fun addAnswersRadio(listAnswers:List<Answer>, linear: LinearLayout, nameQ:String,order: Int){

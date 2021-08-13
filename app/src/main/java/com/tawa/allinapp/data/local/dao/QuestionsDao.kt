@@ -5,9 +5,12 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.tawa.allinapp.data.local.models.AnswerModel
+import com.tawa.allinapp.data.local.models.AnswersPvModel
 import com.tawa.allinapp.data.local.models.QuestionModel
 import com.tawa.allinapp.data.local.models.ReadyAnswerModel
 import com.tawa.allinapp.data.remote.entities.QuestionsRemote
+import com.tawa.allinapp.features.init.usecase.SetIdPv
+import com.tawa.allinapp.models.Answer
 
 @Dao
 interface QuestionsDao {
@@ -19,6 +22,9 @@ interface QuestionsDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertReadyAnswers(readyAnswerModel: ReadyAnswerModel)
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun insertAnswersPv(answersPvModel: AnswersPvModel)
 
     @Query("SELECT * FROM questions order by `order` asc")
     fun getQuestions(): List<QuestionModel>
@@ -40,4 +46,16 @@ interface QuestionsDao {
 
     @Query("UPDATE answers set data=:data where id=:idAnswer")
     fun updateAnswers(idAnswer:String,data:String)
+
+    @Query("SELECT count(id) FROM answers_pv where idPv = :idPv and idQuestion=:idQuestion")
+    fun getCountPvAnswers(idPv:String,idQuestion: String): Int
+
+    @Query("SELECT count(id) FROM answers_pv where idPv = :idPv and idAnswers=:idAnswer")
+    fun getCountPvAnswer(idPv:String,idAnswer: String): Int
+
+    @Query("SELECT answers.id, answers.status,answers.answerName,answers.`order`,answers.idQuestion,answers.idUserCreator,answers.idUserModifier,answers.dateModify,answers.dateCreation,answers_pv.nameAnswer as 'data' FROM answers, answers_pv where answers.idQuestion=answers_pv.idQuestion and answers.id=answers_pv.idAnswers and  answers.idQuestion=:idQuestion and answers_pv.idPv =:idPv")
+    fun getAnswersPv(idQuestion : String,idPv: String): List<AnswerModel>
+
+    @Query("UPDATE answers_pv set nameAnswer=:nameAnswer, img=:img where idAnswers=:idAnswer and idPv=:idPv")
+    fun updateAnswersPv(idAnswer:String,idPv: String,nameAnswer: String,img:String)
 }

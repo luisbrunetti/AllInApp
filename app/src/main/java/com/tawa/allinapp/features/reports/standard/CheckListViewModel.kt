@@ -2,9 +2,7 @@ package com.tawa.allinapp.features.reports.standard
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.tawa.allinapp.core.interactor.UseCase
 import com.tawa.allinapp.core.platform.BaseViewModel
-import com.tawa.allinapp.features.init.usecase.SetCheckIn
 import com.tawa.allinapp.models.Answer
 import com.tawa.allinapp.models.Question
 import javax.inject.Inject
@@ -17,7 +15,9 @@ class CheckListViewModel
     private val updateAnswers: UpdateAnswers,
     private val updateState: UpdateState,
     private val getStateReport: GetStateReport,
-    private val updateStateReport: UpdateStateReport
+    private val updateStateReport: UpdateStateReport,
+    private val updateReportPv: UpdateReportPv,
+    private val setAnswerPv: SetAnswerPv
     ):BaseViewModel() {
 
     private val _text = MutableLiveData<String>("HOLAAAAAAA")
@@ -88,6 +88,14 @@ class CheckListViewModel
     val successUpdateState: LiveData<Boolean>
         get()= _successUpdateState
 
+    private val _successSetReportPv = MutableLiveData<Boolean>(false)
+    val successSetReportPv: LiveData<Boolean>
+        get()= _successSetReportPv
+
+    private val _successSetAnswerPv = MutableLiveData<Boolean>(false)
+    val successSetAnswerPv: LiveData<Boolean>
+        get()= _successSetAnswerPv
+
     private val _type = MutableLiveData<Int>(0)
     val type: LiveData<Int>
         get()= _type
@@ -156,7 +164,8 @@ class CheckListViewModel
         _answersInput.value = answers
     }
 
-    fun getAnswersPhoto(idQuestion:String) = getAnswers(GetAnswers.Params(idQuestion)) {
+    fun getAnswersPhoto(idQuestion:String,nameQuestion: String) = getAnswers(GetAnswers.Params(idQuestion)) {
+       _nameQuestion.value = nameQuestion
         it.either(::handleFailure, ::handleAnswersPhoto) }
 
     private fun handleAnswersPhoto(answers : List<Answer>) {
@@ -216,5 +225,21 @@ class CheckListViewModel
     }
     private fun handleUpdateStateReport(success: Boolean) {
         this._updateReportState.value = success
+    }
+
+    fun updateReportPv(idReport:String,state:String,type: String) { updateReportPv(UpdateReportPv.Params(idReport,state,type)) {
+        it.either(::handleFailure, ::handleSetReportPv)
+        }
+    }
+    private fun handleSetReportPv(success: Boolean) {
+        this._successSetReportPv.value = success
+    }
+
+    fun setAnswerPv(idAnswer: String,idQuestion: String,nameAnswer: String,img: String) { setAnswerPv(SetAnswerPv.Params(idAnswer,idQuestion,nameAnswer,img)) {
+        it.either(::handleFailure, ::handleSetAnswerPv)
+    }
+    }
+    private fun handleSetAnswerPv(success: Boolean) {
+        this._successSetAnswerPv.value = success
     }
 }

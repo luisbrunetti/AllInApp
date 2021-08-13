@@ -8,10 +8,7 @@ import com.tawa.allinapp.core.functional.NetworkHandler
 import com.tawa.allinapp.data.local.Prefs
 import com.tawa.allinapp.data.local.datasource.QuestionsDataSource
 import com.tawa.allinapp.data.local.datasource.ReportsDataSource
-import com.tawa.allinapp.data.local.models.PhotoReportModel
-import com.tawa.allinapp.data.local.models.ReportModel
-import com.tawa.allinapp.data.local.models.SkuDetailModel
-import com.tawa.allinapp.data.local.models.SkuModel
+import com.tawa.allinapp.data.local.models.*
 import com.tawa.allinapp.data.remote.MovieDetailEntity
 import com.tawa.allinapp.data.remote.entities.ReportsSkuRemote
 import com.tawa.allinapp.data.remote.entities.SynReportStandardRemote
@@ -53,6 +50,7 @@ interface ReportsRepository {
     fun getLocalPhotoReport(): Either<Failure, PhotoReport>
     fun getStateReport(idReport: String): Either<Failure,String>
     fun getStatePhotoReport(): Either<Failure, String>
+    fun updateReportPv(idReport: String,state: String,type: String):Either<Failure, Boolean>
 
     class Network
     @Inject constructor(private val networkHandler: NetworkHandler,
@@ -286,7 +284,23 @@ interface ReportsRepository {
 
         override fun getReports(): Either<Failure, List<Report>> {
             return try {
-                Either.Right(reportsDataSource.getReports().map { it.toView() })
+                val idPv = prefs.pvId!!
+
+                if(idPv.isEmpty())
+                    Either.Right(reportsDataSource.getReports(prefs.companyId?:"").map { it.toView() })
+                else{
+                    val count = reportsDataSource.getReportPvCount(prefs.companyId?:"",prefs.pvId?:"")
+                    if(count==0)
+                    {
+                        val reports = reportsDataSource.getReports(prefs.companyId?:"").map { it.toView() }
+                        for(report in reports)
+                        {
+                            reportsDataSource.insertReportPv(ReportPvModel(0,prefs.pvId?:"",report.id,"No iniciado","0"))
+                        }
+                    }
+                    Either.Right(reportsDataSource.getReportsPv(prefs.companyId?:"",prefs.pvId?:"").map { it.toView() })
+                }
+
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))
             }
@@ -538,7 +552,20 @@ interface ReportsRepository {
 
         override fun getStateReport(idReport: String): Either<Failure, String> {
             return try {
-                Either.Right(reportsDataSource.getStateReport(idReport))
+                val count = reportsDataSource.getReportPvCount(prefs.companyId?:"",prefs.pvId?:"")
+                if(count==0)
+                    Either.Right("0")
+                else
+                    Either.Right(reportsDataSource.getStateReport(idReport,prefs.pvId?:""))
+            }catch (e:Exception){
+                Either.Left(Failure.DefaultError(e.message!!))
+            }
+        }
+
+        override fun updateReportPv(idReport: String, state: String,type:String): Either<Failure, Boolean> {
+            return try {
+                reportsDataSource.updateReportPv(idReport,prefs.pvId?:"",state,type)
+                Either.Right(true)
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))
             }
