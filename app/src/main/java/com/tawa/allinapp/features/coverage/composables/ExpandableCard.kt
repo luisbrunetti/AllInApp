@@ -54,7 +54,7 @@ fun ExpandableCard(
                     contentDescription = "ArrowDropDown"
                 )
             }
-            //if (expandedState){
+            if (expandedState){
                 Column(Modifier.padding(start = 12.dp, end = 12.dp, bottom = 12.dp)) {
                     var mainCheckState by remember { mutableStateOf(false) }
                     val checkedList = remember { mutableListOf<String>() }
@@ -96,7 +96,7 @@ fun ExpandableCard(
                         }
                     }
                 }
-            //}
+            }
             Surface(
                 modifier = Modifier.fillMaxWidth().height(1.dp),
                 color = Color.Gray

@@ -1,6 +1,6 @@
 package com.tawa.allinapp.models
 
-data class Channel(
+data class Retail(
     val id: String?,
     val status: String?,
     val description: String?,

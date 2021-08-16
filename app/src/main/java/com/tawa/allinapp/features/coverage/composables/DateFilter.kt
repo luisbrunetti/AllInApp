@@ -33,14 +33,14 @@ fun DateFilter(
                         .weight(1f)
                         .padding(5.dp),
                     value = startDate,
-                    onValueChange = { onStart(it) }
+                    onValueChange = onStart
                 )
                 TextField(
                     modifier = Modifier
                         .weight(1f)
                         .padding(5.dp),
                     value = endDate,
-                    onValueChange = { onEnd(it) }
+                    onValueChange = onEnd
                 )
             }
         }

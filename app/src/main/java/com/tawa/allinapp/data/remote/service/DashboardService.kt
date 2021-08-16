@@ -11,5 +11,6 @@ class DashboardService
     private val dashboardApi by lazy { retrofit.create(DashboardApi::class.java) }
 
     override fun getChannels(token: String,company:String) = dashboardApi.getChannels(token,company)
+    override fun getRetails(token: String,company:String) = dashboardApi.getRetails(token,company)
 
 }

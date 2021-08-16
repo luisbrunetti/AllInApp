@@ -6,10 +6,8 @@ import com.tawa.allinapp.models.Channel
 import javax.inject.Inject
 
 class GetChannels
-@Inject constructor(private val dashboardRepository: DashboardRepository) : UseCase<List<Channel>, GetChannels.Params>() {
+@Inject constructor(private val dashboardRepository: DashboardRepository) : UseCase<List<Channel>, UseCase.None>() {
 
-    override suspend fun run(params: Params) = dashboardRepository.getChannels(params.company)
-
-    class Params(val company: String)
+    override suspend fun run(params:None) = dashboardRepository.getChannels()
 
 }
