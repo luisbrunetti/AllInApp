@@ -129,7 +129,11 @@ class InitFragment : BaseFragment() {
                 override fun onAccept() {
                     showLogin(context)
                 }
+                override fun onSendPassword() {
+                    findNavController().navigate(InitFragmentDirections.actionNavigationInitToSendPasswordFragment())
+                }
             }
+
             frag.show(childFragmentManager, "participant")
         }
 
@@ -188,6 +192,8 @@ class InitFragment : BaseFragment() {
         }
         checkOutDialog?.show(childFragmentManager, "checkOutDialog")
     }
+
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

@@ -39,7 +39,8 @@ class InitViewModel
     private  val syncSku: SyncSku,
     private val syncAudio: SyncAudio,
     private val getAudioRemote: GetAudioRemote,
-    private val listReports: ListReports
+    private val listReports: ListReports,
+    private val sendPassword: SendPassword
 
 ) : BaseViewModel()  {
     private  val formatter: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
@@ -171,6 +172,10 @@ class InitViewModel
     val successGetRole: LiveData<String>
         get() = _successGetRole
 
+    private val _successSendPassword = MutableLiveData<Boolean>(false)
+    val successSendPassword: LiveData<Boolean>
+        get() = _successSendPassword
+
     init {
         startHome()
         startCheckIn()
@@ -238,7 +243,7 @@ class InitViewModel
 
     fun updateStatus(latitude:String,longitude:String,battery:String) = updateStatus(UpdateStatus.Params(latitude,longitude,battery)) { it.either(::handleFailure, ::handleUpdateStatus) }
 
-    fun getReportsSku() = getReportsSku(UseCase.None()) { it.either(::handleFailure, ::handleReportsSku) }
+    fun getReportsSku(company: String) = getReportsSku(GetReportsSku.Params(company)) { it.either(::handleFailure, ::handleReportsSku) }
 
     fun syncCheck() = syncCheck(UseCase.None()) { it.either(::handleFailure, ::handleSyncCheck) }
 
@@ -335,6 +340,13 @@ class InitViewModel
 
     private fun handleListReports(reports:List<Report>) {
         this._successListReport.value = reports
+    }
+
+    fun sendPassword(password: String) =sendPassword(SendPassword.Params(password)) {
+        it.either(::handleFailure, ::handleSendPassword) }
+
+    private fun handleSendPassword(success: Boolean) {
+        this._successSendPassword.value = success
     }
 
 }

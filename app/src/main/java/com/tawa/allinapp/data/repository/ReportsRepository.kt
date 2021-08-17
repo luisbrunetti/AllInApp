@@ -37,7 +37,7 @@ interface ReportsRepository {
     fun getReportStatus(): Either<Failure, List<ReportStatus>>
     fun updateStatus(latitude:String,longitude:String,battery:String): Either<Failure, Boolean>
     fun saveLocalAudioReport(report: AudioReport): Either<Failure, Boolean>
-    fun getReportsSku():Either<Failure, Boolean>
+    fun getReportsSku(company: String):Either<Failure, Boolean>
     fun insertSkuObservation(skuObservation: SkuObservation):Either<Failure, Boolean>
     fun getSkuObservation(idSkuDetail: String):Either<Failure, List<SkuObservation>>
     fun syncSku():Either<Failure, Boolean>
@@ -50,6 +50,7 @@ interface ReportsRepository {
     fun getLocalPhotoReport(): Either<Failure, PhotoReport>
     fun getStateReport(idReport: String): Either<Failure,String>
     fun getStatePhotoReport(): Either<Failure, String>
+    fun getCountSku(): Either<Failure, Int>
     fun updateReportPv(idReport: String,state: String,type: String):Either<Failure, Boolean>
 
     class Network
@@ -244,18 +245,18 @@ interface ReportsRepository {
             }
         }
 
-        override fun getReportsSku(): Either<Failure, Boolean> {
+        override fun getReportsSku(company: String): Either<Failure, Boolean> {
             return when (networkHandler.isConnected) {
                 true ->{
                     try {
-                        val response = service.getReportsSku("Bearer ${prefs.token!!}").execute()
+                        val response = service.getReportsSku("Bearer ${prefs.token!!}",company).execute()
 
                         when (response.isSuccessful) {
                             true -> {
                                 response.body()?.let { body ->
                                     body.data.map {
-                                        reportsDataSource.insertSku(SkuModel(it.id,it.idPuntoVenta.id,it.idEmpresa.id,"No iniciado","0"))
-                                        for(products in it.lineas)
+                                        reportsDataSource.insertSku(SkuModel(it.id,it.idReportPdv.idPuntoVenta.id,it.idCompany.id,"No iniciado","0"))
+                                        for(products in it.idReportPdv.lineas)
                                         {
                                             products.idProducto.nombreProducto?.let { it1 ->
                                                 products.idProducto.idSubsegmentoProd?.idSegmentoProd?.idSubcategoriaProd?.nombreSubcategoria?.let { it2 ->
@@ -527,7 +528,7 @@ interface ReportsRepository {
 
         override fun getStateSku(idPv: String): Either<Failure, String> {
             return try {
-                Either.Right(reportsDataSource.getStateSku(idPv))
+                Either.Right(reportsDataSource.getStateSku(prefs.pvId?:""))
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))
             }
@@ -566,6 +567,14 @@ interface ReportsRepository {
             return try {
                 reportsDataSource.updateReportPv(idReport,prefs.pvId?:"",state,type)
                 Either.Right(true)
+            }catch (e:Exception){
+                Either.Left(Failure.DefaultError(e.message!!))
+            }
+        }
+
+        override fun getCountSku(): Either<Failure, Int> {
+            return try {
+                Either.Right(reportsDataSource.getCountSku(prefs.pvId?:""))
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))
             }

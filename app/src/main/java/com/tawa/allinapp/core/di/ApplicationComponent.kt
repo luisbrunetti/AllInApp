@@ -11,6 +11,7 @@ import com.tawa.allinapp.features.informs.InformsFragment
 import com.tawa.allinapp.features.informs.PDVFragment
 import com.tawa.allinapp.features.init.ui.CheckInDialogFragment
 import com.tawa.allinapp.features.init.ui.InitFragment
+import com.tawa.allinapp.features.init.ui.SendPasswordFragment
 
 
 import com.tawa.allinapp.features.location.LocationFragment
@@ -54,4 +55,5 @@ interface ApplicationComponent{
     fun inject(lastLocationFragment: LastLocationFragment)
     fun inject(audioFragment: AudioFragment)
     fun inject(informsFragment: InformsFragment)
+    fun inject(sendPasswordFragment: SendPasswordFragment)
 }

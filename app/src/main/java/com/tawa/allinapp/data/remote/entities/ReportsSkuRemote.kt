@@ -43,9 +43,30 @@ class ReportsSkuRemote {
     data class Message(
         @SerializedName( "_id")
         val id: String,
+
     )
 
-    data class Response (
+    data class Response(
+        @SerializedName("id_user_modificador")
+        val idUserModif: String,
+
+        @SerializedName("fe_modificacion")
+        val DateModif: String,
+
+        @SerializedName("_id")
+        val id: String,
+
+        @SerializedName("id_empresa")
+        val idCompany: IDEmpresa,
+
+
+        @SerializedName("id_reporte_pdv")
+        val idReportPdv: IdReportPdv,
+
+    )
+
+
+    data class IdReportPdv (
         @SerializedName("_id")
         val id: String,
 

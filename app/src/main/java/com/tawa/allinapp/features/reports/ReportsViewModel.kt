@@ -15,7 +15,8 @@ class ReportsViewModel
     private val getDescPV: GetDescPV,
     private val getUserType: GetUserType,
     private val getStateSku: GetStateSku,
-    private val getStatePicture: GetStatePicture
+    private val getStatePicture: GetStatePicture,
+    private val getCountSku: GetCountSku
 ):BaseViewModel() {
 
     private val _reports = MutableLiveData<List<Report>>()
@@ -37,6 +38,10 @@ class ReportsViewModel
     private val _successStatePicture = MutableLiveData("")
     val successStatePicture:LiveData<String>
         get() = _successStatePicture
+
+    private val _countSku = MutableLiveData(0)
+    val countSku:LiveData<Int>
+        get() = _countSku
 
     init {
         getUserType()
@@ -72,4 +77,9 @@ class ReportsViewModel
         _successStatePicture.value = state
     }
 
+    fun getCountSku() = getCountSku(UseCase.None()) { it.either(::handleFailure, ::handleCountSku) }
+
+    private fun handleCountSku(count: Int) {
+        _countSku.value = count
+    }
 }
