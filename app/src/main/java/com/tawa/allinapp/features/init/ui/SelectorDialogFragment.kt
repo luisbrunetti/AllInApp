@@ -93,7 +93,7 @@ class SelectorDialogFragment
             initViewModel.setIdCompany(selectedCompany)
 
            // initViewModel.getAudioRemote()
-            initViewModel.getReportsSku()
+            initViewModel.getReportsSku(selectedCompany)
 
         }
     }

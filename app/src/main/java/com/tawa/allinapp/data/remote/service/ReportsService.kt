@@ -23,7 +23,7 @@ class ReportsService
     override fun getReports(token:String,company:String) = reportsApi.getReports(token,company)
     override fun getReportStatus(token:String) = reportsApi.getReportStatus(token)
     override fun updateStatus(token: String, request: UpdateStatusRemote.Request) = reportsApi.updateStatus(token,request)
-    override fun getReportsSku(token: String) = reportsApi.getReportsSku(token)
+    override fun getReportsSku(token: String,company: String) = reportsApi.getReportsSku(token,company)
     override fun syncSku(token: String, request: ReportsSkuRemote.Request) = reportsApi.syncSku(token,request)
     override fun setPhotoReports(
         before1:String,before2:String,before3:String,before4:String,before5:String,

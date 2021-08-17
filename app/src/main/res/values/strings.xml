@@ -128,6 +128,7 @@
     <string name="record">Grabar</string>
     <string name="record_audio">Grabar un audio</string>
     <string name="logout">Cerrar Sesión</string>
+    <string name="send_password">Enviar contraseña</string>
     <string name="eraser">Borrador</string>
     <string name="record_one">Grabacion 1</string>
 </resources>

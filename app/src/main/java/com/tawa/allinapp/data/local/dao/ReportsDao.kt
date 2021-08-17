@@ -83,4 +83,7 @@ interface ReportsDao {
     @Query("UPDATE report_pv SET state=:state , type = :type WHERE idReport = :idReport and idPv = :idPv")
     fun updateReportPv(idReport: String,idPv: String,state: String,type:String)
 
+    @Query("SELECT count(id) FROM sku WHERE idPv =:idPv   ")
+    fun getCountSku(idPv: String):Int
+
 }
