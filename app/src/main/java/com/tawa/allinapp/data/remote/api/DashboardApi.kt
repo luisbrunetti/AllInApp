@@ -1,8 +1,10 @@
 package com.tawa.allinapp.data.remote.api
 
 import com.tawa.allinapp.core.platform.BaseResponse
+import com.tawa.allinapp.data.remote.entities.ChainRemote
 import com.tawa.allinapp.data.remote.entities.ChannelRemote
 import com.tawa.allinapp.data.remote.entities.RetailRemote
+import com.tawa.allinapp.data.remote.entities.UserRemote
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -14,4 +16,10 @@ interface DashboardApi {
 
     @GET("/api/retail/1/")
     fun getRetails(@Header("Authorization") token: String, @Query("id_empresa") company:String): Call<BaseResponse<List<RetailRemote.Response>>>
+
+    @GET("/api/cadena/1/")
+    fun getChains(@Header("Authorization") token: String, @Query("id_empresa") company:String): Call<BaseResponse<List<ChainRemote.Response>>>
+
+    @GET("/api/group/user/list/")
+    fun getUserList(@Header("Authorization") token: String, @Query("empresas") company:String): Call<BaseResponse<List<UserRemote.Response>>>
 }

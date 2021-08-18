@@ -35,6 +35,8 @@ class CoverageBoardFragment : BaseFragment() {
     private fun initViewModels(){
         coverageViewModel.getChannels()
         coverageViewModel.getRetails()
+        coverageViewModel.getChains()
+        coverageViewModel.getUserList()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -46,6 +48,8 @@ class CoverageBoardFragment : BaseFragment() {
 
                 val channels by coverageViewModel.channels.observeAsState()
                 val retails by coverageViewModel.retails.observeAsState()
+                val chains by coverageViewModel.chains.observeAsState()
+                val userList by coverageViewModel.userList.observeAsState()
 
                 Column{
                     HeaderPage("Dashboard","Cobertura") {
@@ -67,14 +71,18 @@ class CoverageBoardFragment : BaseFragment() {
                                 content = it
                             ){ list -> val a = list}
                         }
-                        ExpandableCard(
-                            title = "Cadena",
-                            content = listOf("Oh","Moderno","Tradicional","Otros")
-                        ){ val a = it}
-                        ExpandableCard(
-                            title = "Usuarios",
-                            content = listOf("Oh","Moderno","Tradicional","Otros")
-                        ){ val a = it}
+                        chains?.map { it.description?:"" }?.let {
+                            ExpandableCard(
+                                title = "Cadena",
+                                content = it
+                            ){ list -> val a = list}
+                        }
+                        userList?.map { it.fullName?:"" }?.let {
+                            ExpandableCard(
+                                title = "Usuarios",
+                                content = it
+                            ){ list -> val a = list}
+                        }
                     }
                 }
             }
