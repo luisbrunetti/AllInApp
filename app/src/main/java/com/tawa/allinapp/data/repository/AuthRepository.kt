@@ -31,7 +31,7 @@ interface AuthRepository {
                             true -> {
                                 response.body()?.let { body ->
                                     if(body.success) {
-                                        prefs.name = username
+                                        prefs.name = body.data.fullName
                                         prefs.user = body.data.user
                                         prefs.token = body.data.token
                                         prefs.idUser = body.data.idUser

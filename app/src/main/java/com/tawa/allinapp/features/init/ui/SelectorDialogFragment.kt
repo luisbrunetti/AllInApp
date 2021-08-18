@@ -55,8 +55,8 @@ class SelectorDialogFragment
                 getCompanies()
             } })
             observe(setIdCompanySuccess, { it?.let { if (it) {
-                initViewModel.getReportsRemote(selectedCompany)
-
+                authViewModel.getPVRemote()
+                baseFragment.hideProgressDialog()
             }
             } })
             observe(successGetReports, { it?.let { if (it)
@@ -75,6 +75,12 @@ class SelectorDialogFragment
 
             } })
         }
+        authViewModel = viewModel(baseFragment.viewModelFactory){
+            observe(successGetPV, { it?.let {
+                if (it)
+                    initViewModel.getReportsRemote(selectedCompany)
+            } })
+        }
         return binding.root
     }
 
@@ -87,6 +93,7 @@ class SelectorDialogFragment
             }
         }
         binding.btnAccessHome.setOnClickListener {
+            baseFragment.showProgressDialog()
             listener?.onAccept()
             val positionCompany = binding.spinnerCompany.selectedItemPosition
             selectedCompany = listCompany[positionCompany].id

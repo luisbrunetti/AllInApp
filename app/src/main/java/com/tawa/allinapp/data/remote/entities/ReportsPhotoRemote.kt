@@ -18,6 +18,11 @@ class ReportsPhotoRemote {
         @SerializedName("foto_d5") val fd5: String?,
         @SerializedName("comentario") val comment: String?,
         @SerializedName("fe_creacion") val createAt: String?,
+        @SerializedName("longitud") val longitude: Double?,
+        @SerializedName("latitud") val latitude: Double?,
+        @SerializedName("longitud_sincronizacion") val syncLongitude: Double?,
+        @SerializedName("latitud_sincronizacion") val syncLatitude: Double?,
+        @SerializedName("fe_sincronizacion") val syncAt: String?,
     )
 
     data class Response(
@@ -35,5 +40,10 @@ class ReportsPhotoRemote {
         @SerializedName("foto_d5") val fd5: String?,
         @SerializedName("comentario") val comment: String?,
         @SerializedName("fe_creacion") val createAt: String?,
+        @SerializedName("longitud") val longitude: Double?,
+        @SerializedName("latitud") val latitude: Double?,
+        @SerializedName("longitud_sincronizacion") val syncLongitude: Double?,
+        @SerializedName("latitud_sincronizacion") val syncLatitude: Double?,
+        @SerializedName("fe_sincronizacion") val syncAt: String?,
     )
 }

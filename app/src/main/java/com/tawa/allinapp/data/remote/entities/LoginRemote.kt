@@ -14,5 +14,6 @@ class LoginRemote {
         @SerializedName("usuario") @Expose val user: String,
         @SerializedName("id_user") @Expose val idUser: String,
         @SerializedName("roles") @Expose val role: List<String>,
+        @SerializedName("nombre_apellido") @Expose val fullName: String,
     )
 }
