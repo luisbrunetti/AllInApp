@@ -23,7 +23,7 @@ data class PhotoReportModel(
     val createAt: String?,
     val state: String?,
 ){
-    fun toRemote() = ReportsPhotoRemote.Request(company, pv, before1, before2, before3, before4, before5, after1, after2, after3, after4, after5, comments, createAt,)
+    fun toRemote() = ReportsPhotoRemote.Request(company, pv, before1, before2, before3, before4, before5, after1, after2, after3, after4, after5, comments, createAt,null,null,null,null,null) //TODO replace nulls
     fun toView():PhotoReport{
         val before = arrayListOf<String>()
         val after = arrayListOf<String>()
