@@ -22,8 +22,13 @@ data class PhotoReportModel(
     val comments: String?,
     val createAt: String?,
     val state: String?,
+    val longitude: Double?,
+    val latitude: Double?,
+    val syncLongitude: Double?,
+    val syncLatitude: Double?,
+    val syncAt: String?,
 ){
-    fun toRemote() = ReportsPhotoRemote.Request(company, pv, before1, before2, before3, before4, before5, after1, after2, after3, after4, after5, comments, createAt,null,null,null,null,null) //TODO replace nulls
+    fun toRemote() = ReportsPhotoRemote.Request(company, pv, before1, before2, before3, before4, before5, after1, after2, after3, after4, after5, comments, createAt,longitude,latitude,syncLongitude,syncLatitude,syncAt)
     fun toView():PhotoReport{
         val before = arrayListOf<String>()
         val after = arrayListOf<String>()
@@ -37,6 +42,6 @@ data class PhotoReportModel(
         if(after3!!.isNotEmpty()) after.add(after3)
         if(after4!!.isNotEmpty()) after.add(after4)
         if(after5!!.isNotEmpty()) after.add(after5)
-        return PhotoReport(before,after,comments?:"",createAt?:"")
+        return PhotoReport(before,after,comments?:"",createAt?:"",longitude,latitude,syncLongitude,syncLatitude,syncAt)
     }
 }

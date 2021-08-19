@@ -1,8 +1,13 @@
 package com.tawa.allinapp.models
 
 data class PhotoReport (
-    val before:List<String>,
-    val after:List<String>,
-    val comments:String,
-    val createAt:String
+    var before:List<String>,
+    var after:List<String>,
+    var comments:String,
+    val createAt:String,
+    val longitude: Double?,
+    val latitude: Double?,
+    var syncLongitude: Double?,
+    var syncLatitude: Double?,
+    var syncAt: String?,
 )

@@ -52,6 +52,7 @@ interface ReportsRepository {
     fun getStatePhotoReport(): Either<Failure, String>
     fun getCountSku(): Either<Failure, Int>
     fun updateReportPv(idReport: String,state: String,type: String):Either<Failure, Boolean>
+    fun deletePhotoReports(): Either<Failure, Boolean>
 
     class Network
     @Inject constructor(private val networkHandler: NetworkHandler,
@@ -128,6 +129,15 @@ interface ReportsRepository {
             }
         }
 
+        override fun deletePhotoReports(): Either<Failure, Boolean> {
+            return try {
+                reportsDataSource.deletePhotos()
+                Either.Right(true)
+            }catch (e:Exception){
+                Either.Left(Failure.DefaultError(e.message!!))
+            }
+        }
+
         override fun saveLocalPhotoReport(report:PhotoReport,state:String): Either<Failure, Boolean> {
             if (prefs.pvId!!.isEmpty())
                 return Either.Left(Failure.DefaultError("Debe seleccionar hacer Checkin en un Punto de Venta"))
@@ -151,7 +161,12 @@ interface ReportsRepository {
                             if (after >4) report.after[4] else "",
                             report.comments,
                             report.createAt,
-                            state
+                            state,
+                            report.longitude,
+                            report.latitude,
+                            report.syncLongitude,
+                            report.syncLatitude,
+                            report.syncAt,
                         )
                     )
                     Either.Right(true)
@@ -164,7 +179,7 @@ interface ReportsRepository {
             return try {
                 val response = reportsDataSource.getPhotoReports(prefs.pvId?:"",prefs.companyId?:"")
                 if(response.isEmpty())
-                    Either.Right( PhotoReport(emptyList(), emptyList(),"","") )
+                    Either.Right( PhotoReport(emptyList(), emptyList(),"","",0.0,0.0,0.0,0.0,"") )
                 else
                     Either.Right( response.first().toView() )
             }catch (e:Exception){

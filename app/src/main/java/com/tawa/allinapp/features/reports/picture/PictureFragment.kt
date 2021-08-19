@@ -14,6 +14,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.core.net.toUri
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.karumi.dexter.Dexter
@@ -46,6 +47,8 @@ class PictureFragment : BaseFragment() {
 
     private val before = 200
     private val after = 300
+
+    private lateinit var photoReport: PhotoReport
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,16 +89,34 @@ class PictureFragment : BaseFragment() {
             observe(errorMessage, { it?.let {
                 if (it.isNotEmpty()) MessageDialogFragment.newInstance(it).show(childFragmentManager, "dialog")
             }})
+            observe(successSyncPhotoReports, { it?.let {
+                pictureViewModel.deletePhotoReports()
+            }})
+            observe(successDeletePhotoReports, { it?.let {
+                hideProgressDialog()
+            }})
             observe(report, { it?.let {
                 pictureAfterAdapter.setData(it.after)
                 pictureBeforeAdapter.setData(it.before)
                 binding.tvComments.setText(it.comments)
+                getLastLocation()
+                it.apply {
+                    before = pictureBeforeAdapter.collection
+                    after = pictureAfterAdapter.collection
+                    comments = binding.tvComments.text.toString()
+                    syncLongitude = longitude
+                    syncLatitude = latitude
+                    syncAt = Calendar.getInstance().time.toString()
+                    syncLatitude = longitude
+                }
+                pictureViewModel.saveReport(it,"Enviado")
+                pictureViewModel.syncPhotoReport()
             }})
             failure(failure, { it?.let {
                 hideProgressDialog()
                 when(it){
                     is Failure.DefaultError         -> pictureViewModel.setError(it.message ?: getString(R.string.error_unknown))
-                    is Failure.NetworkConnection    -> MessageDialogFragment.newInstance(getString(R.string.error_network)).show(childFragmentManager, "dialog")
+                    is Failure.NetworkConnection    -> notify(activity,R.string.error_network_ok)
                     is Failure.ServerError          -> MessageDialogFragment.newInstance(getString(R.string.error_network)).show(childFragmentManager, "dialog")
                     else                            -> MessageDialogFragment.newInstance(getString(R.string.error_unknown)).show(childFragmentManager, "dialog")
                 }
@@ -109,23 +130,21 @@ class PictureFragment : BaseFragment() {
         }
         binding.btSavePictures.setOnClickListener {
             showProgressDialog()
+            getLastLocation()
             val report = PhotoReport(
                 pictureBeforeAdapter.collection,
                 pictureAfterAdapter.collection,
                 binding.tvComments.text.toString(),
-                Calendar.getInstance().time.toString()
+                Calendar.getInstance().time.toString(),
+                longitude.toDouble(),latitude.toDouble(),
+                longitude.toDouble(),latitude.toDouble(),
+                Calendar.getInstance().time.toString(),
             )
             pictureViewModel.saveReport(report,"En proceso")
         }
         binding.btSendPictures.setOnClickListener {
             showProgressDialog()
-            val report = PhotoReport(
-                pictureBeforeAdapter.collection,
-                pictureAfterAdapter.collection,
-                binding.tvComments.text.toString(),
-                Calendar.getInstance().time.toString()
-            )
-            pictureViewModel.saveReport(report,"Enviado")
+            pictureViewModel.getPhotoReport()
         }
 
         return binding.root
