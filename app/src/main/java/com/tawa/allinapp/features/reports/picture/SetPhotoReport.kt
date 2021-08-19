@@ -11,6 +11,6 @@ class SetPhotoReport
 
     override suspend fun run(params: Params) = reportsRepository.saveLocalPhotoReport(params.report, params.state)
 
-    class Params(val report: PhotoReport, val state:String)
+    class Params(val report: PhotoReport?, val state:String)
 
 }

@@ -89,7 +89,7 @@ class ReportsFragment : BaseFragment() {
                 it?.let {
                     if(it.isNotEmpty())
                     {
-                        binding.tvPVSub2.text = it
+                        binding.tvPhotoState.text = it
                         if(it=="En proceso")
                         {
                             binding.iconPicture.setImageResource(R.drawable.ic_inprocess)
@@ -129,7 +129,10 @@ class ReportsFragment : BaseFragment() {
             findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToSkuFragment())
         }
         binding.btnReportPictures.setOnClickListener {
-            findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToPictureFragment())
+            if(binding.tvPhotoState.text == "Enviado")
+                MessageDialogFragment.newInstance("Ya se envio este reporte").show(childFragmentManager, "dialog")
+            else
+                findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToPictureFragment())
         }
         binding.appbar.addOnOffsetChangedListener(object : OnOffsetChangedListener {
             var isShow = true
