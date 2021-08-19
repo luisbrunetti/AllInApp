@@ -16,6 +16,7 @@
     <string name="error_login">Usuario y/o Contrasena incorrecta</string>
     <string name="ok_login">Login correcto</string>
     <string name="error_network">Error de red</string>
+    <string name="error_network_ok">La informacion se guardo correctamente, pero no se subio a internet</string>
     <string name="error_unknown">Ha ocurrido un error</string>
     <string name="text_check_in">Marcar Ingreso</string>
     <string name="text_check_out">Marcar salida</string>

@@ -86,4 +86,7 @@ interface ReportsDao {
     @Query("SELECT count(id) FROM sku WHERE idPv =:idPv   ")
     fun getCountSku(idPv: String):Int
 
+    @Query("DELETE FROM reports_photo")
+    fun deletePhotos()
+
 }
