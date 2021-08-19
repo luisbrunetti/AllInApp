@@ -121,9 +121,17 @@ class InitViewModel
     val pvDesc: LiveData<String>
         get()= _pvDesc
 
+    private val _descPV = MutableLiveData<String>()
+    val descPV: LiveData<String>
+        get()= _descPV
+
     private val _pvId = MutableLiveData<String>()
     val pvId: LiveData<String>
         get()= _pvId
+
+    private val _idPV = MutableLiveData<String>()
+    val idPV: LiveData<String>
+        get()= _idPV
 
     private val _dayState = MutableLiveData<Boolean>(false)
     val dayState: LiveData<Boolean>
@@ -217,7 +225,11 @@ class InitViewModel
 
     fun getDescPV() = getDescPV(UseCase.None()) { it.either(::handleFailure, ::handlePVDesc) }
 
+    fun getPVDesc() = getDescPV(UseCase.None()) { it.either(::handleFailure, ::handleDescPV) }
+
     fun getIdPV() = getIdPV(UseCase.None()) { it.either(::handleFailure, ::handlePVId) }
+
+    fun getPVId() = getIdPV(UseCase.None()) { it.either(::handleFailure, ::handleIdPV) }
 
     fun getCompanies() = getCompanies(UseCase.None()) { it.either(::handleFailure, ::handleCompanyList) }
 
@@ -260,8 +272,14 @@ class InitViewModel
     private fun handlePVDesc(checkIn:String) {
         this._pvDesc.value = checkIn
     }
+    private fun handleDescPV(checkIn:String) {
+        this._descPV.value = checkIn
+    }
     private fun handlePVId(checkIn:String) {
         this._pvId.value = checkIn
+    }
+    private fun handleIdPV(checkIn:String) {
+        this._idPV.value = checkIn
     }
     private fun handleCheckIn(success: Boolean) {
         this._successCheckIn.value = success

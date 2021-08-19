@@ -61,7 +61,7 @@ class InitFragment : BaseFragment() {
             } }})
             observe(checkInMode, { it?.let {
                 checkIn = it
-                if(!checkIn) binding.tvCheckIn.text = _pv
+                //if(!checkIn) binding.tvCheckIn.text = _pv
                 hideProgressDialog()
             }})
             observe(idUser, { it?.let {
@@ -90,6 +90,16 @@ class InitFragment : BaseFragment() {
             observe(successSyncReportStandard, { it?.let {
                 if (it) initViewModel.syncSku()
             }})
+            observe(descPV, { it?.let {
+                if (it.isNotEmpty())
+                    binding.tvCheckIn.text = it
+            }})
+            observe(idPV, { it?.let {
+                if(it.isNotEmpty())
+                    findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationReports())
+                else
+                    MessageDialogFragment.newInstance("Debes seleccionar o hacer chekIn en un punto de venta").show(childFragmentManager, "errorDialog")
+            }})
             observe(successSyncAudio, { it?.let {
                 if(it){
                     hideProgressDialog()
@@ -115,6 +125,7 @@ class InitFragment : BaseFragment() {
             })
             failure(failure, ::handleFailure)
         }
+        initViewModel.getPVDesc()
         initViewModel.getIdUser()
         initViewModel.getUserName()
         binding.btCheckIn.setOnClickListener{
@@ -151,10 +162,7 @@ class InitFragment : BaseFragment() {
             findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationCalendar())
         }
         binding.viewBtnReports.setOnClickListener {
-            if(_pvId.isNotEmpty())
-                findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationReports())
-            else
-                MessageDialogFragment.newInstance("Debes seleccionar o hacer chekIn en un punto de venta").show(childFragmentManager, "errorDialog")
+            initViewModel.getPVId()
         }
         binding.viewBtnInforms.setOnClickListener{
             findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationInforms())

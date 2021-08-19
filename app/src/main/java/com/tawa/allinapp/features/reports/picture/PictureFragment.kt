@@ -48,7 +48,7 @@ class PictureFragment : BaseFragment() {
     private val before = 200
     private val after = 300
 
-    private lateinit var photoReport: PhotoReport
+    private var photoReport: PhotoReport? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,17 +80,17 @@ class PictureFragment : BaseFragment() {
         binding = FragmentPictureBinding.inflate(inflater)
         pictureViewModel = viewModel(viewModelFactory){
             observe(successReport,{ it?.let {
-                if(it){
-                    hideProgressDialog()
-                    ConfirmDialogFragment().show(childFragmentManager, "dialog")
-                    //MessageDialogFragment.newInstance("", title = R.string.ok_save_report, icon = R.drawable.ic_checkin).show(childFragmentManager, "dialog")
-                }
+                if(it) hideProgressDialog()
             }})
             observe(errorMessage, { it?.let {
                 if (it.isNotEmpty()) MessageDialogFragment.newInstance(it).show(childFragmentManager, "dialog")
             }})
             observe(successSyncPhotoReports, { it?.let {
-                pictureViewModel.deletePhotoReports()
+                hideProgressDialog()
+                if(it){
+                    pictureViewModel.saveReport(photoReport,"Enviado")
+                    activity?.onBackPressed()
+                }
             }})
             observe(successDeletePhotoReports, { it?.let {
                 hideProgressDialog()
@@ -109,8 +109,7 @@ class PictureFragment : BaseFragment() {
                     syncAt = Calendar.getInstance().time.toString()
                     syncLatitude = longitude
                 }
-                pictureViewModel.saveReport(it,"Enviado")
-                pictureViewModel.syncPhotoReport()
+                photoReport = it
             }})
             failure(failure, { it?.let {
                 hideProgressDialog()
@@ -143,10 +142,15 @@ class PictureFragment : BaseFragment() {
             pictureViewModel.saveReport(report,"En proceso")
         }
         binding.btSendPictures.setOnClickListener {
-            showProgressDialog()
-            pictureViewModel.getPhotoReport()
+            val confirm = ConfirmDialogFragment()
+            confirm.listener = object  : ConfirmDialogFragment.Callback{
+                override fun onClick() {
+                    showProgressDialog()
+                    pictureViewModel.syncPhotoReport()
+                }
+            }
+            confirm.show(childFragmentManager, "dialog")
         }
-
         return binding.root
     }
 

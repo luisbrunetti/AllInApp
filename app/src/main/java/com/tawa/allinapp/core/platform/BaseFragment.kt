@@ -68,6 +68,11 @@ abstract class BaseFragment : Fragment() {
         if (this is BaseActivity) this.progress.visibility = viewStatus
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
+    }
+
     internal fun getLastLocation(){
         if(checkPermission()){
             if(isLocationEnabled()){

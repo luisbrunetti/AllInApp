@@ -27,7 +27,7 @@ import kotlin.math.log
 interface ReportsRepository {
     fun setReports(company: String): Either<Failure, Boolean>
     fun listReports(idCompany: String): Either<Failure, List<Report>>
-    fun saveLocalPhotoReport(report:PhotoReport,state:String): Either<Failure, Boolean>
+    fun saveLocalPhotoReport(report:PhotoReport?,state:String): Either<Failure, Boolean>
     fun getReports(): Either<Failure,List<Report>>
     fun getSkuDetail(idSku:String): Either<Failure,List<SkuDetail>>
     fun getSku(): Either<Failure,List<Sku>>
@@ -138,37 +138,51 @@ interface ReportsRepository {
             }
         }
 
-        override fun saveLocalPhotoReport(report:PhotoReport,state:String): Either<Failure, Boolean> {
+        override fun saveLocalPhotoReport(report:PhotoReport?,state:String): Either<Failure, Boolean> {
             if (prefs.pvId!!.isEmpty())
                 return Either.Left(Failure.DefaultError("Debe seleccionar hacer Checkin en un Punto de Venta"))
             else
                 return try {
-                    val before = report.before.size
-                    val after = report.after.size
-                    reportsDataSource.insertPhotoReport(
-                        PhotoReportModel(
-                            prefs.companyId?:"",
-                            prefs.pvId?:"",
-                            if (before >0) report.before[0] else "",
-                            if (before >1) report.before[1] else "",
-                            if (before >2) report.before[2] else "",
-                            if (before >3) report.before[3] else "",
-                            if (before >4) report.before[4] else "",
-                            if (after >0) report.after[0] else "",
-                            if (after >1) report.after[1] else "",
-                            if (after >2) report.after[2] else "",
-                            if (after >3) report.after[3] else "",
-                            if (after >4) report.after[4] else "",
-                            report.comments,
-                            report.createAt,
-                            state,
-                            report.longitude,
-                            report.latitude,
-                            report.syncLongitude,
-                            report.syncLatitude,
-                            report.syncAt,
+                    report?.let {
+                        val before = report.before.size
+                        val after = report.after.size
+                        reportsDataSource.insertPhotoReport(
+                            PhotoReportModel(
+                                prefs.companyId?:"",
+                                prefs.pvId?:"",
+                                if (before >0) report.before[0] else "",
+                                if (before >1) report.before[1] else "",
+                                if (before >2) report.before[2] else "",
+                                if (before >3) report.before[3] else "",
+                                if (before >4) report.before[4] else "",
+                                if (after >0) report.after[0] else "",
+                                if (after >1) report.after[1] else "",
+                                if (after >2) report.after[2] else "",
+                                if (after >3) report.after[3] else "",
+                                if (after >4) report.after[4] else "",
+                                report.comments,
+                                report.createAt,
+                                state,
+                                report.longitude,
+                                report.latitude,
+                                report.syncLongitude,
+                                report.syncLatitude,
+                                report.syncAt,
+                            )
                         )
-                    )
+                    } ?: kotlin.run {
+                        reportsDataSource.insertPhotoReport(
+                            PhotoReportModel(
+                                prefs.companyId?:"",
+                                prefs.pvId?:"",
+                                "", "", "", "", "", "", "", "", "", "",
+                                null,
+                                null,
+                                state,
+                                null, null,null,null,null,
+                            )
+                        )
+                    }
                     Either.Right(true)
                 }catch (e:Exception){
                     Either.Left(Failure.DefaultError(e.message!!))
