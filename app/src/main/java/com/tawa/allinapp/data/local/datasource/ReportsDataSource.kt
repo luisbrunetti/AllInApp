@@ -75,6 +75,10 @@ class ReportsDataSource @Inject constructor(private val reportsDao: ReportsDao){
         return reportsDao.getStateSku(idPV)
     }
 
+    fun deletePhotos(){
+        return reportsDao.deletePhotos()
+    }
+
     fun getStatePhoto(pv: String):String?{
         return reportsDao.getStatePhoto(pv)
     }
@@ -107,4 +111,7 @@ class ReportsDataSource @Inject constructor(private val reportsDao: ReportsDao){
         reportsDao.updateReportPv(idReport,idPV,state,type)
     }
 
+    fun getCountSku(idPV: String):Int{
+        return reportsDao.getCountSku(idPV)
+    }
 }

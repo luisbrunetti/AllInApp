@@ -11,6 +11,17 @@
     >
 
     <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvSendPass"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawablePadding="8dp"
+        android:padding="20dp"
+        android:text="@string/send_password"
+        android:textColor="@color/blue"
+        app:drawableStartCompat="@drawable/ic_send_password"
+        app:drawableTint="@color/blue" />
+
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvLogout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

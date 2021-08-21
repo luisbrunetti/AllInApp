@@ -27,7 +27,7 @@ import kotlin.math.log
 interface ReportsRepository {
     fun setReports(company: String): Either<Failure, Boolean>
     fun listReports(idCompany: String): Either<Failure, List<Report>>
-    fun saveLocalPhotoReport(report:PhotoReport,state:String): Either<Failure, Boolean>
+    fun saveLocalPhotoReport(report:PhotoReport?,state:String): Either<Failure, Boolean>
     fun getReports(): Either<Failure,List<Report>>
     fun getSkuDetail(idSku:String): Either<Failure,List<SkuDetail>>
     fun getSku(): Either<Failure,List<Sku>>
@@ -37,7 +37,7 @@ interface ReportsRepository {
     fun getReportStatus(): Either<Failure, List<ReportStatus>>
     fun updateStatus(latitude:String,longitude:String,battery:String): Either<Failure, Boolean>
     fun saveLocalAudioReport(report: AudioReport): Either<Failure, Boolean>
-    fun getReportsSku():Either<Failure, Boolean>
+    fun getReportsSku(company: String):Either<Failure, Boolean>
     fun insertSkuObservation(skuObservation: SkuObservation):Either<Failure, Boolean>
     fun getSkuObservation(idSkuDetail: String):Either<Failure, List<SkuObservation>>
     fun syncSku():Either<Failure, Boolean>
@@ -50,7 +50,9 @@ interface ReportsRepository {
     fun getLocalPhotoReport(): Either<Failure, PhotoReport>
     fun getStateReport(idReport: String): Either<Failure,String>
     fun getStatePhotoReport(): Either<Failure, String>
+    fun getCountSku(): Either<Failure, Int>
     fun updateReportPv(idReport: String,state: String,type: String):Either<Failure, Boolean>
+    fun deletePhotoReports(): Either<Failure, Boolean>
 
     class Network
     @Inject constructor(private val networkHandler: NetworkHandler,
@@ -127,32 +129,60 @@ interface ReportsRepository {
             }
         }
 
-        override fun saveLocalPhotoReport(report:PhotoReport,state:String): Either<Failure, Boolean> {
+        override fun deletePhotoReports(): Either<Failure, Boolean> {
+            return try {
+                reportsDataSource.deletePhotos()
+                Either.Right(true)
+            }catch (e:Exception){
+                Either.Left(Failure.DefaultError(e.message!!))
+            }
+        }
+
+        override fun saveLocalPhotoReport(report:PhotoReport?,state:String): Either<Failure, Boolean> {
             if (prefs.pvId!!.isEmpty())
                 return Either.Left(Failure.DefaultError("Debe seleccionar hacer Checkin en un Punto de Venta"))
             else
                 return try {
-                    val before = report.before.size
-                    val after = report.after.size
-                    reportsDataSource.insertPhotoReport(
-                        PhotoReportModel(
-                            prefs.companyId?:"",
-                            prefs.pvId?:"",
-                            if (before >0) report.before[0] else "",
-                            if (before >1) report.before[1] else "",
-                            if (before >2) report.before[2] else "",
-                            if (before >3) report.before[3] else "",
-                            if (before >4) report.before[4] else "",
-                            if (after >0) report.after[0] else "",
-                            if (after >1) report.after[1] else "",
-                            if (after >2) report.after[2] else "",
-                            if (after >3) report.after[3] else "",
-                            if (after >4) report.after[4] else "",
-                            report.comments,
-                            report.createAt,
-                            state
+                    report?.let {
+                        val before = report.before.size
+                        val after = report.after.size
+                        reportsDataSource.insertPhotoReport(
+                            PhotoReportModel(
+                                prefs.companyId?:"",
+                                prefs.pvId?:"",
+                                if (before >0) report.before[0] else "",
+                                if (before >1) report.before[1] else "",
+                                if (before >2) report.before[2] else "",
+                                if (before >3) report.before[3] else "",
+                                if (before >4) report.before[4] else "",
+                                if (after >0) report.after[0] else "",
+                                if (after >1) report.after[1] else "",
+                                if (after >2) report.after[2] else "",
+                                if (after >3) report.after[3] else "",
+                                if (after >4) report.after[4] else "",
+                                report.comments,
+                                report.createAt,
+                                state,
+                                report.longitude,
+                                report.latitude,
+                                report.syncLongitude,
+                                report.syncLatitude,
+                                report.syncAt,
+                            )
                         )
-                    )
+                    } ?: kotlin.run {
+                        reportsDataSource.insertPhotoReport(
+                            PhotoReportModel(
+                                prefs.companyId?:"",
+                                prefs.pvId?:"",
+                                "", "", "", "", "", "", "", "", "", "",
+                                null,
+                                null,
+                                state,
+                                null, null,null,null,null,
+                            )
+                        )
+                    }
                     Either.Right(true)
                 }catch (e:Exception){
                     Either.Left(Failure.DefaultError(e.message!!))
@@ -163,7 +193,7 @@ interface ReportsRepository {
             return try {
                 val response = reportsDataSource.getPhotoReports(prefs.pvId?:"",prefs.companyId?:"")
                 if(response.isEmpty())
-                    Either.Right( PhotoReport(emptyList(), emptyList(),"","") )
+                    Either.Right( PhotoReport(emptyList(), emptyList(),"","",0.0,0.0,0.0,0.0,"") )
                 else
                     Either.Right( response.first().toView() )
             }catch (e:Exception){
@@ -244,18 +274,18 @@ interface ReportsRepository {
             }
         }
 
-        override fun getReportsSku(): Either<Failure, Boolean> {
+        override fun getReportsSku(company: String): Either<Failure, Boolean> {
             return when (networkHandler.isConnected) {
                 true ->{
                     try {
-                        val response = service.getReportsSku("Bearer ${prefs.token!!}").execute()
+                        val response = service.getReportsSku("Bearer ${prefs.token!!}",company).execute()
 
                         when (response.isSuccessful) {
                             true -> {
                                 response.body()?.let { body ->
                                     body.data.map {
-                                        reportsDataSource.insertSku(SkuModel(it.id,it.idPuntoVenta.id,it.idEmpresa.id,"No iniciado","0"))
-                                        for(products in it.lineas)
+                                        reportsDataSource.insertSku(SkuModel(it.id,it.idReportPdv.idPuntoVenta.id,it.idCompany.id,"No iniciado","0"))
+                                        for(products in it.idReportPdv.lineas)
                                         {
                                             products.idProducto.nombreProducto?.let { it1 ->
                                                 products.idProducto.idSubsegmentoProd?.idSegmentoProd?.idSubcategoriaProd?.nombreSubcategoria?.let { it2 ->
@@ -527,7 +557,7 @@ interface ReportsRepository {
 
         override fun getStateSku(idPv: String): Either<Failure, String> {
             return try {
-                Either.Right(reportsDataSource.getStateSku(idPv))
+                Either.Right(reportsDataSource.getStateSku(prefs.pvId?:""))
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))
             }
@@ -566,6 +596,14 @@ interface ReportsRepository {
             return try {
                 reportsDataSource.updateReportPv(idReport,prefs.pvId?:"",state,type)
                 Either.Right(true)
+            }catch (e:Exception){
+                Either.Left(Failure.DefaultError(e.message!!))
+            }
+        }
+
+        override fun getCountSku(): Either<Failure, Int> {
+            return try {
+                Either.Right(reportsDataSource.getCountSku(prefs.pvId?:""))
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))
             }

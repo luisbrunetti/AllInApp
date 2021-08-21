@@ -9,6 +9,7 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.EditText
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.appbar.AppBarLayout
@@ -88,7 +89,7 @@ class ReportsFragment : BaseFragment() {
                 it?.let {
                     if(it.isNotEmpty())
                     {
-                        binding.tvPVSub2.text = it
+                        binding.tvPhotoState.text = it
                         if(it=="En proceso")
                         {
                             binding.iconPicture.setImageResource(R.drawable.ic_inprocess)
@@ -96,6 +97,17 @@ class ReportsFragment : BaseFragment() {
                     }
                 }
             })
+            observe(countSku,{it.let {
+                if(it==1)
+                {
+                    binding.btnSku.isVisible  = true
+                    binding.tvSku.isVisible = true
+                    binding.iconSku.isVisible = true
+                    binding.arrowSku.isVisible = true
+                    reportsViewModel.getStateSku("")
+                }
+
+            }})
             failure(failure, { it?.let {
                 hideProgressDialog()
                 when(it){
@@ -117,7 +129,10 @@ class ReportsFragment : BaseFragment() {
             findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToSkuFragment())
         }
         binding.btnReportPictures.setOnClickListener {
-            findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToPictureFragment())
+            if(binding.tvPhotoState.text == "Enviado")
+                MessageDialogFragment.newInstance("Ya se envio este reporte").show(childFragmentManager, "dialog")
+            else
+                findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToPictureFragment())
         }
         binding.appbar.addOnOffsetChangedListener(object : OnOffsetChangedListener {
             var isShow = true
@@ -143,7 +158,7 @@ class ReportsFragment : BaseFragment() {
                 }
             }
         })
-        reportsViewModel.getStateSku("60fb181d8b978fb259e4acb8")
+        reportsViewModel.getCountSku()
         reportsViewModel.getStatePicture()
         return binding.root
     }

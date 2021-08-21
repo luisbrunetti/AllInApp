@@ -87,7 +87,7 @@ class AuthViewModel
     }
 
     fun endLogin(){
-        if(_successGetCompanies.value==true && _successGetPV.value==true)
+        if(_successGetCompanies.value==true)
             _successEndLogin.value = true
     }
 }

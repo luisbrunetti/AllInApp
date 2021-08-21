@@ -47,6 +47,10 @@ class UserMenuDialogFragment : BottomSheetDialogFragment() {
             listener?.onAccept()
             dismiss()
         }
+        binding.tvSendPass.setOnClickListener {
+            dismiss()
+            listener?.onSendPassword()
+        }
     }
 
     override fun onResume() {
@@ -58,5 +62,6 @@ class UserMenuDialogFragment : BottomSheetDialogFragment() {
 
     interface Callback {
         fun onAccept()
+        fun onSendPassword()
     }
 }

@@ -39,7 +39,8 @@ class InitViewModel
     private  val syncSku: SyncSku,
     private val syncAudio: SyncAudio,
     private val getAudioRemote: GetAudioRemote,
-    private val listReports: ListReports
+    private val listReports: ListReports,
+    private val sendPassword: SendPassword
 
 ) : BaseViewModel()  {
     private  val formatter: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
@@ -120,9 +121,17 @@ class InitViewModel
     val pvDesc: LiveData<String>
         get()= _pvDesc
 
+    private val _descPV = MutableLiveData<String>()
+    val descPV: LiveData<String>
+        get()= _descPV
+
     private val _pvId = MutableLiveData<String>()
     val pvId: LiveData<String>
         get()= _pvId
+
+    private val _idPV = MutableLiveData<String>()
+    val idPV: LiveData<String>
+        get()= _idPV
 
     private val _dayState = MutableLiveData<Boolean>(false)
     val dayState: LiveData<Boolean>
@@ -171,6 +180,10 @@ class InitViewModel
     val successGetRole: LiveData<String>
         get() = _successGetRole
 
+    private val _successSendPassword = MutableLiveData<Boolean>(false)
+    val successSendPassword: LiveData<Boolean>
+        get() = _successSendPassword
+
     init {
         startHome()
         startCheckIn()
@@ -212,7 +225,11 @@ class InitViewModel
 
     fun getDescPV() = getDescPV(UseCase.None()) { it.either(::handleFailure, ::handlePVDesc) }
 
+    fun getPVDesc() = getDescPV(UseCase.None()) { it.either(::handleFailure, ::handleDescPV) }
+
     fun getIdPV() = getIdPV(UseCase.None()) { it.either(::handleFailure, ::handlePVId) }
+
+    fun getPVId() = getIdPV(UseCase.None()) { it.either(::handleFailure, ::handleIdPV) }
 
     fun getCompanies() = getCompanies(UseCase.None()) { it.either(::handleFailure, ::handleCompanyList) }
 
@@ -238,7 +255,7 @@ class InitViewModel
 
     fun updateStatus(latitude:String,longitude:String,battery:String) = updateStatus(UpdateStatus.Params(latitude,longitude,battery)) { it.either(::handleFailure, ::handleUpdateStatus) }
 
-    fun getReportsSku() = getReportsSku(UseCase.None()) { it.either(::handleFailure, ::handleReportsSku) }
+    fun getReportsSku(company: String) = getReportsSku(GetReportsSku.Params(company)) { it.either(::handleFailure, ::handleReportsSku) }
 
     fun syncCheck() = syncCheck(UseCase.None()) { it.either(::handleFailure, ::handleSyncCheck) }
 
@@ -255,8 +272,14 @@ class InitViewModel
     private fun handlePVDesc(checkIn:String) {
         this._pvDesc.value = checkIn
     }
+    private fun handleDescPV(checkIn:String) {
+        this._descPV.value = checkIn
+    }
     private fun handlePVId(checkIn:String) {
         this._pvId.value = checkIn
+    }
+    private fun handleIdPV(checkIn:String) {
+        this._idPV.value = checkIn
     }
     private fun handleCheckIn(success: Boolean) {
         this._successCheckIn.value = success
@@ -335,6 +358,13 @@ class InitViewModel
 
     private fun handleListReports(reports:List<Report>) {
         this._successListReport.value = reports
+    }
+
+    fun sendPassword(password: String) =sendPassword(SendPassword.Params(password)) {
+        it.either(::handleFailure, ::handleSendPassword) }
+
+    private fun handleSendPassword(success: Boolean) {
+        this._successSendPassword.value = success
     }
 
 }

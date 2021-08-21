@@ -25,6 +25,9 @@
         <action
             android:id="@+id/action_navigation_init_to_navigation_informs"
             app:destination="@id/navigation_informs" />
+        <action
+            android:id="@+id/action_navigation_init_to_sendPasswordFragment"
+            app:destination="@id/sendPasswordFragment" />
     </fragment>
 
     <fragment
@@ -138,6 +141,11 @@
             android:id="@+id/action_navigation_informs_to_coverageBoardFragment"
             app:destination="@id/coverageBoardFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/sendPasswordFragment"
+        android:name="com.tawa.allinapp.features.init.ui.SendPasswordFragment"
+        android:label="fragment_send_password"
+        tools:layout="@layout/fragment_send_password" />
 
     <fragment
         android:id="@+id/coverageBoardFragment"
