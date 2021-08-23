@@ -18,7 +18,7 @@ interface ReportsApi {
         after1:String,after2:String,after3:String,after4:String,after5:String,comment:String
     ): Call<BaseResponse<String>>
 
-    @GET("/api/group/user/list/1")
+    @GET("/api/group/user/list/")
     fun getReportStatus(@Header("Authorization") token:String): Call<BaseResponse<List<ReportsStatusRemote.Response>>>
 
     @POST("/api/fotografico/masivo/add")
@@ -33,7 +33,13 @@ interface ReportsApi {
     @POST("/api/registropdv/add")
     fun syncSku(@Header("Authorization") token: String,@Body request: ReportsSkuRemote.Request): Call<BaseResponse<ReportsSkuRemote.Message>>
 
+    @POST("/api/registropdv/masivo/add")
+    fun syncSkuMassive(@Header("Authorization") token: String,@Body request: List<ReportsSkuRemote.RequestMassive>): Call<BaseResponse<List<ReportsSkuRemote.Message>>>
+
     @POST("/api/registroreporte/add")
     fun synStandardReports(@Header("Authorization") token: String,@Body request: SynReportStandardRemote.Request): Call<BaseResponse<SynReportStandardRemote.Message>>
+
+    @POST("/api/registroreporte/masivo/add")
+    fun synStandardReportsMassive(@Header("Authorization") token: String,@Body request: List<SynReportStandardMassiveRemote.Request>): Call<BaseResponse<List<SynReportStandardMassiveRemote.Message>>>
 
 }

@@ -14,7 +14,8 @@ data class AnswersPvModel(
     val idAnswers: String,
     val idQuestion: String,
     val nameAnswer: String,
-    val img:String
+    val img:String,
+    val idUser:String
 ){
-    fun toView() = AnswersPv(id,idPv,idAnswers,idQuestion,nameAnswer,img)
+    fun toView() = AnswersPv(id,idPv,idAnswers,idQuestion,nameAnswer,img,idUser)
 }

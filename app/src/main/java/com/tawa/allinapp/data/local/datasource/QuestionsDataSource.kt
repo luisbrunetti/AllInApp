@@ -7,6 +7,7 @@ import com.tawa.allinapp.data.local.models.AnswersPvModel
 import com.tawa.allinapp.data.local.models.QuestionModel
 import com.tawa.allinapp.data.local.models.ReadyAnswerModel
 import com.tawa.allinapp.data.remote.entities.QuestionsRemote
+import com.tawa.allinapp.features.init.usecase.GetIdUser
 import javax.inject.Inject
 
 
@@ -60,15 +61,15 @@ class QuestionsDataSource @Inject constructor(private val questionsDao: Question
         return questionsDao.getCountPvAnswers(idPv,idQuestion)
     }
 
-    fun getCountPvAnswer(idPv:String,idAnswer: String):Int{
-        return questionsDao.getCountPvAnswer(idPv,idAnswer)
+    fun getCountPvAnswer(idPv:String,idAnswer: String,idUser: String):Int{
+        return questionsDao.getCountPvAnswer(idPv,idAnswer,idUser)
     }
 
-    fun getAnswersPv(idQuestion: String,idPv: String):List<AnswerModel>{
-        return questionsDao.getAnswersPv(idQuestion,idPv)
+    fun getAnswersPv(idQuestion: String,idPv: String,idUser: String):List<AnswerModel>{
+        return questionsDao.getAnswersPv(idQuestion,idPv,idUser)
     }
 
-    fun updateAnswersPv(idAnswer:String,idPv: String,nameAnswers:String,img:String){
-        questionsDao.updateAnswersPv(idAnswer,idPv,nameAnswers,img)
+    fun updateAnswersPv(idAnswer:String,idPv: String,nameAnswers:String,img:String,idUser: String){
+        questionsDao.updateAnswersPv(idAnswer,idPv,nameAnswers,img,idUser)
     }
 }

@@ -82,13 +82,15 @@ class InitFragment : BaseFragment() {
                 if (it) initViewModel.syncPhotoReport()
             } })
             observe(successSyncPhotoReports, { it?.let {
-                if (it) initViewModel.syncStandardReports()
+                getActualLocation()
+                if (it) initViewModel.syncStandardReportsMassive(_lat,_long)
             } })
             observe(successSyncSku, { it?.let {
                 if (it) initViewModel.syncAudio()
             } })
             observe(successSyncReportStandard, { it?.let {
-                if (it) initViewModel.syncSku()
+                getActualLocation()
+                if (it) initViewModel.syncSkuMassive(_lat,_long)
             }})
             observe(descPV, { it?.let {
                 if (it.isNotEmpty())
@@ -149,7 +151,7 @@ class InitFragment : BaseFragment() {
         }
 
         binding.btSync.setOnClickListener {
-            showProgressDialog()
+           showProgressDialog()
             initViewModel.syncCheck()
         }
         binding.viewBtnRoutes.setOnClickListener {

@@ -48,11 +48,12 @@ class ReportsFragment : BaseFragment() {
         binding.rvReports.adapter = reportsAdapter
         reportsAdapter.clickListener = {
             when(it.reportName){
-                "CHECK LIST PUNTO DE VENTA" -> findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToCheckListFragment(it.id))
+                /*"CHECK LIST PUNTO DE VENTA" -> findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToCheckListFragment(it.id))
                 //"REPORTE FOTOGRAFICO" -> findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToPictureFragment())
                // "ESTATUS DE USUARIO" -> findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToUserStatusFragment())
-                "LEVANTAMIENTO DE INFORMACIÓN" -> findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToCheckListFragment(it.id))
+                "LEVANTAMIENTO DE INFORMACIÓN" -> findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToCheckListFragment(it.id))*/
                 "REPORTE DE AUDIO" -> findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToAudioFragment(it.id))
+                else->  findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToCheckListFragment(it.id,it.reportName))
             }
         }
     }
@@ -81,6 +82,10 @@ class ReportsFragment : BaseFragment() {
                         if(it=="En proceso")
                         {
                            binding.iconSku.setImageResource(R.drawable.ic_inprocess)
+                        }
+                        if(it=="Enviado")
+                        {
+                            binding.iconSku.setImageResource(R.drawable.ic_sended)
                         }
                     }
                 }

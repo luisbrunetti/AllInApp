@@ -44,6 +44,10 @@
                 android:name="id"
                 app:argType="string"/>
 
+            <argument
+                android:name="name"
+                app:argType="string"/>
+
 
         </action>
         <action

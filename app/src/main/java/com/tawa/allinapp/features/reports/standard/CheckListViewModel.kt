@@ -3,6 +3,7 @@ package com.tawa.allinapp.features.reports.standard
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.tawa.allinapp.core.platform.BaseViewModel
+import com.tawa.allinapp.features.init.usecase.SyncStandardReports
 import com.tawa.allinapp.models.Answer
 import com.tawa.allinapp.models.Question
 import javax.inject.Inject
@@ -17,7 +18,8 @@ class CheckListViewModel
     private val getStateReport: GetStateReport,
     private val updateStateReport: UpdateStateReport,
     private val updateReportPv: UpdateReportPv,
-    private val setAnswerPv: SetAnswerPv
+    private val setAnswerPv: SetAnswerPv,
+    private val syncStandardReports: SyncStandardReports
     ):BaseViewModel() {
 
     private val _text = MutableLiveData<String>("HOLAAAAAAA")
@@ -99,6 +101,10 @@ class CheckListViewModel
     private val _type = MutableLiveData<Int>(0)
     val type: LiveData<Int>
         get()= _type
+
+    private val _successSyncReportStandard = MutableLiveData(false)
+    val successSyncReportStandard : LiveData<Boolean>
+        get() = _successSyncReportStandard
 
 
     private val _stateReport = MutableLiveData("")
@@ -227,7 +233,7 @@ class CheckListViewModel
         this._updateReportState.value = success
     }
 
-    fun updateReportPv(idReport:String,state:String,type: String) { updateReportPv(UpdateReportPv.Params(idReport,state,type)) {
+    fun updateReportPv(idReport:String,state:String,type: String,time:String,latitude: String,longitude: String) { updateReportPv(UpdateReportPv.Params(idReport,state,type,time,latitude,longitude)) {
         it.either(::handleFailure, ::handleSetReportPv)
         }
     }
@@ -241,5 +247,11 @@ class CheckListViewModel
     }
     private fun handleSetAnswerPv(success: Boolean) {
         this._successSetAnswerPv.value = success
+    }
+
+    fun syncStandardReports(idReport: String,latitude:String,longitude:String) = syncStandardReports(SyncStandardReports.Params(idReport,latitude,longitude)) { it.either(::handleFailure, ::handleSyncStandardReport) }
+
+    private fun handleSyncStandardReport(success:Boolean) {
+        this._successSyncReportStandard.value = success
     }
 }

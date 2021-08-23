@@ -1,5 +1,6 @@
 package com.tawa.allinapp.models
 
+import com.tawa.allinapp.data.remote.entities.SynReportStandardMassiveRemote
 import com.tawa.allinapp.data.remote.entities.SynReportStandardRemote
 
 data class ReportStandard(
@@ -8,4 +9,5 @@ data class ReportStandard(
     val answers : List<AnswerStandard>,
 ){
     fun toRequestRemote() = SynReportStandardRemote.Report(idQuestion,nameQuestion,answers.map { it.toRequestRemote() })
+    fun toRequestRemoteMassive() = SynReportStandardMassiveRemote.Report(idQuestion,nameQuestion,answers.map { it.toRequestRemoteMassive() })
 }
