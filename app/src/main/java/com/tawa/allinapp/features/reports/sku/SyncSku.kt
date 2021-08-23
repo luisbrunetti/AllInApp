@@ -9,8 +9,8 @@ import javax.inject.Inject
 
 
 class SyncSku
-@Inject constructor(private val reportsRepository: ReportsRepository) : UseCase<Boolean, UseCase.None>() {
+@Inject constructor(private val reportsRepository: ReportsRepository) : UseCase<Boolean, SyncSku.Params>() {
 
-    override suspend fun run(params: None) = reportsRepository.syncSku()
-
+    override suspend fun run(params: Params) = reportsRepository.syncSku(params.idSku)
+    data class Params(val idSku:String)
 }

@@ -3,12 +3,9 @@ package com.tawa.allinapp.data.remote.entities
 import com.google.gson.annotations.SerializedName
 import com.tawa.allinapp.data.local.models.CompanyModel
 import com.tawa.allinapp.data.local.models.ReportModel
-import com.tawa.allinapp.models.AnswerStandard
-import com.tawa.allinapp.models.Company
-import com.tawa.allinapp.models.Report
-import com.tawa.allinapp.models.ReportStandard
+import com.tawa.allinapp.models.*
 
-class SynReportStandardRemote {
+class SynReportStandardMassiveRemote {
     data class Request (
         @SerializedName("id_reporte")
         val idReporte: String,
@@ -25,13 +22,27 @@ class SynReportStandardRemote {
         @SerializedName( "status_reporte")
         val stateReport: String,
 
+        @SerializedName( "fe_creacion")
+        val dateCreation: String,
+
         @SerializedName( "longitud")
         val longitude: String,
 
         @SerializedName( "latitud")
         val latitude: String,
 
-    )
+        @SerializedName( "longitud_sincronizacion")
+        val longitudeSync: String,
+
+        @SerializedName( "latitud_sincronizacion")
+        val latitudeSync: String,
+
+        @SerializedName( "fe_sincronizacion")
+        val dateSync: String,
+
+    ){
+        fun toView() = ReportStandardMassive(idReporte,idPuntoVenta,idEmpresa,reporte.map { it.toView() },stateReport,dateCreation,longitude,latitude,longitudeSync,latitudeSync,dateSync)
+    }
 
     data class Message(
         @SerializedName( "id_reporte")

@@ -1,7 +1,6 @@
 package com.tawa.allinapp.models
 
 import com.tawa.allinapp.data.local.models.AnswersPvModel
-import com.tawa.allinapp.data.local.models.ReportPvModel
 
 data class AnswersPv(
     val id: Int,
@@ -9,8 +8,9 @@ data class AnswersPv(
     val idAnswer: String,
     val idQuestion: String,
     val nameAnswer: String,
-    val image :String
+    val image :String,
+    val idUser: String
 )
 {
-    fun toModel() = AnswersPvModel(id,idPv,idAnswer,idQuestion,nameAnswer,image)
+    fun toModel() = AnswersPvModel(id,idPv,idAnswer,idQuestion,nameAnswer,image,idUser)
 }

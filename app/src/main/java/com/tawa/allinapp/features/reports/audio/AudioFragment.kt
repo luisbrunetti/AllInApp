@@ -14,6 +14,7 @@ import com.tawa.allinapp.core.functional.Failure
 import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.FragmentAudioBinding
 import com.tawa.allinapp.features.reports.standard.CheckListViewModel
+import java.util.*
 
 
 class AudioFragment : BaseFragment() {
@@ -101,7 +102,7 @@ class AudioFragment : BaseFragment() {
         binding.ivClose.setOnClickListener { binding.rvAudioRecord.invisible() }
         binding.btSavePictures.setOnClickListener {
             audioViewModel.setReadyAnswers(idQuestion,nameQuestion,idAnswer,audio64,"")
-            checkListViewModel.updateReportPv(idReport,"En proceso","Terminado")
+            checkListViewModel.updateReportPv(idReport,"En proceso","Terminado",Calendar.getInstance().toInstant().toString(),"","")
             checkListViewModel.setAnswerPv(idAnswer,idQuestion,nameAnswer,"")
             audioViewModel.updateStateReport(idReport, "En proceso","Terminado")
             activity?.onBackPressed()
@@ -110,7 +111,7 @@ class AudioFragment : BaseFragment() {
         binding.btErraser.setOnClickListener {
             audioViewModel.setReadyAnswers(idQuestion,nameQuestion,idAnswer,audio64,"")
             checkListViewModel.setAnswerPv(idAnswer,idQuestion,nameAnswer,"")
-            checkListViewModel.updateReportPv(idReport,"En proceso","Borrador")
+            checkListViewModel.updateReportPv(idReport,"En proceso","Borrador","","","")
             audioViewModel.updateStateReport(idReport, "En proceso","Borrador")
             activity?.onBackPressed()
         }

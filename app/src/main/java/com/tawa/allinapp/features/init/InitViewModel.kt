@@ -35,8 +35,8 @@ class InitViewModel
     private val syncPhotoReports: SyncPhotoReports,
     private val updateStatus: UpdateStatus,
     private  val getReportsSku: GetReportsSku,
-    private val syncStandardReports: SyncStandardReports,
-    private  val syncSku: SyncSku,
+    private val syncStandardReportsMassive: SyncStandardReportsMassive,
+    private  val syncSkuMassive: SyncSkuMassive,
     private val syncAudio: SyncAudio,
     private val getAudioRemote: GetAudioRemote,
     private val listReports: ListReports,
@@ -323,13 +323,14 @@ class InitViewModel
         this._successReportsSku.value = success
     }
 
-    fun syncStandardReports() = syncStandardReports(UseCase.None()) { it.either(::handleFailure, ::handleSyncStandardReport) }
+    fun syncStandardReportsMassive(latitude: String,longitude: String) = syncStandardReportsMassive(SyncStandardReportsMassive.Params(latitude,longitude)) {
+        it.either(::handleFailure, ::handleSyncStandardReport) }
 
     private fun handleSyncStandardReport(success:Boolean) {
         this._successSyncReportStandard.value = success
     }
 
-    fun syncSku() = syncSku(UseCase.None()) { it.either(::handleFailure, ::handleSyncSku) }
+    fun syncSkuMassive(latitude: String,longitude: String) = syncSkuMassive(SyncSkuMassive.Params(latitude,longitude)) { it.either(::handleFailure, ::handleSyncSku) }
 
     private fun handleSyncSku(success:Boolean) {
         this._successSyncSku.value = success

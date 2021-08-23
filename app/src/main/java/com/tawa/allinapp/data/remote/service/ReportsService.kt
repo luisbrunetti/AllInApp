@@ -4,10 +4,7 @@ package com.tawa.allinapp.data.remote.service
 
 import com.tawa.allinapp.core.platform.BaseResponse
 import com.tawa.allinapp.data.remote.api.ReportsApi
-import com.tawa.allinapp.data.remote.entities.ReportsPhotoRemote
-import com.tawa.allinapp.data.remote.entities.ReportsSkuRemote
-import com.tawa.allinapp.data.remote.entities.SynReportStandardRemote
-import com.tawa.allinapp.data.remote.entities.UpdateStatusRemote
+import com.tawa.allinapp.data.remote.entities.*
 import com.tawa.allinapp.models.PhotoReport
 import retrofit2.Call
 import retrofit2.Retrofit
@@ -25,6 +22,7 @@ class ReportsService
     override fun updateStatus(token: String, request: UpdateStatusRemote.Request) = reportsApi.updateStatus(token,request)
     override fun getReportsSku(token: String,company: String) = reportsApi.getReportsSku(token,company)
     override fun syncSku(token: String, request: ReportsSkuRemote.Request) = reportsApi.syncSku(token,request)
+    override fun syncSkuMassive(token: String, request: List<ReportsSkuRemote.RequestMassive>) = reportsApi.syncSkuMassive(token,request)
     override fun setPhotoReports(
         before1:String,before2:String,before3:String,before4:String,before5:String,
         after1:String,after2:String,after3:String,after4:String,after5:String,comment:String
@@ -35,5 +33,6 @@ class ReportsService
 
     override fun syncPhotoReports(token:String,request:List<ReportsPhotoRemote.Request>) = reportsApi.syncPhotoReports(token,request)
     override fun synStandardReports(token: String, request: SynReportStandardRemote.Request) =  reportsApi.synStandardReports(token,request)
+    override fun synStandardReportsMassive(token: String, request: List<SynReportStandardMassiveRemote.Request>) =  reportsApi.synStandardReportsMassive(token,request)
 
 }
