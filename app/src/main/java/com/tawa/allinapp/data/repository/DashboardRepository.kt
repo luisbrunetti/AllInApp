@@ -15,7 +15,7 @@ interface DashboardRepository {
 
     fun getChannels(): Either<Failure, List<Channel>>
     fun getRetails(): Either<Failure, List<Retail>>
-    fun getChains(): Either<Failure, List<Chain>>
+    fun getChains(channel:String,retail:String): Either<Failure, List<Chain>>
     fun getUserList(): Either<Failure, List<User>>
 
     class Network
@@ -69,11 +69,11 @@ interface DashboardRepository {
                 false -> Either.Left(Failure.NetworkConnection)
             }
         }
-        override fun getChains(): Either<Failure, List<Chain>> {
+        override fun getChains(channel:String,retail:String): Either<Failure, List<Chain>> {
             return when (networkHandler.isConnected) {
                 true ->{
                     try {
-                        val response = service.getChains("Bearer ${prefs.token!!}", prefs.companyId!!).execute()
+                        val response = service.getChains("Bearer ${prefs.token!!}", prefs.companyId!!,channel,retail).execute()
                         when (response.isSuccessful) {
                             true -> {
                                 response.body()?.let { body ->

@@ -8,6 +8,7 @@ import com.tawa.allinapp.features.HomeActivity
 import com.tawa.allinapp.features.auth.ui.LoginActivity
 import com.tawa.allinapp.features.calendar.CalendarFragment
 import com.tawa.allinapp.features.coverage.CoverageBoardFragment
+import com.tawa.allinapp.features.coverage.CoverageBoardGraphFragment
 import com.tawa.allinapp.features.informs.InformsFragment
 import com.tawa.allinapp.features.informs.PDVFragment
 import com.tawa.allinapp.features.init.ui.CheckInDialogFragment
@@ -58,4 +59,5 @@ interface ApplicationComponent{
     fun inject(informsFragment: InformsFragment)
     fun inject(sendPasswordFragment: SendPasswordFragment)
     fun inject(coverageBoardFragment: CoverageBoardFragment)
+    fun inject(coverageBoardGraphFragment: CoverageBoardGraphFragment)
 }

@@ -12,7 +12,7 @@ class DashboardService
 
     override fun getChannels(token: String,company:String) = dashboardApi.getChannels(token,company)
     override fun getRetails(token: String,company:String) = dashboardApi.getRetails(token,company)
-    override fun getChains(token: String,company:String) = dashboardApi.getChains(token,company)
+    override fun getChains(token: String,company:String,channel:String,retail:String) = dashboardApi.getChains(token,company,channel,retail)
     override fun getUserList(token: String,company:String) = dashboardApi.getUserList(token,company)
 
 }

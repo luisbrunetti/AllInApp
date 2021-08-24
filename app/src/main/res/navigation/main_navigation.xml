@@ -150,7 +150,15 @@
     <fragment
         android:id="@+id/coverageBoardFragment"
         android:name="com.tawa.allinapp.features.coverage.CoverageBoardFragment"
-        android:label="CoverageBoardFragment" />
+        android:label="CoverageBoardFragment" >
+        <action
+            android:id="@+id/action_coverageBoardFragment_to_coverageBoardGraphFragment"
+            app:destination="@id/coverageBoardGraphFragment" />
+    </fragment>
 
+    <fragment
+        android:id="@+id/coverageBoardGraphFragment"
+        android:name="com.tawa.allinapp.features.coverage.CoverageBoardGraphFragment"
+        android:label="CoverageBoardGraphFragment" />
 
 </navigation>

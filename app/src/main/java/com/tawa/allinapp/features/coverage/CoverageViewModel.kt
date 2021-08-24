@@ -40,7 +40,7 @@ class CoverageViewModel
 
     fun getChannels() = getChannels(UseCase.None()){ it.either(::handleFailure, ::handleChannels) }
     fun getRetails() = getRetails(UseCase.None()){ it.either(::handleFailure, ::handleRetails) }
-    fun getChains() = getChains(UseCase.None()){ it.either(::handleFailure, ::handleChains) }
+    fun getChains(channel: String, retail: String) = getChains(GetChains.Params(channel,retail)){ it.either(::handleFailure, ::handleChains) }
     fun getUserList() = getUserList(UseCase.None()){ it.either(::handleFailure, ::handleUserList) }
 
     fun onTextChanged(text:String){

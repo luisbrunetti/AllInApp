@@ -44,6 +44,12 @@ fun View.visible() { this.visibility = View.VISIBLE }
 
 fun View.invisible() { this.visibility = View.GONE }
 
+fun Double.round(decimals: Int): Double {
+    var multiplier = 1.0
+    repeat(decimals) { multiplier *= 10 }
+    return round((this * multiplier).toInt()) / multiplier
+}
+
 @BindingAdapter("enableButton")
 fun View.setButtonEnabled(value: Boolean?){
     value?.let { enable ->

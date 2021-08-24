@@ -26,7 +26,12 @@
     <color name="colorCellTable">#838383</color>
     <color name="colorBgCellTableFirst">#E8F4FA</color>
     <color name="colorHeaderTable">#DCEEF6</color>
+    <color name="colorIndicator1">#CCE7FF</color>
+    <color name="colorIndicator2">#CCEFFF</color>
 
+    <color name="green">#24BE82</color>
+    <color name="red">#EA5757</color>
+    <color name="yellow">#FFCD00</color>
     <color name="white">#ffff</color>
     <color name="blue">#044c7e</color>
 </resources>
