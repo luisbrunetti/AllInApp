@@ -11,6 +11,6 @@ class GetChains
 
     override suspend fun run(params: Params) = dashboardRepository.getChains(params.channel,params.retail)
 
-    data class Params(val channel: String, val retail: String)
+    data class Params(val channel: List<String>, val retail: List<String>)
 
 }

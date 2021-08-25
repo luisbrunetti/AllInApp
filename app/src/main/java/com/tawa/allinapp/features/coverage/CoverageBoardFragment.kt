@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,6 +24,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.tawa.allinapp.R
 import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.platform.BaseFragment
@@ -33,10 +35,10 @@ import com.tawa.allinapp.features.coverage.composables.HeaderPage
 class CoverageBoardFragment : BaseFragment() {
 
     private lateinit var coverageViewModel: CoverageViewModel
-    private var selectedChannel:String? = ""
-    private var selectedRetail:String? = ""
-    private var selectedChain:String? = ""
-    private var selectedUser:String? = ""
+    private var selectedChannel:List<String>? = null
+    private var selectedRetail:List<String>? = null
+    private var selectedChain:List<String>? = null
+    private var selectedUser:List<String>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +50,7 @@ class CoverageBoardFragment : BaseFragment() {
         coverageViewModel.getChannels()
         coverageViewModel.getRetails()
         coverageViewModel.getUserList()
+        coverageViewModel.getChains(emptyList(),emptyList())
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -86,25 +89,37 @@ class CoverageBoardFragment : BaseFragment() {
         Column(
             Modifier.verticalScroll(rememberScrollState())
         ) {
-            DateFilter(startDate,endDate,{ startDate = it },{ endDate = it })
-            channels?.let { c ->
+            DateFilter(
+                { startDate = it },{ endDate = it }
+            )
+            channels?.let { ch ->
                 ExpandableCard(
                     title = "Canal",
-                    content = c.map { it.description?:"" }
+                    content = ch.map { it.description?:"" }
                 ){ list ->
-                    if(list.isNotEmpty())
-                        selectedChannel = c.find { it.description == list.first() }?.id
-                    coverageViewModel.getChains(selectedChannel?:"",selectedRetail?:"")
+                    if(list.isNotEmpty()){
+                        selectedChannel = ch.filter { c ->
+                            c.description == list.find { it == c.description }
+                        }.map { it.id?:"" }
+                        coverageViewModel.getChains(selectedChannel?: emptyList(),selectedRetail?: emptyList())
+                    }
+                    else
+                        coverageViewModel.getChains(emptyList(),selectedRetail?: emptyList())
                 }
             }
-            retails?.let { c ->
+            retails?.let { r ->
                 ExpandableCard(
                     title = "Tipo Retail",
-                    content = c.map { it.description?:"" }
+                    content = r.map { it.description?:"" }
                 ){ list ->
-                    if(list.isNotEmpty())
-                        selectedRetail = c.find { it.description == list.first() }?.id
-                    coverageViewModel.getChains(selectedChannel?:"",selectedRetail?:"")
+                    if(list.isNotEmpty()){
+                        selectedRetail = r.filter { c ->
+                            c.description == list.find { it == c.description }
+                        }.map { it.id?:"" }
+                        coverageViewModel.getChains(selectedChannel?: emptyList(),selectedRetail?: emptyList())
+                    }
+                    else
+                        coverageViewModel.getChains(selectedChannel?: emptyList(),emptyList())
                 }
             }
             chains?.let { c ->
@@ -112,15 +127,18 @@ class CoverageBoardFragment : BaseFragment() {
                     title = "Cadena",
                     content = c.map { it.description?:"" }
                 ){ list ->
-                    selectedChain = c.find { it.description == list.first() }?.id
+                    selectedChain = c.map{ it.description }.flatMap { e -> list.filter { e == it }}
                 }
             }
-            userList?.let { c ->
+            userList?.let { u ->
                 ExpandableCard(
                     title = "Usuarios",
-                    content = c.map { it.fullName?:"" }
+                    content = u.map { it.fullName?:"" }
                 ){ list ->
-                    selectedUser = c.find { it.fullName == list.first() }?.id
+                    if(list.isNotEmpty())
+                        selectedUser = u.filter { c ->
+                            c.fullName == list.find { it == c.fullName }
+                        }.map { it.id?:"" }
                 }
             }
         }

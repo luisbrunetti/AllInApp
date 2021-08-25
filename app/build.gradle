@@ -146,4 +146,7 @@ dependencies {
     implementation 'com.facebook.fresco:fresco:2.5.0'
 
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
+
+    implementation "io.github.vanpra.compose-material-dialogs:datetime:0.5.1"
+    //https://vanpra.github.io/compose-material-dialogs/DateTimePicker/
 }
