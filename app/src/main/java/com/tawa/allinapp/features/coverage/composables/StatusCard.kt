@@ -60,8 +60,14 @@ fun StatusCard(
                 ){
                     Text(modifier = Modifier.padding(bottom = 8.dp), text = title, fontSize = 18.sp, fontWeight = FontWeight.Bold)
                     Text(text = "Total: $total", fontSize = 12.sp)
-                    Text(text = "Concluidas: $finished", fontSize = 11.sp)
-                    Text(text = "Pendientes: $pending", fontSize = 11.sp)
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Surface(Modifier.height(8.dp).width(20.dp).padding(end = 5.dp), shape = RoundedCornerShape(10.dp), color = colorResource(id = R.color.green)) {}
+                        Text(text = "Concluidas: $finished", fontSize = 11.sp)
+                    }
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Surface(Modifier.height(8.dp).width(20.dp).padding(end = 5.dp), shape = RoundedCornerShape(10.dp), color = colorResource(id = R.color.red)) {}
+                        Text(text = "Pendientes: $pending", fontSize = 11.sp)
+                    }
                 }
             }
         }
@@ -103,9 +109,9 @@ fun CircularProgress(percent:Float){
             )
             drawArc(
                 color = when {
-                    percentage.value <= 50.0 -> red
-                    50.0 < percentage.value  && percentage.value < 75.0 -> yellow
-                    percentage.value >= 75.0 -> green
+                    percentage.value <= 0.5 -> red
+                    0.5 < percentage.value  && percentage.value < 0.75 -> yellow
+                    percentage.value >= 0.75 -> green
                     else -> green
                 },
                 -90f,
