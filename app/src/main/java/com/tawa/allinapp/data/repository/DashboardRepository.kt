@@ -121,8 +121,8 @@ interface DashboardRepository {
                         val response = service.getGraph(
                             "Bearer ${prefs.token!!}",
                             prefs.companyId!!,
-                            "",
-                            "",
+                            dateStart,
+                            dateEnd,
                             emptyList(),
                             emptyList()
                         ).execute()

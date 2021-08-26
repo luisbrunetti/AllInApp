@@ -4,8 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -15,7 +13,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -24,8 +23,8 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.datepicker.MaterialDatePicker
 import com.tawa.allinapp.R
+import com.tawa.allinapp.core.extensions.observe
 import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.features.coverage.composables.DateFilter
@@ -39,11 +38,17 @@ class CoverageBoardFragment : BaseFragment() {
     private var selectedRetail:List<String>? = null
     private var selectedChain:List<String>? = null
     private var selectedUser:List<String>? = null
+    private var startDate:String? = null
+    private var endDate:String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         appComponent.inject(this)
-        coverageViewModel = viewModel(viewModelFactory) {}
+        coverageViewModel = viewModel(viewModelFactory) {
+            observe(graph, { it?.let {
+                findNavController().navigate(CoverageBoardFragmentDirections.actionCoverageBoardFragmentToCoverageBoardGraphFragment(it))
+            }})
+        }
     }
 
     private fun initViewModels(){
@@ -53,11 +58,13 @@ class CoverageBoardFragment : BaseFragment() {
         coverageViewModel.getChains(emptyList(),emptyList())
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         initViewModels()
         return ComposeView(requireContext()).apply {
             setContent {
-                Column{
+                Column(
+                    Modifier.verticalScroll(rememberScrollState())
+                ){
                     HeaderPage("Dashboard","Cobertura") {
                         findNavController().popBackStack()
                     }
@@ -68,7 +75,9 @@ class CoverageBoardFragment : BaseFragment() {
                             .fillMaxWidth()
                             .height(80.dp)
                             .padding(12.dp),
-                        onClick = { findNavController().navigate(CoverageBoardFragmentDirections.actionCoverageBoardFragmentToCoverageBoardGraphFragment()) }
+                        onClick = {
+                            coverageViewModel.getGraph(startDate,endDate,selectedUser,selectedChain)
+                        }
                     ) {
                         Text("Buscar", color = Color.White, fontSize = 18.sp)
                     }
@@ -79,15 +88,15 @@ class CoverageBoardFragment : BaseFragment() {
 
     @Composable
     fun Filters(){
-        var startDate by remember { mutableStateOf<String>("") }
-        var endDate by remember { mutableStateOf<String>("") }
+        //var startDate by remember { mutableStateOf<String>("") }
+        //var endDate by remember { mutableStateOf<String>("") }
 
         val channels by coverageViewModel.channels.observeAsState()
         val retails by coverageViewModel.retails.observeAsState()
         val chains by coverageViewModel.chains.observeAsState()
         val userList by coverageViewModel.userList.observeAsState()
         Column(
-            Modifier.verticalScroll(rememberScrollState())
+
         ) {
             DateFilter(
                 { startDate = it },{ endDate = it }

@@ -44,7 +44,7 @@ class CoverageViewModel
     fun getRetails() = getRetails(UseCase.None()){ it.either(::handleFailure, ::handleRetails) }
     fun getChains(channel: List<String>, retail: List<String>) = getChains(GetChains.Params(channel,retail)){ it.either(::handleFailure, ::handleChains) }
     fun getUserList() = getUserList(UseCase.None()){ it.either(::handleFailure, ::handleUserList) }
-    fun getGraph(start:String,end:String, users: List<String>, chains: List<String>) = getGraph(GetGraph.Params(start,end,users,chains)){ it.either(::handleFailure, ::handleGraph) }
+    fun getGraph(start:String?,end:String?, users: List<String>?, chains: List<String>?) = getGraph(GetGraph.Params(start,end,users,chains)){ it.either(::handleFailure, ::handleGraph) }
 
     fun onTextChanged(text:String){
         _text.value = text

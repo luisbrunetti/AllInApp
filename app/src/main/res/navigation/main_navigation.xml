@@ -154,11 +154,18 @@
         <action
             android:id="@+id/action_coverageBoardFragment_to_coverageBoardGraphFragment"
             app:destination="@id/coverageBoardGraphFragment" />
+
     </fragment>
 
     <fragment
         android:id="@+id/coverageBoardGraphFragment"
         android:name="com.tawa.allinapp.features.coverage.CoverageBoardGraphFragment"
-        android:label="CoverageBoardGraphFragment" />
+        android:label="CoverageBoardGraphFragment" >
+        <argument
+            android:name="graph"
+            android:defaultValue="@null"
+            app:argType="com.tawa.allinapp.models.CoverageGraph"
+            app:nullable="true"/>
+    </fragment>
 
 </navigation>

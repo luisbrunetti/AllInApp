@@ -1,16 +1,21 @@
 package com.tawa.allinapp.features.coverage.composables
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.tawa.allinapp.R
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.datetime.date.datepicker
 import java.time.format.DateTimeFormatter
@@ -20,8 +25,6 @@ fun DateFilter(
     onStart: (start:String) ->Unit,
     onEnd: (end:String) ->Unit,
 ){
-    var startState by remember { mutableStateOf(TextFieldValue()) }
-    var endState by remember { mutableStateOf(TextFieldValue()) }
     Surface(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -61,7 +64,7 @@ fun ReadonlyDateField(
     }) {
         datepicker { date ->
             val formattedDate = date.format(
-                DateTimeFormatter.ofPattern("dd/MM/yyyy")
+                DateTimeFormatter.ofPattern("yyyy-MM-dd")
             )
             startState = TextFieldValue(formattedDate)
             onDate(formattedDate)
@@ -72,8 +75,11 @@ fun ReadonlyDateField(
     ){
         TextField(
             value = startState,
+            shape = RoundedCornerShape(8.dp),
             onValueChange = { startState = it},
-            label = { Text(text = label) }
+            label = { Text(text = label) },
+            leadingIcon = { Icon(painter = painterResource(id = R.drawable.ic_calendar)  , contentDescription = "CalendarIcon")},
+            colors = TextFieldDefaults.textFieldColors(backgroundColor = Color.White,),
         )
         Box(
             modifier = Modifier

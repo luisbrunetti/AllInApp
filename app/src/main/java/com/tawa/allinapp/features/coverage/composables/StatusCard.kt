@@ -76,7 +76,7 @@ fun CircularProgress(percent:Float){
     val percentage = animateFloatAsState(
         targetValue = if (animationPlayed) percent else 0f,
         animationSpec = tween(
-            durationMillis = 1000,
+            durationMillis = 2000,
             delayMillis = 0
         )
     )
@@ -91,6 +91,8 @@ fun CircularProgress(percent:Float){
             .padding(16.dp)
     ) {
         val red = colorResource(id = R.color.red)
+        val yellow = colorResource(id = R.color.yellow)
+        val green = colorResource(id = R.color.green)
         Canvas(modifier = Modifier.fillMaxSize()){
             drawArc(
                 color = Color.White,
@@ -100,7 +102,12 @@ fun CircularProgress(percent:Float){
                 style = Stroke(4.dp.toPx(), cap = StrokeCap.Round)
             )
             drawArc(
-                color = red,
+                color = when {
+                    percentage.value <= 50.0 -> red
+                    50.0 < percentage.value  && percentage.value < 75.0 -> yellow
+                    percentage.value >= 75.0 -> green
+                    else -> green
+                },
                 -90f,
                 360 * percentage.value,
                 useCenter = false,

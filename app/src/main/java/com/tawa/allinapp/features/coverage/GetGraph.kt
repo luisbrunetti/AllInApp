@@ -10,5 +10,5 @@ class GetGraph
 
     override suspend fun run(params: Params) = dashboardRepository.getGraph(params.start,params.end,params.users,params.chains)
 
-    data class Params(val start:String, val end:String, val users: List<String>, val chains: List<String>)
+    data class Params(val start:String?, val end:String?, val users: List<String>?, val chains: List<String>?)
 }
