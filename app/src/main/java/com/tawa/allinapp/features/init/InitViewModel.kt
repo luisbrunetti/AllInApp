@@ -219,7 +219,8 @@ class InitViewModel
 
     fun getUserName() = getUserName(UseCase.None()) { it.either(::handleFailure, ::handleGetUserName) }
 
-    fun setIdCompany(idCompany:String) = setIdCompany(SetIdCompany.Params(idCompany)) { it.either(::handleFailure, ::handleSetIdCompany) }
+    fun setIdCompany(idCompany:String) = setIdCompany(SetIdCompany.Params(idCompany)) {
+        it.either(::handleFailure, ::handleSetIdCompany) }
 
     fun setPv(schedule:String,pv:String,descPv:String) = setIdPv(SetIdPv.Params(schedule,pv,descPv)) { it.either(::handleFailure, ::handleSetIdPv) }
 

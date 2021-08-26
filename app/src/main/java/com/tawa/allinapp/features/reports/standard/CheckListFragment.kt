@@ -178,7 +178,6 @@ class CheckListFragment: BaseFragment() {
             if(typeReport!="Terminado") {
                 getLastLocation()
                 //checkListViewModel.updateState(true, true)
-                checkListViewModel.updateStateReport(idReport, "En proceso","Terminado")
                 checkListViewModel.updateReportPv(idReport,"En proceso","Terminado",Calendar.getInstance().toInstant().toString(),latitude,longitude)
                 for (radio in listRadioButton) {
                     val tag = radio.tag as ArrayList<String>
@@ -212,7 +211,6 @@ class CheckListFragment: BaseFragment() {
         binding.btnBr.setOnClickListener {
             if(typeReport!="Terminado") {
                 //checkListViewModel.updateState(true, false)
-                checkListViewModel.updateStateReport(idReport, "En proceso","Borrador")
                 checkListViewModel.updateReportPv(idReport,"En proceso","Borrador","","","")
                 for (radio in listRadioButton) {
                     val tag = radio.tag as ArrayList<String>
