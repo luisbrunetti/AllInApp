@@ -10,10 +10,10 @@ class ReportsRemote {
     data class Response(
         @SerializedName("ids_reporte_estandar") val reports:List<ReportType>,
         @SerializedName("id_empresa") val idCompany: Company,
-        @SerializedName("id_user_creador") val idUser: String?,
         @SerializedName("id_user_modificador") val idUserMod: String?,
         @SerializedName("fe_modificacion") val feMod: String?,
-        @SerializedName("fe_creacion") val feCreate: String?,
+        @SerializedName("id_user_asig") val userAsig: UserAsig,
+
 
     ){
      //   fun toModel() = ReportModel(reports.id?:"",reports.reportName?:"",idCompany.id?:"",idCompany.nameCompany?:"",idUser?:"",idUserMod?:"",feMod?:"",feCreate?:"","No iniciado")
@@ -29,4 +29,10 @@ class ReportsRemote {
         @SerializedName("nombre_empresa") val nameCompany: String?,
 
     )
+
+    data class  UserAsig(
+        @SerializedName("_id") val id: String?,
+       // @SerializedName("nombre_empresa") val nameCompany: String?,
+
+        )
 }

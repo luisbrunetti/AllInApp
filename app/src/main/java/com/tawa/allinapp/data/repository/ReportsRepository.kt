@@ -82,7 +82,7 @@ interface ReportsRepository {
                                             for(type in it.reports)
                                             {
                                                 Log.d("type",type.reportName.toString())
-                                                reportsDataSource.insertReports(ReportModel(type.id?:"",type.reportName?:"",it.idCompany.id?:"",it.idCompany.nameCompany?:"",it.idUser?:"",it.idUserMod?:"",it.feMod?:"",it.feCreate?:"","No iniciado","0",""))
+                                                reportsDataSource.insertReports(ReportModel(type.id?:"",type.reportName?:"",it.idCompany.id?:"",it.idCompany.nameCompany?:"",it.userAsig.id?:"",it.idUserMod?:"",it.feMod?:"","","No iniciado","0",""))
                                             }
                                            // reportsDataSource.insertReports(it.toModel())
                                             Log.d("reportes",it.toString())
@@ -323,18 +323,20 @@ interface ReportsRepository {
                 val idPv = prefs.pvId!!
 
                 if(idPv.isEmpty())
-                    Either.Right(reportsDataSource.getReports(prefs.companyId?:"").map { it.toView() })
+                    Either.Right(reportsDataSource.getReports(prefs.companyId?:"",prefs.idUser?:"").map { it.toView() })
                 else{
                     val count = reportsDataSource.getReportPvCount(prefs.companyId?:"",prefs.pvId?:"",prefs.idUser?:"")
                     if(count==0)
                     {
-                        val reports = reportsDataSource.getReports(prefs.companyId?:"").map { it.toView() }
+                        val reports = reportsDataSource.getReports(prefs.companyId?:"",prefs.idUser?:"").map { it.toView() }
                         for(report in reports)
                         {
                             reportsDataSource.insertReportPv(ReportPvModel(0,prefs.pvId?:"",report.id,prefs.idUser?:"","No iniciado","0","","",""))
                         }
                     }
+                    Log.d("reportStandard",reportsDataSource.getReportsPv(prefs.companyId?:"",prefs.pvId?:"",prefs.idUser?:"").map { it.toView() }.toString())
                     Either.Right(reportsDataSource.getReportsPv(prefs.companyId?:"",prefs.pvId?:"",prefs.idUser?:"").map { it.toView() })
+
                 }
 
             }catch (e:Exception){
@@ -677,7 +679,7 @@ interface ReportsRepository {
 
         override fun updateReportPv(idReport: String, state: String,type:String,time:String,latitude: String,longitude: String): Either<Failure, Boolean> {
             return try {
-                reportsDataSource.updateReportPv(idReport,prefs.pvId?:"",state,type,time,latitude,longitude)
+                reportsDataSource.updateReportPv(idReport,prefs.pvId?:"",prefs.idUser?:"",state,type,time,latitude,longitude)
                 Either.Right(true)
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))

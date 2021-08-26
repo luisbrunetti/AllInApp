@@ -15,8 +15,8 @@ class ReportsDataSource @Inject constructor(private val reportsDao: ReportsDao){
         reportsDao.insertReports(reportModel)
     }
 
-    fun getReports(idCompany: String):List<ReportModel> {
-        return reportsDao.getReports(idCompany)
+    fun getReports(idCompany: String,idUser: String):List<ReportModel> {
+        return reportsDao.getReports(idCompany,idUser)
     }
 
     fun getReportsPv(idCompany: String,idPV: String,idUser: String):List<ReportModel> {
@@ -139,8 +139,8 @@ class ReportsDataSource @Inject constructor(private val reportsDao: ReportsDao){
         return reportsDao.getReportPvCount(idCompany,idPV,idUser)
     }
 
-    fun updateReportPv(idReport: String,idPV: String,state: String,type: String,time:String,latitude:String,longitude:String){
-        reportsDao.updateReportPv(idReport,idPV,state,type,time,latitude,longitude)
+    fun updateReportPv(idReport: String,idPV: String,idUser: String,state: String,type: String,time:String,latitude:String,longitude:String){
+        reportsDao.updateReportPv(idReport,idPV,idUser,state,type,time,latitude,longitude)
     }
 
     fun updateReportPvSync(idReport: String,idPV: String,state: String,type: String){
