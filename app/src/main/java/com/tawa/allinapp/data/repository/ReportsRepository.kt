@@ -11,6 +11,7 @@ import com.tawa.allinapp.data.local.datasource.ReportsDataSource
 import com.tawa.allinapp.data.local.models.*
 import com.tawa.allinapp.data.remote.MovieDetailEntity
 import com.tawa.allinapp.data.remote.entities.ReportsSkuRemote
+import com.tawa.allinapp.data.remote.entities.SynReportStandardMassiveRemote
 import com.tawa.allinapp.data.remote.entities.SynReportStandardRemote
 import com.tawa.allinapp.data.remote.entities.UpdateStatusRemote
 import com.tawa.allinapp.data.remote.service.ReportsService
@@ -21,6 +22,7 @@ import com.tawa.allinapp.models.ReportStatus
 import com.tawa.allinapp.features.init.usecase.GetIdCompany
 import com.tawa.allinapp.models.*
 import retrofit2.Call
+import java.util.*
 import javax.inject.Inject
 import kotlin.math.log
 
@@ -40,19 +42,23 @@ interface ReportsRepository {
     fun getReportsSku(company: String):Either<Failure, Boolean>
     fun insertSkuObservation(skuObservation: SkuObservation):Either<Failure, Boolean>
     fun getSkuObservation(idSkuDetail: String):Either<Failure, List<SkuObservation>>
-    fun syncSku():Either<Failure, Boolean>
+    fun syncSku(idSku: String):Either<Failure, Boolean>
+    fun syncSkuMassive(latitude: String,longitude: String):Either<Failure, Boolean>
     fun updateSkuDetail(idSkuDetail: String,stock:Boolean,exhibition:Boolean,price:Float):Either<Failure, Boolean>
     fun updateStateReport(idReport:String,state:String,type:String):Either<Failure, Boolean>
-    fun updateStateSku(idSku:String,state:String,type:String):Either<Failure, Boolean>
+    fun updateStateSku(idSku:String,state:String,type:String,latitude: String,longitude: String):Either<Failure, Boolean>
     fun getUserType():Either<Failure, String>
-    fun syncReportStandard():Either<Failure, Boolean>
+    fun syncReportStandard(idReport: String,latitude: String,longitude: String):Either<Failure, Boolean>
+    fun syncReportStandardMassive(latitude: String,longitude: String):Either<Failure, Boolean>
     fun syncReportAudio():Either<Failure, Boolean>
     fun getLocalPhotoReport(): Either<Failure, PhotoReport>
     fun getStateReport(idReport: String): Either<Failure,String>
     fun getStatePhotoReport(): Either<Failure, String>
     fun getCountSku(): Either<Failure, Int>
-    fun updateReportPv(idReport: String,state: String,type: String):Either<Failure, Boolean>
+    fun updateReportPv(idReport: String,state: String,type: String,time:String,latitude: String,longitude: String):Either<Failure, Boolean>
+    fun updateReportPvSync(idReport: String,state: String,type: String):Either<Failure, Boolean>
     fun deletePhotoReports(): Either<Failure, Boolean>
+    fun getTypeSku(): Either<Failure,String>
 
     class Network
     @Inject constructor(private val networkHandler: NetworkHandler,
@@ -76,7 +82,7 @@ interface ReportsRepository {
                                             for(type in it.reports)
                                             {
                                                 Log.d("type",type.reportName.toString())
-                                                reportsDataSource.insertReports(ReportModel(type.id?:"",type.reportName?:"",it.idCompany.id?:"",it.idCompany.nameCompany?:"",it.idUser?:"",it.idUserMod?:"",it.feMod?:"",it.feCreate?:"","No iniciado","0",""))
+                                                reportsDataSource.insertReports(ReportModel(type.id?:"",type.reportName?:"",it.idCompany.id?:"",it.idCompany.nameCompany?:"",it.userAsig.id?:"",it.idUserMod?:"",it.feMod?:"","","No iniciado","0",""))
                                             }
                                            // reportsDataSource.insertReports(it.toModel())
                                             Log.d("reportes",it.toString())
@@ -284,7 +290,7 @@ interface ReportsRepository {
                             true -> {
                                 response.body()?.let { body ->
                                     body.data.map {
-                                        reportsDataSource.insertSku(SkuModel(it.id,it.idReportPdv.idPuntoVenta.id,it.idCompany.id,"No iniciado","0"))
+                                        reportsDataSource.insertSku(SkuModel(it.id,it.idReportPdv.idPuntoVenta.id,it.idCompany.id,it.idUserAsg.id,"No iniciado","0","","",""))
                                         for(products in it.idReportPdv.lineas)
                                         {
                                             products.idProducto.nombreProducto?.let { it1 ->
@@ -317,18 +323,20 @@ interface ReportsRepository {
                 val idPv = prefs.pvId!!
 
                 if(idPv.isEmpty())
-                    Either.Right(reportsDataSource.getReports(prefs.companyId?:"").map { it.toView() })
+                    Either.Right(reportsDataSource.getReports(prefs.companyId?:"",prefs.idUser?:"").map { it.toView() })
                 else{
-                    val count = reportsDataSource.getReportPvCount(prefs.companyId?:"",prefs.pvId?:"")
+                    val count = reportsDataSource.getReportPvCount(prefs.companyId?:"",prefs.pvId?:"",prefs.idUser?:"")
                     if(count==0)
                     {
-                        val reports = reportsDataSource.getReports(prefs.companyId?:"").map { it.toView() }
+                        val reports = reportsDataSource.getReports(prefs.companyId?:"",prefs.idUser?:"").map { it.toView() }
                         for(report in reports)
                         {
-                            reportsDataSource.insertReportPv(ReportPvModel(0,prefs.pvId?:"",report.id,"No iniciado","0"))
+                            reportsDataSource.insertReportPv(ReportPvModel(0,prefs.pvId?:"",report.id,prefs.idUser?:"","No iniciado","0","","",""))
                         }
                     }
-                    Either.Right(reportsDataSource.getReportsPv(prefs.companyId?:"",prefs.pvId?:"").map { it.toView() })
+                    Log.d("reportStandard",reportsDataSource.getReportsPv(prefs.companyId?:"",prefs.pvId?:"",prefs.idUser?:"").map { it.toView() }.toString())
+                    Either.Right(reportsDataSource.getReportsPv(prefs.companyId?:"",prefs.pvId?:"",prefs.idUser?:"").map { it.toView() })
+
                 }
 
             }catch (e:Exception){
@@ -372,26 +380,31 @@ interface ReportsRepository {
 
         override fun getSku(): Either<Failure, List<Sku>> {
             return try {
-                Either.Right(reportsDataSource.getSku("60fb181d8b978fb259e4acb8").map { it.toView() })
+                Either.Right(reportsDataSource.getSku(prefs.pvId?:"",prefs.companyId?:"",prefs.idUser?:"").map { it.toView() })
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))
             }
         }
 
-        override fun syncSku(): Either<Failure, Boolean> {
+        override fun syncSku(idSku:String): Either<Failure, Boolean> {
             return when (networkHandler.isConnected) {
                 true ->{
                     try {
                         var id = ""
                         var idPv = ""
                         var idCompany = ""
+                        var latitude = ""
+                        var longitude = ""
+                        val listSku = mutableListOf<ReportsSkuRemote>()
                         val linesAnswer = mutableListOf<Lines>()
-                        val skus = reportsDataSource.getSku("60fb181d8b978fb259e4acb8").map { it.toView() }
+                        val skus = reportsDataSource.getSku(idSku,prefs.pvId?:"",prefs.companyId?:"",prefs.idUser?:"").map { it.toView() }
                         for (sku in skus)
                         {
                             id = sku.id
                             idPv = sku.idPv
                             idCompany = sku.idCompany
+                            latitude = sku.latitude
+                            longitude = sku.longitude
                             val skuDetails = reportsDataSource.getSkuDetail(sku.id).map { it.toView() }
                             for(skuDetail in skuDetails)
                             {
@@ -405,15 +418,72 @@ interface ReportsRepository {
                             }
                         }
                         Log.d("lineas",linesAnswer.toString())
-                        val response = service.syncSku("Bearer ${prefs.token!!}",ReportsSkuRemote.Request(id,idPv,idCompany,linesAnswer.map { it.toRequest() })).execute()
+                        val response = service.syncSku("Bearer ${prefs.token!!}",ReportsSkuRemote.Request(id,idPv,idCompany,"COMPLETADO",linesAnswer.map { it.toRequest() },longitude,latitude)).execute()
                         when (response.isSuccessful) {
                             true -> {
                                 response.body()?.let { body ->
                                     if(body.success) {
                                         Log.d("message",body.message.toString())
+                                        reportsDataSource.updateStateSku(idSku,"Enviado","Terminado")
                                         Either.Right(true)
                                     }
-                                    else Either.Left(Failure.DefaultError(body.message))
+                                    else {
+                                        Log.d("errorSku",body.message.toString())
+                                        Either.Left(Failure.DefaultError(body.message))
+                                    }
+
+                                }?: Either.Left(Failure.DefaultError(""))
+                            }
+                            false -> Either.Left(Failure.ServerError)
+                        }
+                    } catch (e: Exception) {
+                        Either.Left(Failure.DefaultError(e.message!!))
+                    }
+                }
+                false -> Either.Left(Failure.NetworkConnection)
+            }
+        }
+
+        override fun syncSkuMassive(latitude: String,longitude: String): Either<Failure, Boolean> {
+            return when (networkHandler.isConnected) {
+                true ->{
+                    try {
+                        val listIdSku = arrayListOf<String>()
+                        val listSku = mutableListOf<ReportsSkuRemote.RequestMassive>()
+                        val linesAnswer = mutableListOf<Lines>()
+                        val skus = reportsDataSource.getSkuReady(prefs.pvId?:"",prefs.companyId?:"",prefs.idUser?:"").map { it.toView() }
+                        for (sku in skus)
+                        {
+                            val skuDetails = reportsDataSource.getSkuDetail(sku.id).map { it.toView() }
+                            for(skuDetail in skuDetails)
+                            {
+                                val observationSku = reportsDataSource.getSkuObservation(skuDetail.id).map { it.toView() }
+                                val observation = arrayListOf<String>()
+                                for(obs in observationSku)
+                                {
+                                    observation.add(obs.observation)
+                                }
+                                linesAnswer.add(Lines(skuDetail.id,skuDetail.stock,skuDetail.exhibition,skuDetail.newPrice,observation))
+                            }
+                            listIdSku.add(sku.id)
+                            listSku.add(ReportsSkuRemote.RequestMassive(sku.id,sku.idPv,sku.idCompany,linesAnswer.map { it.toRequest() },"COMPLETADO",sku.dateCreation,sku.longitude,sku.latitude,longitude,latitude,Calendar.getInstance().toInstant().toString()))
+                        }
+                        Log.d("lineas",linesAnswer.toString())
+                        val response = service.syncSkuMassive("Bearer ${prefs.token!!}",listSku).execute()
+                        when (response.isSuccessful) {
+                            true -> {
+                                response.body()?.let { body ->
+                                    if(body.success) {
+                                        Log.d("message",body.message.toString())
+                                        for(id in listIdSku)
+                                            reportsDataSource.updateStateSku(id,"Enviado","Terminado")
+                                        Either.Right(true)
+                                    }
+                                    else {
+                                        Log.d("errorSkuMassive",body.message.toString())
+                                        Either.Left(Failure.DefaultError(body.message))
+                                    }
+
                                 }?: Either.Left(Failure.DefaultError(""))
                             }
                             false -> Either.Left(Failure.ServerError)
@@ -461,42 +531,39 @@ interface ReportsRepository {
             }
         }
 
-        override fun syncReportStandard(): Either<Failure, Boolean> {
+        override fun syncReportStandard(idReport: String,latitude: String,longitude: String): Either<Failure, Boolean> {
             return when (networkHandler.isConnected) {
                 true ->{
                     try {
 
                         val reportData = mutableListOf<ReportStandard>()
-                        var image =""
-                        val questions  = questionsDataSource.getQuestionsByIdReport("60fb1c398b978f3c44e4ad11").map { it.toView() }
+                        val report = reportsDataSource.getReportPv(prefs.companyId?:"",prefs.pvId?:"",prefs.idUser?:"",idReport)
+                        val questions  = questionsDataSource.getQuestionsByIdReport(idReport).map { it.toView() }
                         for(question in questions)
                         {
-                           if(question.questionName!="SI TIENE EXHIBIDOR COLOQUE FOTO")
-                           {
                                val answerData= mutableListOf<AnswerStandard>()
-                               val answers = questionsDataSource.getReadyAnswers(question.id).map { it.toView() }
+                               val answers = questionsDataSource.getAnswersPv(question.id,report.idPv,report.idUser).map { it.toView() }
                                for(answer in answers)
                                {
-                                   answerData.add(AnswerStandard(answer.idAnswer,"",answer.nameAnswer))
-                                   if(answer.img.isNotEmpty())
-                                   {
-                                       image = answer.img
-                                   }
+                                   answerData.add(AnswerStandard(answer.id,answer.answerName,answer.data))
                                }
                                reportData.add(ReportStandard(question.id,question.questionName,answerData))
-                           }
+
                         }
-                        Log.d("report", "$reportData - $image")
-                        val response = service.synStandardReports("Bearer ${prefs.token!!}",SynReportStandardRemote.Request("60fb1c398b978f3c44e4ad11",prefs.pvId?:"",prefs.companyId?:"",reportData.map { it.toRequestRemote() },image)).execute()
+                        Log.d("report", "$reportData")
+                        val response = service.synStandardReports("Bearer ${prefs.token!!}",SynReportStandardRemote.Request(idReport,report.idPv,report.idCompany,reportData.map { it.toRequestRemote() },"COMPLETADO",longitude,latitude)).execute()
                         when (response.isSuccessful) {
                             true -> {
                                 response.body()?.let { body ->
                                     if(body.success) {
                                         Log.d("success",body.message.toString())
-                                        updateStateReport("60dc7d0c11bb190a40e28e87","Enviado","Terminado")
+                                        updateReportPvSync(idReport,"Enviado","Terminado")
                                         Either.Right(true)
                                     }
-                                    else Either.Left(Failure.DefaultError(body.message))
+                                    else{
+                                        Log.d("errorsincro",body.message.toString())
+                                        Either.Left(Failure.DefaultError(body.message))}
+
                                 }?: Either.Left(Failure.DefaultError(""))
                             }
                             false -> Either.Left(Failure.ServerError)
@@ -533,7 +600,7 @@ interface ReportsRepository {
 
                         }
                         Log.d("reportAudio", "$reportData - $image")
-                        val response = service.synStandardReports("Bearer ${prefs.token!!}",SynReportStandardRemote.Request("61080334ad6bca97e82d94a9",prefs.pvId?:"",prefs.companyId?:"",reportData.map { it.toRequestRemote() },image)).execute()
+                        val response = service.synStandardReports("Bearer ${prefs.token!!}",SynReportStandardRemote.Request("61080334ad6bca97e82d94a9",prefs.pvId?:"",prefs.companyId?:"",reportData.map { it.toRequestRemote() },"","","")).execute()
                         when (response.isSuccessful) {
                             true -> {
                                 response.body()?.let { body ->
@@ -557,15 +624,24 @@ interface ReportsRepository {
 
         override fun getStateSku(idPv: String): Either<Failure, String> {
             return try {
-                Either.Right(reportsDataSource.getStateSku(prefs.pvId?:""))
+                Either.Right(reportsDataSource.getStateSku(prefs.pvId?:"",prefs.companyId?:"",prefs.idUser?:""))
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))
             }
         }
 
-        override fun updateStateSku(idSku: String, state: String,type:String): Either<Failure, Boolean> {
+        override fun getTypeSku(): Either<Failure, String> {
             return try {
-                reportsDataSource.updateStateSku(idSku,state,type)
+                Either.Right(reportsDataSource.getSTypeSku(prefs.pvId?:"",prefs.companyId?:"",prefs.idUser?:""))
+            }catch (e:Exception){
+                Either.Left(Failure.DefaultError(e.message!!))
+            }
+        }
+
+
+        override fun updateStateSku(idSku: String, state: String,type:String,latitude: String,longitude: String): Either<Failure, Boolean> {
+            return try {
+                reportsDataSource.updateStateSku(idSku,state,type,Calendar.getInstance().toInstant().toString(),latitude,longitude)
                 Either.Right(true)
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))
@@ -582,19 +658,28 @@ interface ReportsRepository {
 
         override fun getStateReport(idReport: String): Either<Failure, String> {
             return try {
-                val count = reportsDataSource.getReportPvCount(prefs.companyId?:"",prefs.pvId?:"")
+                val count = reportsDataSource.getReportPvCount(prefs.companyId?:"",prefs.pvId?:"",prefs.idUser?:"")
                 if(count==0)
                     Either.Right("0")
                 else
-                    Either.Right(reportsDataSource.getStateReport(idReport,prefs.pvId?:""))
+                    Either.Right(reportsDataSource.getStateReport(idReport,prefs.pvId?:"",prefs.idUser?:""))
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))
             }
         }
 
-        override fun updateReportPv(idReport: String, state: String,type:String): Either<Failure, Boolean> {
+        override fun updateReportPvSync(idReport: String, state: String,type:String): Either<Failure, Boolean> {
             return try {
-                reportsDataSource.updateReportPv(idReport,prefs.pvId?:"",state,type)
+                reportsDataSource.updateReportPvSync(idReport,prefs.pvId?:"",state,type)
+                Either.Right(true)
+            }catch (e:Exception){
+                Either.Left(Failure.DefaultError(e.message!!))
+            }
+        }
+
+        override fun updateReportPv(idReport: String, state: String,type:String,time:String,latitude: String,longitude: String): Either<Failure, Boolean> {
+            return try {
+                reportsDataSource.updateReportPv(idReport,prefs.pvId?:"",prefs.idUser?:"",state,type,time,latitude,longitude)
                 Either.Right(true)
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))
@@ -603,10 +688,65 @@ interface ReportsRepository {
 
         override fun getCountSku(): Either<Failure, Int> {
             return try {
-                Either.Right(reportsDataSource.getCountSku(prefs.pvId?:""))
+                Either.Right(reportsDataSource.getCountSku(prefs.pvId?:"",prefs.idUser?:""))
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))
             }
+        }
+
+        override fun syncReportStandardMassive(latitude: String,longitude: String): Either<Failure, Boolean> {
+            return when (networkHandler.isConnected) {
+                true ->{
+                    try {
+                        val reportMassive = mutableListOf<ReportStandardMassive>()
+                        val reportData = mutableListOf<ReportStandard>()
+                        val listIdStandard = arrayListOf<String>()
+                        val reports = reportsDataSource.getReportsPvReady(prefs.companyId?:"",prefs.pvId?:"",prefs.idUser?:"")
+                        for (report in reports)
+                        {
+                            val stateReport = reportsDataSource.getReportsPvState(report.id,prefs.pvId?:"",prefs.idUser?:"")
+                            val questions  = questionsDataSource.getQuestionsByIdReport(report.id).map { it.toView() }
+                            for(question in questions)
+                            {
+                                val answerData= mutableListOf<AnswerStandard>()
+                                val answers = questionsDataSource.getAnswersPv(question.id,report.idPv,report.idUser).map { it.toView() }
+                                for(answer in answers)
+                                {
+                                    answerData.add(AnswerStandard(answer.id,answer.answerName,answer.data))
+                                }
+                                reportData.add(ReportStandard(question.id,question.questionName,answerData))
+
+                            }
+                            listIdStandard.add(report.id)
+                            reportMassive.add(ReportStandardMassive(report.id,report.idPv,report.idCompany,reportData,"COMPLETADO",stateReport.time,stateReport.longitude,stateReport.latitude,longitude,latitude,Calendar.getInstance().toInstant().toString()))
+                        }
+
+                        Log.d("report", "$reportData")
+                        val response = service.synStandardReportsMassive("Bearer ${prefs.token!!}",reportMassive.map { it.toRequestRemote() }).execute()
+                        when (response.isSuccessful) {
+                            true -> {
+                                response.body()?.let { body ->
+                                    if(body.success) {
+                                        Log.d("success",body.message.toString())
+                                        for(id in listIdStandard)
+                                            updateReportPvSync(id,"Enviado","Terminado")
+                                        Either.Right(true)
+                                    }
+                                    else{
+                                        Log.d("errorsincro",body.message.toString())
+                                        Either.Left(Failure.DefaultError(body.message))}
+
+                                }?: Either.Left(Failure.DefaultError(""))
+                            }
+                            false -> Either.Left(Failure.ServerError)
+                        }
+                    } catch (e: Exception) {
+                        Either.Left(Failure.DefaultError(e.message!!))
+                    }
+                }
+                false -> Either.Left(Failure.NetworkConnection)
+            }
+
         }
 
     }

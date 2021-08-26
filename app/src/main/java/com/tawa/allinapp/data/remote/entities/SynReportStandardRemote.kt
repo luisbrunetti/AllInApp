@@ -19,10 +19,18 @@ class SynReportStandardRemote {
         @SerializedName( "id_empresa")
         val idEmpresa: String,
 
+        @SerializedName( "reporte")
         val reporte: List<Report>,
 
-        @SerializedName( "image")
-        val image: String
+        @SerializedName( "status_reporte")
+        val stateReport: String,
+
+        @SerializedName( "longitud")
+        val longitude: String,
+
+        @SerializedName( "latitud")
+        val latitude: String,
+
     )
 
     data class Message(

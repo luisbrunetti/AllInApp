@@ -126,7 +126,7 @@ interface QuestionsRepository {
                 if(count==0)
                     Either.Right(questionsDataSource.getAnswers(idQuestion).map { it.toView() })
                 else
-                    Either.Right(questionsDataSource.getAnswersPv(idQuestion,prefs.pvId?:"").map { it.toView() })
+                    Either.Right(questionsDataSource.getAnswersPv(idQuestion,prefs.pvId?:"",prefs.idUser?:"").map { it.toView() })
 
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))
@@ -155,11 +155,11 @@ interface QuestionsRepository {
 
         override fun setAnswersPv(idAnswer: String, idQuestion: String, nameAnswer: String, img: String): Either<Failure, Boolean> {
             return try {
-                val count = questionsDataSource.getCountPvAnswer(prefs.pvId?:"",idAnswer)
+                val count = questionsDataSource.getCountPvAnswer(prefs.pvId?:"",idAnswer,prefs.idUser?:"")
                 if(count==0)
-                    questionsDataSource.insertAnswersPv(AnswersPvModel(0,prefs.pvId?:"",idAnswer,idQuestion,nameAnswer,img))
+                    questionsDataSource.insertAnswersPv(AnswersPvModel(0,prefs.pvId?:"",idAnswer,idQuestion,nameAnswer,img,prefs.idUser?:""))
                 else
-                    questionsDataSource.updateAnswersPv(idAnswer,prefs.pvId?:"",nameAnswer,img)
+                    questionsDataSource.updateAnswersPv(idAnswer,prefs.pvId?:"",nameAnswer,img,prefs.idUser?:"")
                 Either.Right(true)
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))

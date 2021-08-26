@@ -45,6 +45,7 @@ import androidx.core.content.FileProvider
 import com.tawa.allinapp.core.dialog.MessageDialogFragment
 import com.tawa.allinapp.core.extensions.failure
 import com.tawa.allinapp.core.functional.Failure
+import com.tawa.allinapp.databinding.HeaderReportBinding
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -55,6 +56,7 @@ import kotlin.collections.ArrayList
 class CheckListFragment: BaseFragment() {
 
     private lateinit var binding: FragmentChecklistBinding
+    private lateinit var headerReportBinding: HeaderReportBinding
     private val TAKE_PHOTO_REQUEST = 101
     var photoFile: File? = null
     val CAPTURE_IMAGE_REQUEST = 1
@@ -94,11 +96,16 @@ class CheckListFragment: BaseFragment() {
                    showQuestions(list.objectType,list.id,list.questionName,list.order)
             } })
             observe(stateReport,{it?.let {
+                getLastLocation()
                 if(it.isNotEmpty())
                 {
                     typeReport=it
                     checkListViewModel.getQuestions(idReport)
                 }
+            } })
+            observe(successSyncReportStandard,{it?.let {
+                    if(it)
+                        activity?.onBackPressed()
             } })
             observe(answersRadio, { it?.let {
                 if(orderRadio.value!! >0)
@@ -152,6 +159,10 @@ class CheckListFragment: BaseFragment() {
             checkListViewModel.getStateReport(idReport,1)
         }
 
+        arguments?.getString("name").toString().also {
+            binding.tvTitleStandard.text = it
+        }
+
         binding.btnTakePhoto.setOnClickListener{
            validatePermissions()
           //captureImage()
@@ -165,9 +176,9 @@ class CheckListFragment: BaseFragment() {
         binding.btnSaveReport.setOnClickListener{
             //checkListViewModel.updateState(true)
             if(typeReport!="Terminado") {
+                getLastLocation()
                 //checkListViewModel.updateState(true, true)
-                checkListViewModel.updateStateReport(idReport, "En proceso","Terminado")
-                checkListViewModel.updateReportPv(idReport,"En proceso","Terminado")
+                checkListViewModel.updateReportPv(idReport,"En proceso","Terminado",Calendar.getInstance().toInstant().toString(),latitude,longitude)
                 for (radio in listRadioButton) {
                     val tag = radio.tag as ArrayList<String>
                     checkListViewModel.setAnswerPv(tag[0],tag[1],radio.isChecked.toString(),urlImage)
@@ -188,7 +199,8 @@ class CheckListFragment: BaseFragment() {
                 //checkListViewModel.updateAnswers(idPhoto, urlImage)
 
                 findElements()
-                activity?.onBackPressed()
+
+                showConfirmSync()
             }
             else
                 Toast.makeText(context,"Ya se registró",Toast.LENGTH_SHORT).show()
@@ -199,8 +211,7 @@ class CheckListFragment: BaseFragment() {
         binding.btnBr.setOnClickListener {
             if(typeReport!="Terminado") {
                 //checkListViewModel.updateState(true, false)
-                checkListViewModel.updateStateReport(idReport, "En proceso","Borrador")
-                checkListViewModel.updateReportPv(idReport,"En proceso","Borrador")
+                checkListViewModel.updateReportPv(idReport,"En proceso","Borrador","","","")
                 for (radio in listRadioButton) {
                     val tag = radio.tag as ArrayList<String>
                     checkListViewModel.setAnswerPv(tag[0],tag[1],radio.isChecked.toString(),urlImage)
@@ -366,6 +377,22 @@ class CheckListFragment: BaseFragment() {
         linearL.layoutParams = params
         linear.addView(linearL,order)
 
+    }
+
+    private fun showConfirmSync(){
+        val dialog = ConfirmSyncDialogFragment()
+        dialog.listener = object : ConfirmSyncDialogFragment.Callback{
+            override fun onClick() {
+                getLastLocation()
+                checkListViewModel.syncStandardReports(idReport,latitude,longitude)
+            }
+
+            override fun onBack() {
+                activity?.onBackPressed()
+            }
+
+        }
+        dialog.show(childFragmentManager,"")
     }
 
     private fun Float.toDips() = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, this, resources.displayMetrics)

@@ -60,6 +60,7 @@ class SkuFragment : BaseFragment() {
     var idPv:String= ""
     var idCompany: String = ""
     var idSkuUpdate  = ""
+    var skuType = ""
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -118,7 +119,7 @@ class SkuFragment : BaseFragment() {
 
             } })
             observe(successGetSku, { it?.let {
-
+                getLastLocation()
                 if(typeIni.value==1)
                 {
                     for(sku in it)
@@ -137,6 +138,27 @@ class SkuFragment : BaseFragment() {
                 }
 
             } })
+            observe(successGetTypeSku,{it?.let{
+                if(it.isNotEmpty()){
+                    if(typeUpdate.value==1)
+                        skuType = it
+                    else{
+                        if(it=="Terminado") {
+                            showConfirmSyncDialog()
+                        }
+                       // activity?.onBackPressed()
+                    }
+                }
+
+            }})
+            observe(successUpdateStateSku,{it?.let {
+                if(it)
+                    skuViewModel.getTypeSku(2)
+            }})
+            observe(successSyncSku,{it?.let {
+                if(it)
+                    activity?.onBackPressed()
+            }})
 
         }
         skuViewModel.getSku(1)
@@ -144,35 +166,43 @@ class SkuFragment : BaseFragment() {
             showFilterDialog(categoryFilter)
         }
         binding.btnSaveSku.setOnClickListener {
-            mapObs.clear()
-            for(check in checksStock)
-                mapCheckStock[check.tag.toString()] = check.isChecked
-            for(checkEx in checkEx)
-                mapCheckEx[checkEx.tag.toString()]= checkEx.isChecked
-            for(ed in edPrice) {
-                if (ed.text.toString().isNotEmpty()) {
-                    mapEdPrice[ed.tag.toString()] = ed.text.toString().toFloat()
+            if(skuType!="Terminado"){
+                mapObs.clear()
+                for(check in checksStock)
+                    mapCheckStock[check.tag.toString()] = check.isChecked
+                for(checkEx in checkEx)
+                    mapCheckEx[checkEx.tag.toString()]= checkEx.isChecked
+                for(ed in edPrice) {
+                    if (ed.text.toString().isNotEmpty()) {
+                        mapEdPrice[ed.tag.toString()] = ed.text.toString().toFloat()
+                    }
                 }
+                skuViewModel.getSku(2)
+                getLastLocation()
+                showConfirmDialog("Terminado")
             }
-            skuViewModel.getSku(2)
-            showConfirmDialog("Terminado")
-
+            else
+                Toast.makeText(context,"Ya se registró",Toast.LENGTH_SHORT).show()
         }
         binding.btnBrSku.setOnClickListener {
-            mapObs.clear()
-            for(check in checksStock)
-                mapCheckStock[check.tag.toString()] = check.isChecked
-            for(checkEx in checkEx)
-                mapCheckEx[checkEx.tag.toString()]= checkEx.isChecked
-            for(ed in edPrice) {
-                if (ed.text.toString().isNotEmpty()) {
-                    mapEdPrice[ed.tag.toString()] = ed.text.toString().toFloat()
+            if(skuType!="Terminado"){
+                mapObs.clear()
+                for(check in checksStock)
+                    mapCheckStock[check.tag.toString()] = check.isChecked
+                for(checkEx in checkEx)
+                    mapCheckEx[checkEx.tag.toString()]= checkEx.isChecked
+                for(ed in edPrice) {
+                    if (ed.text.toString().isNotEmpty()) {
+                        mapEdPrice[ed.tag.toString()] = ed.text.toString().toFloat()
+                    }
                 }
+                skuViewModel.getSku(2)
+                showConfirmDialog("Borrador")
             }
-            skuViewModel.getSku(2)
-            showConfirmDialog("Borrador")
-
+            else
+                Toast.makeText(context,"Ya se registró",Toast.LENGTH_SHORT).show()
         }
+        skuViewModel.getTypeSku(1)
         return binding.root
     }
 
@@ -465,11 +495,27 @@ class SkuFragment : BaseFragment() {
                     }
                 }
 
-                skuViewModel.updateStateSku(idSkuUpdate,"En proceso",type)
-                activity?.onBackPressed()
+                skuViewModel.updateStateSku(idSkuUpdate,"En proceso",type,latitude,longitude)
+
             }
         }
 
+    }
+
+    private fun showConfirmSyncDialog(){
+        val dialog = ConfirmSyncSkuDialogFragment()
+        dialog.listener = object  : ConfirmSyncSkuDialogFragment.Callback{
+            override fun onClick() {
+               skuViewModel.syncSku(idSkuUpdate)
+
+            }
+
+            override fun onBack() {
+               activity?.onBackPressed()
+            }
+
+        }
+        dialog.show(childFragmentManager,"")
     }
 
     private fun showFilterDialog(data:ArrayList<String>){

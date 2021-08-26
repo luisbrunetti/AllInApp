@@ -4,9 +4,9 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.tawa.allinapp.models.Report
 
-@Entity(tableName = "reports")
+@Entity(tableName = "reports",primaryKeys = ["id","idUser"])
 data class ReportModel(
-    @PrimaryKey val id: String,
+    val id: String,
     val reportName: String,
     val idCompany: String,
     val nameCompany:String,
@@ -16,7 +16,7 @@ data class ReportModel(
     val feCreate: String,
     val state:String,
     val type:String,
-    val idPv:String
+    val idPv:String,
 ){
     fun toView() = Report(id,reportName,idCompany,nameCompany,idUser,idUserMod,feMod,feCreate,state,type,idPv)
 }

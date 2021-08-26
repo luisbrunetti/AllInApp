@@ -10,8 +10,12 @@ data class ReportPvModel(
     @PrimaryKey (autoGenerate = true)  val id: Int,
     val idPv: String,
     val idReport: String,
+    val idUser:String,
     val state: String,
-    val type:String
+    val type:String,
+    val time :String,
+    val latitude:String,
+    val longitude:String
 ){
-    fun toView() = ReportPv(id,idPv,idReport,state,type)
+    fun toView() = ReportPv(id,idPv,idReport,idUser,state,type,time,latitude,longitude)
 }

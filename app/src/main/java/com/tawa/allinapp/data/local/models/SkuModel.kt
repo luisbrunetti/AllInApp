@@ -10,8 +10,12 @@ data class SkuModel(
     @PrimaryKey val id: String,
     val idPv: String,
     val idCompany: String,
+    val idUser:String,
     val state : String,
-    val type:String
+    val type:String,
+    val dateCreation:String,
+    val latitude:String,
+    val longitude:String
 ){
-    fun toView() = Sku(id,idPv,idCompany,state,type)
+    fun toView() = Sku(id,idPv,idCompany,idUser,state,type,dateCreation,latitude,longitude)
 }

@@ -4,6 +4,8 @@ import com.tawa.allinapp.data.local.dao.ParametersDao
 import com.tawa.allinapp.data.local.dao.ReportsDao
 import com.tawa.allinapp.data.local.models.*
 import com.tawa.allinapp.features.init.usecase.GetIdPV
+import com.tawa.allinapp.features.init.usecase.GetIdUser
+import com.tawa.allinapp.models.ReportPv
 import com.tawa.allinapp.models.Sku
 import javax.inject.Inject
 
@@ -13,16 +15,29 @@ class ReportsDataSource @Inject constructor(private val reportsDao: ReportsDao){
         reportsDao.insertReports(reportModel)
     }
 
-    fun getReports(idCompany: String):List<ReportModel> {
-        return reportsDao.getReports(idCompany)
+    fun getReports(idCompany: String,idUser: String):List<ReportModel> {
+        return reportsDao.getReports(idCompany,idUser)
     }
 
-    fun getReportsPv(idCompany: String,idPV: String):List<ReportModel> {
-        return reportsDao.getReportsPv(idCompany,idPV)
+    fun getReportsPv(idCompany: String,idPV: String,idUser: String):List<ReportModel> {
+        return reportsDao.getReportsPv(idCompany,idPV,idUser)
     }
 
-    fun getStateReport(idReport: String,idPV: String):String {
-        return reportsDao.getStateReport(idReport,idPV)
+    fun getReportsPvReady(idCompany: String,idPV: String,idUser: String):List<ReportModel> {
+        return reportsDao.getReportsPvReady(idCompany,idPV,idUser)
+    }
+
+
+    fun getReportsPvState(idReport: String,idPV: String,idUser: String):ReportPv {
+        return reportsDao.getReportsPvState(idReport,idPV,idUser)
+    }
+
+    fun getReportPv(idCompany: String,idPV: String,idUser: String,idReport: String):ReportModel {
+        return reportsDao.getReportPv(idCompany,idPV,idUser,idReport)
+    }
+
+    fun getStateReport(idReport: String,idPV: String,idUser: String):String {
+        return reportsDao.getStateReport(idReport,idPV,idUser)
     }
 
     fun listReports(idCompany:String):List<ReportModel> {
@@ -32,6 +47,11 @@ class ReportsDataSource @Inject constructor(private val reportsDao: ReportsDao){
     fun updateStateReports(idReport:String,state:String,type:String,idPV: String)
     {
         reportsDao.updateStateReports(idReport,state,type,idPV)
+    }
+
+    fun updateStateSku(idSku:String,state:String,type: String,dateCreation:String,latitude: String,longitude: String)
+    {
+        reportsDao.updateStateSku(idSku,state,type,dateCreation,latitude,longitude)
     }
 
     fun updateStateSku(idSku:String,state:String,type: String)
@@ -67,12 +87,24 @@ class ReportsDataSource @Inject constructor(private val reportsDao: ReportsDao){
         return reportsDao.getSkuDetail(idSku)
     }
 
-    fun getSku(idPV: String):List<SkuModel>{
-        return reportsDao.getSku(idPV)
+    fun getSku(idSku: String,idPV: String,idCompany: String,idUser: String):List<SkuModel>{
+        return reportsDao.getSku(idSku,idPV,idCompany,idUser)
     }
 
-    fun getStateSku(idPV: String):String{
-        return reportsDao.getStateSku(idPV)
+    fun getSku(idPV: String,idCompany: String,idUser: String):List<SkuModel>{
+        return reportsDao.getSku(idPV,idCompany,idUser)
+    }
+
+    fun getSkuReady(idPV: String,idCompany: String,idUser: String):List<SkuModel>{
+        return reportsDao.getSkuReady(idPV,idCompany,idUser)
+    }
+
+    fun getStateSku(idPV: String,idCompany: String,idUser: String):String{
+        return reportsDao.getStateSku(idPV,idCompany,idUser)
+    }
+
+    fun getSTypeSku(idPV: String,idCompany: String,idUser: String):String{
+        return reportsDao.getTypeSku(idPV,idCompany,idUser)
     }
 
     fun deletePhotos(){
@@ -103,15 +135,19 @@ class ReportsDataSource @Inject constructor(private val reportsDao: ReportsDao){
         return reportsDao.reportPvCount(idReport,idPV)
     }
 
-    fun getReportPvCount(idCompany: String,idPV: String):Int{
-        return reportsDao.getReportPvCount(idCompany,idPV)
+    fun getReportPvCount(idCompany: String,idPV: String,idUser: String):Int{
+        return reportsDao.getReportPvCount(idCompany,idPV,idUser)
     }
 
-    fun updateReportPv(idReport: String,idPV: String,state: String,type: String){
-        reportsDao.updateReportPv(idReport,idPV,state,type)
+    fun updateReportPv(idReport: String,idPV: String,idUser: String,state: String,type: String,time:String,latitude:String,longitude:String){
+        reportsDao.updateReportPv(idReport,idPV,idUser,state,type,time,latitude,longitude)
     }
 
-    fun getCountSku(idPV: String):Int{
-        return reportsDao.getCountSku(idPV)
+    fun updateReportPvSync(idReport: String,idPV: String,state: String,type: String){
+        reportsDao.updateReportPvSync(idReport,idPV,state,type)
+    }
+
+    fun getCountSku(idPV: String,idUser: String):Int{
+        return reportsDao.getCountSku(idPV,idUser)
     }
 }

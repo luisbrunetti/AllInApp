@@ -62,8 +62,7 @@ class SelectorDialogFragment
             observe(successGetReports, { it?.let { if (it)
                 {
                     initViewModel.listReports(selectedCompany)
-
-                }
+            }
 
             } })
             observe(successListReport,{it?.let {

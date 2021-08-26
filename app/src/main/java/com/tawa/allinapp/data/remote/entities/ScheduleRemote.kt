@@ -38,11 +38,11 @@ class ScheduleRemote {
         @SerializedName("tlf_jefe") val bossPhone: String?,
         @SerializedName("id_cadena") val chain: String?,
         @SerializedName("id_empresa") val company: String?,
-        @SerializedName("id_ptv_corp") val corp: String?,
+        @SerializedName("id_ptv_corp") val corp: IdPtvCorp?,
         @SerializedName("id_user_creador") val idUserCreator: String?,
         @SerializedName("fe_creacion") val feCreated: String?,
     ){
-        fun toModel(id:String?,) = ScheduleModel(id?:"",this.id?:"",description?:"",zone?.id,"",company?:"", zone?.latitude?:0.0,zone?.longitude?:0.0)
+        fun toModel(id:String?,) = ScheduleModel(id?:"",this.id?:"",description?:"",zone?.id,"",company?:"", corp?.latitude?:0.0,corp?.longitude?:0.0)
     }
     data class Zone(
         @SerializedName("id_user_modificador") val idUserModify: Any? = null,
@@ -56,6 +56,14 @@ class ScheduleRemote {
         @SerializedName("longitud") val longitude: Double,
         @SerializedName("id_empresa") val company: String?,
         @SerializedName("id_user_creador") val idUserCreator: String?,
+    )
+
+    data class IdPtvCorp(
+        @SerializedName("_id") val id: String?,
+        @SerializedName("nombre_ptv_corp") val name: String?,
+        @SerializedName("direccion_ptv_corp") val direction: String?,
+        @SerializedName("latitud") val latitude: Double,
+        @SerializedName("longitud") val longitude: Double,
     )
 
 }

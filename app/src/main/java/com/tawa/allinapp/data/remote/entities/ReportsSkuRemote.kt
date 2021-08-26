@@ -18,8 +18,63 @@ class ReportsSkuRemote {
         @SerializedName( "id_empresa")
         val idEmpresa: String,
 
+        @SerializedName( "status_reporte")
+        val stateReport: String,
+
         @SerializedName( "lineas_respuestas")
-        val lineasRespuestas: List<LineasRespuesta>
+        val lineasRespuestas: List<LineasRespuesta>,
+
+        @SerializedName( "longitud")
+        val longitude: String,
+
+        @SerializedName( "latitud")
+        val latitude: String,
+
+    )
+
+    data class RequestMassive (
+        @SerializedName( "id_reporte_pdv")
+        val idReportePdv: String,
+
+        @SerializedName("id_punto_venta")
+        val idPuntoVenta: String,
+
+        @SerializedName( "id_empresa")
+        val idEmpresa: String,
+
+        @SerializedName( "lineas_respuestas")
+        val lineasRespuestas: List<LineasRespuesta>,
+
+        @SerializedName( "status_reporte")
+        val stateReport: String,
+
+        @SerializedName( "fe_creacion")
+        val dateCreation: String,
+
+        @SerializedName( "longitud")
+        val longitude: String,
+
+        @SerializedName( "latitud")
+        val latitude: String,
+
+        @SerializedName( "longitud_sincronizacion")
+        val longitudeSync: String,
+
+        @SerializedName( "latitud_sincronizacion")
+        val latitudeSync: String,
+
+        @SerializedName( "fe_sincronizacion")
+        val dateSync: String,
+
+        )
+
+    data class idUserAsig(
+        @SerializedName( "_id")
+        val id: String,
+
+        @SerializedName( "_usuario")
+        val user: String,
+
     )
 
     data class LineasRespuesta (
@@ -58,6 +113,9 @@ class ReportsSkuRemote {
 
         @SerializedName("id_empresa")
         val idCompany: IDEmpresa,
+
+        @SerializedName( "id_user_asig")
+        val idUserAsg: idUserAsig,
 
 
         @SerializedName("id_reporte_pdv")

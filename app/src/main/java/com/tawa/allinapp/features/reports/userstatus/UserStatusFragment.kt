@@ -52,16 +52,26 @@ class UserStatusFragment : BaseFragment() {
         binding = FragmentUserStatusBinding.inflate(inflater)
         userStatusViewModel = viewModel(viewModelFactory) {
             observe(reportStatus, { it?.let {
-                listStatus = it
-                showReporter(listStatus)
-                listLimited = if(it.size<5)
-                    it.slice(it.indices)
+                if(it.isEmpty())
+                {
+                    Toast.makeText(context,"No tiene datos disponibles",Toast.LENGTH_SHORT).show()
+                    activity?.onBackPressed()
+                }
                 else
-                    it.slice(0..4)
+                {
+                    listStatus = it
+                    showReporter(listStatus)
+                    listLimited = if(it.size<5)
+                        it.slice(it.indices)
+                    else
+                        it.slice(0..4)
 
-                if(order.value==0)
-                    showDataTable(listLimited,order.value!!)
-                createPager(it,binding.pageNumber,binding.tlName,binding.tlGridTable)
+                    if(order.value==0)
+                        showDataTable(listLimited,order.value!!)
+                    createPager(it,binding.pageNumber,binding.tlName,binding.tlGridTable)
+                }
+
+
             } })
         }
         binding.etDateUserStatus.setOnClickListener{
