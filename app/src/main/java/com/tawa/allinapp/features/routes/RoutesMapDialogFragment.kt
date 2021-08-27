@@ -62,8 +62,6 @@ class RoutesMapDialogFragment: DialogFragment() {
     }
 
     private val mapCallback = OnMapReadyCallback { googleMap ->
-
-
         arguments?.let { bundle ->
             bundle.getStringArrayList("latitude")?.let { lat->
                 bundle.getStringArrayList("longitude")?.let { lon->
@@ -80,17 +78,13 @@ class RoutesMapDialogFragment: DialogFragment() {
                         }
                         googleMap.moveCamera(CameraUpdateFactory.newLatLng(LatLng(lat[0].toDouble(), lon[0].toDouble())))
                         googleMap.setMinZoomPreference(10f)
-
-
                     }
                 }
             }
         }
     }
 
-    private fun getMarkerIconFromDrawable(drawable: Drawable): BitmapDescriptor? {
-
-        val canvas = Canvas()
+    private fun getMarkerIconFromDrawable(drawable: Drawable): BitmapDescriptor? { val canvas = Canvas()
         val bitmap = Bitmap.createBitmap(
             drawable.intrinsicWidth,
             drawable.intrinsicHeight,
