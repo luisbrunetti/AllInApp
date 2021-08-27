@@ -2,6 +2,7 @@ package com.tawa.allinapp.features.routes
 
 import android.app.DatePickerDialog
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,13 +10,16 @@ import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.ListView
 import android.widget.Toast
+import androidx.core.view.isVisible
 import com.tawa.allinapp.R
 import com.tawa.allinapp.core.extensions.observe
 import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.FragmentRoutesBinding
 import com.tawa.allinapp.models.ReportStatus
+import com.tawa.allinapp.models.Routes
 import com.tawa.allinapp.models.RoutesUser
+import com.tawa.allinapp.models.Tracking
 import kotlinx.android.synthetic.main.fragment_routes.*
 import java.util.*
 import kotlin.collections.ArrayList
@@ -26,7 +30,10 @@ class RoutesFragment : BaseFragment() {
     private lateinit var routesViewModel: RoutesViewModel
     private lateinit var binding: FragmentRoutesBinding
     var listUserData  = listOf<RoutesUser>()
+    private var listRoutesUser  = listOf<Routes>()
+    var listTrackingUser  = listOf<Tracking>()
     var dateFormat = ""
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,20 +48,51 @@ class RoutesFragment : BaseFragment() {
                 it?.let {
                     showUser(it)
                     listUserData = it
-                    createListRoutes(binding.listRoutes,it)
+
                 }
             })
+            observe(successGetRoutes,{it?.let {
+
+                if(it.isNotEmpty()){
+                    listRoutesUser = it
+                    binding.contRoutes.isVisible = true
+                    binding.tvType.text = "Rutas"
+                    createListRoutes(binding.listRoutes,it)
+                }
+                else {
+                    Toast.makeText(context, "No se encontraron datos", Toast.LENGTH_SHORT).show()
+                }
+            } })
+            observe(successGetTracking,{it?.let {
+
+                if(it.isNotEmpty()){
+                    listTrackingUser = it
+                    binding.contRoutes.isVisible = true
+                    binding.tvType.text = "Seguimiento"
+                    createListTracking(binding.listRoutes,it)
+                }
+                else {
+                    Toast.makeText(context, "No se encontraron datos", Toast.LENGTH_SHORT).show()
+                }
+            } })
+
+        }
+        binding.btnBackRoutes.setOnClickListener {
+            activity?.onBackPressed()
         }
         binding.edDateUserRoutes.setOnClickListener{
             getDay(binding.edDateUserRoutes)
         }
         binding.btnShowMapRoutes.setOnClickListener {
-            showMapRoutesDialog()
+            if(binding.tvType.text=="Rutas")
+                showMapRoutesDialog(listRoutesUser)
+            else
+                showMapTrackingDialog(listTrackingUser)
         }
         routesViewModel.getListUser()
-        //val listRoutes = arrayListOf<String>("Ruta 1","Ruta 2","Ruta 3","Ruta 4","Ruta 5")
-        //createListRoutes(binding.listRoutes,listRoutes)
         binding.btnRoutes.setOnClickListener {
+            binding.listRoutes.adapter= null
+            binding.contRoutes.isVisible = false
             val user = binding.edUserRoutes.text.toString()
             if(user.isEmpty()){
                 Toast.makeText(context,"Seleccione un usuario",Toast.LENGTH_SHORT).show()
@@ -66,14 +104,27 @@ class RoutesFragment : BaseFragment() {
             }
             val newList = listUserData.filter { it.name == user }
             if (newList.isNullOrEmpty())
-            {
                 Toast.makeText(context,"No se encontró el usuario",Toast.LENGTH_SHORT).show()
+            else
+                routesViewModel.getRoutes(newList[0].id,dateFormat)
+        }
+        binding.btnTracking.setOnClickListener {
+            binding.listRoutes.adapter= null
+            binding.contRoutes.isVisible = false
+            val user = binding.edUserRoutes.text.toString()
+            if(user.isEmpty()){
+                Toast.makeText(context,"Seleccione un usuario",Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
             }
-            else{
-                Toast.makeText(context,newList[0].id,Toast.LENGTH_SHORT).show()
-
+            if(dateFormat.isEmpty()){
+                Toast.makeText(context,"Seleccione una fecha valida",Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
             }
-
+            val newList = listUserData.filter { it.name == user }
+            if (newList.isNullOrEmpty())
+                Toast.makeText(context,"No se encontró el usuario",Toast.LENGTH_SHORT).show()
+            else
+                routesViewModel.getTracking(newList[0].id,dateFormat)
         }
         return binding.root
     }
@@ -88,20 +139,29 @@ class RoutesFragment : BaseFragment() {
         binding.edUserRoutes.setAdapter(userAdapter)
     }
 
-    private fun showMapRoutesDialog(){
-        val dialog = RoutesMapDialogFragment.newInstance("-9.517005","-77.528855","Prueba rutas")
+    private fun showMapRoutesDialog(listRoutes:List<Routes>){
+        val dialog = RoutesMapDialogFragment.newInstance(listRoutes)
         dialog.show(childFragmentManager,"")
     }
 
-    private fun createListRoutes(listView: ListView,list:List<RoutesUser>){
-        val listUser  = ArrayList<String>()
-        for(user in list)
-        {
-            listUser.add(user.name)
-        }
-        val aa = ArrayAdapter(requireContext(), R.layout.item_routes,listUser)
-        listView.adapter = aa
+    private fun showMapTrackingDialog(listTracking:List<Tracking>){
+        val dialog = TrackingMapDialogFragment.newInstance(listTracking)
+        dialog.show(childFragmentManager,"")
+    }
 
+    private fun createListRoutes(listView: ListView,list:List<Routes>){
+        val listRoutes  = ArrayList<String>()
+        for(route in list)
+            listRoutes.add( route.Pv + " - "+route.zoneName)
+        val aa = ArrayAdapter(requireContext(), R.layout.item_routes,listRoutes)
+        listView.adapter = aa
+    }
+    private fun createListTracking(listView: ListView,list:List<Tracking>){
+        val listTracking = ArrayList<String>()
+        for(track in list)
+            listTracking.add( track.Pv + " - "+track.zoneName)
+        val aa = ArrayAdapter(requireContext(), R.layout.item_routes,listTracking)
+        listView.adapter = aa
     }
 
     private fun getDay(et: EditText){

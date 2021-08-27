@@ -670,7 +670,7 @@ interface ReportsRepository {
 
         override fun updateReportPvSync(idReport: String, state: String,type:String): Either<Failure, Boolean> {
             return try {
-                reportsDataSource.updateReportPvSync(idReport,prefs.pvId?:"",state,type)
+                reportsDataSource.updateReportPvSync(idReport,prefs.pvId?:"",state,type,prefs.idUser?:"")
                 Either.Right(true)
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))

@@ -14,8 +14,12 @@ import retrofit2.http.Query
 interface RoutesApi{
 
     @GET("/api/cronograma/rutas/get")
-    fun getRoutes(@Header("Authorization") token:String, @Query("id_empresa") idCompany:String,@Query("id_user_asig") idUser:String,@Query("date_start") dateStart:String): Call<BaseResponse<List<RoutesRemote.Response>>>
+    fun getRoutes(@Header("Authorization") token:String, @Query("id_empresa") idCompany:String,@Query("id_user_asig") idUser:String,@Query("date_start") dateStart:String): Call<BaseResponse<List<RoutesRemote.RoutesUser>>>
 
     @GET("/api/group/user/list/")
     fun getListUser(@Header("Authorization") token:String): Call<BaseResponse<List<RoutesRemote.ListUser>>>
+
+    @GET("/api/cronograma/seguimiento/get")
+    fun getTracking(@Header("Authorization") token:String, @Query("id_empresa") idCompany:String,@Query("id_user_asig") idUser:String,@Query("date_start") dateStart:String): Call<BaseResponse<List<RoutesRemote.TrackingUser>>>
+
 }
