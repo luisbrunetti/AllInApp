@@ -25,10 +25,10 @@ interface ReportsDao {
     @Query("SELECT reports.id,reports.reportName,reports.idCompany,reports.nameCompany,reports.idUser,reports.idUserMod,reports.feMod,reports.feCreate,report_pv.state,report_pv.type,report_pv.idPv FROM reports,report_pv WHERE reports.id=report_pv.idReport and reports.idUser=report_pv.idUser and  reports.idCompany=:idCompany and report_pv.idPv=:idPv and report_pv.idUser=:idUser")
     fun getReportsPv(idCompany: String,idPv: String,idUser: String): List<ReportModel>
 
-    @Query("SELECT reports.id,reports.reportName,reports.idCompany,reports.nameCompany,reports.idUser,reports.idUserMod,reports.feMod,reports.feCreate,report_pv.state,report_pv.type,report_pv.idPv FROM reports,report_pv WHERE reports.id=report_pv.idReport and  reports.idCompany=:idCompany and report_pv.idPv=:idPv and report_pv.idUser=:idUser and report_pv.type='Terminado'")
+    @Query("SELECT reports.id,reports.reportName,reports.idCompany,reports.nameCompany,reports.idUser,reports.idUserMod,reports.feMod,reports.feCreate,report_pv.state,report_pv.type,report_pv.idPv FROM reports,report_pv WHERE reports.id=report_pv.idReport and reports.idUser=report_pv.idUser and  reports.idCompany=:idCompany and report_pv.idPv=:idPv and report_pv.idUser=:idUser and report_pv.type='Terminado'")
     fun getReportsPvReady(idCompany: String,idPv: String,idUser: String): List<ReportModel>
 
-    @Query("SELECT reports.id,reports.reportName,reports.idCompany,reports.nameCompany,reports.idUser,reports.idUserMod,reports.feMod,reports.feCreate,report_pv.state,report_pv.type,report_pv.idPv FROM reports,report_pv WHERE reports.id=report_pv.idReport and  reports.idCompany=:idCompany and report_pv.idPv=:idPv and report_pv.idUser=:idUser and reports.id=:idReport")
+    @Query("SELECT reports.id,reports.reportName,reports.idCompany,reports.nameCompany,reports.idUser,reports.idUserMod,reports.feMod,reports.feCreate,report_pv.state,report_pv.type,report_pv.idPv FROM reports,report_pv WHERE reports.id=report_pv.idReport and reports.idUser=report_pv.idUser and  reports.idCompany=:idCompany and report_pv.idPv=:idPv and report_pv.idUser=:idUser and reports.id=:idReport")
     fun getReportPv(idCompany: String,idPv: String,idUser: String,idReport: String): ReportModel
 
     @Query("SELECT report_pv.type FROM reports,report_pv WHERE reports.id=report_pv.idReport and  reports.id=:idReport and report_pv.idPv=:idPv and report_pv.idUser=:idUser")
@@ -100,14 +100,14 @@ interface ReportsDao {
     @Query("SELECT count(id) FROM report_pv WHERE idReport = :idReport and idPv = :idPv   ")
     fun reportPvCount(idReport: String,idPv: String):Int
 
-    @Query("SELECT count(reports.id) FROM reports,report_pv WHERE reports.id=report_pv.idReport and  reports.idCompany=:idCompany and report_pv.idPv=:idPv and report_pv.idUser=:idUser")
+    @Query("SELECT count(reports.id) FROM reports,report_pv WHERE reports.id=report_pv.idReport and reports.idUser=report_pv.idUser and  reports.idCompany=:idCompany and report_pv.idPv=:idPv and report_pv.idUser=:idUser")
     fun getReportPvCount(idCompany: String,idPv: String,idUser: String):Int
 
     @Query("UPDATE report_pv SET state=:state , type = :type, time=:time,latitude=:latitude,longitude=:longitude WHERE idReport = :idReport and idPv = :idPv and idUser=:idUser")
     fun updateReportPv(idReport: String,idPv: String,idUser: String,state: String,type:String,time:String,latitude:String,longitude:String)
 
-    @Query("UPDATE report_pv SET state=:state , type = :type WHERE idReport = :idReport and idPv = :idPv")
-    fun updateReportPvSync(idReport: String,idPv: String,state: String,type:String)
+    @Query("UPDATE report_pv SET state=:state , type = :type WHERE idReport = :idReport and idPv = :idPv and idUser=:idUser")
+    fun updateReportPvSync(idReport: String,idPv: String,state: String,type:String,idUser: String)
 
     @Query("SELECT count(id) FROM sku WHERE idPv =:idPv and idUser=:idUser  ")
     fun getCountSku(idPv: String,idUser: String):Int

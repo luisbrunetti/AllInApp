@@ -143,8 +143,8 @@ class ReportsDataSource @Inject constructor(private val reportsDao: ReportsDao){
         reportsDao.updateReportPv(idReport,idPV,idUser,state,type,time,latitude,longitude)
     }
 
-    fun updateReportPvSync(idReport: String,idPV: String,state: String,type: String){
-        reportsDao.updateReportPvSync(idReport,idPV,state,type)
+    fun updateReportPvSync(idReport: String,idPV: String,state: String,type: String,idUser: String){
+        reportsDao.updateReportPvSync(idReport,idPV,state,type,idUser)
     }
 
     fun getCountSku(idPV: String,idUser: String):Int{
