@@ -88,8 +88,6 @@ class CoverageBoardFragment : BaseFragment() {
 
     @Composable
     fun Filters(){
-        //var startDate by remember { mutableStateOf<String>("") }
-        //var endDate by remember { mutableStateOf<String>("") }
 
         val channels by coverageViewModel.channels.observeAsState()
         val retails by coverageViewModel.retails.observeAsState()
