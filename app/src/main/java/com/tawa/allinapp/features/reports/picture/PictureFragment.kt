@@ -47,6 +47,7 @@ class PictureFragment : BaseFragment() {
 
     private val before = 200
     private val after = 300
+    private var state = true
 
     private var photoReport: PhotoReport? = null
 
@@ -78,6 +79,9 @@ class PictureFragment : BaseFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentPictureBinding.inflate(inflater)
+        if(arguments?.getString("state")=="Enviado"){
+            disableComponents()
+        }
         pictureViewModel = viewModel(viewModelFactory){
             observe(successReport,{ it?.let {
                 if(it) hideProgressDialog()
@@ -210,5 +214,28 @@ class PictureFragment : BaseFragment() {
         binding.viewModel = pictureViewModel
         binding.lifecycleOwner = this
         binding.executePendingBindings()
+    }
+
+    private fun disableComponents(){
+        binding.btTakePhotoBefore.apply {
+            isEnabled = false
+            alpha = 0.5F
+        }
+        binding.btTakePhotoAfter.apply {
+            isEnabled = false
+            alpha = 0.5F
+        }
+        binding.btSendPictures.apply {
+            isEnabled = false
+            alpha = 0.5F
+        }
+        binding.btSavePictures.apply {
+            isEnabled = false
+            alpha = 0.5F
+        }
+        binding.tvComments.apply {
+            isEnabled = false
+            alpha = 0.5F
+        }
     }
 }

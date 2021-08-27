@@ -68,23 +68,19 @@ class ReportsFragment : BaseFragment() {
                 binding.tvHeaderPV.text = it
             } })
             observe(userType, { it?.let {
-                if(it.isNotEmpty())
-                {
+                if(it.isNotEmpty()) {
                     typeUser = it
                     reportsViewModel.getReports()
                 }
             } })
             observe(successStateSku,{
                 it?.let {
-                    if(it.isNotEmpty())
-                    {
+                    if(it.isNotEmpty()) {
                         binding.tvPVSub3.text = it
-                        if(it=="En proceso")
-                        {
+                        if(it=="En proceso") {
                            binding.iconSku.setImageResource(R.drawable.ic_inprocess)
                         }
-                        if(it=="Enviado")
-                        {
+                        if(it=="Enviado") {
                             binding.iconSku.setImageResource(R.drawable.ic_sended)
                         }
                     }
@@ -98,6 +94,9 @@ class ReportsFragment : BaseFragment() {
                         if(it=="En proceso")
                         {
                             binding.iconPicture.setImageResource(R.drawable.ic_inprocess)
+                        }
+                        if(it=="Enviado") {
+                            binding.iconSku.setImageResource(R.drawable.ic_sended)
                         }
                     }
                 }
@@ -134,10 +133,7 @@ class ReportsFragment : BaseFragment() {
             findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToSkuFragment())
         }
         binding.btnReportPictures.setOnClickListener {
-            if(binding.tvPhotoState.text == "Enviado")
-                MessageDialogFragment.newInstance("Ya se envio este reporte").show(childFragmentManager, "dialog")
-            else
-                findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToPictureFragment())
+            findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToPictureFragment("${binding.tvPhotoState.text}"))
         }
         binding.appbar.addOnOffsetChangedListener(object : OnOffsetChangedListener {
             var isShow = true
