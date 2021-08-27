@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,6 +20,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.tawa.allinapp.databinding.DialogMapRoutesBinding
+import com.tawa.allinapp.models.Routes
 
 
 class RoutesMapDialogFragment: DialogFragment() {
@@ -30,14 +32,21 @@ class RoutesMapDialogFragment: DialogFragment() {
     var nameGen= ""
     companion object {
 
-        fun newInstance(latitudeG: String = "",longitudeG: String = "",nameG: String = ""): RoutesMapDialogFragment {
+        fun newInstance(listRoutes : List<Routes>): RoutesMapDialogFragment {
             val frag = RoutesMapDialogFragment()
             val bundle = Bundle()
-            val data = ArrayList<String>()
-            data.add(latitudeG)
-            data.add(longitudeG)
-            data.add(nameG)
-            bundle.putStringArrayList("data", data)
+            val arrayLatitude = ArrayList<String>()
+            val arrayLongitude = ArrayList<String>()
+            val arrayDirections = ArrayList<String>()
+            for(route in listRoutes)
+            {
+                arrayLatitude.add(route.latitude.toString())
+                arrayLongitude.add(route.longitude.toString())
+                arrayDirections.add(route.dirCorpPv.toString())
+            }
+            bundle.putStringArrayList("latitude", arrayLatitude)
+            bundle.putStringArrayList("longitude", arrayLongitude)
+            bundle.putStringArrayList("directions", arrayDirections)
             frag.arguments = bundle
             return frag
         }
@@ -53,24 +62,29 @@ class RoutesMapDialogFragment: DialogFragment() {
     }
 
     private val mapCallback = OnMapReadyCallback { googleMap ->
-
         arguments?.let { bundle ->
-            bundle.getStringArrayList("data")?.let {
-                val userPosition = LatLng(it[0].toDouble(), it[1].toDouble())
-                val iconD = resources.getDrawable(com.tawa.allinapp.R.drawable.ic_marker_1)
-                googleMap.addMarker(MarkerOptions()
-                    .position(userPosition).title(it[2])
-                    .icon(getMarkerIconFromDrawable(iconD))
-                )
-                googleMap.moveCamera(CameraUpdateFactory.newLatLng(userPosition))
-                googleMap.setMinZoomPreference(10f)
+            bundle.getStringArrayList("latitude")?.let { lat->
+                bundle.getStringArrayList("longitude")?.let { lon->
+                    bundle.getStringArrayList("directions")?.let {dir->
+                        for((index,data ) in lat.withIndex())
+                        {
+                            val userPosition = LatLng(data.toDouble(), lon[index].toDouble())
+                            Log.d("pos",userPosition.toString())
+                            val iconD = resources.getDrawable(com.tawa.allinapp.R.drawable.ic_marker_routes)
+                            googleMap.addMarker(MarkerOptions()
+                                .position(userPosition).title(dir[index])
+                                .icon(getMarkerIconFromDrawable(iconD))
+                            )
+                        }
+                        googleMap.moveCamera(CameraUpdateFactory.newLatLng(LatLng(lat[0].toDouble(), lon[0].toDouble())))
+                        googleMap.setMinZoomPreference(10f)
+                    }
+                }
             }
         }
     }
 
-    private fun getMarkerIconFromDrawable(drawable: Drawable): BitmapDescriptor? {
-
-        val canvas = Canvas()
+    private fun getMarkerIconFromDrawable(drawable: Drawable): BitmapDescriptor? { val canvas = Canvas()
         val bitmap = Bitmap.createBitmap(
             drawable.intrinsicWidth,
             drawable.intrinsicHeight,

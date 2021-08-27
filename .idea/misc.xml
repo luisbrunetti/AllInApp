@@ -49,6 +49,9 @@
         <entry key="..\:/DESARROLLO/tawa-android-changes/app/src/main/res/drawable/ic_infor.xml" value="0.3828125" />
         <entry key="..\:/DESARROLLO/tawa-android-changes/app/src/main/res/drawable/ic_informs.xml" value="0.3828125" />
         <entry key="..\:/DESARROLLO/tawa-android-changes/app/src/main/res/drawable/ic_informs_home.xml" value="0.3828125" />
+        <entry key="..\:/DESARROLLO/tawa-android-changes/app/src/main/res/drawable/ic_informsicon_resize.xml" value="0.3828125" />
+        <entry key="..\:/DESARROLLO/tawa-android-changes/app/src/main/res/drawable/ic_marker_1.xml" value="0.3828125" />
+        <entry key="..\:/DESARROLLO/tawa-android-changes/app/src/main/res/drawable/ic_marker_routes.xml" value="0.3828125" />
         <entry key="..\:/DESARROLLO/tawa-android-changes/app/src/main/res/drawable/ic_noinit.xml" value="0.3828125" />
         <entry key="..\:/DESARROLLO/tawa-android-changes/app/src/main/res/drawable/ic_report_nostate.xml" value="0.3828125" />
         <entry key="..\:/DESARROLLO/tawa-android-changes/app/src/main/res/drawable/ic_rutas.xml" value="0.3828125" />
@@ -68,6 +71,11 @@
         <entry key="..\:/DESARROLLO/tawa-android-changes/app/src/main/res/layout/fragment_init.xml" value="0.36666666666666664" />
         <entry key="..\:/DESARROLLO/tawa-android-changes/app/src/main/res/layout/fragment_login.xml" value="0.36666666666666664" />
         <entry key="..\:/DESARROLLO/tawa-android-changes/app/src/main/res/layout/fragment_reports.xml" value="0.5" />
+        <entry key="..\:/DESARROLLO/tawa-android-changes/app/src/main/res/layout/fragment_picture.xml" value="0.88" />
+        <entry key="..\:/DESARROLLO/tawa-android-changes/app/src/main/res/layout/fragment_reports.xml" value="0.33" />
+        <entry key="..\:/DESARROLLO/tawa-android-changes/app/src/main/res/layout/fragment_routes.xml" value="0.25" />
+        <entry key="..\:/DESARROLLO/tawa-android-changes/app/src/main/res/layout/fragment_send_message.xml" value="0.36666666666666664" />
+        <entry key="..\:/DESARROLLO/tawa-android-changes/app/src/main/res/layout/fragment_send_password.xml" value="0.33" />
         <entry key="..\:/DESARROLLO/tawa-android-changes/app/src/main/res/layout/fragment_sku.xml" value="0.36666666666666664" />
         <entry key="..\:/DESARROLLO/tawa-android-changes/app/src/main/res/layout/fragment_user_status.xml" value="0.36666666666666664" />
         <entry key="..\:/DESARROLLO/tawa-android-changes/app/src/main/res/layout/row_report.xml" value="0.5" />

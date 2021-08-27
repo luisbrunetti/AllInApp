@@ -21,4 +21,6 @@ class RoutesService
     override fun getListUser(token: String) = routesApi.getListUser(token)
 
     override fun getRoutes(token: String, idCompany: String, idUser: String, dateStart: String) = routesApi.getRoutes(token,idCompany,idUser,dateStart)
+
+    override fun getTracking(token: String, idCompany: String, idUser: String, dateStart: String) = routesApi.getTracking(token,idCompany,idUser,dateStart)
 }

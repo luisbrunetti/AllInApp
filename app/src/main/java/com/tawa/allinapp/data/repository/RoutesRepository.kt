@@ -13,14 +13,13 @@ import com.tawa.allinapp.data.local.models.ReadyAnswerModel
 import com.tawa.allinapp.data.remote.entities.RoutesRemote
 import com.tawa.allinapp.data.remote.service.QuestionsService
 import com.tawa.allinapp.data.remote.service.RoutesService
-import com.tawa.allinapp.models.Answer
-import com.tawa.allinapp.models.Question
-import com.tawa.allinapp.models.ReadyAnswer
-import com.tawa.allinapp.models.RoutesUser
+import com.tawa.allinapp.models.*
 import javax.inject.Inject
 
 interface RoutesRepository {
     fun getListUserRemote(): Either<Failure, List<RoutesUser>>
+    fun getRoutes(idUser:String,dateStart:String): Either<Failure, List<Routes>>
+    fun getTracking(idUser:String,dateStart:String): Either<Failure, List<Tracking>>
 
 
     class Network
@@ -34,6 +33,57 @@ interface RoutesRepository {
                 true ->{
                     try {
                         val response = service.getListUser("Bearer ${prefs.token!!}").execute()
+                        when (response.isSuccessful) {
+                            true -> {
+                                response.body()?.let { body ->
+                                    if(body.success) {
+                                        Either.Right(body.data.map { it.toView() })
+                                    }
+                                    else Either.Left(Failure.DefaultError(body.message))
+                                }?: Either.Left(Failure.DefaultError(""))
+                            }
+                            false -> Either.Left(Failure.ServerError)
+                        }
+                    } catch (e: Exception) {
+                        Either.Left(Failure.DefaultError(e.message!!))
+                    }
+                }
+                false -> Either.Left(Failure.NetworkConnection)
+            }
+        }
+
+        override fun getRoutes(idUser:String,dateStart:String): Either<Failure, List<Routes>> {
+            return when (networkHandler.isConnected) {
+                true ->{
+                    try {
+                        val response = service.getRoutes("Bearer ${prefs.token!!}",prefs.companyId?:"",idUser,dateStart).execute()
+                        when (response.isSuccessful) {
+                            true -> {
+                                response.body()?.let { body ->
+                                    if(body.success) {
+                                        Either.Right(body.data.map { it.toView() })
+                                    }
+                                    else {
+                                        Log.d("errorTracking",body.message.toString())
+                                        Either.Left(Failure.DefaultError(body.message))
+                                    }
+                                }?: Either.Left(Failure.DefaultError(""))
+                            }
+                            false -> Either.Left(Failure.ServerError)
+                        }
+                    } catch (e: Exception) {
+                        Either.Left(Failure.DefaultError(e.message!!))
+                    }
+                }
+                false -> Either.Left(Failure.NetworkConnection)
+            }
+        }
+
+        override fun getTracking(idUser: String, dateStart: String): Either<Failure, List<Tracking>> {
+            return when (networkHandler.isConnected) {
+                true ->{
+                    try {
+                        val response = service.getTracking("Bearer ${prefs.token!!}",prefs.companyId?:"",idUser,dateStart).execute()
                         when (response.isSuccessful) {
                             true -> {
                                 response.body()?.let { body ->
