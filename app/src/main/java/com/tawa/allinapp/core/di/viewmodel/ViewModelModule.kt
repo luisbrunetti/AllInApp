@@ -8,6 +8,7 @@ import com.tawa.allinapp.features.coverage.CoverageViewModel
 import com.tawa.allinapp.features.informs.InformsViewModel
 import com.tawa.allinapp.features.init.InitViewModel
 import com.tawa.allinapp.features.movies.MoviesViewModel
+import com.tawa.allinapp.features.pdv.PdvViewModel
 import com.tawa.allinapp.features.reports.audio.AudioViewModel
 import com.tawa.allinapp.features.reports.picture.PictureViewModel
 import com.tawa.allinapp.features.reports.standard.CheckListViewModel
@@ -94,5 +95,10 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(CoverageViewModel::class)
     abstract fun bindsCoverageViewModel(coverageViewModel: CoverageViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(PdvViewModel::class)
+    abstract fun bindsPdvViewModel(pdvViewModel: PdvViewModel): ViewModel
 
 }

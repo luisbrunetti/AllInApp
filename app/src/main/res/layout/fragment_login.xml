@@ -123,9 +123,12 @@
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
                         android:background="@null"
+                        android:fontFamily="monospace"
                         android:hint="Contraseña"
                         android:inputType="textPassword"
-                        android:text="@={viewModel.password}" />
+                        android:text="@={viewModel.password}"
+                        android:textStyle="normal"
+                        android:typeface="normal" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <CheckBox

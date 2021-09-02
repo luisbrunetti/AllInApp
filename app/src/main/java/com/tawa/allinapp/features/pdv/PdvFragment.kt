@@ -1,4 +1,4 @@
-package com.tawa.allinapp.features.informs
+package com.tawa.allinapp.features.pdv
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,14 +7,13 @@ import android.view.ViewGroup
 import com.tawa.allinapp.core.extensions.observe
 import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.platform.BaseFragment
-
+import com.tawa.allinapp.databinding.FragmentCalendarBinding
 import com.tawa.allinapp.databinding.FragmentPdvBinding
 
-class PDVFragment : BaseFragment() {
+class PdvFragment : BaseFragment() {
 
-    private lateinit var informsViewModel: InformsViewModel
+    private lateinit var pdvViewModel: PdvViewModel
     private lateinit var binding: FragmentPdvBinding
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         appComponent.inject(this)
@@ -22,14 +21,21 @@ class PDVFragment : BaseFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentPdvBinding.inflate(inflater)
-        informsViewModel = viewModel(viewModelFactory) {
+        pdvViewModel = viewModel(viewModelFactory) {
             observe(text, {
                 it?.let {
-                    binding.tvInforms.text = it
+                  
                 }
             })
+        }
+        binding.btnShowModalPhotoPdv.setOnClickListener {
+            showDialogTakePhoto()
         }
         return binding.root
     }
 
+    private fun showDialogTakePhoto(){
+        val dialog = TakePhotoDialogFragment()
+        dialog.show(childFragmentManager,"")
+    }
 }

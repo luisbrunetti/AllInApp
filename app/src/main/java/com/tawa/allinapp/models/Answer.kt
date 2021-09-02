@@ -12,5 +12,7 @@ data class Answer(
     val idUserModifier: String?,
     val dateModify: String?,
     val dateCreation: String,
-    val data:String
+    val data:String,
+    val nameQuestion: String,
+    val objectType :String,
 )

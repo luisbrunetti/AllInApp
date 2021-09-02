@@ -158,7 +158,7 @@ class InitFragment : BaseFragment() {
             findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationRoutes())
         }
         binding.viewBtnPV.setOnClickListener {
-            findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationPdv())
+            findNavController().navigate(InitFragmentDirections.actionNavigationInitToPdvFragment())
         }
         binding.viewBtnCalendar.setOnClickListener {
             findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationCalendar())

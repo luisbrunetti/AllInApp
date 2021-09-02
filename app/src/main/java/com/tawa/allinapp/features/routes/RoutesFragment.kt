@@ -21,6 +21,8 @@ import com.tawa.allinapp.models.Routes
 import com.tawa.allinapp.models.RoutesUser
 import com.tawa.allinapp.models.Tracking
 import kotlinx.android.synthetic.main.fragment_routes.*
+import java.sql.Timestamp
+import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -29,6 +31,9 @@ class RoutesFragment : BaseFragment() {
 
     private lateinit var routesViewModel: RoutesViewModel
     private lateinit var binding: FragmentRoutesBinding
+    private  val formatter: SimpleDateFormat = SimpleDateFormat("dd/MM/yyyy")
+    private  val formatter1: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd")
+    var timestamp: Timestamp = Timestamp(System.currentTimeMillis())
     var listUserData  = listOf<RoutesUser>()
     private var listRoutesUser  = listOf<Routes>()
     var listTrackingUser  = listOf<Tracking>()
@@ -126,6 +131,8 @@ class RoutesFragment : BaseFragment() {
             else
                 routesViewModel.getTracking(newList[0].id,dateFormat)
         }
+        binding.edDateUserRoutes.setText(formatter.format(timestamp))
+        dateFormat = formatter1.format(timestamp)
         return binding.root
     }
 

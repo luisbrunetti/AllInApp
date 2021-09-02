@@ -8,6 +8,7 @@ import com.tawa.allinapp.core.functional.NetworkHandler
 import com.tawa.allinapp.data.local.Prefs
 import com.tawa.allinapp.data.local.datasource.QuestionsDataSource
 import com.tawa.allinapp.data.local.datasource.ReportsDataSource
+import com.tawa.allinapp.data.local.models.AnswerModel
 import com.tawa.allinapp.data.local.models.AnswersPvModel
 import com.tawa.allinapp.data.local.models.ReadyAnswerModel
 import com.tawa.allinapp.data.remote.service.QuestionsService
@@ -20,7 +21,7 @@ interface QuestionsRepository {
     fun setQuestions(idReport: String): Either<Failure, Boolean>
     fun setAudioQuestion(): Either<Failure, Boolean>
     fun setReadyAnswers(id: Int, idQuestion: String, nameQuestion: String, idAnswer : String, nameAnswer: String, img : String): Either<Failure, Boolean>
-    fun getQuestions(idReport: String): Either<Failure,List<Question>>
+    fun getQuestions(idReport: String): Either<Failure,List<Answer>>
     fun getAnswers(idQuestion: String): Either<Failure,List<Answer>>
     fun updateAnswers(idAnswer:String,data:String): Either<Failure, Boolean>
     fun changeState(state: Boolean,verify:Boolean):Either<Failure, Boolean>
@@ -48,7 +49,7 @@ interface QuestionsRepository {
                                             Log.d("PREGUNTAS",it.toString())
                                             questionsDataSource.insertQuestions(it.question.toModel())
                                             for(answers in it.answers )
-                                                questionsDataSource.insertAnswers(answers.toModel()) }
+                                                questionsDataSource.insertAnswers(AnswerModel(answers.id,answers.status,answers.answerName,answers.order,answers.idQuestion,answers.idUserCreator,answers.idUserModifier,answers.dateModify,answers.dateCreation,"",it.question.questionName,it.question.objectType)) }
                                         Either.Right(true)
                                     }
                                     else Either.Left(Failure.DefaultError(body.message))
@@ -103,9 +104,18 @@ interface QuestionsRepository {
         }
 
 
-        override fun getQuestions(idReport :String): Either<Failure, List<Question>> {
+        override fun getQuestions(idReport :String): Either<Failure, List<Answer>> {
             return try {
-                Either.Right(questionsDataSource.getQuestionsByIdReport(idReport).map { it.toView() })
+                val questions = questionsDataSource.getQuestionsByIdReport(idReport).map { it.toView() }
+                val listAnswers = mutableListOf<Answer>()
+               questions.forEach {
+                   val count  = questionsDataSource.getCountPvAnswers(prefs.pvId?:"",it.id)
+                   if(count==0)
+                      listAnswers.addAll(questionsDataSource.getAnswers(it.id).map { it.toView() })
+                   else
+                      listAnswers.addAll(questionsDataSource.getAnswersPv(it.id,prefs.pvId?:"",prefs.idUser?:"").map { it.toView() })
+                    }
+                Either.Right(listAnswers)
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))
             }
@@ -122,7 +132,6 @@ interface QuestionsRepository {
         override fun getAnswers(idQuestion:String): Either<Failure, List<Answer>> {
             return try {
                 val count  = questionsDataSource.getCountPvAnswers(prefs.pvId?:"",idQuestion)
-                Log.d("count",count.toString())
                 if(count==0)
                     Either.Right(questionsDataSource.getAnswers(idQuestion).map { it.toView() })
                 else

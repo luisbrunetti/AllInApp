@@ -26,8 +26,8 @@ class CheckListViewModel
     val text: LiveData<String>
         get()= _text
 
-    private val _questions = MutableLiveData<List<Question>>()
-    val questions: LiveData<List<Question>>
+    private val _questions = MutableLiveData<List<Answer>>()
+    val questions: LiveData<List<Answer>>
         get()= _questions
 
     private val _nameQuestion = MutableLiveData<String>("")
@@ -37,6 +37,10 @@ class CheckListViewModel
     private val _orderRadio = MutableLiveData<Int>(0)
     val orderRadio: LiveData<Int>
         get()= _orderRadio
+
+    private val _orderGen = MutableLiveData<Int>(0)
+    val orderGen: LiveData<Int>
+        get()= _orderGen
 
     private val _orderCheckBox = MutableLiveData<Int>(0)
     val orderCheckBox: LiveData<Int>
@@ -49,6 +53,10 @@ class CheckListViewModel
     private val _answersRadio = MutableLiveData<List<Answer>>()
     val answersRadio: LiveData<List<Answer>>
         get()= _answersRadio
+
+    private val _answersGen = MutableLiveData<List<Answer>>()
+    val answersGen: LiveData<List<Answer>>
+        get()= _answersGen
 
     private val _answersAll = MutableLiveData<List<Answer>>()
     val answersAll: LiveData<List<Answer>>
@@ -126,7 +134,7 @@ class CheckListViewModel
 
     fun getQuestions(idReport: String) = getQuestions(GetQuestions.Params(idReport)) { it.either(::handleFailure, ::handleQuestions) }
 
-    private fun handleQuestions(questions : List<Question>) {
+    private fun handleQuestions(questions : List<Answer>) {
         _questions.value = questions
     }
 
@@ -143,6 +151,15 @@ class CheckListViewModel
 
     private fun handleAnswersRadio(answers : List<Answer>) {
         _answersRadio.value = answers
+    }
+
+    fun getAnswersGen(idQuestion:String,nameQ: String,order:Int) = getAnswers(GetAnswers.Params(idQuestion)) {
+        _nameQuestion.value = nameQ
+        _orderGen.value = order
+        it.either(::handleFailure, ::handleAnswersGen) }
+
+    private fun handleAnswersGen(answers : List<Answer>) {
+        _answersGen.value = answers
     }
 
     fun getAnswersAll(idQuestion:String) = getAnswers(GetAnswers.Params(idQuestion)) {

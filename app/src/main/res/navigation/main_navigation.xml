@@ -28,6 +28,9 @@
         <action
             android:id="@+id/action_navigation_init_to_sendPasswordFragment"
             app:destination="@id/sendPasswordFragment" />
+        <action
+            android:id="@+id/action_navigation_init_to_pdvFragment"
+            app:destination="@id/navigation_pdv" />
     </fragment>
 
     <fragment
@@ -70,12 +73,6 @@
 
         </action>
     </fragment>
-
-    <fragment
-        android:id="@+id/navigation_pdv"
-        android:name="com.tawa.allinapp.features.informs.PDVFragment"
-        android:label="@string/title_pdv"
-        tools:layout="@layout/fragment_calendar" />
 
     <fragment
         android:id="@+id/navigation_calendar"
@@ -175,5 +172,11 @@
             app:argType="com.tawa.allinapp.models.CoverageGraph"
             app:nullable="true"/>
     </fragment>
+
+    <fragment
+        android:id="@+id/navigation_pdv"
+        android:name="com.tawa.allinapp.features.pdv.PdvFragment"
+        android:label="fragment_pdv"
+        tools:layout="@layout/fragment_pdv" />
 
 </navigation>

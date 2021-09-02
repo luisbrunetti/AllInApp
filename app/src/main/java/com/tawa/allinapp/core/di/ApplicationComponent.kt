@@ -10,7 +10,6 @@ import com.tawa.allinapp.features.calendar.CalendarFragment
 import com.tawa.allinapp.features.coverage.CoverageBoardFragment
 import com.tawa.allinapp.features.coverage.CoverageBoardGraphFragment
 import com.tawa.allinapp.features.informs.InformsFragment
-import com.tawa.allinapp.features.informs.PDVFragment
 import com.tawa.allinapp.features.init.ui.CheckInDialogFragment
 import com.tawa.allinapp.features.init.ui.InitFragment
 import com.tawa.allinapp.features.init.ui.SendPasswordFragment
@@ -18,6 +17,7 @@ import com.tawa.allinapp.features.init.ui.SendPasswordFragment
 
 import com.tawa.allinapp.features.location.LocationFragment
 import com.tawa.allinapp.features.movies.ui.MoviesFragment
+import com.tawa.allinapp.features.pdv.PdvFragment
 import com.tawa.allinapp.features.reports.audio.AudioFragment
 import com.tawa.allinapp.features.reports.picture.PictureFragment
 import com.tawa.allinapp.features.reports.standard.CheckListFragment
@@ -40,7 +40,6 @@ interface ApplicationComponent{
     fun inject(loginActivity: LoginActivity)
     fun inject(moviesFragment: MoviesFragment)
     fun inject(locationFragment: LocationFragment)
-    fun inject(informsFragment: PDVFragment)
     fun inject(calendarFragment: CalendarFragment)
     fun inject(reportsFragment: ReportsFragment)
     fun inject(loginFragment: LoginFragment)
@@ -60,4 +59,5 @@ interface ApplicationComponent{
     fun inject(sendPasswordFragment: SendPasswordFragment)
     fun inject(coverageBoardFragment: CoverageBoardFragment)
     fun inject(coverageBoardGraphFragment: CoverageBoardGraphFragment)
+    fun inject(pdvFragment: PdvFragment)
 }
