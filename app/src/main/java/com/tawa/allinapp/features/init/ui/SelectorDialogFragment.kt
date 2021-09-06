@@ -93,14 +93,12 @@ class SelectorDialogFragment
         }
         binding.btnAccessHome.setOnClickListener {
             baseFragment.showProgressDialog()
-            listener?.onAccept()
             val positionCompany = binding.spinnerCompany.selectedItemPosition
             selectedCompany = listCompany[positionCompany].id
             initViewModel.setIdCompany(selectedCompany)
-
-           // initViewModel.getAudioRemote()
+            // initViewModel.getAudioRemote()
             initViewModel.getReportsSku(selectedCompany)
-
+            initViewModel.getPdvRemote(selectedCompany)
         }
     }
 
