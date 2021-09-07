@@ -6,15 +6,15 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Base64
-import android.util.Base64OutputStream
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
-import android.widget.Toast
+import android.widget.ImageView
+import androidx.annotation.RequiresApi
 import androidx.core.net.toUri
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.karumi.dexter.Dexter
@@ -32,24 +32,28 @@ import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.FragmentPictureBinding
 import com.tawa.allinapp.features.reports.sku.ConfirmDialogFragment
 import com.tawa.allinapp.models.PhotoReport
+import it.sephiroth.android.library.xtooltip.Tooltip
+import kotlinx.android.synthetic.main.fragment_picture.*
 import java.io.ByteArrayOutputStream
-import java.io.File
 import java.util.*
 import javax.inject.Inject
 
 class PictureFragment : BaseFragment() {
 
-    private lateinit var binding:FragmentPictureBinding
+    private lateinit var binding: FragmentPictureBinding
     private lateinit var pictureViewModel: PictureViewModel
 
-    @Inject lateinit var pictureBeforeAdapter: PictureBeforeAdapter
-    @Inject lateinit var pictureAfterAdapter: PictureAfterAdapter
+    @Inject
+    lateinit var pictureBeforeAdapter: PictureBeforeAdapter
+    @Inject
+    lateinit var pictureAfterAdapter: PictureAfterAdapter
 
     private val before = 200
     private val after = 300
     private var state = true
 
     private var photoReport: PhotoReport? = null
+    private var tooltip: Tooltip? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,14 +64,16 @@ class PictureFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         setUpBinding()
         checkPermissions()
-        binding.rvPhotoBefore.layoutManager = LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
+        binding.rvPhotoBefore.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.rvPhotoBefore.adapter = pictureBeforeAdapter
         pictureBeforeAdapter.clickListener = { openImage(it) }
         pictureBeforeAdapter.deleteListener = {
             pictureBeforeAdapter.collection.remove(it)
             pictureBeforeAdapter.notifyDataSetChanged()
         }
-        binding.rvPhotoAfter.layoutManager = LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
+        binding.rvPhotoAfter.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.rvPhotoAfter.adapter = pictureAfterAdapter
         pictureAfterAdapter.clickListener = { openImage(it) }
         pictureAfterAdapter.deleteListener = {
@@ -75,55 +81,78 @@ class PictureFragment : BaseFragment() {
             pictureAfterAdapter.notifyDataSetChanged()
         }
         pictureViewModel.getPhotoReport()
+        binding.ivInformationPointSale.setOnClickListener { setTextToolTip() }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         binding = FragmentPictureBinding.inflate(inflater)
-        if(arguments?.getString("state")=="Enviado"){
+        if (arguments?.getString("state") == "Enviado") {
             disableComponents()
         }
-        pictureViewModel = viewModel(viewModelFactory){
-            observe(successReport,{ it?.let {
-                if(it) hideProgressDialog()
-            }})
-            observe(errorMessage, { it?.let {
-                if (it.isNotEmpty()) MessageDialogFragment.newInstance(it).show(childFragmentManager, "dialog")
-            }})
-            observe(successSyncPhotoReports, { it?.let {
-                hideProgressDialog()
-                if(it){
-                    pictureViewModel.saveReport(photoReport,"Enviado")
-                    activity?.onBackPressed()
+        pictureViewModel = viewModel(viewModelFactory) {
+            observe(successReport, {
+                it?.let {
+                    if (it) hideProgressDialog()
                 }
-            }})
-            observe(successDeletePhotoReports, { it?.let {
-                hideProgressDialog()
-            }})
-            observe(report, { it?.let {
-                pictureAfterAdapter.setData(it.after)
-                pictureBeforeAdapter.setData(it.before)
-                binding.tvComments.setText(it.comments)
-                getLastLocation()
-                it.apply {
-                    before = pictureBeforeAdapter.collection
-                    after = pictureAfterAdapter.collection
-                    comments = binding.tvComments.text.toString()
-                    syncLongitude = longitude
-                    syncLatitude = latitude
-                    syncAt = Calendar.getInstance().time.toString()
-                    syncLatitude = longitude
+            })
+            observe(errorMessage, {
+                it?.let {
+                    if (it.isNotEmpty()) MessageDialogFragment.newInstance(it)
+                        .show(childFragmentManager, "dialog")
                 }
-                photoReport = it
-            }})
-            failure(failure, { it?.let {
-                hideProgressDialog()
-                when(it){
-                    is Failure.DefaultError         -> pictureViewModel.setError(it.message ?: getString(R.string.error_unknown))
-                    is Failure.NetworkConnection    -> notify(activity,R.string.error_network_ok)
-                    is Failure.ServerError          -> MessageDialogFragment.newInstance(getString(R.string.error_network)).show(childFragmentManager, "dialog")
-                    else                            -> MessageDialogFragment.newInstance(getString(R.string.error_unknown)).show(childFragmentManager, "dialog")
+            })
+            observe(successSyncPhotoReports, {
+                it?.let {
+                    hideProgressDialog()
+                    if (it) {
+                        pictureViewModel.saveReport(photoReport, "Enviado")
+                        activity?.onBackPressed()
+                    }
                 }
-            }})
+            })
+            observe(successDeletePhotoReports, {
+                it?.let {
+                    hideProgressDialog()
+                }
+            })
+            observe(report, {
+                it?.let {
+                    pictureAfterAdapter.setData(it.after)
+                    pictureBeforeAdapter.setData(it.before)
+                    binding.tvComments.setText(it.comments)
+                    getLastLocation()
+                    it.apply {
+                        before = pictureBeforeAdapter.collection
+                        after = pictureAfterAdapter.collection
+                        comments = binding.tvComments.text.toString()
+                        syncLongitude = longitude
+                        syncLatitude = latitude
+                        syncAt = Calendar.getInstance().time.toString()
+                        syncLatitude = longitude
+                    }
+                    photoReport = it
+                }
+            })
+            failure(failure, {
+                it?.let {
+                    hideProgressDialog()
+                    when (it) {
+                        is Failure.DefaultError -> pictureViewModel.setError(
+                            it.message ?: getString(R.string.error_unknown)
+                        )
+                        is Failure.NetworkConnection -> notify(activity, R.string.error_network_ok)
+                        is Failure.ServerError -> MessageDialogFragment.newInstance(getString(R.string.error_network))
+                            .show(childFragmentManager, "dialog")
+                        else -> MessageDialogFragment.newInstance(getString(R.string.error_unknown))
+                            .show(childFragmentManager, "dialog")
+                    }
+                }
+            })
         }
         binding.btTakePhotoBefore.setOnClickListener {
             checkCameraPermissions(before)
@@ -139,15 +168,15 @@ class PictureFragment : BaseFragment() {
                 pictureAfterAdapter.collection,
                 binding.tvComments.text.toString(),
                 Calendar.getInstance().time.toString(),
-                longitude.toDouble(),latitude.toDouble(),
-                longitude.toDouble(),latitude.toDouble(),
+                longitude.toDouble(), latitude.toDouble(),
+                longitude.toDouble(), latitude.toDouble(),
                 Calendar.getInstance().time.toString(),
             )
-            pictureViewModel.saveReport(report,"En proceso")
+            pictureViewModel.saveReport(report, "En proceso")
         }
         binding.btSendPictures.setOnClickListener {
             val confirm = ConfirmDialogFragment()
-            confirm.listener = object  : ConfirmDialogFragment.Callback{
+            confirm.listener = object : ConfirmDialogFragment.Callback {
                 override fun onClick() {
                     showProgressDialog()
                     pictureViewModel.syncPhotoReport()
@@ -159,14 +188,14 @@ class PictureFragment : BaseFragment() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        when(requestCode){
-            before -> if(resultCode==Activity.RESULT_OK) {
+        when (requestCode) {
+            before -> if (resultCode == Activity.RESULT_OK) {
                 val bitmap = data!!.extras?.get("data") as Bitmap
                 val uri = getImageUri(activity?.applicationContext!!, bitmap)
                 pictureBeforeAdapter.collection.add(convertBase64(bitmap)!!)
                 pictureBeforeAdapter.notifyDataSetChanged()
             }
-            after -> if(resultCode==Activity.RESULT_OK) {
+            after -> if (resultCode == Activity.RESULT_OK) {
                 val bitmap = data!!.extras?.get("data") as Bitmap
                 val uri = getImageUri(activity?.applicationContext!!, bitmap)
                 pictureAfterAdapter.collection.add(convertBase64(bitmap)!!)
@@ -175,19 +204,25 @@ class PictureFragment : BaseFragment() {
         }
     }
 
-    private fun openImage(image:String){
+    private fun openImage(image: String) {
         val intent = Intent()
         intent.action = Intent.ACTION_VIEW
         intent.setDataAndType(image.toUri(), "image/*")
         activity?.startActivity(intent)
     }
 
-    private fun checkCameraPermissions(origin:Int){
+    private fun checkCameraPermissions(origin: Int) {
         Dexter.withActivity(activity)
-            .withPermissions(Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE)
-            .withListener(object: MultiplePermissionsListener {
-                override fun onPermissionsChecked(report: MultiplePermissionsReport?) { launchCamera(origin) }
-                override fun onPermissionRationaleShouldBeShown(permissions: MutableList<PermissionRequest>?, token: PermissionToken?) {
+            .withPermissions(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            .withListener(object : MultiplePermissionsListener {
+                override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
+                    launchCamera(origin)
+                }
+
+                override fun onPermissionRationaleShouldBeShown(
+                    permissions: MutableList<PermissionRequest>?,
+                    token: PermissionToken?
+                ) {
                     token?.continuePermissionRequest()
                 }
             }).check()
@@ -199,14 +234,15 @@ class PictureFragment : BaseFragment() {
         return Base64.encodeToString(outputStream.toByteArray(), Base64.DEFAULT)
     }
 
-    private fun launchCamera(origin:Int){
+    private fun launchCamera(origin: Int) {
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         startActivityForResult(intent, origin)
     }
 
     private fun getImageUri(inContext: Context, inImage: Bitmap?): Uri? {
         val image = Bitmap.createScaledBitmap(inImage!!, 300, 300, true)
-        val path = MediaStore.Images.Media.insertImage(inContext.contentResolver, image, "documents", null)
+        val path =
+            MediaStore.Images.Media.insertImage(inContext.contentResolver, image, "documents", null)
         return Uri.parse(path)
     }
 
@@ -216,7 +252,7 @@ class PictureFragment : BaseFragment() {
         binding.executePendingBindings()
     }
 
-    private fun disableComponents(){
+    private fun disableComponents() {
         binding.btTakePhotoBefore.apply {
             isEnabled = false
             alpha = 0.5F
@@ -236,6 +272,22 @@ class PictureFragment : BaseFragment() {
         binding.tvComments.apply {
             isEnabled = false
             alpha = 0.5F
+        }
+    }
+    private fun setTextToolTip() {
+        tooltip?.dismiss()
+        tooltip = Tooltip.Builder(requireContext())
+            .text("Máximo solo cinco fotos")
+            .anchor(binding.ivInformationPointSale,0,0,false)
+            .overlay(false)
+            .showDuration(2000L)
+            .styleId(R.style.ToolTipAltStyle)
+            .arrow(true)
+            .create()
+        tooltip?.let {
+            tooltip?.doOnHidden {  }
+                ?.doOnShown {  }
+                ?.show(binding.ivInformationPointSale,Tooltip.Gravity.RIGHT,false)
         }
     }
 }

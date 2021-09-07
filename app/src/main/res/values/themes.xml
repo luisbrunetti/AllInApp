@@ -14,6 +14,16 @@
         <item name="windowActionBar">false</item>
         <item name="android:windowBackground">@drawable/splashscreen</item>
     </style>
+    <!-- default style -->
+    <style name="ToolTipAltStyle" parent="ToolTipLayoutDefaultStyle">
+        <item name="ttlm_padding">16dp</item>
+        <item name="ttlm_backgroundColor">@color/colorLayoutTop</item>
+        <item name="ttlm_cornerRadius">6dp</item>
+        <item name="ttlm_arrowRatio">1.2</item>
+        <item name="textFillColor">@color/white</item>
+
+    </style>
+
 
     <style name="mySpinnerItemStyle" parent="@android:style/Widget.Holo.DropDownItem.Spinner">
         <item name="android:textColor">@color/colorPrimary</item>

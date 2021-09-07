@@ -60,7 +60,6 @@ class ApplicationModule(private val application: Application){
     @Provides @Singleton fun providesCheckDao(demoDatabase:AllInAppDatabase) : CheckDao { return demoDatabase.checkDao() }
     @Provides @Singleton fun providesReportDao(demoDatabase:AllInAppDatabase) : ReportsDao { return demoDatabase.reportsDao() }
     @Provides @Singleton fun providesQuestionDao(demoDatabase:AllInAppDatabase) : QuestionsDao { return demoDatabase.questionsDao() }
-    @Provides @Singleton fun providesPdvDao(demoDatabase:AllInAppDatabase) : PdvDao { return demoDatabase.pdvDao() }
 
     @Provides @Singleton fun provideMoviesRepository(dataSource: MoviesRepository.Network): MoviesRepository = dataSource
     @Provides @Singleton fun provideAuthRepository(dataSource: AuthRepository.Network): AuthRepository = dataSource
@@ -70,6 +69,5 @@ class ApplicationModule(private val application: Application){
     @Provides @Singleton fun provideQuestionRepository(dataSource: QuestionsRepository.Network): QuestionsRepository = dataSource
     @Provides @Singleton fun provideRoutesRepository(dataSource: RoutesRepository.Network): RoutesRepository = dataSource
     @Provides @Singleton fun provideDashboardRepository(dataSource: DashboardRepository.Network): DashboardRepository = dataSource
-    @Provides @Singleton fun providePdvRepository(dataSource:PdvRepository.Network): PdvRepository = dataSource
 
 }

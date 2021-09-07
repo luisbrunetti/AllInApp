@@ -40,8 +40,7 @@ class InitViewModel
     private val syncAudio: SyncAudio,
     private val getAudioRemote: GetAudioRemote,
     private val listReports: ListReports,
-    private val sendPassword: SendPassword,
-    private val getPdvRemote: GetPdvRemote
+    private val sendPassword: SendPassword
 
 ) : BaseViewModel()  {
     private  val formatter: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
@@ -184,10 +183,6 @@ class InitViewModel
     private val _successSendPassword = MutableLiveData<Boolean>(false)
     val successSendPassword: LiveData<Boolean>
         get() = _successSendPassword
-
-    private val _successGetPdvRemote = MutableLiveData<Boolean>(false)
-    val successGetPdvRemote: LiveData<Boolean>
-        get() = _successGetPdvRemote
 
     init {
         startHome()
@@ -372,13 +367,6 @@ class InitViewModel
 
     private fun handleSendPassword(success: Boolean) {
         this._successSendPassword.value = success
-    }
-
-    fun getPdvRemote(idCompany: String) =getPdvRemote(GetPdvRemote.Params(idCompany)) {
-        it.either(::handleFailure, ::handleGetPdvRemote) }
-
-    private fun handleGetPdvRemote(success: Boolean) {
-        this._successGetPdvRemote.value = success
     }
 
 }

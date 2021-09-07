@@ -30,11 +30,7 @@
             app:destination="@id/sendPasswordFragment" />
         <action
             android:id="@+id/action_navigation_init_to_pdvFragment"
-            app:destination="@id/navigation_pdv" >
-            <argument
-                android:name="id"
-                app:argType="string"/>
-        </action>
+            app:destination="@id/navigation_pdv" />
     </fragment>
 
     <fragment
@@ -46,12 +42,16 @@
         <action
             android:id="@+id/action_navigation_reports_to_checkListFragment"
             app:destination="@id/checkListFragment" >
+
             <argument
                 android:name="id"
                 app:argType="string"/>
+
             <argument
                 android:name="name"
                 app:argType="string"/>
+
+
         </action>
         <action
             android:id="@+id/action_navigation_reports_to_pictureFragment"

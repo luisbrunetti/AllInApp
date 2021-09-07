@@ -113,14 +113,14 @@
             app:layout_constraintTop_toBottomOf="@+id/view9">
 
             <com.facebook.drawee.view.SimpleDraweeView
-                android:id="@+id/headerPhotoPdv"
+                android:id="@+id/headerPhoto"
                 android:layout_width="match_parent"
                 android:layout_height="170dp"
                 android:elevation="0dp"
                 android:visibility="visible"
                 app:failureImageScaleType="center"
-                app:placeholderImage="@drawable/ic_img"
-                app:placeholderImageScaleType="center"
+                app:placeholderImage="@drawable/demo_imge"
+                app:placeholderImageScaleType="centerCrop"
                 app:roundBottomLeft="false"
                 app:roundBottomRight="false" />
 
@@ -149,12 +149,11 @@
                     android:text="Datos del punto de venta"
                     android:textColor="@color/colorMain"
                     android:textSize="16sp"
-                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/edRuc"
+                    app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName3"
                     app:layout_constraintVertical_bias="0.0" />
 
                 <TextView
@@ -197,7 +196,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/btnUpdateLocation" />
+                    app:layout_constraintTop_toBottomOf="@+id/btnSaveReport2" />
 
                 <TextView
                     android:id="@+id/textView38"
@@ -211,7 +210,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/edNameContact" />
+                    app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName" />
 
                 <TextView
                     android:id="@+id/textView41"
@@ -222,7 +221,6 @@
                     android:text="Distrito"
                     android:textColor="@color/text_dark"
                     android:textSize="15sp"
-                    android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
@@ -237,7 +235,6 @@
                     android:text="Cuota"
                     android:textColor="@color/text_dark"
                     android:textSize="15sp"
-                    android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
@@ -252,7 +249,6 @@
                     android:text="Venta"
                     android:textColor="@color/text_dark"
                     android:textSize="15sp"
-                    android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
@@ -267,7 +263,6 @@
                     android:text="Alcance"
                     android:textColor="@color/text_dark"
                     android:textSize="15sp"
-                    android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
@@ -282,7 +277,6 @@
                     android:text="Rotación"
                     android:textColor="@color/text_dark"
                     android:textSize="15sp"
-                    android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
@@ -297,7 +291,6 @@
                     android:text="Criterio de cuenta"
                     android:textColor="@color/text_dark"
                     android:textSize="15sp"
-                    android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
@@ -313,7 +306,6 @@
                     android:textColor="@color/text_dark"
                     android:textSize="15sp"
                     android:textStyle="bold"
-                    android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
@@ -329,7 +321,6 @@
                     android:textColor="@color/text_dark"
                     android:textSize="15sp"
                     android:textStyle="bold"
-                    android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
@@ -345,7 +336,6 @@
                     android:textColor="@color/text_dark"
                     android:textSize="15sp"
                     android:textStyle="bold"
-                    android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
@@ -361,7 +351,6 @@
                     android:textColor="@color/text_dark"
                     android:textSize="15sp"
                     android:textStyle="bold"
-                    android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
@@ -377,7 +366,6 @@
                     android:textColor="@color/text_dark"
                     android:textSize="15sp"
                     android:textStyle="bold"
-                    android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
@@ -394,7 +382,6 @@
                     android:textColor="@color/text_dark"
                     android:textSize="15sp"
                     android:textStyle="bold"
-                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
@@ -414,10 +401,10 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/edPhoneContact" />
+                    app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName2" />
 
                 <Button
-                    android:id="@+id/showLocationPdv"
+                    android:id="@+id/button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="36dp"
@@ -434,7 +421,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/textView35" />
 
                 <Button
-                    android:id="@+id/btnUpdateLocation"
+                    android:id="@+id/btnSaveReport2"
                     android:layout_width="0dp"
                     android:layout_height="48dp"
                     android:layout_marginStart="16dp"
@@ -448,10 +435,10 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/showLocationPdv" />
+                    app:layout_constraintTop_toBottomOf="@+id/button" />
 
                 <Button
-                    android:id="@+id/btnUpdatePdvRemote"
+                    android:id="@+id/btnSaveReport3"
                     android:layout_width="0dp"
                     android:layout_height="48dp"
                     android:layout_marginStart="16dp"
@@ -469,10 +456,10 @@
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView53"
-                    app:layout_constraintVertical_bias="0.0" />
+                    app:layout_constraintVertical_bias="1.0" />
 
                 <EditText
-                    android:id="@+id/edNameContact"
+                    android:id="@+id/editTextTextPersonName"
                     android:layout_width="0dp"
                     android:layout_height="50dp"
                     android:layout_marginStart="36dp"
@@ -490,7 +477,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/textView37" />
 
                 <EditText
-                    android:id="@+id/edPhoneContact"
+                    android:id="@+id/editTextTextPersonName2"
                     android:layout_width="0dp"
                     android:layout_height="50dp"
                     android:layout_marginStart="36dp"
@@ -510,7 +497,7 @@
                     app:layout_constraintVertical_bias="0.0" />
 
                 <EditText
-                    android:id="@+id/edRuc"
+                    android:id="@+id/editTextTextPersonName3"
                     android:layout_width="0dp"
                     android:layout_height="50dp"
                     android:layout_marginStart="36dp"

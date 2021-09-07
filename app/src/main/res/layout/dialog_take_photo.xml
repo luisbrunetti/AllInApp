@@ -41,8 +41,8 @@
                     android:layout_height="260dp"
                     android:adjustViewBounds="true"
                     android:scaleType="center"
-                    app:placeholderImage="@drawable/ic_img"
-                    app:placeholderImageScaleType="center">
+                    app:placeholderImage="@drawable/demo_imge"
+                    app:placeholderImageScaleType="focusCrop">
 
                 </com.facebook.drawee.view.SimpleDraweeView>
             </androidx.cardview.widget.CardView>
