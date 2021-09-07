@@ -56,7 +56,9 @@ abstract class BaseFragment : Fragment() {
 
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    open fun onBackPressed() {}
+    open fun onBackPressed() {
+
+    }
 
     internal fun firstTimeCreated(savedInstanceState: Bundle?) = savedInstanceState == null
 

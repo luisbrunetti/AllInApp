@@ -10,6 +10,7 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Base64
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -154,6 +155,7 @@ class PictureFragment : BaseFragment() {
                 }
             })
         }
+        binding.iHeader.ivHeader.setOnClickListener { activity?.onBackPressed() }
         binding.btTakePhotoBefore.setOnClickListener {
             checkCameraPermissions(before)
         }
@@ -173,6 +175,7 @@ class PictureFragment : BaseFragment() {
                 Calendar.getInstance().time.toString(),
             )
             pictureViewModel.saveReport(report, "En proceso")
+            activity?.onBackPressed()
         }
         binding.btSendPictures.setOnClickListener {
             val confirm = ConfirmDialogFragment()
@@ -193,6 +196,7 @@ class PictureFragment : BaseFragment() {
                 val bitmap = data!!.extras?.get("data") as Bitmap
                 val uri = getImageUri(activity?.applicationContext!!, bitmap)
                 pictureBeforeAdapter.collection.add(convertBase64(bitmap)!!)
+                Log.d("Collections", pictureBeforeAdapter.toString())
                 pictureBeforeAdapter.notifyDataSetChanged()
             }
             after -> if (resultCode == Activity.RESULT_OK) {
