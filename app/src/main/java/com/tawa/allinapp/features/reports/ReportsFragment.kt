@@ -2,6 +2,7 @@ package com.tawa.allinapp.features.reports
 
 import android.app.DatePickerDialog
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -47,12 +48,13 @@ class ReportsFragment : BaseFragment() {
         binding.rvReports.layoutManager = LinearLayoutManager(context)
         binding.rvReports.adapter = reportsAdapter
         reportsAdapter.clickListener = {
+            Log.d("reportname",it.reportName)
             when(it.reportName){
                 /*"CHECK LIST PUNTO DE VENTA" -> findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToCheckListFragment(it.id))
                 //"REPORTE FOTOGRAFICO" -> findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToPictureFragment())
                // "ESTATUS DE USUARIO" -> findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToUserStatusFragment())
                 "LEVANTAMIENTO DE INFORMACIÓN" -> findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToCheckListFragment(it.id))*/
-                "REPORTE DE AUDIO" -> findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToAudioFragment(it.id))
+                "REPORTE DE AUDIOS" -> findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToAudioFragment(it.id))
                 else->  findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToCheckListFragment(it.id,it.reportName))
             }
         }

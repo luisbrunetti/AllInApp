@@ -218,7 +218,6 @@
                         android:layout_width="0dp"
                         android:layout_height="64dp"
                         android:layout_marginStart="36dp"
-                        android:layout_marginTop="10dp"
                         android:layout_marginEnd="36dp"
                         android:background="@drawable/bg_item_view"
                         android:elevation="5dp"

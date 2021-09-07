@@ -23,6 +23,7 @@ import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
+import com.skydoves.balloon.*
 import com.tawa.allinapp.R
 import com.tawa.allinapp.core.dialog.MessageDialogFragment
 import com.tawa.allinapp.core.extensions.failure
@@ -33,8 +34,6 @@ import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.FragmentPictureBinding
 import com.tawa.allinapp.features.reports.sku.ConfirmDialogFragment
 import com.tawa.allinapp.models.PhotoReport
-import it.sephiroth.android.library.xtooltip.Tooltip
-import kotlinx.android.synthetic.main.fragment_picture.*
 import java.io.ByteArrayOutputStream
 import java.util.*
 import javax.inject.Inject
@@ -54,7 +53,7 @@ class PictureFragment : BaseFragment() {
     private var state = true
 
     private var photoReport: PhotoReport? = null
-    private var tooltip: Tooltip? = null
+    private var balloon: Balloon? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,16 +64,14 @@ class PictureFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         setUpBinding()
         checkPermissions()
-        binding.rvPhotoBefore.layoutManager =
-            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.rvPhotoBefore.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.rvPhotoBefore.adapter = pictureBeforeAdapter
         pictureBeforeAdapter.clickListener = { openImage(it) }
         pictureBeforeAdapter.deleteListener = {
             pictureBeforeAdapter.collection.remove(it)
             pictureBeforeAdapter.notifyDataSetChanged()
         }
-        binding.rvPhotoAfter.layoutManager =
-            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.rvPhotoAfter.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.rvPhotoAfter.adapter = pictureAfterAdapter
         pictureAfterAdapter.clickListener = { openImage(it) }
         pictureAfterAdapter.deleteListener = {
@@ -157,10 +154,20 @@ class PictureFragment : BaseFragment() {
         }
         binding.iHeader.ivHeader.setOnClickListener { activity?.onBackPressed() }
         binding.btTakePhotoBefore.setOnClickListener {
-            checkCameraPermissions(before)
+            if(pictureBeforeAdapter.collection.size < 5){
+                checkCameraPermissions(before)
+            }else{
+                MessageDialogFragment.newInstance(getString(R.string.error_photo_limit))
+                    .show(childFragmentManager,"dialog")
+            }
         }
         binding.btTakePhotoAfter.setOnClickListener {
-            checkCameraPermissions(after)
+            if(pictureAfterAdapter.collection.size < 5){
+                checkCameraPermissions(after)
+            }else{
+                MessageDialogFragment.newInstance(getString(R.string.error_photo_limit))
+                    .show(childFragmentManager,"dialog")
+            }
         }
         binding.btSavePictures.setOnClickListener {
             showProgressDialog()
@@ -196,7 +203,6 @@ class PictureFragment : BaseFragment() {
                 val bitmap = data!!.extras?.get("data") as Bitmap
                 val uri = getImageUri(activity?.applicationContext!!, bitmap)
                 pictureBeforeAdapter.collection.add(convertBase64(bitmap)!!)
-                Log.d("Collections", pictureBeforeAdapter.toString())
                 pictureBeforeAdapter.notifyDataSetChanged()
             }
             after -> if (resultCode == Activity.RESULT_OK) {
@@ -278,20 +284,27 @@ class PictureFragment : BaseFragment() {
             alpha = 0.5F
         }
     }
+
     private fun setTextToolTip() {
-        tooltip?.dismiss()
-        tooltip = Tooltip.Builder(requireContext())
-            .text("Máximo solo cinco fotos")
-            .anchor(binding.ivInformationPointSale,0,0,false)
-            .overlay(false)
-            .showDuration(2000L)
-            .styleId(R.style.ToolTipAltStyle)
-            .arrow(true)
-            .create()
-        tooltip?.let {
-            tooltip?.doOnHidden {  }
-                ?.doOnShown {  }
-                ?.show(binding.ivInformationPointSale,Tooltip.Gravity.RIGHT,false)
+        balloon?.dismiss()
+
+        balloon = createBalloon(requireContext()){
+            setArrowSize(10).setWidth(BalloonSizeSpec.WRAP).setHeight(BalloonSizeSpec.WRAP)
+                .setArrowPosition(0.5f)
+                .setArrowOrientation(ArrowOrientation.LEFT)
+                .setCornerRadius(10f)
+                .setPaddingTop(5)
+                .setPaddingBottom(5)
+                .setPaddingLeft(10)
+                .setPaddingRight(10)
+                .setText("Máximo solo cinco fotos")
+                .setTextColorResource(R.color.white)
+                .setBackgroundColorResource(R.color.colorLayoutTopGradient)
+                .setBalloonAnimation(BalloonAnimation.FADE).setLifecycleOwner(lifecycleOwner)
+                .build()
         }
+        balloon?.showAlignRight(binding.ivInformationPointSale,5, 0)
+        balloon?.dismissWithDelay(3000L)
+        balloon?.show(binding.ivInformationPointSale)
     }
 }

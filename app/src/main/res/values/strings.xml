@@ -132,4 +132,5 @@
     <string name="send_password">Enviar contraseña</string>
     <string name="eraser">Borrador</string>
     <string name="record_one">Grabacion 1</string>
+    <string name="error_photo_limit">Solo se puede agregar cinco fotografías</string>
 </resources>

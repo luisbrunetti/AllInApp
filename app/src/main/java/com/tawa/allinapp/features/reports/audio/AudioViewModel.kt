@@ -77,12 +77,18 @@ class AudioViewModel
     val updateReportState: LiveData<Boolean>
         get()= _updateReportState
 
+    private val _displayMessage = MutableLiveData<Boolean>(false)
+    val displayMessage : LiveData<Boolean> get() = _displayMessage
 
     fun doRecordAudio(){
-        if (_recording.value==true)
-            stopRecord()
-        else
-            startRecord()
+        if(record.value != ""){
+            if (_recording.value==true)
+                stopRecord()
+            else
+                startRecord()
+        }else{
+            _displayMessage.value = true
+        }
     }
 
     private fun startPlaying() {
@@ -120,7 +126,7 @@ class AudioViewModel
             _record.value = output!!.absolutePath
 
             setOutputFile(_record.value)
-            setMaxDuration(3000)
+            setMaxDuration(7000)
 
             try {
                 prepare()
