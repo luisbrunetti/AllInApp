@@ -22,6 +22,7 @@ class Prefs
         const val DATA_SKU = "data_sku"
         const val STATE_CHECKLIST = "stateChecklist"
         const val VERIFY_CHECKLIST = "verifyChecklist"
+        const val AUDIO_RECORDED = "audioRecorded"
     }
 
     private val prefs  = context.getSharedPreferences(FILENAME, Context.MODE_PRIVATE)
@@ -81,5 +82,7 @@ class Prefs
         get() = prefs.getString(DATA_SKU,"")
         set(value) = prefs.edit().putString(DATA_SKU,value).apply()
 
-
+    var audioRecorded: String?
+        get() = prefs.getString(AUDIO_RECORDED, "")
+        set(value) = prefs.edit().putString(AUDIO_RECORDED, value).apply()
 }

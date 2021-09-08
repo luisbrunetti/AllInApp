@@ -15,7 +15,7 @@ import com.tawa.allinapp.databinding.FragmentConditionalDialogBinding
 
 class ConditionalDialogFragment : DialogFragment() {
    private var _binding: FragmentConditionalDialogBinding? = null
-   private val binding get() = _binding
+   private val binding get() = _binding!!
     var listener: Callback? = null
     companion object {
         const val MESSAGE: String = "message"
@@ -44,7 +44,7 @@ class ConditionalDialogFragment : DialogFragment() {
         _binding = FragmentConditionalDialogBinding.inflate(inflater,container,false)
         dialog?.window?.setBackgroundDrawable(ColorDrawable(android.graphics.Color.TRANSPARENT))
         isCancelable = false
-        return binding?.root
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

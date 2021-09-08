@@ -35,9 +35,7 @@ class AudioFragment : BaseFragment() {
     private var audio64 = ""
     private var idReport = ""
 
-    companion object
-
-    val REQUEST_CODE = 6384
+    companion object val REQUEST_CODE = 6384
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -123,18 +121,33 @@ class AudioFragment : BaseFragment() {
             observe(displayMessage, {
                 it?.let {
                     if (it) {
-                        ConditionalDialogFragment.newInstance(
-                            title = "El audio anterior será borrado?",
+                        val conditionalFragment = ConditionalDialogFragment.newInstance(
+                            title = "El audio anterior será borrado",
                             message = "¿Desea sobrescribir el audio que ya se grabó?",
                             icon = R.drawable.ic_warning,
-                            btn1 = "Si",
+                            btn1 = "Sí",
                             btn2 = "No"
-                        ).show(childFragmentManager, "dialog")
+                        )
+                        conditionalFragment.listener = object : ConditionalDialogFragment.Callback{
+                            override fun onAccept() {
+                                audioViewModel.reRecordAudio()
+                            }
+                        }
+                        conditionalFragment.show(childFragmentManager, "dialog")
+
                     }
                 }
             })
         }
-        binding.ivClose.setOnClickListener { binding.rvAudioRecord.invisible() }
+
+        visibilityAudioRecorded()
+        binding.ivRecordSelectedDelete.setOnClickListener {
+            binding.lyRecordSelected.visibility = View.GONE
+        }
+        binding.ivClose.setOnClickListener {
+            binding.rvAudioRecord.invisible()
+            audioViewModel.clearAudioRecorded()
+        }
         binding.btSavePictures.setOnClickListener {
             audioViewModel.setReadyAnswers(idQuestion, nameQuestion, idAnswer, audio64, "")
             checkListViewModel.updateReportPv(
@@ -166,14 +179,22 @@ class AudioFragment : BaseFragment() {
         return binding.root
     }
 
+    private fun visibilityAudioRecorded() {
+        if(audioViewModel.existPreviousRecord() != "") binding.rvAudioRecord.visibility = View.VISIBLE
+        else  binding.rvAudioRecord.visibility = View.GONE
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             data?.let {
                 //Log.d("data", data.)
-                val uri = data.data
-                Log.d("uri", uri?.path.toString())
-
+                val uri = data.data?.lastPathSegment
+                uri?.toString()?.let { it1 -> Log.d("uri", it1) }
+                var nameFile: String = "ErrorFile"
+                uri?.indexOf("/",0,true)?.let { it1 -> nameFile = uri.substring(it1+1, uri.length) }
+                binding.lyRecordSelected.visibility = View.VISIBLE
+                binding.tvRecordSelected.text = nameFile
             }
 
         }
@@ -192,8 +213,11 @@ class AudioFragment : BaseFragment() {
             startActivityForResult(intent, REQUEST_CODE)
         } catch (e: ActivityNotFoundException) {
             e.printStackTrace();
-            Log.e("tag", "No activity can handle picking a file. Showing alternatives.")
+            Log.e("tag", "No activity")
         }
 
     }
+
 }
+
+

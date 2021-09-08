@@ -22,6 +22,7 @@ import java.io.ByteArrayOutputStream
 import java.io.File
 import android.util.Base64
 import com.tawa.allinapp.core.interactor.UseCase
+import com.tawa.allinapp.data.local.Prefs
 import com.tawa.allinapp.features.reports.standard.GetAnswers
 import com.tawa.allinapp.features.reports.standard.SetReadyAnswers
 import com.tawa.allinapp.features.reports.standard.UpdateStateReport
@@ -36,14 +37,16 @@ class AudioViewModel
     private val setAudioReport: SetAudioReport,
     private val getAudioQuestion: GetAudioQuestion,
     private val getAnswers: GetAnswers,
-    private  val setReadyAnswers: SetReadyAnswers,
-    private  val updateStateReport: UpdateStateReport
+    private val setReadyAnswers: SetReadyAnswers,
+    private val updateStateReport: UpdateStateReport,
+    private val prefs: Prefs
 ): BaseViewModel(){
 
     private var recorder: MediaRecorder? = null
     private var player: MediaPlayer? = null
     private var fileName: String? = ""
     private var output: File? = null
+    private var outputPath : String? = null
 
     private val _recording = MutableLiveData(false)
     val recording = _recording
@@ -51,7 +54,8 @@ class AudioViewModel
     private val _timeRecord = MutableLiveData("0:00")
     val timeRecord = _timeRecord
 
-    private val _record = MutableLiveData("")
+    private val
+            _record = MutableLiveData("")
     val record = _record
 
     private val _fileString = MutableLiveData("")
@@ -81,13 +85,14 @@ class AudioViewModel
     val displayMessage : LiveData<Boolean> get() = _displayMessage
 
     fun doRecordAudio(){
-        if(record.value != ""){
-            if (_recording.value==true)
-                stopRecord()
-            else
-                startRecord()
+        if(_recording.value == true ){
+            stopRecord()
         }else{
-            _displayMessage.value = true
+            if(_record.value == ""){
+                startRecord()
+            }else{
+                _displayMessage.value = true
+            }
         }
     }
 
@@ -96,9 +101,13 @@ class AudioViewModel
             try {
                 setDataSource(_record.value)
                 prepare()
+                setOnCompletionListener {
+                    _recording.value = false
+                }
                 start()
+                _recording.value = true
             } catch (e: IOException) {
-                Log.e("PLAYING ERROR", "prepare() failed")
+                Log.e("PLAYING ERROR", e.toString())
             }
         }
     }
@@ -124,15 +133,18 @@ class AudioViewModel
             output = File(outputFolder.absolutePath +"/out" + Date().time + ".3gpp")
             Log.i("DIRECTORIO", output!!.absolutePath)
             _record.value = output!!.absolutePath
+            prefs.audioRecorded = output!!.absolutePath
 
             setOutputFile(_record.value)
             setMaxDuration(7000)
+
 
             try {
                 prepare()
                 start()
                 _recording.value = true
             } catch (e: IOException) {
+                prefs.audioRecorded = ""
                 Log.e("RECORD", e.toString())
             }
         }
@@ -143,7 +155,7 @@ class AudioViewModel
             stop()
             release()
             _fileString.value = convertImageFileToBase64(output!!)
-            _recording.value=false
+            _recording.value= false
         }
         recorder = null
     }
@@ -187,5 +199,18 @@ class AudioViewModel
     }
     private fun handleUpdateStateReport(success: Boolean) {
         this._updateReportState.value = success
+    }
+    fun existPreviousRecord() : String? {
+        this._record.value = prefs.audioRecorded
+        return this._record.value
+    }
+    fun reRecordAudio(){
+        this._displayMessage.value = false
+        this._record.value = ""
+        doRecordAudio()
+    }
+    fun clearAudioRecorded() {
+        prefs.audioRecorded = ""
+        this._record.value = ""
     }
 }

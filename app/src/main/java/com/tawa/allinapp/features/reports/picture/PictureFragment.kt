@@ -34,6 +34,7 @@ import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.FragmentPictureBinding
 import com.tawa.allinapp.features.reports.sku.ConfirmDialogFragment
 import com.tawa.allinapp.models.PhotoReport
+import kotlinx.android.synthetic.main.fragment_picture.*
 import java.io.ByteArrayOutputStream
 import java.util.*
 import javax.inject.Inject
