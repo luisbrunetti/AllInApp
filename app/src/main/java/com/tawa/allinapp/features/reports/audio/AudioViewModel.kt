@@ -46,7 +46,6 @@ class AudioViewModel
     private var player: MediaPlayer? = null
     private var fileName: String? = ""
     private var output: File? = null
-    private var outputPath : String? = null
 
     private val _recording = MutableLiveData(false)
     val recording = _recording
@@ -54,8 +53,7 @@ class AudioViewModel
     private val _timeRecord = MutableLiveData("0:00")
     val timeRecord = _timeRecord
 
-    private val
-            _record = MutableLiveData("")
+    private val _record = MutableLiveData("")
     val record = _record
 
     private val _fileString = MutableLiveData("")
@@ -84,6 +82,9 @@ class AudioViewModel
     private val _displayMessage = MutableLiveData<Boolean>(false)
     val displayMessage : LiveData<Boolean> get() = _displayMessage
 
+    private val _textPlaying = MutableLiveData<Boolean>(false)
+    val textPlaying : LiveData<Boolean> get() = _textPlaying
+
     fun doRecordAudio(){
         if(_recording.value == true ){
             stopRecord()
@@ -100,9 +101,11 @@ class AudioViewModel
         player = MediaPlayer().apply {
             try {
                 setDataSource(_record.value)
+                _textPlaying.value = true
                 prepare()
                 setOnCompletionListener {
                     _recording.value = false
+                    _textPlaying.value = false
                 }
                 start()
                 _recording.value = true

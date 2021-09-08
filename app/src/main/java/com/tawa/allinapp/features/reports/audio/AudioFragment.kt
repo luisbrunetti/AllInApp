@@ -118,6 +118,10 @@ class AudioFragment : BaseFragment() {
                     }
                 }
             })
+            observe(textPlaying,{
+                if(it == true) binding.tvPlaying.visibility= View.VISIBLE
+                else binding.tvPlaying.visibility= View.GONE
+            })
             observe(displayMessage, {
                 it?.let {
                     if (it) {
@@ -141,9 +145,7 @@ class AudioFragment : BaseFragment() {
         }
 
         visibilityAudioRecorded()
-        binding.ivRecordSelectedDelete.setOnClickListener {
-            binding.lyRecordSelected.visibility = View.GONE
-        }
+        binding.ivRecordSelectedDelete.setOnClickListener { binding.lyRecordSelected.visibility = View.GONE }
         binding.ivClose.setOnClickListener {
             binding.rvAudioRecord.invisible()
             audioViewModel.clearAudioRecorded()
@@ -171,9 +173,7 @@ class AudioFragment : BaseFragment() {
             activity?.onBackPressed()
         }
 
-        binding.btTakeAudioSelect.setOnClickListener {
-            showFilePicker()
-        }
+        binding.btTakeAudioSelect.setOnClickListener { showFilePicker() }
 
         audioViewModel.getAudioQuestions()
         return binding.root
@@ -181,7 +181,7 @@ class AudioFragment : BaseFragment() {
 
     private fun visibilityAudioRecorded() {
         if(audioViewModel.existPreviousRecord() != "") binding.rvAudioRecord.visibility = View.VISIBLE
-        else  binding.rvAudioRecord.visibility = View.GONE
+        else binding.rvAudioRecord.visibility = View.GONE
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
