@@ -133,4 +133,6 @@
     <string name="eraser">Borrador</string>
     <string name="record_one">Grabacion 1</string>
     <string name="error_photo_limit">Solo se puede agregar cinco fotografías</string>
+    <string name="time_audio_limit">(Máximo 7 minutos)</string>
+    <string name="error_audio_limit">Solo puedes grabar 7 minutos como máximo</string>
 </resources>

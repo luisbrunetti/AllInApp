@@ -5,13 +5,15 @@ import androidx.lifecycle.MutableLiveData
 import com.tawa.allinapp.core.interactor.UseCase
 import com.tawa.allinapp.core.platform.BaseViewModel
 import com.tawa.allinapp.features.init.usecase.SyncPhotoReports
+import com.tawa.allinapp.features.reports.picture.DeletePhotoReports
+import com.tawa.allinapp.features.reports.picture.SetPhotoReport
+import com.tawa.allinapp.features.reports.picture.usecase.GetLocalPhotoReport
 import com.tawa.allinapp.models.PhotoReport
-import com.tawa.allinapp.models.Report
 import javax.inject.Inject
 
 class PictureViewModel
 @Inject constructor(
-    private val setPhotoReport:SetPhotoReport,
+    private val setPhotoReport: SetPhotoReport,
     private val getLocalPhotoReport: GetLocalPhotoReport,
     private val syncPhotoReports: SyncPhotoReports,
     private val deletePhotoReports: DeletePhotoReports,
@@ -39,7 +41,11 @@ class PictureViewModel
         _errorMessage.value = error
     }
 
-    fun saveReport(report: PhotoReport?,state:String) = setPhotoReport(SetPhotoReport.Params(report,state)) { it.either(::handleFailure, ::handleReports) }
+    fun saveReport(report: PhotoReport?,state:String) {
+        setPhotoReport(SetPhotoReport.Params(report, state)) {
+            it.either(::handleFailure, ::handleReports)
+        }
+    }
 
     fun getPhotoReport() = getLocalPhotoReport(UseCase.None()) { it.either(::handleFailure, ::handlePhotoReport) }
 

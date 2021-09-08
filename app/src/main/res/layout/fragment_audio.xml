@@ -27,7 +27,7 @@
             android:fillViewport="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/iHeader"
             app:layout_constraintVertical_bias="1.0">
@@ -60,7 +60,7 @@
                         android:id="@+id/btTakeAudioSelect"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
+                        android:layout_marginTop="32dp"
                         android:background="@drawable/bg_blue_button_reports"
                         android:drawableStart="@drawable/ic_record"
                         android:drawablePadding="12dp"
@@ -72,6 +72,7 @@
                         android:textSize="16sp"
 
                         app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.516"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/tvLabelSelectAudio" />
 
@@ -126,7 +127,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="36dp"
-                        android:layout_marginTop="96dp"
+                        android:layout_marginTop="60dp"
                         android:layout_marginEnd="36dp"
                         android:text="@string/record_audio"
                         android:textColor="@color/text_dark"
@@ -136,12 +137,25 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/rvAudioSelect" />
 
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/appCompatTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:layout_marginTop="4dp"
+                        android:layout_marginStart="36dp"
+                        android:text="@string/time_audio_limit"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tvLabelRecordAudio" />
+
                     <androidx.appcompat.widget.LinearLayoutCompat
                         android:id="@+id/btTakeAudioRecord"
                         android:layout_width="wrap_content"
                         android:layout_height="48dp"
                         android:layout_marginStart="32dp"
-                        android:layout_marginTop="16dp"
+                        android:layout_marginTop="36dp"
                         android:layout_marginEnd="32dp"
                         android:background="@drawable/bg_blue_button_reports"
                         android:drawableStart="@drawable/ic_record"
@@ -152,8 +166,9 @@
                         android:paddingStart="36dp"
                         android:paddingEnd="36dp"
                         app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.495"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/tvLabelRecordAudio">
+                        app:layout_constraintTop_toBottomOf="@+id/appCompatTextView">
 
                         <androidx.appcompat.widget.AppCompatImageView
                             visibleView="@{!viewModel.recording}"
@@ -193,6 +208,7 @@
                         android:id="@+id/tvPlaying"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
                         android:text="Reproduciendo audio ... "
                         android:textAlignment="center"
                         android:visibility="gone"
@@ -267,6 +283,7 @@
                         android:gravity="center"
                         android:text="@string/register_button"
                         android:textAllCaps="false"
+                        android:textSize="18sp"
                         android:textColor="@color/white"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"

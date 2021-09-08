@@ -6,13 +6,9 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.location.LocationManager
 import android.os.Bundle
-import android.provider.Settings
 import android.view.LayoutInflater
-import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
-import android.widget.PopupMenu
-import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
@@ -25,7 +21,7 @@ import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.FragmentInitBinding
 import com.tawa.allinapp.features.HomeActivity
 import com.tawa.allinapp.features.init.InitViewModel
-import com.tawa.allinapp.features.reports.picture.PictureViewModel
+
 
 
 class InitFragment : BaseFragment() {
@@ -119,7 +115,7 @@ class InitFragment : BaseFragment() {
                         if(it=="SUPERVISOR") {
                             (activity as HomeActivity).showInforms()
                             binding.viewBtnInforms.isVisible = true
-                            binding.imageViewInforms.isVisible = true
+                            binding.imageViewInforms.isVisible= true
                             binding.textViewInforms.isVisible = true
                         }
                     }

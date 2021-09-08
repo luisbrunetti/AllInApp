@@ -20,6 +20,7 @@ import com.tawa.allinapp.core.functional.Failure
 import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.FragmentAudioBinding
 import com.tawa.allinapp.features.reports.standard.CheckListViewModel
+import com.tawa.allinapp.features.reports.standard.ConfirmSyncDialogFragment
 import java.util.*
 
 
@@ -34,6 +35,8 @@ class AudioFragment : BaseFragment() {
     private var nameAnswer = ""
     private var audio64 = ""
     private var idReport = ""
+    private var audioLimit: Int = 1000*60*7 // 7 minutos
+    private val confirmationDialog: ConfirmSyncDialogFragment = ConfirmSyncDialogFragment()
 
     companion object val REQUEST_CODE = 6384
 
@@ -52,7 +55,7 @@ class AudioFragment : BaseFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentAudioBinding.inflate(inflater)
         arguments?.getString("id").toString().also { idRep ->
             idReport = idRep
@@ -75,13 +78,25 @@ class AudioFragment : BaseFragment() {
             observe(recording, {
                 it?.let {
                     if (it) {
+                        val timeLimitString = getMiliSeoncdsOnFormat(audioLimit)
                         binding.chronometer.base = SystemClock.elapsedRealtime()
+                        binding.chronometer.setOnChronometerTickListener { chronometer ->
+                            Log.d("LogTimer", " ${SystemClock.elapsedRealtime()} isEqual : $timeLimitString - ${chronometer.text.trim()}")
+                            if(chronometer.text.trim() == timeLimitString){
+                                binding.chronometer.onChronometerTickListener = null
+                                binding.chronometer.stop()
+                                binding.chronometer.base = SystemClock.elapsedRealtime()
+                                notify(activity, R.string.error_audio_limit)
+                                stopRecordingByLimit()
+                            }
+
+                        }
                         binding.chronometer.start()
                         binding.rvAudioRecord.invisible()
                     } else {
                         binding.chronometer.base = SystemClock.elapsedRealtime()
                         binding.chronometer.stop()
-                        binding.rvAudioRecord.visible()
+                        if(audioViewModel.existPreviousRecord() != "") binding.rvAudioRecord.visible()
                     }
                 }
             })
@@ -143,26 +158,46 @@ class AudioFragment : BaseFragment() {
                 }
             })
         }
-
         visibilityAudioRecorded()
         binding.ivRecordSelectedDelete.setOnClickListener { binding.lyRecordSelected.visibility = View.GONE }
         binding.ivClose.setOnClickListener {
             binding.rvAudioRecord.invisible()
             audioViewModel.clearAudioRecorded()
         }
+        confirmationDialog.listener = object : ConfirmSyncDialogFragment.Callback {
+            override fun onClick() {
+                audioViewModel.setReadyAnswers(idQuestion, nameQuestion, idAnswer, audio64, "") // Work
+                audioViewModel.updateStateReport(idReport, "En proceso", "Terminado")
+                checkListViewModel.updateReportPv(
+                    idReport,
+                    "En proceso",
+                    "Terminado",
+                    Calendar.getInstance().toInstant().toString(),
+                    latitude,
+                    longitude
+                )
+                checkListViewModel.setAnswerPv(idAnswer, idQuestion, nameAnswer, "")
+                activity?.onBackPressed()
+            }
+
+            override fun onBack() {
+                audioViewModel.setReadyAnswers(idQuestion, nameQuestion, idAnswer, audio64, "") // Work
+                audioViewModel.updateStateReport(idReport, "En proceso", "Terminado")
+                checkListViewModel.updateReportPv(
+                    idReport,
+                    "En proceso",
+                    "Terminado",
+                    Calendar.getInstance().toInstant().toString(),
+                    latitude,
+                    longitude
+                )
+                checkListViewModel.setAnswerPv(idAnswer, idQuestion, nameAnswer, "")
+                activity?.onBackPressed()
+            }
+
+        }
         binding.btSavePictures.setOnClickListener {
-            audioViewModel.setReadyAnswers(idQuestion, nameQuestion, idAnswer, audio64, "")
-            checkListViewModel.updateReportPv(
-                idReport,
-                "En proceso",
-                "Terminado",
-                Calendar.getInstance().toInstant().toString(),
-                "",
-                ""
-            )
-            checkListViewModel.setAnswerPv(idAnswer, idQuestion, nameAnswer, "")
-            audioViewModel.updateStateReport(idReport, "En proceso", "Terminado")
-            activity?.onBackPressed()
+            confirmationDialog.show(childFragmentManager, "dialog")
         }
 
         binding.btErraser.setOnClickListener {
@@ -175,11 +210,12 @@ class AudioFragment : BaseFragment() {
 
         binding.btTakeAudioSelect.setOnClickListener { showFilePicker() }
 
+        audioViewModel.setAudioLimit(audioLimit)
         audioViewModel.getAudioQuestions()
         return binding.root
     }
 
-    private fun visibilityAudioRecorded() {
+    private fun visibilityAudioRecorded(){
         if(audioViewModel.existPreviousRecord() != "") binding.rvAudioRecord.visibility = View.VISIBLE
         else binding.rvAudioRecord.visibility = View.GONE
     }
@@ -216,6 +252,15 @@ class AudioFragment : BaseFragment() {
             Log.e("tag", "No activity")
         }
 
+    }
+    private fun getMiliSeoncdsOnFormat(timeMiliseconds: Int): String{
+        val seconds = (timeMiliseconds/1000) %60
+        val minutes = timeMiliseconds/(1000*60)
+        return if(seconds < 10){
+            "0$minutes:0$seconds"
+        }else{
+            "0$minutes:$seconds"
+        }
     }
 
 }

@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Base64
@@ -14,8 +13,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import androidx.annotation.RequiresApi
 import androidx.core.net.toUri
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.karumi.dexter.Dexter
@@ -34,7 +31,6 @@ import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.FragmentPictureBinding
 import com.tawa.allinapp.features.reports.sku.ConfirmDialogFragment
 import com.tawa.allinapp.models.PhotoReport
-import kotlinx.android.synthetic.main.fragment_picture.*
 import java.io.ByteArrayOutputStream
 import java.util.*
 import javax.inject.Inject
@@ -46,6 +42,7 @@ class PictureFragment : BaseFragment() {
 
     @Inject
     lateinit var pictureBeforeAdapter: PictureBeforeAdapter
+
     @Inject
     lateinit var pictureAfterAdapter: PictureAfterAdapter
 
@@ -65,14 +62,16 @@ class PictureFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         setUpBinding()
         checkPermissions()
-        binding.rvPhotoBefore.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.rvPhotoBefore.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.rvPhotoBefore.adapter = pictureBeforeAdapter
         pictureBeforeAdapter.clickListener = { openImage(it) }
         pictureBeforeAdapter.deleteListener = {
             pictureBeforeAdapter.collection.remove(it)
             pictureBeforeAdapter.notifyDataSetChanged()
         }
-        binding.rvPhotoAfter.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.rvPhotoAfter.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.rvPhotoAfter.adapter = pictureAfterAdapter
         pictureAfterAdapter.clickListener = { openImage(it) }
         pictureAfterAdapter.deleteListener = {
@@ -155,19 +154,19 @@ class PictureFragment : BaseFragment() {
         }
         binding.iHeader.ivHeader.setOnClickListener { activity?.onBackPressed() }
         binding.btTakePhotoBefore.setOnClickListener {
-            if(pictureBeforeAdapter.collection.size < 5){
+            if (pictureBeforeAdapter.collection.size < 5) {
                 checkCameraPermissions(before)
-            }else{
+            } else {
                 MessageDialogFragment.newInstance(getString(R.string.error_photo_limit))
-                    .show(childFragmentManager,"dialog")
+                    .show(childFragmentManager, "dialog")
             }
         }
         binding.btTakePhotoAfter.setOnClickListener {
-            if(pictureAfterAdapter.collection.size < 5){
+            if (pictureAfterAdapter.collection.size < 5) {
                 checkCameraPermissions(after)
-            }else{
+            } else {
                 MessageDialogFragment.newInstance(getString(R.string.error_photo_limit))
-                    .show(childFragmentManager,"dialog")
+                    .show(childFragmentManager, "dialog")
             }
         }
         binding.btSavePictures.setOnClickListener {
@@ -199,19 +198,24 @@ class PictureFragment : BaseFragment() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        when (requestCode) {
-            before -> if (resultCode == Activity.RESULT_OK) {
-                val bitmap = data!!.extras?.get("data") as Bitmap
-                val uri = getImageUri(activity?.applicationContext!!, bitmap)
-                pictureBeforeAdapter.collection.add(convertBase64(bitmap)!!)
-                pictureBeforeAdapter.notifyDataSetChanged()
+        try {
+            when (requestCode) {
+                before -> if (resultCode == Activity.RESULT_OK) {
+                    val bitmap = data!!.extras?.get("data") as Bitmap
+                    //val uri = getImageUri(activity?.applicationContext!!, bitmap)
+                    pictureBeforeAdapter.collection.add(convertBase64(bitmap)!!)
+                    pictureBeforeAdapter.notifyDataSetChanged()
+                }
+                after -> if (resultCode == Activity.RESULT_OK) {
+                    val bitmap = data!!.extras?.get("data") as Bitmap
+                    //val uri = getImageUri(activity?.applicationContext!!, bitmap)
+                    pictureAfterAdapter.collection.add(convertBase64(bitmap)!!)
+                    pictureAfterAdapter.notifyDataSetChanged()
+                }
             }
-            after -> if (resultCode == Activity.RESULT_OK) {
-                val bitmap = data!!.extras?.get("data") as Bitmap
-                val uri = getImageUri(activity?.applicationContext!!, bitmap)
-                pictureAfterAdapter.collection.add(convertBase64(bitmap)!!)
-                pictureAfterAdapter.notifyDataSetChanged()
-            }
+        } catch (e : Exception){
+            Log.d("Error", e.toString())
+            MessageDialogFragment.newInstance("Ha ocurrido un error\nVuelvalo a intentar").show(childFragmentManager,"dialog")
         }
     }
 
@@ -288,8 +292,7 @@ class PictureFragment : BaseFragment() {
 
     private fun setTextToolTip() {
         balloon?.dismiss()
-
-        balloon = createBalloon(requireContext()){
+        balloon = createBalloon(requireContext()) {
             setArrowSize(10).setWidth(BalloonSizeSpec.WRAP).setHeight(BalloonSizeSpec.WRAP)
                 .setArrowPosition(0.5f)
                 .setArrowOrientation(ArrowOrientation.LEFT)
@@ -304,7 +307,7 @@ class PictureFragment : BaseFragment() {
                 .setBalloonAnimation(BalloonAnimation.FADE).setLifecycleOwner(lifecycleOwner)
                 .build()
         }
-        balloon?.showAlignRight(binding.ivInformationPointSale,5, 0)
+        balloon?.showAlignRight(binding.ivInformationPointSale, 8, 0)
         balloon?.dismissWithDelay(3000L)
         balloon?.show(binding.ivInformationPointSale)
     }

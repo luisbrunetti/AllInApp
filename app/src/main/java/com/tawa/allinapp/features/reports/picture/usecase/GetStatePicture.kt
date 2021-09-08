@@ -1,4 +1,4 @@
-package com.tawa.allinapp.features.reports.picture
+package com.tawa.allinapp.features.reports.picture.usecase
 
 import com.tawa.allinapp.core.interactor.UseCase
 import com.tawa.allinapp.data.repository.ReportsRepository
