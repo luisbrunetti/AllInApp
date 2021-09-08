@@ -151,14 +151,14 @@ class InitFragment : BaseFragment() {
         }
 
         binding.btSync.setOnClickListener {
-           showProgressDialog()
+            showProgressDialog()
             initViewModel.syncCheck()
         }
         binding.viewBtnRoutes.setOnClickListener {
             findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationRoutes())
         }
         binding.viewBtnPV.setOnClickListener {
-            findNavController().navigate(InitFragmentDirections.actionNavigationInitToPdvFragment())
+            showSelectPdvDialog()
         }
         binding.viewBtnCalendar.setOnClickListener {
             findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationCalendar())
@@ -175,6 +175,16 @@ class InitFragment : BaseFragment() {
     private fun showSelector(){
         val dialog = SelectorDialogFragment(this)
         dialog.show(childFragmentManager, "dialog")
+    }
+
+    private fun showSelectPdvDialog(){
+        val dialog = SelectPdvDialogFragment(this)
+        dialog.listener = object : SelectPdvDialogFragment.Callback{
+            override fun onAccept(id:String) {
+                findNavController().navigate(InitFragmentDirections.actionNavigationInitToPdvFragment(id))
+            }
+        }
+        dialog.show(childFragmentManager,"")
     }
 
     private fun showSelectorCheckIn(){

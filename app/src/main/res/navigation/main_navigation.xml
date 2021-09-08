@@ -30,7 +30,11 @@
             app:destination="@id/sendPasswordFragment" />
         <action
             android:id="@+id/action_navigation_init_to_pdvFragment"
-            app:destination="@id/navigation_pdv" />
+            app:destination="@id/navigation_pdv" >
+            <argument
+                android:name="id"
+                app:argType="string"/>
+        </action>
     </fragment>
 
     <fragment
@@ -42,16 +46,12 @@
         <action
             android:id="@+id/action_navigation_reports_to_checkListFragment"
             app:destination="@id/checkListFragment" >
-
             <argument
                 android:name="id"
                 app:argType="string"/>
-
             <argument
                 android:name="name"
                 app:argType="string"/>
-
-
         </action>
         <action
             android:id="@+id/action_navigation_reports_to_pictureFragment"
@@ -105,12 +105,12 @@
             android:id="@+id/action_userStatusFragment_to_lastLocationFragment"
             app:destination="@id/lastLocationFragment">
 
-        <argument
-            android:name="latitude"
-            app:argType="string"/>
-        <argument
-            android:name="longitude"
-            app:argType="string"/>
+            <argument
+                android:name="latitude"
+                app:argType="string"/>
+            <argument
+                android:name="longitude"
+                app:argType="string"/>
 
             <argument
                 android:name="name"
@@ -177,6 +177,16 @@
         android:id="@+id/navigation_pdv"
         android:name="com.tawa.allinapp.features.pdv.PdvFragment"
         android:label="fragment_pdv"
-        tools:layout="@layout/fragment_pdv" />
+        tools:layout="@layout/fragment_pdv" >
+        <action
+            android:id="@+id/action_navigation_pdv_self"
+            app:destination="@id/navigation_pdv"
+            app:popUpTo="@id/navigation_pdv"
+            app:popUpToInclusive="true" >
+            <argument
+                android:name="id"
+                app:argType="string"/>
+        </action>
+    </fragment>
 
 </navigation>

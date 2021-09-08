@@ -15,4 +15,6 @@ data class Answer(
     val data:String,
     val nameQuestion: String,
     val objectType :String,
+    val row : Boolean,
+    val column : Boolean
 )

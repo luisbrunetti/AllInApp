@@ -49,7 +49,7 @@ interface QuestionsRepository {
                                             Log.d("PREGUNTAS",it.toString())
                                             questionsDataSource.insertQuestions(it.question.toModel())
                                             for(answers in it.answers )
-                                                questionsDataSource.insertAnswers(AnswerModel(answers.id,answers.status,answers.answerName,answers.order,answers.idQuestion,answers.idUserCreator,answers.idUserModifier,answers.dateModify,answers.dateCreation,"",it.question.questionName,it.question.objectType)) }
+                                                questionsDataSource.insertAnswers(AnswerModel(answers.id,answers.status,answers.answerName,answers.order,answers.idQuestion,answers.idUserCreator,answers.idUserModifier,answers.dateModify,answers.dateCreation,"",it.question.questionName,it.question.objectType,answers.row,answers.column)) }
                                         Either.Right(true)
                                     }
                                     else Either.Left(Failure.DefaultError(body.message))

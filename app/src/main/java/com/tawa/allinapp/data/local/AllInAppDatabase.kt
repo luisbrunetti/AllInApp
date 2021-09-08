@@ -21,7 +21,8 @@ import com.tawa.allinapp.features.movies.models.Movie
     SkuDetailModel::class,
     SkuObservationModel::class,
     ReportPvModel::class,
-    AnswersPvModel::class
+    AnswersPvModel::class,
+    PdvModel::class
 ],version = 1)
 abstract class AllInAppDatabase: RoomDatabase(){
     abstract fun movieDao(): MovieDao
@@ -29,4 +30,5 @@ abstract class AllInAppDatabase: RoomDatabase(){
     abstract fun checkDao(): CheckDao
     abstract fun reportsDao(): ReportsDao
     abstract fun questionsDao():QuestionsDao
+    abstract fun pdvDao():PdvDao
 }

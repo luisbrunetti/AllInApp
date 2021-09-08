@@ -60,4 +60,5 @@ interface ApplicationComponent{
     fun inject(coverageBoardFragment: CoverageBoardFragment)
     fun inject(coverageBoardGraphFragment: CoverageBoardGraphFragment)
     fun inject(pdvFragment: PdvFragment)
+
 }

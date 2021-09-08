@@ -1,7 +1,10 @@
 package com.tawa.allinapp.features.reports.standard
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
@@ -40,6 +43,8 @@ import com.tawa.allinapp.models.Question
 import java.io.File
 import android.os.Environment
 import android.graphics.BitmapFactory
+import android.text.InputType
+import android.util.LayoutDirection
 import android.util.Log
 import androidx.compose.animation.slideIn
 import androidx.core.app.ActivityCompat
@@ -53,6 +58,10 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.jar.Manifest
 import kotlin.collections.ArrayList
+import android.widget.Spinner
+
+
+
 
 
 class CheckListFragment: BaseFragment() {
@@ -64,9 +73,6 @@ class CheckListFragment: BaseFragment() {
     val CAPTURE_IMAGE_REQUEST = 1
     var mCurrentPhotoPath: String? = null
     private lateinit var checkListViewModel: CheckListViewModel
-    private var  listRadioButton = ArrayList<RadioButton>()
-    private var  listCheckBox = ArrayList<CheckBox>()
-    private var  listInput = ArrayList<EditText>()
     private lateinit var  listInit:List<Answer>
     private lateinit var  listFilter:List<Answer>
     private var state:Boolean = false
@@ -79,6 +85,22 @@ class CheckListFragment: BaseFragment() {
     val params1 = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
     var urlImage = ""
     private  var statePhoto = 0
+    private var  listRadioButton = ArrayList<RadioButton>()
+    private var  listCheckBox = ArrayList<CheckBox>()
+    private var  listInput = ArrayList<EditText>()
+    private var  listCheckBoxBd = ArrayList<CheckBox>()
+    private var  listRadioButtonBd = ArrayList<RadioButton>()
+    private var  listSpinner = ArrayList<Spinner>()
+    private var  listSpinnerBd = ArrayList<Spinner>()
+    private var  listInputNumber = ArrayList<EditText>()
+    private var  listInputDate = ArrayList<EditText>()
+    private var  listInputTime= ArrayList<EditText>()
+    private val arrayId = mutableMapOf<String,ArrayList<String>>()
+    private val arrayIdQuestion =  mutableMapOf<String,ArrayList<String>>()
+    private val arrayNameQ = mutableMapOf<String,ArrayList<String>>()
+    private val arrayIdBd = mutableMapOf<String,ArrayList<String>>()
+    private val arrayIdQuestionBd =  mutableMapOf<String,ArrayList<String>>()
+    private val arrayNameQBd = mutableMapOf<String,ArrayList<String>>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -93,21 +115,22 @@ class CheckListFragment: BaseFragment() {
                 listFilter = it.distinctBy { it.nameQuestion }
                 for(list in listFilter){
                     val listAnswer = listInit.filter { it.nameQuestion==list.nameQuestion }
-                    if(list.objectType=="Caja de texto")
-                        addAnswersInput(listAnswer,binding.contentCheckList,list.nameQuestion)
-                    if(list.objectType=="Check")
-                        addAnswersCheck(listAnswer,binding.contentCheckList,list.nameQuestion)
-                    if(list.objectType=="Option")
-                        addAnswersRadio(listAnswer,binding.contentCheckList,list.nameQuestion)
-                    if(list.objectType=="BD - Check")
-                        addAnswersCheck(listAnswer,binding.contentCheckList,list.nameQuestion)
-                    if(list.objectType=="BD - Option")
-                        addAnswersRadio(listAnswer,binding.contentCheckList,list.nameQuestion)
-                    if(list.objectType=="Lista desplegable")
-                        addAnswersSpinner(listAnswer,binding.contentCheckList,list.nameQuestion)
-                    if(list.objectType=="BD - Lista desplegable")
-                        addAnswersSpinner(listAnswer,binding.contentCheckList,list.nameQuestion)
-
+                    when(list.objectType)
+                    {
+                        "Caja de texto" -> addAnswersInput(listAnswer,binding.contentCheckList,list.nameQuestion)
+                        "Check" -> addAnswersCheck(listAnswer,binding.contentCheckList,list.nameQuestion)
+                        "Option" ->  addAnswersRadio(listAnswer,binding.contentCheckList,list.nameQuestion)
+                        "BD - Check" -> addAnswersCheckBd(listAnswer,binding.contentCheckList,list.nameQuestion)
+                        "BD - Option" -> addAnswersRadioBd(listAnswer,binding.contentCheckList,list.nameQuestion)
+                        "Lista desplegable" -> addAnswersSpinner(listAnswer,binding.contentCheckList,list.nameQuestion)
+                        "BD - Lista desplegable" -> addAnswersSpinnerBd(listAnswer,binding.contentCheckList,list.nameQuestion)
+                        "Numérico" -> addAnswersInputNumber(listAnswer,binding.contentCheckList,list.nameQuestion)
+                        "Fecha" -> addAnswersDate(listAnswer,binding.contentCheckList,list.nameQuestion)
+                        "Hora" -> addAnswersTime(listAnswer,binding.contentCheckList,list.nameQuestion)
+                        "Imagen de cámara" -> addAnswersPhoto(listAnswer,binding.contentCheckList,list.nameQuestion)
+                        "Imagen de biblioteca" -> addAnswersSelectImage(listAnswer,binding.contentCheckList,list.nameQuestion)
+                        //"Cuadrícula de varias opciones" -> addAnswersMultiRadio(listAnswer,binding.contentCheckList,list.nameQuestion)
+                    }
                         //addAnswersRadio(listAnswer,binding.contentCheckList,list.nameQuestion)
                 }
                   // showQuestions(list.objectType,list.id,list.questionName,list.order)
@@ -217,7 +240,8 @@ class CheckListFragment: BaseFragment() {
                     //checkListViewModel.updateAnswers(tag[0], input.text.toString())
 
                 }
-                checkListViewModel.setAnswerPv(idPhoto,idQuestion,urlImage,urlImage)
+
+                //checkListViewModel.setAnswerPv(idPhoto,idQuestion,urlImage,urlImage)
                 //checkListViewModel.updateAnswers(idPhoto, urlImage)
 
                 findElements()
@@ -230,6 +254,7 @@ class CheckListFragment: BaseFragment() {
         binding.btnBackCheckList.setOnClickListener{
             activity?.onBackPressed()
         }
+
         binding.btnBr.setOnClickListener {
             if(typeReport!="Terminado") {
                 //checkListViewModel.updateState(true, false)
@@ -239,20 +264,64 @@ class CheckListFragment: BaseFragment() {
                     checkListViewModel.setAnswerPv(tag[0],tag[1],radio.isChecked.toString(),urlImage)
                    // checkListViewModel.updateAnswers(tag[0], radio.isChecked.toString())
                 }
+                for (radio in listRadioButtonBd) {
+                    val tag = radio.tag as ArrayList<String>
+                    checkListViewModel.setAnswerPv(tag[0],tag[1],radio.isChecked.toString(),urlImage)
+                    // checkListViewModel.updateAnswers(tag[0], radio.isChecked.toString())
+                }
                 for (check in listCheckBox) {
                     val tag = check.tag as ArrayList<String>
                     checkListViewModel.setAnswerPv(tag[0],tag[1],check.isChecked.toString(),urlImage)
                    // checkListViewModel.updateAnswers(tag[0], check.isChecked.toString())
                 }
+                for (check in listCheckBoxBd) {
+                    val tag = check.tag as ArrayList<String>
+                    checkListViewModel.setAnswerPv(tag[0],tag[1],check.isChecked.toString(),urlImage)
+                    // checkListViewModel.updateAnswers(tag[0], check.isChecked.toString())
+                }
                 for (input in listInput) {
                     val tag = input.tag as ArrayList<String>
                     checkListViewModel.setAnswerPv(tag[0],tag[1],input.text.toString(),urlImage)
                     //checkListViewModel.updateAnswers(tag[0], input.text.toString())
-
                 }
-                //checkListViewModel.updateAnswers(idPhoto, urlImage)
-                checkListViewModel.setAnswerPv(idPhoto,idQuestion,urlImage,urlImage)
 
+                for (input in listInputNumber) {
+                    val tag = input.tag as ArrayList<String>
+                    checkListViewModel.setAnswerPv(tag[0],tag[1],input.text.toString(),urlImage)
+                    //checkListViewModel.updateAnswers(tag[0], input.text.toString())
+                }
+
+                for (input in listInputTime) {
+                    val tag = input.tag as ArrayList<String>
+                    checkListViewModel.setAnswerPv(tag[0],tag[1],input.text.toString(),urlImage)
+                    //checkListViewModel.updateAnswers(tag[0], input.text.toString())
+                }
+
+                for (input in listInputDate) {
+                    val tag = input.tag as ArrayList<String>
+                    checkListViewModel.setAnswerPv(tag[0],tag[1],input.text.toString(),urlImage)
+                    //checkListViewModel.updateAnswers(tag[0], input.text.toString())
+                }
+
+                for (input in listSpinner) {
+                    val index = input.selectedItemPosition
+                    val tag = input.tag
+                    val data = arrayId[tag]
+                    val dataName = arrayNameQ[tag]
+                    checkListViewModel.setAnswerPv(data?.get(index)!!,tag.toString(),input.selectedItem.toString(),urlImage)
+                    //checkListViewModel.updateAnswers(tag[0], input.text.toString())
+                }
+                for (input in listSpinnerBd) {
+                    val index = input.selectedItemPosition
+                    val tag = input.tag
+                    val data = arrayIdBd[tag]
+                    val dataName = arrayNameQBd[tag]
+                    checkListViewModel.setAnswerPv(data?.get(index)!!,tag.toString(),input.selectedItem.toString(),urlImage)
+                    //checkListViewModel.updateAnswers(tag[0], input.text.toString())
+                }
+
+                //checkListViewModel.updateAnswers(idPhoto, urlImage)
+               // checkListViewModel.setAnswerPv(idPhoto,idQuestion,urlImage,urlImage)
                 activity?.onBackPressed()
             }
             else
@@ -327,12 +396,79 @@ class CheckListFragment: BaseFragment() {
         spinner.setPadding(10f.toDips().toInt(),0,0,0)
         val arrayAnswer = arrayListOf<String>()
         arrayAnswer.add("Seleccione una opción")
+        arrayId.getOrPut(listAnswers[0].idQuestion){ arrayListOf()}.add("")
+        arrayIdQuestion.getOrPut(listAnswers[0].idQuestion){ arrayListOf()}.add("")
+        arrayNameQ.getOrPut(listAnswers[0].idQuestion){ arrayListOf()}.add("")
         listAnswers.forEach {
             arrayAnswer.add(it.answerName)
+            arrayId.getOrPut(it.idQuestion){ arrayListOf()}.add(it.id)
+            arrayIdQuestion.getOrPut(it.idQuestion){ arrayListOf()}.add(it.idQuestion)
+            arrayNameQ.getOrPut(it.idQuestion){ arrayListOf()}.add(it.nameQuestion)
         }
         spinner.setBackgroundResource(R.drawable.spinner_reporteador)
         val aa = ArrayAdapter(requireContext(),android.R.layout.simple_spinner_dropdown_item,arrayAnswer)
         spinner.adapter = aa
+        spinner.tag = listAnswers[0].idQuestion
+        val dataSpinner = listAnswers.filter { it.data!="false" }
+        if(typeReport!="0")
+            spinner.setSelection(getIndex(spinner,dataSpinner[0].data))
+        listSpinner.add(spinner)
+        for(list in listAnswers)
+        {
+            val radioButton  = RadioButton(context)
+            val listTag =ArrayList<String>(2)
+            radioButton.text = list.answerName
+            listTag.add(list.id)
+            listTag.add(list.idQuestion)
+            listTag.add(nameQ)
+            radioButton.tag = listTag
+            if(typeReport!="0")
+                radioButton.isChecked = list.data.toBoolean()
+            listRadioButton.add(radioButton)
+            radioGroup.addView(radioButton)
+        }
+        linearL.addView(spinner)
+        params.setMargins(0,0, 0, 0)
+        linearL.layoutParams = params
+        linear.addView(linearL)
+
+    }
+
+    private fun addAnswersSpinnerBd(listAnswers:List<Answer>, linear: LinearLayout, nameQ:String){
+        params1.setMargins(0,0, 0, 0)
+        params1.bottomMargin = 5f.toDips().toInt()
+        val linearL = LinearLayout(context)
+        linearL.orientation = LinearLayout.VERTICAL
+        val textView  = TextView(context)
+        textView.text = nameQ
+        textView.textSize = 16f
+        textView.layoutParams = params1
+        textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_dark))
+        linearL.addView(textView)
+
+        val radioGroup = RadioGroup(context)
+        val spinner = Spinner(context)
+        spinner.setPadding(10f.toDips().toInt(),0,0,0)
+        val arrayAnswer = arrayListOf<String>()
+        arrayAnswer.add("Seleccione una opción")
+        arrayIdBd.getOrPut(listAnswers[0].idQuestion){ arrayListOf()}.add("")
+        arrayIdQuestionBd.getOrPut(listAnswers[0].idQuestion){ arrayListOf()}.add("")
+        arrayNameQBd.getOrPut(listAnswers[0].idQuestion){ arrayListOf()}.add("")
+        listAnswers.forEach {
+            arrayAnswer.add(it.answerName)
+            arrayIdBd.getOrPut(it.idQuestion){ arrayListOf()}.add(it.id)
+            arrayIdQuestionBd.getOrPut(it.idQuestion){ arrayListOf()}.add(it.idQuestion)
+            arrayNameQBd.getOrPut(it.idQuestion){ arrayListOf()}.add(it.nameQuestion)
+        }
+        spinner.setBackgroundResource(R.drawable.spinner_reporteador)
+        val aa = ArrayAdapter(requireContext(),android.R.layout.simple_spinner_dropdown_item,arrayAnswer)
+
+        spinner.adapter = aa
+        spinner.tag = listAnswers[0].idQuestion
+        val dataSpinner = listAnswers.filter { it.data!="false" }
+        if(typeReport!="0")
+           spinner.setSelection(getIndex(spinner,dataSpinner[0].data))
+        listSpinnerBd.add(spinner)
         for(list in listAnswers)
         {
             val radioButton  = RadioButton(context)
@@ -385,6 +521,119 @@ class CheckListFragment: BaseFragment() {
 
     }
 
+    private fun addAnswersRadioBd(listAnswers:List<Answer>, linear: LinearLayout, nameQ:String){
+        params.setMargins(0,0, 0, 10f.toDips().toInt())
+        val linearL = LinearLayout(context)
+        linearL.orientation = LinearLayout.VERTICAL
+        val textView  = TextView(context)
+        textView.text = nameQ
+        textView.textSize = 16f
+        textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_dark))
+        linearL.addView(textView)
+
+        val radioGroup = RadioGroup(context)
+        for(list in listAnswers)
+        {
+            val radioButton  = RadioButton(context)
+            val listTag =ArrayList<String>(2)
+            radioButton.text = list.answerName
+            listTag.add(list.id)
+            listTag.add(list.idQuestion)
+            listTag.add(nameQ)
+            radioButton.tag = listTag
+            if(typeReport!="0")
+                radioButton.isChecked = list.data.toBoolean()
+            listRadioButtonBd.add(radioButton)
+            radioGroup.addView(radioButton)
+        }
+        linearL.addView(radioGroup)
+        linearL.layoutParams = params
+        linear.addView(linearL)
+
+    }
+
+
+    private fun addAnswersMultiRadio(listAnswers:List<Answer>, linear: LinearLayout, nameQ:String){
+        params.setMargins(0,0, 0, 10f.toDips().toInt())
+        val linearL = LinearLayout(context)
+        linearL.orientation = LinearLayout.VERTICAL
+        val textView  = TextView(context)
+        textView.text = nameQ
+        textView.textSize = 16f
+        textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_dark))
+        linearL.addView(textView)
+        val linearColumn = LinearLayout(context)
+        linearColumn.orientation = LinearLayout.HORIZONTAL
+
+        val radioGroup = RadioGroup(context)
+        val listColumns  = arrayListOf<String>()
+        val listRows  = arrayListOf<String>()
+        val listId  = arrayListOf<String>()
+        val listIdQuestion = arrayListOf<String>()
+        val listNameQ = arrayListOf<String>()
+        val listData = arrayListOf<Boolean>()
+        for(list in listAnswers)
+        {
+            if(list.column)
+            {
+                /*val textColumn = TextView(context)
+                textColumn.text = list.answerName
+                linearColumn.addView(textColumn)*/
+                listColumns.add(list.answerName)
+            }
+            if(list.row)
+            {
+                listRows.add(list.answerName)
+                listId.add(list.id)
+                listIdQuestion.add(list.idQuestion)
+                listNameQ.add(nameQ)
+                listData.add(list.data.toBoolean())
+
+            }
+                /*val radioButton  = RadioButton(context)
+                val listTag =ArrayList<String>(2)
+                radioButton.text = list.answerName
+                radioButton.layoutDirection = View.LAYOUT_DIRECTION_RTL
+                listTag.add(list.id)
+                listTag.add(list.idQuestion)
+                listTag.add(nameQ)
+                radioButton.tag = listTag
+                if(typeReport!="0")
+                    radioButton.isChecked = list.data.toBoolean()
+                listRadioButton.add(radioButton)
+                radioGroup.addView(radioButton)
+            }*/
+           // listColumns.add(list.)
+
+        }
+        var count = 0
+        listColumns.forEach {
+            val linearRow = LinearLayout(context)
+            linearRow.orientation = LinearLayout.VERTICAL
+            val textColumn = TextView(context)
+            textColumn.text = it
+           // linearColumn.addView(textColumn)
+            val rg = RadioGroup(context)
+            listRows.forEach { row->
+                val radioButton  = RadioButton(context)
+                if(count==0)
+                    radioButton.text = row
+                val listTag =ArrayList<String>(2)
+                radioButton.layoutDirection = View.LAYOUT_DIRECTION_RTL
+                rg.addView(radioButton)
+              //  linearRow.addView(radioButton)
+            }
+            linearRow.addView(textColumn)
+            linearRow.addView(rg)
+            linearColumn.addView(linearRow)
+            count++
+        }
+        linearL.addView(linearColumn)
+       // linearL.addView(radioGroup)
+        linearL.layoutParams = params
+        linear.addView(linearL)
+    }
+
     private fun addAnswersCheck(listAnswers:List<Answer>,linear: LinearLayout,nameQ: String){
             params.setMargins(0,0, 0, 20f.toDips().toInt())
             val linearL = LinearLayout(context)
@@ -414,13 +663,44 @@ class CheckListFragment: BaseFragment() {
 
     }
 
-    private fun addAnswersInput(listAnswers:List<Answer>,linear: LinearLayout,nameQ: String){
+    private fun addAnswersCheckBd(listAnswers:List<Answer>,linear: LinearLayout,nameQ: String){
         params.setMargins(0,0, 0, 20f.toDips().toInt())
         val linearL = LinearLayout(context)
         linearL.orientation = LinearLayout.VERTICAL
         val textView  = TextView(context)
         textView.text = nameQ
         textView.textSize = 16f
+        textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_dark))
+        linearL.addView(textView)
+        for(list in listAnswers)
+        {
+            val checkBox  = CheckBox(context)
+            val listTag =ArrayList<String>(2)
+            checkBox.text = list.answerName
+            listTag.add(list.id)
+            listTag.add(list.idQuestion)
+            listTag.add(nameQ)
+            checkBox.tag = listTag
+            if(typeReport!="0")
+                checkBox.isChecked=list.data.toBoolean()
+
+            listCheckBoxBd.add(checkBox)
+            linearL.addView(checkBox)
+        }
+        linearL.layoutParams = params
+        linear.addView(linearL)
+
+    }
+
+    private fun addAnswersInput(listAnswers:List<Answer>,linear: LinearLayout,nameQ: String){
+        params.setMargins(0,0, 0, 20f.toDips().toInt())
+        params1.bottomMargin = 5f.toDips().toInt()
+        val linearL = LinearLayout(context)
+        linearL.orientation = LinearLayout.VERTICAL
+        val textView  = TextView(context)
+        textView.text = nameQ
+        textView.textSize = 16f
+        textView.layoutParams = params1
         textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_dark))
         linearL.addView(textView)
 
@@ -446,13 +726,15 @@ class CheckListFragment: BaseFragment() {
 
     }
 
-    private fun addAnswersPhoto(listAnswers:List<Answer>,linear: LinearLayout,nameQ: String){
+    private fun addAnswersInputNumber(listAnswers:List<Answer>,linear: LinearLayout,nameQ: String){
         params.setMargins(0,0, 0, 20f.toDips().toInt())
+        params1.bottomMargin = 5f.toDips().toInt()
         val linearL = LinearLayout(context)
         linearL.orientation = LinearLayout.VERTICAL
         val textView  = TextView(context)
         textView.text = nameQ
         textView.textSize = 16f
+        textView.layoutParams = params1
         textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_dark))
         linearL.addView(textView)
 
@@ -460,6 +742,7 @@ class CheckListFragment: BaseFragment() {
         {
             val editText  = EditText(context)
             editText.setBackgroundResource(R.drawable.rounded)
+            editText.inputType = InputType.TYPE_CLASS_NUMBER
             editText.setPadding((16f).toDips().toInt(),0,(16f).toDips().toInt(),0)
             editText.height = (50f).toDips().toInt()
             val listTag =ArrayList<String>(2)
@@ -470,12 +753,235 @@ class CheckListFragment: BaseFragment() {
             editText.tag = listTag
             if(typeReport!="0")
                 editText.setText(list.data)
-            listInput.add(editText)
+            listInputNumber.add(editText)
             linearL.addView(editText)
         }
         linearL.layoutParams = params
         linear.addView(linearL)
 
+    }
+
+    private fun addAnswersDate(listAnswers:List<Answer>,linear: LinearLayout,nameQ: String){
+        params.setMargins(0,0, 0, 20f.toDips().toInt())
+        params1.bottomMargin = 5f.toDips().toInt()
+        val linearL = LinearLayout(context)
+        linearL.orientation = LinearLayout.VERTICAL
+        val textView  = TextView(context)
+        textView.text = nameQ
+        textView.textSize = 16f
+        textView.layoutParams = params1
+        textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_dark))
+        linearL.addView(textView)
+
+        for(list in listAnswers)
+        {
+            val editText  = EditText(context)
+            editText.setBackgroundResource(R.drawable.rounded)
+            editText.isFocusable = false
+           // editText.isEnabled = false
+            editText.setCompoundDrawablesWithIntrinsicBounds(
+                0,
+                0,
+                R.drawable.ic_calendar_home,
+                0
+            )
+            editText.setOnClickListener {
+                getDay(editText)
+            }
+            editText.setPadding((16f).toDips().toInt(),0,(16f).toDips().toInt(),0)
+            editText.height = (50f).toDips().toInt()
+            val listTag =ArrayList<String>(2)
+            editText.hint = list.answerName.toLowerCase()
+            listTag.add(list.id)
+            listTag.add(list.idQuestion)
+            listTag.add(nameQ)
+            editText.tag = listTag
+            if(typeReport!="0")
+                editText.setText(list.data)
+            listInputDate.add(editText)
+            linearL.addView(editText)
+        }
+        linearL.layoutParams = params
+        linear.addView(linearL)
+
+    }
+
+    private fun addAnswersTime(listAnswers:List<Answer>,linear: LinearLayout,nameQ: String){
+        params.setMargins(0,0, 0, 20f.toDips().toInt())
+        params1.bottomMargin = 5f.toDips().toInt()
+        val linearL = LinearLayout(context)
+        linearL.orientation = LinearLayout.VERTICAL
+        val textView  = TextView(context)
+        textView.text = nameQ
+        textView.textSize = 16f
+        textView.layoutParams = params1
+        textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_dark))
+        linearL.addView(textView)
+
+        for(list in listAnswers)
+        {
+            val editText  = EditText(context)
+            editText.setBackgroundResource(R.drawable.rounded)
+            editText.isFocusable = false
+            // editText.isEnabled = false
+            /*editText.setCompoundDrawablesWithIntrinsicBounds(
+                0,
+                0,
+                R.drawable.ic_calendar_home,
+                0
+            )*/
+            editText.setOnClickListener {
+                getTime(editText)
+            }
+            editText.setPadding((16f).toDips().toInt(),0,(16f).toDips().toInt(),0)
+            editText.height = (50f).toDips().toInt()
+            val listTag =ArrayList<String>(2)
+            editText.hint = list.answerName.toLowerCase()
+            listTag.add(list.id)
+            listTag.add(list.idQuestion)
+            listTag.add(nameQ)
+            editText.tag = listTag
+            if(typeReport!="0")
+                editText.setText(list.data)
+            listInputTime.add(editText)
+            linearL.addView(editText)
+        }
+        linearL.layoutParams = params
+        linear.addView(linearL)
+
+    }
+
+    private fun addAnswersPhoto(listAnswers:List<Answer>,linear: LinearLayout,nameQ: String){
+        params.setMargins(0,0, 0, 20f.toDips().toInt())
+        params1.bottomMargin = 5f.toDips().toInt()
+        val linearL = LinearLayout(context)
+        linearL.orientation = LinearLayout.VERTICAL
+        val textView  = TextView(context)
+        textView.text = nameQ
+        textView.textSize = 16f
+        textView.layoutParams = params1
+        textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_dark))
+        linearL.addView(textView)
+
+        for(list in listAnswers)
+        {
+            val editText  = Button(context)
+            editText.setBackgroundResource(R.drawable.bg_blue_button_reports)
+            editText.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+            editText.setCompoundDrawablesWithIntrinsicBounds(
+                R.drawable.ic_report_photo,
+                0,
+               0,
+                0
+            )
+            editText.setPadding((16f).toDips().toInt(),0,(16f).toDips().toInt(),0)
+            editText.height = (50f).toDips().toInt()
+            val listTag =ArrayList<String>(2)
+            listTag.add(list.id)
+            listTag.add(list.idQuestion)
+            listTag.add(nameQ)
+            editText.tag = listTag
+            editText.text =   "Tomar Foto"
+            editText.setOnClickListener {
+                validatePermissions()
+            }
+            if(typeReport!="0")
+                editText.setText( "Tomar Foto")
+            //listInput.add(editText)
+            linearL.addView(editText)
+        }
+        linearL.layoutParams = params
+        linear.addView(linearL)
+
+    }
+
+    private fun addAnswersSelectImage(listAnswers:List<Answer>,linear: LinearLayout,nameQ: String){
+        params.setMargins(0,0, 0, 20f.toDips().toInt())
+        params1.bottomMargin = 5f.toDips().toInt()
+        val linearL = LinearLayout(context)
+        linearL.orientation = LinearLayout.VERTICAL
+        val textView  = TextView(context)
+        textView.text = nameQ
+        textView.textSize = 16f
+        textView.layoutParams = params1
+        textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_dark))
+        linearL.addView(textView)
+
+        for(list in listAnswers)
+        {
+            val editText  = Button(context)
+            editText.setBackgroundResource(R.drawable.bg_blue_button_reports)
+            editText.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+            editText.setCompoundDrawablesWithIntrinsicBounds(
+                R.drawable.ic_image_report,
+                0,
+                0,
+                0
+            )
+            editText.setPadding((16f).toDips().toInt(),0,(16f).toDips().toInt(),0)
+            editText.height = (50f).toDips().toInt()
+            val listTag =ArrayList<String>(2)
+            listTag.add(list.id)
+            listTag.add(list.idQuestion)
+            listTag.add(nameQ)
+            editText.tag = listTag
+            editText.text =   "Seleccionar archivo"
+            if(typeReport!="0")
+                editText.setText( "Tomar Foto")
+            //listInput.add(editText)
+            linearL.addView(editText)
+        }
+        linearL.layoutParams = params
+        linear.addView(linearL)
+
+    }
+
+    private fun getIndex(spinner: Spinner, myString: String): Int {
+        for (i in 0 until spinner.count) {
+            if (spinner.getItemAtPosition(i).toString().equals(myString, ignoreCase = true)) {
+                return i
+            }
+        }
+        return 0
+    }
+
+    private fun getDay(et: EditText){
+        val c = Calendar.getInstance()
+        val year = c.get(Calendar.YEAR)
+        val month = c.get(Calendar.MONTH)
+        val day = c.get(Calendar.DAY_OF_MONTH)
+        val dpd = DatePickerDialog(requireContext(), { _, _, monthOfYear, dayOfMonth ->
+
+            et.setText("" + dayOfMonth + "/" + getMonth(monthOfYear) + "/" + year)
+        }, year, month, day)
+        dpd.show()
+    }
+    private fun getTime(et: EditText){
+        val cal = Calendar.getInstance()
+
+        val timeSetListener = TimePickerDialog.OnTimeSetListener { _, hour, minute ->
+            cal.set(Calendar.HOUR_OF_DAY, hour)
+            cal.set(Calendar.MINUTE, minute)
+            et.setText( SimpleDateFormat("HH:mm aa").format(cal.time))
+        }
+        TimePickerDialog(context, timeSetListener, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), false).show()
+    }
+
+
+    private fun getMonth(monthYear: Int) = when(monthYear){
+        0 -> "01"
+        1 -> "02"
+        2 -> "03"
+        3 -> "04"
+        4 -> "05"
+        5 -> "06"
+        6 -> "07"
+        7 -> "08"
+        8 -> "09"
+        9 -> "10"
+        10 -> "11"
+        11 -> "12"
+        else  ->""
     }
 
     private fun showConfirmSync(){
@@ -513,7 +1019,6 @@ class CheckListFragment: BaseFragment() {
             })
             .check()
     }
-
 
     private fun launchCamera() {
 

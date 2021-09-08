@@ -39,10 +39,12 @@ class QuestionsRemote {
         @SerializedName("id_user_modificador") val idUserModifier: String?,
         @SerializedName("fe_modificacion") val dateModify: String?,
         @SerializedName("fe_creacion") val dateCreation: String,
+        @SerializedName("fila") val row: Boolean,
+        @SerializedName("columna") val column:Boolean,
 
         ){
-        fun toView() = Answer(id,status,answerName,order,idQuestion,idUserCreator,idUserModifier,dateModify,dateCreation,"VACIO","","")
-        fun toModel() = AnswerModel(id,status,answerName,order,idQuestion,idUserCreator,idUserModifier,dateModify,dateCreation,"VACIO","","")
+        fun toView() = Answer(id,status,answerName,order,idQuestion,idUserCreator,idUserModifier,dateModify,dateCreation,"VACIO","","",row,column)
+        fun toModel() = AnswerModel(id,status,answerName,order,idQuestion,idUserCreator,idUserModifier,dateModify,dateCreation,"VACIO","","",row,column)
     }
 
 }

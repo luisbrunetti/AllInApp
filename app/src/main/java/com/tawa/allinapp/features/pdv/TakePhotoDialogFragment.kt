@@ -72,6 +72,7 @@ class TakePhotoDialogFragment : DialogFragment() {
             validatePermissions()
         }
         binding.btnSavePdv.setOnClickListener {
+            listener?.onSave(urlImage)
             dismiss()
         }
         binding.btnCloseModalTakePhoto.setOnClickListener {
@@ -163,6 +164,7 @@ class TakePhotoDialogFragment : DialogFragment() {
 
     interface Callback {
         fun onClick()
-        fun onBack()
+        fun onSave(urlImage:String)
+        // fun onBack()
     }
 }

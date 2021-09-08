@@ -55,7 +55,6 @@ class TrackingMapDialogFragment: DialogFragment() {
                         arrayType.add(visit?.comment.toString())
                     }
                    // Log.d("visitasDato",track.visits.toString())
-
                     if(!tasks.isNullOrEmpty())
                     {
                         Log.d("tareas",tasks.toString())
@@ -67,7 +66,6 @@ class TrackingMapDialogFragment: DialogFragment() {
                             arrayType.add(task?.reportState.toString())
                         }
                     }
-
                 }
                 else
                 {
@@ -85,8 +83,6 @@ class TrackingMapDialogFragment: DialogFragment() {
             return frag
         }
     }
-
-
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = DialogMapRoutesBinding.inflate(inflater)
@@ -115,9 +111,7 @@ class TrackingMapDialogFragment: DialogFragment() {
                                         .snippet( " ("+data+","+lon[index]+")")
                                         .icon(getMarkerIconFromDrawable(iconD))
                                     )
-
                                 }
-
                                 if(type[index]=="SALIDA")
                                 {
                                     val userPosition = LatLng(data.toDouble(), lon[index].toDouble())
@@ -128,9 +122,7 @@ class TrackingMapDialogFragment: DialogFragment() {
                                         .snippet( " ("+data+","+lon[index]+")")
                                         .icon(getMarkerIconFromDrawable(iconD))
                                     )
-
                                 }
-
                                 if(type[index]=="COMPLETADO")
                                 {
                                     val userPosition = LatLng(data.toDouble(), lon[index].toDouble())
@@ -141,9 +133,7 @@ class TrackingMapDialogFragment: DialogFragment() {
                                         .snippet( " ("+data+","+lon[index]+")")
                                         .icon(getMarkerIconFromDrawable(iconD))
                                     )
-
                                 }
-
                                 if(type[index]=="none")
                                 {
                                     val userPosition = LatLng(data.toDouble(), lon[index].toDouble())
@@ -154,14 +144,10 @@ class TrackingMapDialogFragment: DialogFragment() {
                                         .icon(getMarkerIconFromDrawable(iconD))
                                     )
                                 }
-
                             }
                             googleMap.moveCamera(CameraUpdateFactory.newLatLng(LatLng(lat[0].toDouble(), lon[0].toDouble())))
                             googleMap.setMinZoomPreference(10f)
-
                         }
-
-
                     }
                 }
             }
