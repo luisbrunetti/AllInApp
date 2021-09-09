@@ -548,7 +548,6 @@ interface ReportsRepository {
                                    answerData.add(AnswerStandard(answer.id,answer.answerName,answer.data))
                                }
                                reportData.add(ReportStandard(question.id,question.questionName,answerData))
-
                         }
                         Log.d("report", "$reportData")
                         val response = service.synStandardReports("Bearer ${prefs.token!!}",SynReportStandardRemote.Request(idReport,report.idPv,report.idCompany,reportData.map { it.toRequestRemote() },"COMPLETADO",longitude,latitude)).execute()
