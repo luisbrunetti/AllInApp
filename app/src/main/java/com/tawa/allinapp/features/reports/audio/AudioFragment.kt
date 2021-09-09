@@ -21,6 +21,8 @@ import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.FragmentAudioBinding
 import com.tawa.allinapp.features.reports.standard.CheckListViewModel
 import com.tawa.allinapp.features.reports.standard.ConfirmSyncDialogFragment
+import com.tawa.allinapp.models.AudioReport
+import java.io.File
 import java.util.*
 
 
@@ -37,8 +39,8 @@ class AudioFragment : BaseFragment() {
     private var idReport = ""
     private var audioLimit: Int = 1000*60*7 // 7 minutos
     private val confirmationDialog: ConfirmSyncDialogFragment = ConfirmSyncDialogFragment()
-
-    companion object val REQUEST_CODE = 6384
+    private var audioSelected : String? = null
+    companion object val REQUEST_CODE = 200
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -166,6 +168,7 @@ class AudioFragment : BaseFragment() {
         }
         confirmationDialog.listener = object : ConfirmSyncDialogFragment.Callback {
             override fun onClick() {
+                getLastLocation()
                 audioViewModel.setReadyAnswers(idQuestion, nameQuestion, idAnswer, audio64, "") // Work
                 audioViewModel.updateStateReport(idReport, "En proceso", "Terminado")
                 checkListViewModel.updateReportPv(
@@ -181,6 +184,7 @@ class AudioFragment : BaseFragment() {
             }
 
             override fun onBack() {
+                getLastLocation()
                 audioViewModel.setReadyAnswers(idQuestion, nameQuestion, idAnswer, audio64, "") // Work
                 audioViewModel.updateStateReport(idReport, "En proceso", "Terminado")
                 checkListViewModel.updateReportPv(
@@ -201,10 +205,16 @@ class AudioFragment : BaseFragment() {
         }
 
         binding.btErraser.setOnClickListener {
+            val report = AudioReport(
+                audioSelected ?: "",
+                audio64,
+                ""
+            )
             audioViewModel.setReadyAnswers(idQuestion, nameQuestion, idAnswer, audio64, "")
             checkListViewModel.setAnswerPv(idAnswer, idQuestion, nameAnswer, "")
             checkListViewModel.updateReportPv(idReport, "En proceso", "Borrador", "", "", "")
             audioViewModel.updateStateReport(idReport, "En proceso", "Borrador")
+            audioViewModel.saveReport(report)
             activity?.onBackPressed()
         }
 
@@ -224,13 +234,24 @@ class AudioFragment : BaseFragment() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             data?.let {
-                //Log.d("data", data.)
+                Log.d("data", data.data.toString())
+
+
                 val uri = data.data?.lastPathSegment
                 uri?.toString()?.let { it1 -> Log.d("uri", it1) }
                 var nameFile: String = "ErrorFile"
                 uri?.indexOf("/",0,true)?.let { it1 -> nameFile = uri.substring(it1+1, uri.length) }
                 binding.lyRecordSelected.visibility = View.VISIBLE
-                binding.tvRecordSelected.text = nameFile
+
+
+
+                val newuri = data.data
+                val file = File(newuri!!.path)
+
+                binding.tvRecordSelected.text = file.name
+                audioSelected = file.name
+                //audioSelected = audioViewModel.convertAudioSelectedTo64Format(data.data.toString())
+                //Log.d("audioSelected", audioSelected.toString())
             }
 
         }

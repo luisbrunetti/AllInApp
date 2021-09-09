@@ -192,6 +192,7 @@ class AudioViewModel
         )
     }
 
+
     private fun handleReports(reports: Boolean) {
         _successRecord.value = reports
     }
@@ -276,5 +277,9 @@ class AudioViewModel
     fun clearAudioRecorded() {
         prefs.audioRecorded = ""
         this._record.value = ""
+    }
+    fun convertAudioSelectedTo64Format(path: String): String?{
+        val outputSelected = File(path)
+        return convertImageFileToBase64(outputSelected)
     }
 }
