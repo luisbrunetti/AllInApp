@@ -41,5 +41,4 @@ interface ReportsApi {
 
     @POST("/api/registroreporte/masivo/add")
     fun synStandardReportsMassive(@Header("Authorization") token: String,@Body request: List<SynReportStandardMassiveRemote.Request>): Call<BaseResponse<List<SynReportStandardMassiveRemote.Message>>>
-
 }

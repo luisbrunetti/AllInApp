@@ -182,7 +182,7 @@ class SkuFragment : BaseFragment() {
                 showConfirmDialog("Terminado")
             }
             else
-                Toast.makeText(context,"Ya se registró",Toast.LENGTH_SHORT).show()
+                notify(activity, R.string.register_ready)
         }
         binding.btnBrSku.setOnClickListener {
             if(skuType!="Terminado"){
@@ -200,7 +200,7 @@ class SkuFragment : BaseFragment() {
                 showConfirmDialog("Borrador")
             }
             else
-                Toast.makeText(context,"Ya se registró",Toast.LENGTH_SHORT).show()
+                notify(activity, R.string.register_ready)
         }
         skuViewModel.getTypeSku(1)
         return binding.root

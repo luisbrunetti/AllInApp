@@ -24,6 +24,7 @@ import java.io.FileInputStream
 import java.io.FileNotFoundException
 import android.provider.MediaStore
 import androidx.navigation.fragment.findNavController
+import com.tawa.allinapp.R
 import com.tawa.allinapp.features.init.ui.InitFragmentDirections
 import com.tawa.allinapp.features.init.ui.SelectPdvDialogFragment
 
@@ -90,7 +91,7 @@ class PdvFragment : BaseFragment() {
             }})
             observe(successUpdatePdvState,{it?.let {
                 if(it) {
-                    Toast.makeText(context, "Se actualizo correctamente", Toast.LENGTH_SHORT).show()
+                    notify(activity, R.string.notify_update)
                     activity?.onBackPressed() }
             }})
         }

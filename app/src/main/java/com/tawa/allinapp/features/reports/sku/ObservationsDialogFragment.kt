@@ -105,8 +105,10 @@ class ObservationsDialogFragment
             dismiss()
         }
         binding.btnSaveObservations.setOnClickListener {
-            skuViewModel.setSkuObservation(idSku,binding.edObservation.text.toString())
-
+            if(binding.edObservation.text.toString().isNotEmpty())
+                skuViewModel.setSkuObservation(idSku,binding.edObservation.text.toString())
+            else
+                Toast.makeText(context,"Debe ingresar un valor",Toast.LENGTH_SHORT).show()
         }
     }
 

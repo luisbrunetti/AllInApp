@@ -159,10 +159,10 @@
                         android:layout_marginTop="16dp"
                         android:layout_marginEnd="35dp"
                         android:background="@drawable/rounded"
-                        android:drawableEnd="@drawable/ic_arrow_reporteador"
-                        android:hint="Seleccionar"
+                        android:drawableEnd="@drawable/ic_search_user"
+                        android:hint="Ingresar Reporteador"
                         android:paddingStart="16dp"
-                        android:paddingEnd="7dp"
+                        android:paddingEnd="16dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/textView12" />
@@ -377,9 +377,22 @@
 
                             <TextView
                                 android:id="@+id/tvPager"
-                                android:layout_width="match_parent"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:gravity="center"
+                                android:layout_weight="1"
+                                android:gravity="center|end"
+                                android:text="1 "
+                                android:textColor="@color/colorTextAll"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tvPager2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center|start"
+                                android:text="- 5 de 5 entradas"
                                 android:textColor="@color/colorTextAll"
                                 android:textSize="16sp" />
                         </LinearLayout>

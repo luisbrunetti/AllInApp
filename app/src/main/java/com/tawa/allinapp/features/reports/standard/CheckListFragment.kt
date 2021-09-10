@@ -1,13 +1,11 @@
 package com.tawa.allinapp.features.reports.standard
 
+import android.R.attr
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
-import android.content.ContentValues
-import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.net.Uri
@@ -40,7 +38,6 @@ import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.FragmentChecklistBinding
 import com.tawa.allinapp.models.Answer
 import com.tawa.allinapp.models.Question
-import java.io.File
 import android.os.Environment
 import android.graphics.BitmapFactory
 import android.text.InputType
@@ -53,15 +50,19 @@ import com.tawa.allinapp.core.dialog.MessageDialogFragment
 import com.tawa.allinapp.core.extensions.failure
 import com.tawa.allinapp.core.functional.Failure
 import com.tawa.allinapp.databinding.HeaderReportBinding
-import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.jar.Manifest
 import kotlin.collections.ArrayList
 import android.widget.Spinner
-
-
-
+import android.R.attr.data
+import androidx.core.net.toFile
+import android.R.attr.data
+import android.content.*
+import android.database.Cursor
+import android.provider.DocumentsContract
+import android.util.Base64
+import java.io.*
 
 
 class CheckListFragment: BaseFragment() {
@@ -79,10 +80,12 @@ class CheckListFragment: BaseFragment() {
     private var verify:Boolean = false
     private  var idPhoto = ""
     private var idQuestion = ""
+    private var idAnswerGen = ""
     private var idReport=""
     private var typeReport = ""
     val params = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
     val params1 = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+    val params2 = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
     var urlImage = ""
     private  var statePhoto = 0
     private var  listRadioButton = ArrayList<RadioButton>()
@@ -95,12 +98,17 @@ class CheckListFragment: BaseFragment() {
     private var  listInputNumber = ArrayList<EditText>()
     private var  listInputDate = ArrayList<EditText>()
     private var  listInputTime= ArrayList<EditText>()
+    private var  listImages= ArrayList<ImageView>()
+    private var  listViews = ArrayList<View>()
+    private var  listImagesSelect= ArrayList<ImageView>()
+    private var  listViewsSelect = ArrayList<View>()
     private val arrayId = mutableMapOf<String,ArrayList<String>>()
     private val arrayIdQuestion =  mutableMapOf<String,ArrayList<String>>()
     private val arrayNameQ = mutableMapOf<String,ArrayList<String>>()
     private val arrayIdBd = mutableMapOf<String,ArrayList<String>>()
     private val arrayIdQuestionBd =  mutableMapOf<String,ArrayList<String>>()
     private val arrayNameQBd = mutableMapOf<String,ArrayList<String>>()
+    val REQUEST_CODE = 100
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -227,18 +235,82 @@ class CheckListFragment: BaseFragment() {
                 for (radio in listRadioButton) {
                     val tag = radio.tag as ArrayList<String>
                     checkListViewModel.setAnswerPv(tag[0],tag[1],radio.isChecked.toString(),urlImage)
-                //checkListViewModel.updateAnswers(tag[0], radio.isChecked.toString())
+                    // checkListViewModel.updateAnswers(tag[0], radio.isChecked.toString())
+                }
+                for (radio in listRadioButtonBd) {
+                    val tag = radio.tag as ArrayList<String>
+                    checkListViewModel.setAnswerPv(tag[0],tag[1],radio.isChecked.toString(),urlImage)
+                    // checkListViewModel.updateAnswers(tag[0], radio.isChecked.toString())
                 }
                 for (check in listCheckBox) {
                     val tag = check.tag as ArrayList<String>
                     checkListViewModel.setAnswerPv(tag[0],tag[1],check.isChecked.toString(),urlImage)
-                //checkListViewModel.updateAnswers(tag[0], check.isChecked.toString())
+                    // checkListViewModel.updateAnswers(tag[0], check.isChecked.toString())
+                }
+                for (check in listCheckBoxBd) {
+                    val tag = check.tag as ArrayList<String>
+                    checkListViewModel.setAnswerPv(tag[0],tag[1],check.isChecked.toString(),urlImage)
+                    // checkListViewModel.updateAnswers(tag[0], check.isChecked.toString())
                 }
                 for (input in listInput) {
                     val tag = input.tag as ArrayList<String>
                     checkListViewModel.setAnswerPv(tag[0],tag[1],input.text.toString(),urlImage)
                     //checkListViewModel.updateAnswers(tag[0], input.text.toString())
+                }
 
+                for (input in listInputNumber) {
+                    val tag = input.tag as ArrayList<String>
+                    checkListViewModel.setAnswerPv(tag[0],tag[1],input.text.toString(),urlImage)
+                    //checkListViewModel.updateAnswers(tag[0], input.text.toString())
+                }
+
+                for (input in listInputTime) {
+                    val tag = input.tag as ArrayList<String>
+                    checkListViewModel.setAnswerPv(tag[0],tag[1],input.text.toString(),urlImage)
+                    //checkListViewModel.updateAnswers(tag[0], input.text.toString())
+                }
+
+                for (input in listInputDate) {
+                    val tag = input.tag as ArrayList<String>
+                    checkListViewModel.setAnswerPv(tag[0],tag[1],input.text.toString(),urlImage)
+                    //checkListViewModel.updateAnswers(tag[0], input.text.toString())
+                }
+
+                for (input in listSpinner) {
+                    val index = input.selectedItemPosition
+                    if(index>0)
+                    {
+                        val tag = input.tag
+                        val data = arrayId[tag]
+                        val dataName = arrayNameQ[tag]
+                        checkListViewModel.setAnswerPv(data?.get(index)!!,tag.toString(),input.selectedItem.toString(),urlImage)
+                    }
+
+                    //checkListViewModel.updateAnswers(tag[0], input.text.toString())
+                }
+                for (input in listSpinnerBd) {
+                    val index = input.selectedItemPosition
+                    if(index>0)
+                    {
+                        val tag = input.tag
+                        val data = arrayIdBd[tag]
+                        val dataName = arrayNameQBd[tag]
+                        checkListViewModel.setAnswerPv(data?.get(index)!!,tag.toString(),input.selectedItem.toString(),urlImage)
+                        //checkListViewModel.updateAnswers(tag[0], input.text.toString())
+                    }
+
+                }
+                for (input in listImages) {
+                    val tag = input.tag as ArrayList<String>
+                    if(tag[2]!="VACIO")
+                        checkListViewModel.setAnswerPv(tag[0],tag[1],tag[2],urlImage)
+                    //checkListViewModel.updateAnswers(tag[0], input.text.toString())
+                }
+                for (input in listImagesSelect) {
+                    val tag = input.tag as ArrayList<String>
+                    if(tag[2]!="VACIO")
+                        checkListViewModel.setAnswerPv(tag[0],tag[1],tag[2],urlImage)
+                    //checkListViewModel.updateAnswers(tag[0], input.text.toString())
                 }
 
                 //checkListViewModel.setAnswerPv(idPhoto,idQuestion,urlImage,urlImage)
@@ -249,7 +321,7 @@ class CheckListFragment: BaseFragment() {
                 showConfirmSync()
             }
             else
-                Toast.makeText(context,"Ya se registró",Toast.LENGTH_SHORT).show()
+                notify(activity, R.string.register_ready)
         }
         binding.btnBackCheckList.setOnClickListener{
             activity?.onBackPressed()
@@ -305,35 +377,132 @@ class CheckListFragment: BaseFragment() {
 
                 for (input in listSpinner) {
                     val index = input.selectedItemPosition
-                    val tag = input.tag
-                    val data = arrayId[tag]
-                    val dataName = arrayNameQ[tag]
-                    checkListViewModel.setAnswerPv(data?.get(index)!!,tag.toString(),input.selectedItem.toString(),urlImage)
+                    if(index>0)
+                    {
+                        val tag = input.tag
+                        val data = arrayId[tag]
+                        val dataName = arrayNameQ[tag]
+                        checkListViewModel.setAnswerPv(data?.get(index)!!,tag.toString(),input.selectedItem.toString(),urlImage)
+                    }
+
                     //checkListViewModel.updateAnswers(tag[0], input.text.toString())
                 }
                 for (input in listSpinnerBd) {
                     val index = input.selectedItemPosition
-                    val tag = input.tag
-                    val data = arrayIdBd[tag]
-                    val dataName = arrayNameQBd[tag]
-                    checkListViewModel.setAnswerPv(data?.get(index)!!,tag.toString(),input.selectedItem.toString(),urlImage)
+                    if(index>0)
+                    {
+                        val tag = input.tag
+                        val data = arrayIdBd[tag]
+                        val dataName = arrayNameQBd[tag]
+                        checkListViewModel.setAnswerPv(data?.get(index)!!,tag.toString(),input.selectedItem.toString(),urlImage)
+                        //checkListViewModel.updateAnswers(tag[0], input.text.toString())
+                    }
+
+                }
+                for (input in listImages) {
+                    val tag = input.tag as ArrayList<String>
+                    if(tag[2]!="VACIO")
+                        checkListViewModel.setAnswerPv(tag[0],tag[1],tag[2],urlImage)
                     //checkListViewModel.updateAnswers(tag[0], input.text.toString())
                 }
-
+                for (input in listImagesSelect) {
+                    val tag = input.tag as ArrayList<String>
+                    if(tag[2]!="VACIO")
+                        checkListViewModel.setAnswerPv(tag[0],tag[1],tag[2],urlImage)
+                    //checkListViewModel.updateAnswers(tag[0], input.text.toString())
+                }
                 //checkListViewModel.updateAnswers(idPhoto, urlImage)
                // checkListViewModel.setAnswerPv(idPhoto,idQuestion,urlImage,urlImage)
                 activity?.onBackPressed()
             }
             else
-                Toast.makeText(context,"Ya se registró",Toast.LENGTH_SHORT).show()
+                notify(activity, R.string.register_ready)
         }
         return binding.root
     }
 
     private fun findElements(){
-        checkListViewModel.startRadio()
+       /* checkListViewModel.startRadio()
         checkListViewModel.startCheck()
-        checkListViewModel.startInput()
+        checkListViewModel.startInput()*/
+
+        for (radio in listRadioButton) {
+            val tag = radio.tag as ArrayList<String>
+            checkListViewModel.setReadyAnswers(tag[1],tag[2],tag[0],radio.isChecked.toString(),urlImage)
+        }
+        for (radio in listRadioButtonBd) {
+            val tag = radio.tag as ArrayList<String>
+            checkListViewModel.setReadyAnswers(tag[1],tag[2],tag[0],radio.isChecked.toString(),urlImage)
+            // checkListViewModel.updateAnswers(tag[0], radio.isChecked.toString())
+        }
+        for (check in listCheckBox) {
+            val tag = check.tag as ArrayList<String>
+            checkListViewModel.setReadyAnswers(tag[1],tag[2],tag[0],check.isChecked.toString(),urlImage)
+        }
+        for (check in listCheckBoxBd) {
+            val tag = check.tag as ArrayList<String>
+            checkListViewModel.setReadyAnswers(tag[1],tag[2],tag[0],check.isChecked.toString(),urlImage)
+            // checkListViewModel.updateAnswers(tag[0], check.isChecked.toString())
+        }
+        for (input in listInput) {
+            val tag = input.tag as ArrayList<String>
+            checkListViewModel.setReadyAnswers(tag[1],tag[2],tag[0],input.text.toString(),urlImage)
+            //checkListViewModel.updateAnswers(tag[0], input.text.toString())
+        }
+
+        for (input in listInputNumber) {
+            val tag = input.tag as ArrayList<String>
+            checkListViewModel.setReadyAnswers(tag[1],tag[2],tag[0],input.text.toString(),urlImage)
+            //checkListViewModel.updateAnswers(tag[0], input.text.toString())
+        }
+
+        for (input in listInputTime) {
+            val tag = input.tag as ArrayList<String>
+            checkListViewModel.setReadyAnswers(tag[1],tag[2],tag[0],input.text.toString(),urlImage)
+            //checkListViewModel.updateAnswers(tag[0], input.text.toString())
+        }
+
+        for (input in listInputDate) {
+            val tag = input.tag as ArrayList<String>
+            checkListViewModel.setReadyAnswers(tag[1],tag[2],tag[0],input.text.toString(),urlImage)
+            //checkListViewModel.updateAnswers(tag[0], input.text.toString())
+        }
+
+        for (input in listSpinner) {
+            val index = input.selectedItemPosition
+            if(index>0)
+            {
+                val tag = input.tag
+                val data = arrayId[tag]
+                val dataName = arrayNameQ[tag]
+                checkListViewModel.setReadyAnswers(tag.toString(),dataName?.get(index)!!,data?.get(index)!!,input.selectedItem.toString(),urlImage)
+            }
+
+            //checkListViewModel.updateAnswers(tag[0], input.text.toString())
+        }
+        for (input in listSpinnerBd) {
+            val index = input.selectedItemPosition
+            if(index>0)
+            {
+                val tag = input.tag
+                val data = arrayIdBd[tag]
+                val dataName = arrayNameQBd[tag]
+                checkListViewModel.setReadyAnswers(tag.toString(),dataName?.get(index)!!,data?.get(index)!!,input.selectedItem.toString(),urlImage)
+            }
+
+        }
+        for (input in listImages) {
+            val tag = input.tag as ArrayList<String>
+            if(tag[2]!="VACIO")
+                checkListViewModel.setReadyAnswers(tag[1],tag[3],tag[0],tag[2],urlImage)
+            //checkListViewModel.updateAnswers(tag[0], input.text.toString())
+        }
+        for (input in listImagesSelect) {
+            val tag = input.tag as ArrayList<String>
+            if(tag[2]!="VACIO")
+                checkListViewModel.setReadyAnswers(tag[1],tag[3],tag[0],tag[2],urlImage)
+            //checkListViewModel.updateAnswers(tag[0], input.text.toString())
+        }
     }
 
     private fun findRadioButton(){
@@ -410,8 +579,10 @@ class CheckListFragment: BaseFragment() {
         spinner.adapter = aa
         spinner.tag = listAnswers[0].idQuestion
         val dataSpinner = listAnswers.filter { it.data!="false" }
-        if(typeReport!="0")
-            spinner.setSelection(getIndex(spinner,dataSpinner[0].data))
+        if(typeReport!="0"){
+            if(dataSpinner.isNotEmpty())
+                spinner.setSelection(getIndex(spinner,dataSpinner[0].data))
+        }
         listSpinner.add(spinner)
         for(list in listAnswers)
         {
@@ -466,8 +637,10 @@ class CheckListFragment: BaseFragment() {
         spinner.adapter = aa
         spinner.tag = listAnswers[0].idQuestion
         val dataSpinner = listAnswers.filter { it.data!="false" }
-        if(typeReport!="0")
-           spinner.setSelection(getIndex(spinner,dataSpinner[0].data))
+        if(typeReport!="0"){
+            if(dataSpinner.isNotEmpty())
+                spinner.setSelection(getIndex(spinner,dataSpinner[0].data))
+        }
         listSpinnerBd.add(spinner)
         for(list in listAnswers)
         {
@@ -882,13 +1055,44 @@ class CheckListFragment: BaseFragment() {
             listTag.add(nameQ)
             editText.tag = listTag
             editText.text =   "Tomar Foto"
+            val view =layoutInflater.inflate(R.layout.photo_report,null)
+            params2.topMargin = 30
+            params2.height = 200f.toDips().toInt()
+            view.layoutParams = params2
+            val image =view.findViewById<ImageView>(R.id.ivPictureReport)
+            val imageClose =view.findViewById<ImageView>(R.id.ivCloseReport)
+            view.isVisible = false
+            val listTag1 =ArrayList<String>(2)
+            listTag1.add(list.id)
+            listTag1.add(list.idQuestion)
+            listTag1.add("VACIO")
+            listTag1.add(nameQ)
+            image.setImageResource(R.drawable.ic_img)
+            image.tag = listTag1
+            if(typeReport!="0") {
+                if(list.data.isNotEmpty())
+                {
+                    view.isVisible = true
+                    val uriImage = Uri.fromFile(File(list.data))
+                    image.setImageURI(uriImage)
+                    val tag = image.tag as ArrayList<String>
+                    tag[2]=list.data
+                }
+            }
             editText.setOnClickListener {
+                idAnswerGen = list.id
                 validatePermissions()
             }
-            if(typeReport!="0")
-                editText.setText( "Tomar Foto")
+            imageClose.setOnClickListener {
+                val tag = image.tag as ArrayList<String>
+                tag[2]=""
+                view.isVisible = false
+            }
             //listInput.add(editText)
             linearL.addView(editText)
+            listImages.add(image)
+            listViews.add(view)
+            linearL.addView(view)
         }
         linearL.layoutParams = params
         linear.addView(linearL)
@@ -926,10 +1130,44 @@ class CheckListFragment: BaseFragment() {
             listTag.add(nameQ)
             editText.tag = listTag
             editText.text =   "Seleccionar archivo"
-            if(typeReport!="0")
-                editText.setText( "Tomar Foto")
+            val view =layoutInflater.inflate(R.layout.photo_report,null)
+            params2.topMargin = 30
+            params2.height = 200f.toDips().toInt()
+            view.layoutParams = params2
+            val image =view.findViewById<ImageView>(R.id.ivPictureReport)
+            val imageClose =view.findViewById<ImageView>(R.id.ivCloseReport)
+            view.isVisible = false
+            val listTag1 =ArrayList<String>(2)
+            listTag1.add(list.id)
+            listTag1.add(list.idQuestion)
+            listTag1.add("VACIO")
+            listTag1.add(nameQ)
+            image.setImageResource(R.drawable.ic_img)
+            image.tag = listTag1
+            if(typeReport!="0") {
+                if(list.data.isNotEmpty())
+                {
+                    view.isVisible = true
+                    val uriImage = Uri.fromFile(File(list.data))
+                    image.setImageURI(uriImage)
+                    val tag = image.tag as ArrayList<String>
+                    tag[2]=list.data
+                }
+            }
+            editText.setOnClickListener {
+                idAnswerGen = list.id
+                imagePicker()
+            }
+            imageClose.setOnClickListener {
+                val tag = image.tag as ArrayList<String>
+                tag[2]=""
+                view.isVisible = false
+            }
             //listInput.add(editText)
             linearL.addView(editText)
+            listImagesSelect.add(image)
+            listViewsSelect.add(view)
+            linearL.addView(view)
         }
         linearL.layoutParams = params
         linear.addView(linearL)
@@ -943,6 +1181,18 @@ class CheckListFragment: BaseFragment() {
             }
         }
         return 0
+    }
+
+    private fun imagePicker() {
+        val intent = Intent(Intent.ACTION_GET_CONTENT)
+        intent.type = "image/*"
+        try {
+            startActivityForResult(intent, REQUEST_CODE)
+        } catch (e: ActivityNotFoundException) {
+            e.printStackTrace();
+            Log.e("tag", "error")
+        }
+
     }
 
     private fun getDay(et: EditText){
@@ -967,6 +1217,19 @@ class CheckListFragment: BaseFragment() {
         TimePickerDialog(context, timeSetListener, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), false).show()
     }
 
+    private fun convertBase64(path: String): String? {
+        val imageFile = File(path)
+        var fis: FileInputStream? = null
+        try {
+            fis = FileInputStream(imageFile)
+        } catch (e: FileNotFoundException) {
+            e.printStackTrace()
+        }
+        val bm = BitmapFactory.decodeStream(fis)
+        val outputStream = ByteArrayOutputStream()
+        bm.compress(Bitmap.CompressFormat.JPEG, 50, outputStream)
+        return Base64.encodeToString(outputStream.toByteArray(), Base64.DEFAULT)
+    }
 
     private fun getMonth(monthYear: Int) = when(monthYear){
         0 -> "01"
@@ -1062,18 +1325,186 @@ class CheckListFragment: BaseFragment() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
         if (requestCode == CAPTURE_IMAGE_REQUEST && resultCode == Activity.RESULT_OK) {
-            binding.checkListPhoto.isVisible = true
+            urlImage = photoFile!!.absolutePath
+            /*binding.checkListPhoto.isVisible = true
             binding.deletePhoto.isVisible = true
             urlImage = photoFile!!.absolutePath
             val imageUri = Uri.fromFile(File(urlImage))
             binding.checkListPhoto.setImageURI(imageUri,"")
-            statePhoto = 1
-        } else {
-            displayMessage(requireContext(), "Request cancelled or something went wrong.")
+            statePhoto = 1*/
+            for((index,image) in listImages.withIndex())
+            {
+                val tag = image.tag as ArrayList<String>
+                if(tag[0]==idAnswerGen)
+                {
+                    tag[2] = urlImage
+                    image.isVisible  = true
+                    listViews[index].isVisible = true
+                    val imageUri = Uri.fromFile(File(urlImage))
+                    image.setImageURI(imageUri)
+                }
+            }
         }
+        if(requestCode == REQUEST_CODE&&resultCode==Activity.RESULT_OK)
+        {
+            val realPath  = getRealPathFromURI(requireContext(),data?.data!!)
+            for((index,image) in listImagesSelect.withIndex())
+            {
+                val tag = image.tag as ArrayList<String>
+                if(tag[0]==idAnswerGen)
+                {
+                    tag[2] = realPath.toString()
+                    image.isVisible  = true
+                    listViewsSelect[index].isVisible = true
+                    val imageUri = Uri.fromFile(File(realPath))
+                    image.setImageURI(imageUri)
+                }
+            }
+
+        }
+    }
+
+    fun getRealPathFromURI(context: Context, uri: Uri): String? {
+        when {
+            // DocumentProvider
+            DocumentsContract.isDocumentUri(context, uri) -> {
+                when {
+                    // ExternalStorageProvider
+                    isExternalStorageDocument(uri) -> {
+                        val docId = DocumentsContract.getDocumentId(uri)
+                        val split = docId.split(":").toTypedArray()
+                        val type = split[0]
+                        // This is for checking Main Memory
+                        return if ("primary".equals(type, ignoreCase = true)) {
+                            if (split.size > 1) {
+                                Environment.getExternalStorageDirectory().toString() + "/" + split[1]
+                            } else {
+                                Environment.getExternalStorageDirectory().toString() + "/"
+                            }
+                            // This is for checking SD Card
+                        } else {
+                            "storage" + "/" + docId.replace(":", "/")
+                        }
+                    }
+                    isDownloadsDocument(uri) -> {
+                        val fileName = getFilePath(context, uri)
+                        if (fileName != null) {
+                            return Environment.getExternalStorageDirectory().toString() + "/Download/" + fileName
+                        }
+                        var id = DocumentsContract.getDocumentId(uri)
+                        if (id.startsWith("raw:")) {
+                            id = id.replaceFirst("raw:".toRegex(), "")
+                            val file = File(id)
+                            if (file.exists()) return id
+                        }
+                        val contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), java.lang.Long.valueOf(id))
+                        return getDataColumn(context, contentUri, null, null)
+                    }
+                    isMediaDocument(uri) -> {
+                        val docId = DocumentsContract.getDocumentId(uri)
+                        val split = docId.split(":").toTypedArray()
+                        val type = split[0]
+                        var contentUri: Uri? = null
+                        when (type) {
+                            "image" -> {
+                                contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                            }
+                            "video" -> {
+                                contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI
+                            }
+                            "audio" -> {
+                                contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+                            }
+                        }
+                        val selection = "_id=?"
+                        val selectionArgs = arrayOf(split[1])
+                        return getDataColumn(context, contentUri, selection, selectionArgs)
+                    }
+                }
+            }
+            "content".equals(uri.scheme, ignoreCase = true) -> {
+                // Return the remote address
+                return if (isGooglePhotosUri(uri)) uri.lastPathSegment else getDataColumn(context, uri, null, null)
+            }
+            "file".equals(uri.scheme, ignoreCase = true) -> {
+                return uri.path
+            }
+        }
+        return null
+    }
+
+    fun getDataColumn(context: Context, uri: Uri?, selection: String?,
+                      selectionArgs: Array<String>?): String? {
+        var cursor: Cursor? = null
+        val column = "_data"
+        val projection = arrayOf(
+            column
+        )
+        try {
+            if (uri == null) return null
+            cursor = context.contentResolver.query(uri, projection, selection, selectionArgs,
+                null)
+            if (cursor != null && cursor.moveToFirst()) {
+                val index = cursor.getColumnIndexOrThrow(column)
+                return cursor.getString(index)
+            }
+        } finally {
+            cursor?.close()
+        }
+        return null
+    }
+
+
+    fun getFilePath(context: Context, uri: Uri?): String? {
+        var cursor: Cursor? = null
+        val projection = arrayOf(
+            MediaStore.MediaColumns.DISPLAY_NAME
+        )
+        try {
+            if (uri == null) return null
+            cursor = context.contentResolver.query(uri, projection, null, null,
+                null)
+            if (cursor != null && cursor.moveToFirst()) {
+                val index = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DISPLAY_NAME)
+                return cursor.getString(index)
+            }
+        } finally {
+            cursor?.close()
+        }
+        return null
+    }
+
+    /**
+     * @param uri The Uri to check.
+     * @return Whether the Uri authority is ExternalStorageProvider.
+     */
+    fun isExternalStorageDocument(uri: Uri): Boolean {
+        return "com.android.externalstorage.documents" == uri.authority
+    }
+
+    /**
+     * @param uri The Uri to check.
+     * @return Whether the Uri authority is DownloadsProvider.
+     */
+    fun isDownloadsDocument(uri: Uri): Boolean {
+        return "com.android.providers.downloads.documents" == uri.authority
+    }
+
+    /**
+     * @param uri The Uri to check.
+     * @return Whether the Uri authority is MediaProvider.
+     */
+    fun isMediaDocument(uri: Uri): Boolean {
+        return "com.android.providers.media.documents" == uri.authority
+    }
+
+    /**
+     * @param uri The Uri to check.
+     * @return Whether the Uri authority is Google Photos.
+     */
+    fun isGooglePhotosUri(uri: Uri): Boolean {
+        return "com.google.android.apps.photos.content" == uri.authority
     }
 
 

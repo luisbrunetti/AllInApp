@@ -305,12 +305,14 @@ class UserStatusFragment : BaseFragment() {
             }
             numPages.add(list.size%5)
         }
-        "${pageNum*5+1} - ${pageNum*5+numPages[pageNum]} de ${list.size} entradas".also { binding.tvPager.text = it }
+        binding.tvPager.text = "${pageNum*5+1} "
+        binding.tvPager2.text = " - ${pageNum*5+numPages[pageNum]} de ${list.size} entradas"
         binding.btnPrevPage.setOnClickListener{
             if(pageNum>0)
             {
                 pageNum--
-                "${pageNum*5+1} - ${pageNum*5+numPages[pageNum]} de ${list.size} entradas".also { binding.tvPager.text = it }
+                binding.tvPager.text = "${pageNum*5+1} "
+                binding.tvPager2.text = " - ${pageNum*5+numPages[pageNum]} de ${list.size} entradas"
                 limitedTable(tl1,tl2,pageNum)
             }
         }
@@ -318,7 +320,8 @@ class UserStatusFragment : BaseFragment() {
             if(pageNum<(numPager-1))
             {
                 pageNum++
-                "${pageNum*5+1} - ${pageNum*5+numPages[pageNum]} de ${list.size} entradas".also { binding.tvPager.text = it }
+                binding.tvPager.text = "${pageNum*5+1} "
+                binding.tvPager2.text = " - ${pageNum*5+numPages[pageNum]} de ${list.size} entradas"
                 limitedTable(tl1,tl2,pageNum)
             }
         }

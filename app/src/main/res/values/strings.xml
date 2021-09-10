@@ -28,6 +28,8 @@
     <string name="select_company">Selecciona la empresa</string>
     <string name="trade_marketing">Trade Marketing</string>
     <string name="notify_already">Ya realizaste check-in en el punto de venta</string>
+    <string name="notify_update">Actualización exitosa</string>
+    <string name="register_ready">Ya se registró</string>
     <string name="ok">OK</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"
