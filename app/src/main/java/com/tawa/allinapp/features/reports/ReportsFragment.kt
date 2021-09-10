@@ -54,7 +54,7 @@ class ReportsFragment : BaseFragment() {
                 //"REPORTE FOTOGRAFICO" -> findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToPictureFragment())
                // "ESTATUS DE USUARIO" -> findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToUserStatusFragment())
                 "LEVANTAMIENTO DE INFORMACIÓN" -> findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToCheckListFragment(it.id))*/
-                "REPORTE DE AUDIOS" -> findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToAudioFragment(it.id,it.idPv))
+                "REPORTE DE AUDIOS" -> findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToAudioFragment(it.id,it.idPv,it.state))
                 else->  findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToCheckListFragment(it.id,it.reportName))
             }
         }
@@ -98,7 +98,7 @@ class ReportsFragment : BaseFragment() {
                             binding.iconPicture.setImageResource(R.drawable.ic_inprocess)
                         }
                         if(it=="Enviado") {
-                            binding.iconSku.setImageResource(R.drawable.ic_sended)
+                            binding.iconPicture.setImageResource(R.drawable.ic_sended)
                         }
                     }
                 }

@@ -36,7 +36,6 @@ class AudioViewModel
     private val setReadyAnswers: SetReadyAnswers,
     private val updateStateReport: UpdateStateReport,
     private val syncAudio: SyncAudio,
- //   private val prefs: Prefs,
     private val syncStandardReports: SyncStandardReports
 ) : BaseViewModel() {
 
@@ -104,7 +103,6 @@ class AudioViewModel
     private val _updateAudioReports = MutableLiveData<Boolean>(false)
     val updateAudioReports: LiveData<Boolean> get() = _updateAudioReports
 
-    var listAudiosReport: List<AudioReportModel>? = null
 
     fun doRecordAudio() {
         if (_recording.value == true) {

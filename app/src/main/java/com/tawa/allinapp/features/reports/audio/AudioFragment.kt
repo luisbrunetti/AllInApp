@@ -44,6 +44,7 @@ class AudioFragment : BaseFragment() {
     private var nameAnswer = ""
     private var idReport = ""
     private var idPv = ""
+    private var state = ""
     private var audioLimit: Int = 1000 * 60 * 7 // 7 minutos
     private val confirmationDialog: ConfirmSyncDialogFragment = ConfirmSyncDialogFragment()
 
@@ -81,6 +82,10 @@ class AudioFragment : BaseFragment() {
         }
         arguments?.getString("idPv").toString().also { id ->
             idPv = id
+        }
+        arguments?.getString("state").toString().also { state->
+            this.state = state
+            if(state == "Enviado") disableComponents()
         }
 
         listAudioReport = ArrayList()
@@ -173,7 +178,7 @@ class AudioFragment : BaseFragment() {
                     } else {
                         binding.chronometer.base = SystemClock.elapsedRealtime()
                         binding.chronometer.stop()
-                        binding.rvAudioRecord.visible()
+                        if(audio64 != "" && audioPath != "") binding.rvAudioRecord.visible()
                     }
                 }
             })
@@ -255,19 +260,13 @@ class AudioFragment : BaseFragment() {
             override fun onClick() {
                 audioViewModel.setReadyAnswers(idQuestion, nameQuestion, idAnswer, audio64, "") // Work // Poner validación
                 audioViewModel.updateStateReport(idReport, "En proceso", "Terminado")
-                checkListViewModel.updateReportPv(
-                    idReport,
-                    "En proceso",
-                    "Terminado",
-                    Calendar.getInstance().toInstant().toString(),
-                    latitude,
-                    longitude
-                )
+                checkListViewModel.updateReportPv(idReport, "En proceso", "Terminado", Calendar.getInstance().toInstant().toString(), latitude, longitude)
                 checkListViewModel.setAnswerPv(idAnswer, idQuestion, audio64, "")
                 //Guardando audio
-                audioViewModel.saveReport(AudioReport(idPv,audioSelected64, audioSelectedName, audio64, audioPath, ""))
-                if (audio64 != "") audioViewModel.syncStandardReports(idReport, latitude, longitude)
-                else audioViewModel.syncStandardReports(idReport, latitude, longitude)
+                if(listAudioReport.isEmpty()) audioViewModel.saveReport(AudioReport(idPv,audioSelected64, audioSelectedName, audio64, audioPath, ""))
+                else audioViewModel.updateAudioReport(AudioReport(idPv,audioSelected64, audioSelectedName, audio64, audioPath, ""))
+                audioViewModel.syncStandardReports(idReport, latitude, longitude)
+
                 activity?.onBackPressed()
             }
 
@@ -306,6 +305,34 @@ class AudioFragment : BaseFragment() {
         audioViewModel.getAudioReport(idPv)
 
         return binding.root
+    }
+
+    private fun disableComponents() {
+        binding.btTakeAudioSelect.apply{
+            isEnabled = false
+            alpha = 0.5F
+        }
+
+        binding.btTakeAudioRecord.apply {
+            isEnabled = false
+            alpha = 0.5F
+        }
+        binding.btErraser.apply {
+            isEnabled =  false
+            alpha = 0.5F
+        }
+        binding.btSavePictures.apply {
+            isEnabled = false
+            alpha = 0.5f
+        }
+        binding.ivRecordSelectedDelete.apply {
+            isEnabled = false
+            alpha = 0.5f
+        }
+        binding.ivClose.apply {
+            isEnabled = false
+            alpha = 0.5f
+        }
     }
 
 
