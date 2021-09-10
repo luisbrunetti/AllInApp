@@ -36,7 +36,6 @@ interface AuthRepository {
                                         prefs.token = body.data.token
                                         prefs.idUser = body.data.idUser
                                         prefs.role = body.data.role[0]
-                                        prefs.session = true
                                         prefs.checkIn = true
                                         Either.Right(true)
                                     }
@@ -57,6 +56,7 @@ interface AuthRepository {
         override fun userLoggedIn(): Either<Failure, Boolean> {
             return Either.Right(prefs.session)
         }
+
 
         override fun sendPassword(password: String): Either<Failure, Boolean> {
             return when (networkHandler.isConnected) {

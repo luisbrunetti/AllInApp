@@ -2,10 +2,7 @@ package com.tawa.allinapp.data.local.datasource
 
 
 import com.tawa.allinapp.data.local.dao.QuestionsDao
-import com.tawa.allinapp.data.local.models.AnswerModel
-import com.tawa.allinapp.data.local.models.AnswersPvModel
-import com.tawa.allinapp.data.local.models.QuestionModel
-import com.tawa.allinapp.data.local.models.ReadyAnswerModel
+import com.tawa.allinapp.data.local.models.*
 import com.tawa.allinapp.data.remote.entities.QuestionsRemote
 import com.tawa.allinapp.features.init.usecase.GetIdUser
 import javax.inject.Inject
@@ -72,4 +69,6 @@ class QuestionsDataSource @Inject constructor(private val questionsDao: Question
     fun updateAnswersPv(idAnswer:String,idPv: String,nameAnswers:String,img:String,idUser: String){
         questionsDao.updateAnswersPv(idAnswer,idPv,nameAnswers,img,idUser)
     }
+
+
 }

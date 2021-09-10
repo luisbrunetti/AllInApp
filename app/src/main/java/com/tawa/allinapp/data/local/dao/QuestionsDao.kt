@@ -4,10 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.tawa.allinapp.data.local.models.AnswerModel
-import com.tawa.allinapp.data.local.models.AnswersPvModel
-import com.tawa.allinapp.data.local.models.QuestionModel
-import com.tawa.allinapp.data.local.models.ReadyAnswerModel
+import com.tawa.allinapp.data.local.models.*
 import com.tawa.allinapp.data.remote.entities.QuestionsRemote
 import com.tawa.allinapp.features.init.usecase.SetIdPv
 import com.tawa.allinapp.models.Answer
@@ -58,4 +55,5 @@ interface QuestionsDao {
 
     @Query("UPDATE answers_pv set nameAnswer=:nameAnswer, img=:img where idAnswers=:idAnswer and idPv=:idPv and idUser=:idUser")
     fun updateAnswersPv(idAnswer:String,idPv: String,nameAnswer: String,img:String,idUser: String)
+
 }

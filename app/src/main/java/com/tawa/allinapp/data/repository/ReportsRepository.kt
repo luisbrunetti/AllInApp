@@ -60,7 +60,9 @@ interface ReportsRepository {
     fun updateReportPvSync(idReport: String,state: String,type: String):Either<Failure, Boolean>
     fun deletePhotoReports(): Either<Failure, Boolean>
     fun getTypeSku(): Either<Failure,String>
-
+    fun setSession(value: Boolean) :Either<Failure,Boolean>
+    fun getAudioReport(idPv:String): Either<Failure, List<AudioReportModel>>
+    fun updateAudioReport(idPv: String, selected: String, selectedName: String, record:String, recordPath: String, comments: String) : Either<Failure, Boolean>
     class Network
     @Inject constructor(private val networkHandler: NetworkHandler,
                         private val reportsDataSource: ReportsDataSource,
@@ -760,5 +762,38 @@ interface ReportsRepository {
 
         }
 
+        override fun setSession(value: Boolean): Either<Failure, Boolean> {
+            prefs.session = true
+            return Either.Right(true)
+        }
+        override fun getAudioReport(idPv: String): Either<Failure, List<AudioReportModel>> {
+            return try {
+                val response = reportsDataSource.getAudioReports(idPv)
+                if (response.isNotEmpty()) {
+                    Either.Right(response)
+                } else {
+                    Either.Right(emptyList())
+                }
+            } catch (e: Exception) {
+                Either.Left(Failure.DefaultError(e.message!!))
+            }
+        }
+
+        override fun updateAudioReport(
+            idPv: String,
+            selected: String,
+            selectedName: String,
+            record: String,
+            recordPath: String,
+            comments: String
+        ): Either<Failure, Boolean> {
+            return try{
+
+                reportsDataSource.updateAudioReport(idPv,selected,selectedName,record,recordPath,comments)
+                Either.Right(true)
+            }catch (e : Exception){
+                Either.Left(Failure.DefaultError(e.message!!))
+            }
+        }
     }
 }

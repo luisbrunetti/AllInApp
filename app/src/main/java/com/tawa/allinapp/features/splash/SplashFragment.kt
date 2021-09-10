@@ -1,6 +1,7 @@
 package com.tawa.allinapp.features.splash
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,6 +24,7 @@ class SplashFragment : BaseFragment() {
         binding = FragmentSplashBinding.inflate(inflater)
         splashViewModel = viewModel(viewModelFactory) {
             observe(session, {
+                Log.d("SplashFragment",session.toString())
                 when(it){
                     true -> showHome(context,false)
                     else -> showLogin(context)

@@ -60,6 +60,10 @@ class LoginFragment : BaseFragment() {
                 }
             }})
         }
+        //authViewModel.setSessionFirstTime()
+        binding.remember.setOnClickListener {
+            authViewModel.setSession(binding.remember.isChecked)
+        }
         return binding.root
     }
 

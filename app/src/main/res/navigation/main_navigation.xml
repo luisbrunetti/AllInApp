@@ -70,6 +70,9 @@
             <argument
                 android:name="id"
                 app:argType="string"/>
+            <argument
+                android:name="idPv"
+                app:argType="string"/>
 
         </action>
     </fragment>

@@ -1,9 +1,11 @@
 package com.tawa.allinapp.features.auth
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.tawa.allinapp.core.interactor.UseCase
 import com.tawa.allinapp.core.platform.BaseViewModel
+import com.tawa.allinapp.data.local.Prefs
 import com.tawa.allinapp.features.auth.usecase.DoLogin
 import com.tawa.allinapp.features.auth.usecase.GetCompaniesRemote
 import com.tawa.allinapp.features.auth.usecase.GetPVRemote
@@ -14,6 +16,7 @@ class AuthViewModel
     private val doLogin: DoLogin,
     private val getCompaniesRemote: GetCompaniesRemote,
     private val getPVRemote: GetPVRemote,
+    private val pref: Prefs
 ): BaseViewModel(){
 
     private val _startLogin = MutableLiveData(false)
@@ -53,6 +56,7 @@ class AuthViewModel
     private val _password = MutableLiveData("")
     val password = _password
 
+
     fun setErrorLogin(error:String){
         _errorEdits.value = true
         _errorMessage.value = error
@@ -90,4 +94,13 @@ class AuthViewModel
         if(_successGetCompanies.value==true)
             _successEndLogin.value = true
     }
+
+    fun setSession(value: Boolean){
+        pref.session = value
+    }
+    fun setSessionFirstTime(){
+        if(!pref.session)
+        pref.session = false
+    }
+
 }

@@ -136,6 +136,7 @@ class InitFragment : BaseFragment() {
             val frag = UserMenuDialogFragment.newInstance()
             frag.listener = object : UserMenuDialogFragment.Callback {
                 override fun onAccept() {
+                    initViewModel.setSession(false)
                     showLogin(context)
                 }
                 override fun onSendPassword() {

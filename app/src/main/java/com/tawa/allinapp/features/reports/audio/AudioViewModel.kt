@@ -11,6 +11,7 @@ import androidx.lifecycle.MutableLiveData
 import com.tawa.allinapp.core.interactor.UseCase
 import com.tawa.allinapp.core.platform.BaseViewModel
 import com.tawa.allinapp.data.local.Prefs
+import com.tawa.allinapp.data.local.models.AudioReportModel
 import com.tawa.allinapp.features.init.usecase.SyncAudio
 import com.tawa.allinapp.features.init.usecase.SyncStandardReports
 import com.tawa.allinapp.features.reports.standard.GetAnswers
@@ -29,7 +30,8 @@ class AudioViewModel
 @Inject constructor(
     private val setAudioReport: SetAudioReport,
     private val getAudioQuestion: GetAudioQuestion,
-  //  private val getAudioReport: GetAudioReport,
+    private val getAudioReport: GetAudioReport,
+    private val updateAudioReport: UpdateAudioReport,
     private val getAnswers: GetAnswers,
     private val setReadyAnswers: SetReadyAnswers,
     private val updateStateReport: UpdateStateReport,
@@ -70,8 +72,6 @@ class AudioViewModel
     // Guardano en memoria
     private val _successRecord = MutableLiveData(false)
 
-
-
     val successRecord: LiveData<Boolean>
         get() = _successRecord
 
@@ -96,6 +96,15 @@ class AudioViewModel
 
     private val _textPlaying = MutableLiveData<Boolean>(false)
     val textPlaying: LiveData<Boolean> get() = _textPlaying
+
+    //Room
+    private val _getAudiosReport = MutableLiveData<List<AudioReportModel>>(emptyList())
+    val getAudiosReport: LiveData<List<AudioReportModel>> get() = _getAudiosReport
+
+    private val _updateAudioReports = MutableLiveData<Boolean>(false)
+    val updateAudioReports: LiveData<Boolean> get() = _updateAudioReports
+
+    var listAudiosReport: List<AudioReportModel>? = null
 
     fun doRecordAudio() {
         if (_recording.value == true) {
@@ -225,6 +234,22 @@ class AudioViewModel
         _answersAudio.value = answers
     }
 
+    fun getAudioReport(idPv: String) = getAudioReport(GetAudioReport.Params(idPv)){
+        it.either(::handleFailure,::handleGetAudioReport )
+    }
+    private fun handleGetAudioReport(list: List<AudioReportModel>){
+        _getAudiosReport.value = list ?: emptyList()
+    }
+
+    fun updateAudioReport(audioReportModel: AudioReport) = updateAudioReport(audioReportModel){
+        it.either(::handleFailure,::handleUpdateReport)
+    }
+    private fun handleUpdateReport(success: Boolean){
+        _updateAudioReports.value = success
+    }
+
+
+
     fun setReadyAnswers(
         idQuestion: String,
         nameQuestion: String,
@@ -317,12 +342,7 @@ class AudioViewModel
         syncStandardReports(SyncStandardReports.Params(idReport,latitude,longitude))
         { it.either(::handleFailure, ::handleSyncAudioReport) }
 
-    /*fun getAudioReport() = getAudioReport(UseCase.None()){
-
-    }*/
-
     private fun handleSyncAudioReport(success: Boolean){
         this._syncAudioReport.value = success
     }
-
 }

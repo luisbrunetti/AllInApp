@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.tawa.allinapp.core.interactor.UseCase
 import com.tawa.allinapp.core.platform.BaseViewModel
+import com.tawa.allinapp.data.local.Prefs
 import com.tawa.allinapp.features.init.usecase.*
 import com.tawa.allinapp.features.reports.GetReportsRemote
 import com.tawa.allinapp.features.reports.sku.SyncSku
@@ -41,7 +42,8 @@ class InitViewModel
     private val getAudioRemote: GetAudioRemote,
     private val listReports: ListReports,
     private val sendPassword: SendPassword,
-    private val getPdvRemote: GetPdvRemote
+    private val getPdvRemote: GetPdvRemote,
+    private val pref:Prefs
 
 ) : BaseViewModel()  {
     private  val formatter: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
@@ -380,5 +382,7 @@ class InitViewModel
     private fun handleGetPdvRemote(success: Boolean) {
         this._successGetPdvRemote.value = success
     }
+
+    fun setSession(value : Boolean){ pref.session =value}
 
 }

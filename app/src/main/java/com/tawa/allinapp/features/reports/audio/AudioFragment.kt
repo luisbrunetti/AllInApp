@@ -29,7 +29,7 @@ import java.io.File
 import java.util.*
 import android.provider.MediaStore
 import android.provider.OpenableColumns
-import androidx.loader.content.CursorLoader
+import com.tawa.allinapp.data.local.models.AudioReportModel
 
 
 class AudioFragment : BaseFragment() {
@@ -42,16 +42,20 @@ class AudioFragment : BaseFragment() {
     private var idAnswer = ""
     private var nameAnswer = ""
     private var idReport = ""
-    private var audioLimit: Int =1000*60*7 // 7 minutos
+    private var idPv = ""
+    private var audioLimit: Int = 1000 * 60 * 7 // 7 minutos
     private val confirmationDialog: ConfirmSyncDialogFragment = ConfirmSyncDialogFragment()
 
     private var audio64 = ""
     private var audioPath = ""
-    private var audioSelected64 : String = ""
-    private var audioSelectedPath: String = ""
+    private var audioSelected64: String = ""
+    private var audioSelectedName: String = ""
 
+    private var listAudioReport: List<AudioReportModel>? = null
 
-    companion object val REQUEST_CODE = 200
+    companion object
+
+    val REQUEST_CODE = 200
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,29 +78,57 @@ class AudioFragment : BaseFragment() {
         arguments?.getString("id").toString().also { idRep ->
             idReport = idRep
         }
+        arguments?.getString("idPv").toString().also { id ->
+            idPv = id
+        }
 
         checkListViewModel = viewModel(viewModelFactory) {
 
         }
 
         audioViewModel = viewModel(viewModelFactory) {
+            observe(getAudiosReport, {
+                it?.let {
+                    if (it.isNotEmpty()) {
+                        Log.d("list",listAudiosReport.toString())
+                        listAudioReport = it
+                        listAudiosReport?.get(0)?.let { info ->
+                            audio64 = info.record
+                            audioPath =info.recordPath
+                            audioSelected64 = info.selected
+                            audioPath = info.selectedName
+                            //////Vistas
+                            binding.lyRecordSelected.visible()
+                            binding.tvRecordSelected.text = info.selectedName
+
+                        }
+                    }
+                }
+            })
+            observe(updateAudioReports){
+                if (it == true){
+                    notify(requireActivity(), R.string.successful_update_audio)
+                }else{
+                }
+            }
             observe(fileString, {
                 it?.let {
                     if (it != "") {
                         audio64 = it
                         binding.rvAudioRecord.visible()
-                        binding.tvLabelRecordAudio.text = getSelected()
+                        binding.tvRecordSelected.text = getSelected()
                     } else
                         audio64 = ""
-                        binding.rvAudioRecord.invisible()
+                    audioPath = ""
+                    binding.rvAudioRecord.invisible()
                 }
             })
-            observe(fileSelectedString,{
+            observe(fileSelectedString, {
                 it?.let {
-                    if(it != ""){
+                    if (it != "") {
                         audioSelected64 = it
                         binding.lyRecordSelected.visible()
-                    }else{
+                    } else {
                         audioSelected64 = ""
                         binding.lyRecordSelected.invisible()
                     }
@@ -108,8 +140,11 @@ class AudioFragment : BaseFragment() {
                         val timeLimitString = getMiliSeoncdsOnFormat(audioLimit)
                         binding.chronometer.base = SystemClock.elapsedRealtime()
                         binding.chronometer.setOnChronometerTickListener { chronometer ->
-                            Log.d("LogTimer", " ${SystemClock.elapsedRealtime()} isEqual : $timeLimitString - ${chronometer.text.trim()}")
-                            if(chronometer.text.trim() == timeLimitString){
+                            Log.d(
+                                "LogTimer",
+                                " ${SystemClock.elapsedRealtime()} isEqual : $timeLimitString - ${chronometer.text.trim()}"
+                            )
+                            if (chronometer.text.trim() == timeLimitString) {
                                 binding.chronometer.onChronometerTickListener = null
                                 binding.chronometer.stop()
                                 binding.chronometer.base = SystemClock.elapsedRealtime()
@@ -159,9 +194,9 @@ class AudioFragment : BaseFragment() {
                     }
                 }
             })
-            observe(textPlaying,{
-                if(it == true) binding.tvPlaying.visibility= View.VISIBLE
-                else binding.tvPlaying.visibility= View.GONE
+            observe(textPlaying, {
+                if (it == true) binding.tvPlaying.visibility = View.VISIBLE
+                else binding.tvPlaying.visibility = View.GONE
             })
             observe(displayMessage, {
                 it?.let {
@@ -173,7 +208,7 @@ class AudioFragment : BaseFragment() {
                             btn1 = "Sí",
                             btn2 = "No"
                         )
-                        conditionalFragment.listener = object : ConditionalDialogFragment.Callback{
+                        conditionalFragment.listener = object : ConditionalDialogFragment.Callback {
                             override fun onAccept() {
                                 audioViewModel.reRecordAudio()
                             }
@@ -200,15 +235,28 @@ class AudioFragment : BaseFragment() {
         confirmationDialog.listener = object : ConfirmSyncDialogFragment.Callback {
             override fun onClick() {
 
-                audioViewModel.setReadyAnswers(idQuestion, nameQuestion, idAnswer, audio64, "") // Work // Poner validación
+                audioViewModel.setReadyAnswers(
+                    idQuestion,
+                    nameQuestion,
+                    idAnswer,
+                    audio64,
+                    ""
+                ) // Work // Poner validación
                 audioViewModel.updateStateReport(idReport, "En proceso", "Terminado")
-                checkListViewModel.updateReportPv(idReport, "En proceso", "Terminado", Calendar.getInstance().toInstant().toString(), latitude, longitude)
+                checkListViewModel.updateReportPv(
+                    idReport,
+                    "En proceso",
+                    "Terminado",
+                    Calendar.getInstance().toInstant().toString(),
+                    latitude,
+                    longitude
+                )
                 checkListViewModel.setAnswerPv(idAnswer, idQuestion, audio64, "")
                 //Guardando audio
-                val report = AudioReport(audioSelected64,audioSelectedPath, audio64, audioPath, "")
+                val report = AudioReport(idPv,audioSelected64, audioSelectedName, audio64, audioPath, "")
                 audioViewModel.saveReport(report)
-                if(audio64 != "") audioViewModel.syncStandardReports(idReport,latitude, longitude)
-                else audioViewModel.syncStandardReports(idReport,latitude, longitude)
+                if (audio64 != "") audioViewModel.syncStandardReports(idReport, latitude, longitude)
+                else audioViewModel.syncStandardReports(idReport, latitude, longitude)
                 activity?.onBackPressed()
             }
 
@@ -217,29 +265,25 @@ class AudioFragment : BaseFragment() {
             }
         }
         binding.btSavePictures.setOnClickListener {
-            if(audio64 != "" && audioSelected64 != ""){
+            if (audio64 != "" && audioSelected64 != "") {
                 notify(activity, R.string.only_one_audio)
-            }else{
-                if(audio64 == "" && audioSelected64 == "") notify(activity, R.string.no_audios)
+            } else {
+                if (audio64 == "" && audioSelected64 == "") notify(activity, R.string.no_audios)
                 else confirmationDialog.show(childFragmentManager, "dialog")
             }
         }
         binding.btErraser.setOnClickListener {
+            val report = AudioReport(idPv,audioSelected64, audioSelectedName, audio64, audioPath, "")
 
-            val report = AudioReport(audioSelected64,audioSelectedPath, audio64, audioPath, "")
-            if(audio64 != ""){
-                audioViewModel.setReadyAnswers(idQuestion, nameQuestion, idAnswer, audio64, "") // Aqui faltaria poner en la estructura la c
-                checkListViewModel.setAnswerPv(idAnswer, idQuestion, audio64, "") // Falta cheuear lo de Answer (Ingrese Audio)
-                checkListViewModel.updateReportPv(idReport, "En proceso", "Borrador", Calendar.getInstance().toInstant().toString(), latitude, longitude)
-                audioViewModel.updateStateReport(idReport, "En proceso", "Borrador")
-                audioViewModel.saveReport(report)
-            }else{
-                audioViewModel.setReadyAnswers(idQuestion, nameQuestion, idAnswer, audioSelected64, "") // Aqui faltaria poner en la estructura la columna selected
-                checkListViewModel.setAnswerPv(idAnswer, idQuestion, audioSelected64, "") // Falta cheuear lo de Answer (Ingrese Audio)
-                checkListViewModel.updateReportPv(idReport, "En proceso", "Borrador", Calendar.getInstance().toInstant().toString(), latitude, longitude)
-                audioViewModel.updateStateReport(idReport, "En proceso", "Borrador")
-            }
-            audioViewModel.saveReport(report)
+            audioViewModel.setReadyAnswers(idQuestion, nameQuestion, idAnswer, audio64, "") // Aqui faltaria poner en la estructura la c
+            checkListViewModel.setAnswerPv(idAnswer, idQuestion, audio64, "") // Falta cheuear lo de Answer (Ingrese Audio
+
+            checkListViewModel.updateReportPv(idReport, "En proceso", "Borrador", Calendar.getInstance().toInstant().toString(), latitude, longitude)
+            audioViewModel.updateStateReport(idReport, "En proceso", "Borrador")
+
+            if(listAudioReport == null) audioViewModel.saveReport(report)
+            else audioViewModel.updateAudioReport(report)
+
             activity?.onBackPressed()
         }
 
@@ -248,10 +292,14 @@ class AudioFragment : BaseFragment() {
         audioViewModel.getAudioQuestions()
 
         //Audios
-        audioSelectedPath = audioViewModel.getSelectedPath()
-        audioSelected64 = audioViewModel.getSelected()
+        audioSelectedName = audioViewModel.getSelectedPath()
+        //audioSelected64 = audioViewModel.getSelected()
         audioPath = audioViewModel.getRecordedPath()
         audio64 = audioViewModel.getRecord()
+//Room
+        audioViewModel.getAudioReport(idPv)
+
+
         return binding.root
     }
 
@@ -265,19 +313,17 @@ class AudioFragment : BaseFragment() {
                 binding.lyRecordSelected.visibility = View.VISIBLE
 
                 val realPath = getRealPathFromURI(requireContext(), data.data!!)
-                val file = realPath.toString()+".mp3"
-
-                Log.d("realPath",realPath.toString()+".mp3")
-
-                binding.tvRecordSelected.text = getFilename(data.data!!)
-                audioSelectedPath = data.data?.path.toString()
-                audioViewModel.saveSelectedAudio(audioSelected64,audioSelectedPath)
-                //audioSelected64 = Base64.t
-                //Log.d("audioSelected", audioSelected64.toString())
+                val file = realPath.toString() + ".mp3"
+                Log.d("realPath", realPath.toString() + ".mp3")
+                val fileName = getFilename(data.data!!)
+                binding.tvRecordSelected.text = fileName
+                audioSelectedName = fileName!!
+                audioViewModel.saveSelectedAudio(audioSelected64, audioSelectedName)
             }
 
         }
     }
+
     private fun getFilename(uri: Uri): String? {
         val cursor = activity?.contentResolver?.query(uri, null, null, null, null)
         var filename: String? = null
@@ -310,16 +356,16 @@ class AudioFragment : BaseFragment() {
         }
 
     }
-    private fun getMiliSeoncdsOnFormat(timeMiliseconds: Int): String{
-        val seconds = (timeMiliseconds/1000) %60
-        val minutes = timeMiliseconds/(1000*60)
-        return if(seconds < 10){
+
+    private fun getMiliSeoncdsOnFormat(timeMiliseconds: Int): String {
+        val seconds = (timeMiliseconds / 1000) % 60
+        val minutes = timeMiliseconds / (1000 * 60)
+        return if (seconds < 10) {
             "0$minutes:0$seconds"
-        }else{
+        } else {
             "0$minutes:$seconds"
         }
     }
-
 
 
     fun getRealPathFromURI(context: Context, uri: Uri): String? {
@@ -335,7 +381,8 @@ class AudioFragment : BaseFragment() {
                         // This is for checking Main Memory
                         return if ("primary".equals(type, ignoreCase = true)) {
                             if (split.size > 1) {
-                                Environment.getExternalStorageDirectory().toString() + "/" + split[1]
+                                Environment.getExternalStorageDirectory()
+                                    .toString() + "/" + split[1]
                             } else {
                                 Environment.getExternalStorageDirectory().toString() + "/"
                             }
@@ -347,7 +394,8 @@ class AudioFragment : BaseFragment() {
                     isDownloadsDocument(uri) -> {
                         val fileName = getFilePath(context, uri)
                         if (fileName != null) {
-                            return Environment.getExternalStorageDirectory().toString() + "/Download/" + fileName
+                            return Environment.getExternalStorageDirectory()
+                                .toString() + "/Download/" + fileName
                         }
                         var id = DocumentsContract.getDocumentId(uri)
                         if (id.startsWith("raw:")) {
@@ -355,7 +403,10 @@ class AudioFragment : BaseFragment() {
                             val file = File(id)
                             if (file.exists()) return id
                         }
-                        val contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), java.lang.Long.valueOf(id))
+                        val contentUri = ContentUris.withAppendedId(
+                            Uri.parse("content://downloads/public_downloads"),
+                            java.lang.Long.valueOf(id)
+                        )
                         return getDataColumn(context, contentUri, null, null)
                     }
                     isMediaDocument(uri) -> {
@@ -382,7 +433,12 @@ class AudioFragment : BaseFragment() {
             }
             "content".equals(uri.scheme, ignoreCase = true) -> {
                 // Return the remote address
-                return if (isGooglePhotosUri(uri)) uri.lastPathSegment else getDataColumn(context, uri, null, null)
+                return if (isGooglePhotosUri(uri)) uri.lastPathSegment else getDataColumn(
+                    context,
+                    uri,
+                    null,
+                    null
+                )
             }
             "file".equals(uri.scheme, ignoreCase = true) -> {
                 return uri.path
@@ -391,8 +447,10 @@ class AudioFragment : BaseFragment() {
         return null
     }
 
-    private fun getDataColumn(context: Context, uri: Uri?, selection: String?,
-                              selectionArgs: Array<String>?): String? {
+    private fun getDataColumn(
+        context: Context, uri: Uri?, selection: String?,
+        selectionArgs: Array<String>?
+    ): String? {
         var cursor: Cursor? = null
         val column = "_data"
         val projection = arrayOf(
@@ -400,8 +458,10 @@ class AudioFragment : BaseFragment() {
         )
         try {
             if (uri == null) return null
-            cursor = context.contentResolver.query(uri, projection, selection, selectionArgs,
-                null)
+            cursor = context.contentResolver.query(
+                uri, projection, selection, selectionArgs,
+                null
+            )
             if (cursor != null && cursor.moveToFirst()) {
                 val index = cursor.getColumnIndexOrThrow(column)
                 return cursor.getString(index)
@@ -420,8 +480,10 @@ class AudioFragment : BaseFragment() {
         )
         try {
             if (uri == null) return null
-            cursor = context.contentResolver.query(uri, projection, null, null,
-                null)
+            cursor = context.contentResolver.query(
+                uri, projection, null, null,
+                null
+            )
             if (cursor != null && cursor.moveToFirst()) {
                 val index = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DISPLAY_NAME)
                 return cursor.getString(index)

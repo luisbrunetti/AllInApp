@@ -75,10 +75,6 @@ class ReportsDataSource @Inject constructor(private val reportsDao: ReportsDao){
         reportsDao.insertAudioReport(reportModel)
     }
 
-    fun getAudioReport(): List<AudioReportModel>{
-        return reportsDao.getAudioReport()
-    }
-
 
     fun insertSku(skuModel: SkuModel){
         reportsDao.insertSku(skuModel)
@@ -154,5 +150,11 @@ class ReportsDataSource @Inject constructor(private val reportsDao: ReportsDao){
 
     fun getCountSku(idPV: String,idUser: String):Int{
         return reportsDao.getCountSku(idPV,idUser)
+    }
+    fun getAudioReports(idPv: String):List<AudioReportModel>{
+        return reportsDao.getAudioReports(idPv = idPv)
+    }
+    fun updateAudioReport(idPv: String, selected: String, selectedName: String, record:String, recordPath: String, comments: String){
+        reportsDao.updateAudioReport(idPv,selected,selectedName,record,recordPath,comments)
     }
 }

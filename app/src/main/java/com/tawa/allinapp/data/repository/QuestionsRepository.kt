@@ -13,6 +13,7 @@ import com.tawa.allinapp.data.local.models.AnswersPvModel
 import com.tawa.allinapp.data.local.models.ReadyAnswerModel
 import com.tawa.allinapp.data.remote.service.QuestionsService
 import com.tawa.allinapp.models.Answer
+import com.tawa.allinapp.models.AudioReport
 import com.tawa.allinapp.models.Question
 import com.tawa.allinapp.models.ReadyAnswer
 import javax.inject.Inject
