@@ -27,7 +27,7 @@
     <string name="enter">Ingresar</string>
     <string name="select_company">Selecciona la empresa</string>
     <string name="trade_marketing">Trade Marketing</string>
-    <string name="notify_already">YA REALIZASTE CHECK-IN EN ESTE PUNTO DE VENTA</string>
+    <string name="notify_already">Ya realizaste check-in en el punto de venta</string>
     <string name="ok">OK</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"
@@ -138,4 +138,5 @@
     <string name="only_one_audio">Solo se debería enviar un audio. Por favor elimina alguno</string>
     <string name="no_audios">Se debe enviar por lo menos un audio</string>
     <string name="successful_update_audio">El audio se ha actualizado correctamente</string>
+    <string name="checkoout_successful">Registro exitoso</string>
 </resources>

@@ -205,6 +205,7 @@ class InitFragment : BaseFragment() {
                 showProgressDialog()
                 getActualLocation()
                 initViewModel.setCheckOut(_user,_pvId,_lat,_long)
+                notify(requireActivity(), R.string.checkoout_successful)
             }
         }
         checkOutDialog?.show(childFragmentManager, "checkOutDialog")

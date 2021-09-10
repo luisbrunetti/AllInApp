@@ -70,7 +70,6 @@
                         android:textAllCaps="false"
                         android:textColor="@color/white"
                         android:textSize="16sp"
-
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.516"
                         app:layout_constraintStart_toStartOf="parent"
@@ -234,7 +233,6 @@
                         <androidx.appcompat.widget.AppCompatImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:onClick="@{()->viewModel.doSelectAudio()}"
                             android:src="@drawable/ic_clip" />
 
                         <androidx.appcompat.widget.AppCompatTextView
@@ -244,7 +242,6 @@
                             android:layout_gravity="center"
                             android:layout_marginStart="8dp"
                             android:layout_marginEnd="8dp"
-                            android:onClick="@{()->viewModel.doSelectAudio()}"
                             android:text="@string/record_one" />
 
                         <androidx.appcompat.widget.AppCompatImageView

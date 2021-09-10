@@ -36,7 +36,7 @@ class AudioViewModel
     private val setReadyAnswers: SetReadyAnswers,
     private val updateStateReport: UpdateStateReport,
     private val syncAudio: SyncAudio,
-    private val prefs: Prefs,
+ //   private val prefs: Prefs,
     private val syncStandardReports: SyncStandardReports
 ) : BaseViewModel() {
 
@@ -135,9 +135,12 @@ class AudioViewModel
                 playingAudio = true
                 _recording.value = true
             } catch (e: IOException) {
-                Log.e("PLAYING ERROR", e.toString())
+                Log.e("PLAYING ERROR", "No se encuentra ael recordpat -> "+recordPath.toString())
             }
         }
+    }
+    fun setRecordPath(recordPath:String){
+        this.recordPath = recordPath
     }
 
     private fun convertImageFileToBase64(file: File): String {
@@ -170,7 +173,7 @@ class AudioViewModel
                 start()
                 _recording.value = true
             } catch (e: IOException) {
-                prefs.audioRecorded = ""
+                //prefs.audioRecorded = ""
                 Log.e("RECORD", e.toString())
             }
         }
@@ -182,12 +185,14 @@ class AudioViewModel
             release()
             val audio64 = convertImageFileToBase64(output!!)
             _fileString.value = audio64
-            prefs.audioRecorded = audio64
-            prefs.audioRecordedPath = recordPath
+            //prefs.audioRecorded = audio64
+            //prefs.audioRecordedPath = recordPath
             _recording.value = false
         }
         recorder = null
     }
+    fun getAudioRecordPath() = recordPath
+
     private fun stopAudioPlaying() {
         player?.let {
             player?.apply {
@@ -201,8 +206,23 @@ class AudioViewModel
     }
 
 
-    fun doSelectAudio() {
-        startPlaying()
+    fun doSelectAudio(path: String) {
+        player = MediaPlayer().apply {
+            try {
+                setDataSource(path)
+                prepare()
+                setOnCompletionListener {
+                    _recording.value = false
+                    _textPlaying.value = false
+                }
+                start()
+                _textPlaying.value = true
+                playingAudio = true
+                _recording.value = true
+            } catch (e: IOException) {
+                Log.e("PLAYING ERROR", "No se encuentra ael recordpat -> "+recordPath.toString())
+            }
+        }
     }
 
     fun saveReport(report: AudioReport) = setAudioReport(SetAudioReport.Params(report)) {
@@ -238,6 +258,7 @@ class AudioViewModel
         it.either(::handleFailure,::handleGetAudioReport )
     }
     private fun handleGetAudioReport(list: List<AudioReportModel>){
+        Log.d("viewModel",list.toString())
         _getAudiosReport.value = list ?: emptyList()
     }
 
@@ -250,13 +271,7 @@ class AudioViewModel
 
 
 
-    fun setReadyAnswers(
-        idQuestion: String,
-        nameQuestion: String,
-        idAnswer: String,
-        nameAnswer: String,
-        img: String
-    ) {
+    fun setReadyAnswers(idQuestion: String, nameQuestion: String, idAnswer: String, nameAnswer: String, img: String) {
         setReadyAnswers(
             SetReadyAnswers.Params(
                 0,
@@ -285,26 +300,6 @@ class AudioViewModel
         this._updateReportState.value = success
     }
 
-    fun saveSelectedAudio(audioSelected64: String,audioSelectedPath: String){
-        prefs.audioSelectedPath = audioSelectedPath
-        prefs.audioSelected = audioSelected64
-    }
-
-    fun existPreviousRecord() {
-        recordPath = prefs.audioRecordedPath.toString()
-        _fileString.value = prefs.audioRecorded
-    }
-
-    fun existPreviousSelectedAudio(){
-        _fileSelectedString.value = prefs.audioSelected
-        selectedPath = prefs.audioSelectedPath.toString()
-    }
-
-    fun getSelectedPath() : String = prefs.audioSelectedPath.toString()
-    fun getSelected() : String = prefs.audioSelected.toString()
-    fun getRecordedPath() : String = prefs.audioRecordedPath.toString()
-    fun getRecord(): String = prefs.audioRecorded.toString()
-
     fun reRecordAudio() {
         this._displayMessage.value = false
         this._fileString.value = ""
@@ -321,15 +316,15 @@ class AudioViewModel
     }
 
     fun clearAudioRecorded() {
-        prefs.audioRecorded = ""
-        prefs.audioRecordedPath = ""
+        //prefs.audioRecorded = ""
+        //prefs.audioRecordedPath = ""
         this._fileString.value = ""
         this.recordPath = ""
     }
 
     fun clearAudioSelected(){
-        prefs.audioSelected = ""
-        prefs.audioSelectedPath = ""
+        //prefs.audioSelected = ""
+        //prefs.audioSelectedPath = ""
         _fileSelectedString.value = ""
         selectedPath = ""
     }

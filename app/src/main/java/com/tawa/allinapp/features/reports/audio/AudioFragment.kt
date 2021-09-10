@@ -30,6 +30,7 @@ import java.util.*
 import android.provider.MediaStore
 import android.provider.OpenableColumns
 import com.tawa.allinapp.data.local.models.AudioReportModel
+import kotlin.collections.ArrayList
 
 
 class AudioFragment : BaseFragment() {
@@ -51,7 +52,7 @@ class AudioFragment : BaseFragment() {
     private var audioSelected64: String = ""
     private var audioSelectedName: String = ""
 
-    private var listAudioReport: List<AudioReportModel>? = null
+    private lateinit var listAudioReport: ArrayList<AudioReportModel>
 
     companion object
 
@@ -82,6 +83,7 @@ class AudioFragment : BaseFragment() {
             idPv = id
         }
 
+        listAudioReport = ArrayList()
         checkListViewModel = viewModel(viewModelFactory) {
 
         }
@@ -89,18 +91,31 @@ class AudioFragment : BaseFragment() {
         audioViewModel = viewModel(viewModelFactory) {
             observe(getAudiosReport, {
                 it?.let {
+                    //Log.d("listAudio", it.toString())
                     if (it.isNotEmpty()) {
-                        Log.d("list",listAudiosReport.toString())
-                        listAudioReport = it
-                        listAudiosReport?.get(0)?.let { info ->
+                        for(i in it){
+                            listAudioReport.add(i)
+                        }
+                        it[0].let { info->
                             audio64 = info.record
                             audioPath =info.recordPath
-                            audioSelected64 = info.selected
-                            audioPath = info.selectedName
-                            //////Vistas
-                            binding.lyRecordSelected.visible()
-                            binding.tvRecordSelected.text = info.selectedName
+                            audioViewModel.setRecordPath(audioPath)
 
+                            audioSelected64 = info.selected
+                            audioSelectedName = info.selectedName
+                            //////Vistas
+                            if(audioSelectedName != ""){
+                                binding.lyRecordSelected.visible()
+                                binding.tvRecordSelected.text = info.selectedName
+                            }else{
+                                binding.lyRecordSelected.invisible()
+                            }
+
+                            if(audioPath != ""){
+                                binding.rvAudioRecord.visible()
+                            }else{
+                                binding.rvAudioRecord.invisible()
+                            }
                         }
                     }
                 }
@@ -115,12 +130,13 @@ class AudioFragment : BaseFragment() {
                 it?.let {
                     if (it != "") {
                         audio64 = it
+                        audioPath = audioViewModel.getAudioRecordPath()
                         binding.rvAudioRecord.visible()
-                        binding.tvRecordSelected.text = getSelected()
+                        //binding.tvRecordSelected.text = getSelected()
                     } else
-                        audio64 = ""
-                    audioPath = ""
-                    binding.rvAudioRecord.invisible()
+                        //audio64 = ""
+                        //audioPath = ""
+                        binding.rvAudioRecord.invisible()
                 }
             })
             observe(fileSelectedString, {
@@ -219,29 +235,25 @@ class AudioFragment : BaseFragment() {
                 }
             })
         }
-        audioViewModel.existPreviousRecord()
-        audioViewModel.existPreviousSelectedAudio()
 
+        binding.tvRecord.setOnClickListener {
+            audioViewModel.doSelectAudio(audioPath)
+        }
         binding.ivRecordSelectedDelete.setOnClickListener {
-            binding.lyRecordSelected.visibility = View.GONE
+            binding.lyRecordSelected.invisible()
             audioSelected64 = ""
+            audioSelectedName = ""
             audioViewModel.clearAudioSelected()
         }
         binding.ivClose.setOnClickListener {
             binding.rvAudioRecord.invisible()
+            audioPath = ""
             audio64 = ""
             audioViewModel.clearAudioRecorded()
         }
         confirmationDialog.listener = object : ConfirmSyncDialogFragment.Callback {
             override fun onClick() {
-
-                audioViewModel.setReadyAnswers(
-                    idQuestion,
-                    nameQuestion,
-                    idAnswer,
-                    audio64,
-                    ""
-                ) // Work // Poner validación
+                audioViewModel.setReadyAnswers(idQuestion, nameQuestion, idAnswer, audio64, "") // Work // Poner validación
                 audioViewModel.updateStateReport(idReport, "En proceso", "Terminado")
                 checkListViewModel.updateReportPv(
                     idReport,
@@ -253,8 +265,7 @@ class AudioFragment : BaseFragment() {
                 )
                 checkListViewModel.setAnswerPv(idAnswer, idQuestion, audio64, "")
                 //Guardando audio
-                val report = AudioReport(idPv,audioSelected64, audioSelectedName, audio64, audioPath, "")
-                audioViewModel.saveReport(report)
+                audioViewModel.saveReport(AudioReport(idPv,audioSelected64, audioSelectedName, audio64, audioPath, ""))
                 if (audio64 != "") audioViewModel.syncStandardReports(idReport, latitude, longitude)
                 else audioViewModel.syncStandardReports(idReport, latitude, longitude)
                 activity?.onBackPressed()
@@ -281,7 +292,7 @@ class AudioFragment : BaseFragment() {
             checkListViewModel.updateReportPv(idReport, "En proceso", "Borrador", Calendar.getInstance().toInstant().toString(), latitude, longitude)
             audioViewModel.updateStateReport(idReport, "En proceso", "Borrador")
 
-            if(listAudioReport == null) audioViewModel.saveReport(report)
+            if(listAudioReport.isEmpty()) audioViewModel.saveReport(report)
             else audioViewModel.updateAudioReport(report)
 
             activity?.onBackPressed()
@@ -291,14 +302,8 @@ class AudioFragment : BaseFragment() {
         audioViewModel.setAudioLimit(audioLimit)
         audioViewModel.getAudioQuestions()
 
-        //Audios
-        audioSelectedName = audioViewModel.getSelectedPath()
-        //audioSelected64 = audioViewModel.getSelected()
-        audioPath = audioViewModel.getRecordedPath()
-        audio64 = audioViewModel.getRecord()
-//Room
+        //Room
         audioViewModel.getAudioReport(idPv)
-
 
         return binding.root
     }
@@ -318,7 +323,8 @@ class AudioFragment : BaseFragment() {
                 val fileName = getFilename(data.data!!)
                 binding.tvRecordSelected.text = fileName
                 audioSelectedName = fileName!!
-                audioViewModel.saveSelectedAudio(audioSelected64, audioSelectedName)
+                audioSelected64 = "Audiotest"
+                //audioViewModel.saveSelectedAudio(audioSelected64, audioSelectedName)
             }
 
         }
