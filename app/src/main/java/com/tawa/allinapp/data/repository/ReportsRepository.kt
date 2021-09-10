@@ -51,6 +51,7 @@ interface ReportsRepository {
     fun syncReportStandard(idReport: String,latitude: String,longitude: String):Either<Failure, Boolean>
     fun syncReportStandardMassive(latitude: String,longitude: String):Either<Failure, Boolean>
     fun syncReportAudio():Either<Failure, Boolean>
+    //fun getAudioReport(): Either<Failure, List<ReportModel>>
     fun getLocalPhotoReport(): Either<Failure, PhotoReport>
     fun getStateReport(idReport: String): Either<Failure,String>
     fun getStatePhotoReport(): Either<Failure, String>
@@ -535,7 +536,6 @@ interface ReportsRepository {
             return when (networkHandler.isConnected) {
                 true ->{
                     try {
-
                         val reportData = mutableListOf<ReportStandard>()
                         val report = reportsDataSource.getReportPv(prefs.companyId?:"",prefs.pvId?:"",prefs.idUser?:"",idReport)
                         val questions  = questionsDataSource.getQuestionsByIdReport(idReport).map { it.toView() }
@@ -580,12 +580,11 @@ interface ReportsRepository {
             return when (networkHandler.isConnected) {
                 true ->{
                     try {
-
                         val reportData = mutableListOf<ReportStandard>()
                         var image =""
+                        val report = reportsDataSource.getReportsPvReady(prefs.companyId ?: "", prefs.pvId ?: "", prefs.idUser ?: "")
                         val questions  = questionsDataSource.getQuestionsByIdReport("61080334ad6bca97e82d94a9").map { it.toView() }
-                        for(question in questions)
-                        {
+                        for(question in questions) {
                                 val answerData= mutableListOf<AnswerStandard>()
                                 val answers = questionsDataSource.getReadyAnswers(question.id).map { it.toView() }
                                 for(answer in answers)
@@ -621,7 +620,20 @@ interface ReportsRepository {
                 false -> Either.Left(Failure.NetworkConnection)
             }
         }
-
+/*
+        override fun getAudioReport(): Either<Failure, List<ReportModel>> {
+            return try {
+                val response = reportsDataSource.getAudioReport()
+                if(response.isEmpty()){
+                    Either.Right(AudioReport("","",""))
+                }else{
+                    Either.Right(respo)
+                }
+            }catch (e:Exception){
+                Either.Left(Failure.DefaultError(e.message!!))
+            }
+        }
+*/
         override fun getStateSku(idPv: String): Either<Failure, String> {
             return try {
                 Either.Right(reportsDataSource.getStateSku(prefs.pvId?:"",prefs.companyId?:"",prefs.idUser?:""))

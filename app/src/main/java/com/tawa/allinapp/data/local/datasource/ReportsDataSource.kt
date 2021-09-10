@@ -75,6 +75,11 @@ class ReportsDataSource @Inject constructor(private val reportsDao: ReportsDao){
         reportsDao.insertAudioReport(reportModel)
     }
 
+    fun getAudioReport(): List<AudioReportModel>{
+        return reportsDao.getAudioReport()
+    }
+
+
     fun insertSku(skuModel: SkuModel){
         reportsDao.insertSku(skuModel)
     }

@@ -7,6 +7,8 @@ import androidx.room.PrimaryKey
 data class AudioReportModel(
     @PrimaryKey(autoGenerate = true) val id: Int=0,
     val selected: String,
+    val selectedPath: String,
     val record: String,
+    val recordPath: String,
     val comments: String?,
 )

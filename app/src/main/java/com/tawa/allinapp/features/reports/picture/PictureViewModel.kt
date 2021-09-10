@@ -47,7 +47,8 @@ class PictureViewModel
         }
     }
 
-    fun getPhotoReport() = getLocalPhotoReport(UseCase.None()) { it.either(::handleFailure, ::handlePhotoReport) }
+    fun getPhotoReport() = getLocalPhotoReport(UseCase.None()) {
+        it.either(::handleFailure, ::handlePhotoReport) }
 
     fun syncPhotoReport() = syncPhotoReports(UseCase.None()) { it.either(::handleFailure, ::handleSyncPhotoReport) }
 

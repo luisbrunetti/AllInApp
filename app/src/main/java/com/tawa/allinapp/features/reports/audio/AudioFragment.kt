@@ -2,16 +2,19 @@ package com.tawa.allinapp.features.reports.audio
 
 import android.app.Activity
 import android.content.ActivityNotFoundException
+import android.content.ContentUris
+import android.content.Context
 import android.content.Intent
+import android.database.Cursor
+import android.net.Uri
 import android.os.Bundle
-import android.os.FileUtils
+import android.os.Environment
 import android.os.SystemClock
+import android.provider.DocumentsContract
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import com.skydoves.balloon.createBalloon
 import com.tawa.allinapp.R
 import com.tawa.allinapp.core.dialog.ConditionalDialogFragment
 import com.tawa.allinapp.core.dialog.MessageDialogFragment
@@ -24,6 +27,9 @@ import com.tawa.allinapp.features.reports.standard.ConfirmSyncDialogFragment
 import com.tawa.allinapp.models.AudioReport
 import java.io.File
 import java.util.*
+import android.provider.MediaStore
+import android.provider.OpenableColumns
+import androidx.loader.content.CursorLoader
 
 
 class AudioFragment : BaseFragment() {
@@ -35,11 +41,16 @@ class AudioFragment : BaseFragment() {
     private var nameQuestion = ""
     private var idAnswer = ""
     private var nameAnswer = ""
-    private var audio64 = ""
     private var idReport = ""
-    private var audioLimit: Int = 1000*60*7 // 7 minutos
+    private var audioLimit: Int =1000*60*7 // 7 minutos
     private val confirmationDialog: ConfirmSyncDialogFragment = ConfirmSyncDialogFragment()
-    private var audioSelected : String? = null
+
+    private var audio64 = ""
+    private var audioPath = ""
+    private var audioSelected64 : String = ""
+    private var audioSelectedPath: String = ""
+
+
     companion object val REQUEST_CODE = 200
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,6 +62,7 @@ class AudioFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         setUpBinding()
         checkPermissions()
+        getLastLocation()
     }
 
     override fun onCreateView(
@@ -70,11 +82,24 @@ class AudioFragment : BaseFragment() {
         audioViewModel = viewModel(viewModelFactory) {
             observe(fileString, {
                 it?.let {
-                    if (it.isNotEmpty()) {
+                    if (it != "") {
                         audio64 = it
                         binding.rvAudioRecord.visible()
+                        binding.tvLabelRecordAudio.text = getSelected()
                     } else
+                        audio64 = ""
                         binding.rvAudioRecord.invisible()
+                }
+            })
+            observe(fileSelectedString,{
+                it?.let {
+                    if(it != ""){
+                        audioSelected64 = it
+                        binding.lyRecordSelected.visible()
+                    }else{
+                        audioSelected64 = ""
+                        binding.lyRecordSelected.invisible()
+                    }
                 }
             })
             observe(recording, {
@@ -91,14 +116,13 @@ class AudioFragment : BaseFragment() {
                                 notify(activity, R.string.error_audio_limit)
                                 stopRecordingByLimit()
                             }
-
                         }
                         binding.chronometer.start()
                         binding.rvAudioRecord.invisible()
                     } else {
                         binding.chronometer.base = SystemClock.elapsedRealtime()
                         binding.chronometer.stop()
-                        if(audioViewModel.existPreviousRecord() != "") binding.rvAudioRecord.visible()
+                        binding.rvAudioRecord.visible()
                     }
                 }
             })
@@ -160,75 +184,77 @@ class AudioFragment : BaseFragment() {
                 }
             })
         }
-        visibilityAudioRecorded()
-        binding.ivRecordSelectedDelete.setOnClickListener { binding.lyRecordSelected.visibility = View.GONE }
+        audioViewModel.existPreviousRecord()
+        audioViewModel.existPreviousSelectedAudio()
+
+        binding.ivRecordSelectedDelete.setOnClickListener {
+            binding.lyRecordSelected.visibility = View.GONE
+            audioSelected64 = ""
+            audioViewModel.clearAudioSelected()
+        }
         binding.ivClose.setOnClickListener {
             binding.rvAudioRecord.invisible()
+            audio64 = ""
             audioViewModel.clearAudioRecorded()
         }
         confirmationDialog.listener = object : ConfirmSyncDialogFragment.Callback {
             override fun onClick() {
-                getLastLocation()
-                audioViewModel.setReadyAnswers(idQuestion, nameQuestion, idAnswer, audio64, "") // Work
+
+                audioViewModel.setReadyAnswers(idQuestion, nameQuestion, idAnswer, audio64, "") // Work // Poner validación
                 audioViewModel.updateStateReport(idReport, "En proceso", "Terminado")
-                checkListViewModel.updateReportPv(
-                    idReport,
-                    "En proceso",
-                    "Terminado",
-                    Calendar.getInstance().toInstant().toString(),
-                    latitude,
-                    longitude
-                )
-                checkListViewModel.setAnswerPv(idAnswer, idQuestion, nameAnswer, "")
+                checkListViewModel.updateReportPv(idReport, "En proceso", "Terminado", Calendar.getInstance().toInstant().toString(), latitude, longitude)
+                checkListViewModel.setAnswerPv(idAnswer, idQuestion, audio64, "")
+                //Guardando audio
+                val report = AudioReport(audioSelected64,audioSelectedPath, audio64, audioPath, "")
+                audioViewModel.saveReport(report)
+                if(audio64 != "") audioViewModel.syncStandardReports(idReport,latitude, longitude)
+                else audioViewModel.syncStandardReports(idReport,latitude, longitude)
                 activity?.onBackPressed()
             }
 
             override fun onBack() {
-                getLastLocation()
-                audioViewModel.setReadyAnswers(idQuestion, nameQuestion, idAnswer, audio64, "") // Work
-                audioViewModel.updateStateReport(idReport, "En proceso", "Terminado")
-                checkListViewModel.updateReportPv(
-                    idReport,
-                    "En proceso",
-                    "Terminado",
-                    Calendar.getInstance().toInstant().toString(),
-                    latitude,
-                    longitude
-                )
-                checkListViewModel.setAnswerPv(idAnswer, idQuestion, nameAnswer, "")
-                activity?.onBackPressed()
+                confirmationDialog.dismiss()
             }
-
         }
         binding.btSavePictures.setOnClickListener {
-            confirmationDialog.show(childFragmentManager, "dialog")
+            if(audio64 != "" && audioSelected64 != ""){
+                notify(activity, R.string.only_one_audio)
+            }else{
+                if(audio64 == "" && audioSelected64 == "") notify(activity, R.string.no_audios)
+                else confirmationDialog.show(childFragmentManager, "dialog")
+            }
         }
-
         binding.btErraser.setOnClickListener {
-            val report = AudioReport(
-                audioSelected ?: "",
-                audio64,
-                ""
-            )
-            audioViewModel.setReadyAnswers(idQuestion, nameQuestion, idAnswer, audio64, "")
-            checkListViewModel.setAnswerPv(idAnswer, idQuestion, nameAnswer, "")
-            checkListViewModel.updateReportPv(idReport, "En proceso", "Borrador", "", "", "")
-            audioViewModel.updateStateReport(idReport, "En proceso", "Borrador")
+
+            val report = AudioReport(audioSelected64,audioSelectedPath, audio64, audioPath, "")
+            if(audio64 != ""){
+                audioViewModel.setReadyAnswers(idQuestion, nameQuestion, idAnswer, audio64, "") // Aqui faltaria poner en la estructura la c
+                checkListViewModel.setAnswerPv(idAnswer, idQuestion, audio64, "") // Falta cheuear lo de Answer (Ingrese Audio)
+                checkListViewModel.updateReportPv(idReport, "En proceso", "Borrador", Calendar.getInstance().toInstant().toString(), latitude, longitude)
+                audioViewModel.updateStateReport(idReport, "En proceso", "Borrador")
+                audioViewModel.saveReport(report)
+            }else{
+                audioViewModel.setReadyAnswers(idQuestion, nameQuestion, idAnswer, audioSelected64, "") // Aqui faltaria poner en la estructura la columna selected
+                checkListViewModel.setAnswerPv(idAnswer, idQuestion, audioSelected64, "") // Falta cheuear lo de Answer (Ingrese Audio)
+                checkListViewModel.updateReportPv(idReport, "En proceso", "Borrador", Calendar.getInstance().toInstant().toString(), latitude, longitude)
+                audioViewModel.updateStateReport(idReport, "En proceso", "Borrador")
+            }
             audioViewModel.saveReport(report)
             activity?.onBackPressed()
         }
 
         binding.btTakeAudioSelect.setOnClickListener { showFilePicker() }
-
         audioViewModel.setAudioLimit(audioLimit)
         audioViewModel.getAudioQuestions()
+
+        //Audios
+        audioSelectedPath = audioViewModel.getSelectedPath()
+        audioSelected64 = audioViewModel.getSelected()
+        audioPath = audioViewModel.getRecordedPath()
+        audio64 = audioViewModel.getRecord()
         return binding.root
     }
 
-    private fun visibilityAudioRecorded(){
-        if(audioViewModel.existPreviousRecord() != "") binding.rvAudioRecord.visibility = View.VISIBLE
-        else binding.rvAudioRecord.visibility = View.GONE
-    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -236,26 +262,36 @@ class AudioFragment : BaseFragment() {
             data?.let {
                 Log.d("data", data.data.toString())
 
-
-                val uri = data.data?.lastPathSegment
-                uri?.toString()?.let { it1 -> Log.d("uri", it1) }
-                var nameFile: String = "ErrorFile"
-                uri?.indexOf("/",0,true)?.let { it1 -> nameFile = uri.substring(it1+1, uri.length) }
                 binding.lyRecordSelected.visibility = View.VISIBLE
 
+                val realPath = getRealPathFromURI(requireContext(), data.data!!)
+                val file = realPath.toString()+".mp3"
 
+                Log.d("realPath",realPath.toString()+".mp3")
 
-                val newuri = data.data
-                val file = File(newuri!!.path)
-
-                binding.tvRecordSelected.text = file.name
-                audioSelected = file.name
-                //audioSelected = audioViewModel.convertAudioSelectedTo64Format(data.data.toString())
-                //Log.d("audioSelected", audioSelected.toString())
+                binding.tvRecordSelected.text = getFilename(data.data!!)
+                audioSelectedPath = data.data?.path.toString()
+                audioViewModel.saveSelectedAudio(audioSelected64,audioSelectedPath)
+                //audioSelected64 = Base64.t
+                //Log.d("audioSelected", audioSelected64.toString())
             }
 
         }
     }
+    private fun getFilename(uri: Uri): String? {
+        val cursor = activity?.contentResolver?.query(uri, null, null, null, null)
+        var filename: String? = null
+
+        cursor?.getColumnIndex(OpenableColumns.DISPLAY_NAME)?.let { nameIndex ->
+            cursor.moveToFirst()
+
+            filename = cursor.getString(nameIndex)
+            cursor.close()
+        }
+
+        return filename
+    }
+
 
     private fun setUpBinding() {
         binding.viewModel = audioViewModel
@@ -284,6 +320,149 @@ class AudioFragment : BaseFragment() {
         }
     }
 
+
+
+    fun getRealPathFromURI(context: Context, uri: Uri): String? {
+        when {
+            // DocumentProvider
+            DocumentsContract.isDocumentUri(context, uri) -> {
+                when {
+                    // ExternalStorageProvider
+                    isExternalStorageDocument(uri) -> {
+                        val docId = DocumentsContract.getDocumentId(uri)
+                        val split = docId.split(":").toTypedArray()
+                        val type = split[0]
+                        // This is for checking Main Memory
+                        return if ("primary".equals(type, ignoreCase = true)) {
+                            if (split.size > 1) {
+                                Environment.getExternalStorageDirectory().toString() + "/" + split[1]
+                            } else {
+                                Environment.getExternalStorageDirectory().toString() + "/"
+                            }
+                            // This is for checking SD Card
+                        } else {
+                            "storage" + "/" + docId.replace(":", "/")
+                        }
+                    }
+                    isDownloadsDocument(uri) -> {
+                        val fileName = getFilePath(context, uri)
+                        if (fileName != null) {
+                            return Environment.getExternalStorageDirectory().toString() + "/Download/" + fileName
+                        }
+                        var id = DocumentsContract.getDocumentId(uri)
+                        if (id.startsWith("raw:")) {
+                            id = id.replaceFirst("raw:".toRegex(), "")
+                            val file = File(id)
+                            if (file.exists()) return id
+                        }
+                        val contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), java.lang.Long.valueOf(id))
+                        return getDataColumn(context, contentUri, null, null)
+                    }
+                    isMediaDocument(uri) -> {
+                        val docId = DocumentsContract.getDocumentId(uri)
+                        val split = docId.split(":").toTypedArray()
+                        val type = split[0]
+                        var contentUri: Uri? = null
+                        when (type) {
+                            "image" -> {
+                                contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                            }
+                            "video" -> {
+                                contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI
+                            }
+                            "audio" -> {
+                                contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+                            }
+                        }
+                        val selection = "_id=?"
+                        val selectionArgs = arrayOf(split[1])
+                        return getDataColumn(context, contentUri, selection, selectionArgs)
+                    }
+                }
+            }
+            "content".equals(uri.scheme, ignoreCase = true) -> {
+                // Return the remote address
+                return if (isGooglePhotosUri(uri)) uri.lastPathSegment else getDataColumn(context, uri, null, null)
+            }
+            "file".equals(uri.scheme, ignoreCase = true) -> {
+                return uri.path
+            }
+        }
+        return null
+    }
+
+    private fun getDataColumn(context: Context, uri: Uri?, selection: String?,
+                              selectionArgs: Array<String>?): String? {
+        var cursor: Cursor? = null
+        val column = "_data"
+        val projection = arrayOf(
+            column
+        )
+        try {
+            if (uri == null) return null
+            cursor = context.contentResolver.query(uri, projection, selection, selectionArgs,
+                null)
+            if (cursor != null && cursor.moveToFirst()) {
+                val index = cursor.getColumnIndexOrThrow(column)
+                return cursor.getString(index)
+            }
+        } finally {
+            cursor?.close()
+        }
+        return null
+    }
+
+
+    private fun getFilePath(context: Context, uri: Uri?): String? {
+        var cursor: Cursor? = null
+        val projection = arrayOf(
+            MediaStore.MediaColumns.DISPLAY_NAME
+        )
+        try {
+            if (uri == null) return null
+            cursor = context.contentResolver.query(uri, projection, null, null,
+                null)
+            if (cursor != null && cursor.moveToFirst()) {
+                val index = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DISPLAY_NAME)
+                return cursor.getString(index)
+            }
+        } finally {
+            cursor?.close()
+        }
+        return null
+    }
+
+    /**
+     * @param uri The Uri to check.
+     * @return Whether the Uri authority is ExternalStorageProvider.
+     */
+    fun isExternalStorageDocument(uri: Uri): Boolean {
+        return "com.android.externalstorage.documents" == uri.authority
+    }
+
+    /**
+     * @param uri The Uri to check.
+     * @return Whether the Uri authority is DownloadsProvider.
+     */
+    fun isDownloadsDocument(uri: Uri): Boolean {
+        return "com.android.providers.downloads.documents" == uri.authority
+    }
+
+    /**
+     * @param uri The Uri to check.
+     * @return Whether the Uri authority is MediaProvider.
+     */
+    fun isMediaDocument(uri: Uri): Boolean {
+        return "com.android.providers.media.documents" == uri.authority
+    }
+
+    /**
+     * @param uri The Uri to check.
+     * @return Whether the Uri authority is Google Photos.
+     */
+    fun isGooglePhotosUri(uri: Uri): Boolean {
+        return "com.google.android.apps.photos.content" == uri.authority
+    }
 }
 
 

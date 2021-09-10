@@ -58,6 +58,9 @@ interface ReportsDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertAudioReport(report:AudioReportModel)
 
+    @Query("SELECT * FROM reports_audio")
+    fun getAudioReport() : List<AudioReportModel>
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertSku(skuModel: SkuModel)
 

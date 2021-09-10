@@ -135,4 +135,6 @@
     <string name="error_photo_limit">Solo se puede agregar cinco fotografías</string>
     <string name="time_audio_limit">(Máximo 7 minutos)</string>
     <string name="error_audio_limit">Solo puedes grabar 7 minutos como máximo</string>
+    <string name="only_one_audio">Solo se debería enviar un audio. Por favor elimina alguno</string>
+    <string name="no_audios">Se debe enviar por lo menos un audio</string>
 </resources>

@@ -11,6 +11,8 @@ import androidx.lifecycle.MutableLiveData
 import com.tawa.allinapp.core.interactor.UseCase
 import com.tawa.allinapp.core.platform.BaseViewModel
 import com.tawa.allinapp.data.local.Prefs
+import com.tawa.allinapp.features.init.usecase.SyncAudio
+import com.tawa.allinapp.features.init.usecase.SyncStandardReports
 import com.tawa.allinapp.features.reports.standard.GetAnswers
 import com.tawa.allinapp.features.reports.standard.SetReadyAnswers
 import com.tawa.allinapp.features.reports.standard.UpdateStateReport
@@ -27,20 +29,25 @@ class AudioViewModel
 @Inject constructor(
     private val setAudioReport: SetAudioReport,
     private val getAudioQuestion: GetAudioQuestion,
+  //  private val getAudioReport: GetAudioReport,
     private val getAnswers: GetAnswers,
     private val setReadyAnswers: SetReadyAnswers,
     private val updateStateReport: UpdateStateReport,
-    private val prefs: Prefs
+    private val syncAudio: SyncAudio,
+    private val prefs: Prefs,
+    private val syncStandardReports: SyncStandardReports
 ) : BaseViewModel() {
 
     private var recorder: MediaRecorder? = null
     private var player: MediaPlayer? = null
-    private var fileName: String? = ""
     private var output: File? = null
     private var audioLimit: Int = 0
     private var playingAudio: Boolean = false
 
-
+    private var recordPath: String = ""
+    private var recordName: String = ""
+    private var selectedName: String = ""
+    private var selectedPath: String = ""
 
     private val _recording = MutableLiveData(false)
     val recording = _recording
@@ -48,13 +55,23 @@ class AudioViewModel
     private val _timeRecord = MutableLiveData("0:00")
     val timeRecord = _timeRecord
 
-    private val _record = MutableLiveData("")
-    val record = _record
+    //Files Names
+
+    private val _fileSelectedString = MutableLiveData("")
+    val fileSelectedString :LiveData<String> = _fileSelectedString
 
     private val _fileString = MutableLiveData("")
     val fileString = _fileString
 
+    //SyncAudio
+    private val _syncAudioReport = MutableLiveData(false)
+    val syncAudioReport: LiveData<Boolean> = _syncAudioReport
+
+    // Guardano en memoria
     private val _successRecord = MutableLiveData(false)
+
+
+
     val successRecord: LiveData<Boolean>
         get() = _successRecord
 
@@ -87,7 +104,7 @@ class AudioViewModel
             }
             stopRecord()
         } else {
-            if (_record.value == "") {
+            if (_fileString.value == "") {
                 startRecord()
             } else {
                 _displayMessage.value = true
@@ -98,7 +115,7 @@ class AudioViewModel
     private fun startPlaying() {
         player = MediaPlayer().apply {
             try {
-                setDataSource(_record.value)
+                setDataSource(recordPath)
                 prepare()
                 setOnCompletionListener {
                     _recording.value = false
@@ -131,23 +148,14 @@ class AudioViewModel
             setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
             setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
 
-            val outputFolder =
-                File(Environment.getExternalStorageDirectory().toString() + "/download/")
+            val outputFolder = File(Environment.getExternalStorageDirectory().toString() + "/download/")
             output = File(outputFolder.absolutePath + "/out" + Date().time + ".3gpp")
-            Log.i("DIRECTORIO", output!!.absolutePath)
-            _record.value = output!!.absolutePath
-            prefs.audioRecorded = output!!.absolutePath
-            setOutputFile(_record.value)
-            //setMaxDuration(1000*60*7)
-            setMaxDuration(audioLimit)
-            setOnInfoListener { mediaRecorder, what, extra ->
-                Log.d(
-                    "setInfoListener",
-                    what.toString() + mediaRecorder.toString() + extra.toString()
-                )
-                Log.d("setInfoListener", mediaRecorder.maxAmplitude.toString())
-            }
 
+            Log.i("DIRECTORIO", output!!.absolutePath)
+            recordPath = output!!.absolutePath
+            val directory = output!!.absolutePath
+            setOutputFile(directory)
+            setMaxDuration(audioLimit)
             try {
                 prepare()
                 start()
@@ -159,6 +167,18 @@ class AudioViewModel
         }
     }
 
+    private fun stopRecord() {
+        recorder?.apply {
+            stop()
+            release()
+            val audio64 = convertImageFileToBase64(output!!)
+            _fileString.value = audio64
+            prefs.audioRecorded = audio64
+            prefs.audioRecordedPath = recordPath
+            _recording.value = false
+        }
+        recorder = null
+    }
     private fun stopAudioPlaying() {
         player?.let {
             player?.apply {
@@ -171,15 +191,6 @@ class AudioViewModel
         player = null
     }
 
-    private fun stopRecord() {
-        recorder?.apply {
-            stop()
-            release()
-            _fileString.value = convertImageFileToBase64(output!!)
-            _recording.value = false
-        }
-        recorder = null
-    }
 
     fun doSelectAudio() {
         startPlaying()
@@ -249,14 +260,30 @@ class AudioViewModel
         this._updateReportState.value = success
     }
 
-    fun existPreviousRecord(): String? {
-        this._record.value = prefs.audioRecorded
-        return this._record.value
+    fun saveSelectedAudio(audioSelected64: String,audioSelectedPath: String){
+        prefs.audioSelectedPath = audioSelectedPath
+        prefs.audioSelected = audioSelected64
     }
+
+    fun existPreviousRecord() {
+        recordPath = prefs.audioRecordedPath.toString()
+        _fileString.value = prefs.audioRecorded
+    }
+
+    fun existPreviousSelectedAudio(){
+        _fileSelectedString.value = prefs.audioSelected
+        selectedPath = prefs.audioSelectedPath.toString()
+    }
+
+    fun getSelectedPath() : String = prefs.audioSelectedPath.toString()
+    fun getSelected() : String = prefs.audioSelected.toString()
+    fun getRecordedPath() : String = prefs.audioRecordedPath.toString()
+    fun getRecord(): String = prefs.audioRecorded.toString()
 
     fun reRecordAudio() {
         this._displayMessage.value = false
-        this._record.value = ""
+        this._fileString.value = ""
+        recordPath = ""
         doRecordAudio()
     }
 
@@ -266,20 +293,36 @@ class AudioViewModel
 
     fun stopRecordingByLimit() {
         stopRecord()
-        /*recorder?.apply {
-            stop()
-            release()
-            _fileString.value = convertImageFileToBase64(output!!)
-        }
-        recorder = null*/
     }
 
     fun clearAudioRecorded() {
         prefs.audioRecorded = ""
-        this._record.value = ""
+        prefs.audioRecordedPath = ""
+        this._fileString.value = ""
+        this.recordPath = ""
+    }
+
+    fun clearAudioSelected(){
+        prefs.audioSelected = ""
+        prefs.audioSelectedPath = ""
+        _fileSelectedString.value = ""
+        selectedPath = ""
     }
     fun convertAudioSelectedTo64Format(path: String): String?{
         val outputSelected = File(path)
         return convertImageFileToBase64(outputSelected)
     }
+
+    fun syncStandardReports(idReport: String, latitude:String,longitude: String) =
+        syncStandardReports(SyncStandardReports.Params(idReport,latitude,longitude))
+        { it.either(::handleFailure, ::handleSyncAudioReport) }
+
+    /*fun getAudioReport() = getAudioReport(UseCase.None()){
+
+    }*/
+
+    private fun handleSyncAudioReport(success: Boolean){
+        this._syncAudioReport.value = success
+    }
+
 }

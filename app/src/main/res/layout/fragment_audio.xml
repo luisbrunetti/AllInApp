@@ -46,7 +46,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="36dp"
-                        android:layout_marginTop="52dp"
+                        android:layout_marginTop="48dp"
                         android:layout_marginEnd="36dp"
                         android:text="@string/select_audio"
                         android:textColor="@color/text_dark"
@@ -127,7 +127,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="36dp"
-                        android:layout_marginTop="60dp"
+                        android:layout_marginTop="48dp"
                         android:layout_marginEnd="36dp"
                         android:text="@string/record_audio"
                         android:textColor="@color/text_dark"
@@ -283,13 +283,14 @@
                         android:gravity="center"
                         android:text="@string/register_button"
                         android:textAllCaps="false"
-                        android:textSize="18sp"
                         android:textColor="@color/white"
+                        android:textSize="18sp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toEndOf="@+id/btErraser"
-                        app:layout_constraintTop_toBottomOf="@+id/rvAudioRecord" />
+                        app:layout_constraintTop_toBottomOf="@+id/rvAudioRecord"
+                        app:layout_constraintVertical_bias="0.501" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

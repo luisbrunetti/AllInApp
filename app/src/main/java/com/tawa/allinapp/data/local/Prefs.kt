@@ -22,7 +22,12 @@ class Prefs
         const val DATA_SKU = "data_sku"
         const val STATE_CHECKLIST = "stateChecklist"
         const val VERIFY_CHECKLIST = "verifyChecklist"
+
+        //AUDIORECORDED
         const val AUDIO_RECORDED = "audioRecorded"
+        const val AUDIO_RECORDED_PATH = "audioRecordedPath"
+        const val AUDIO_SELECTED = "audioSelected"
+        const val AUDIO_SELECTED_PATH = "audioSelectedPath"
     }
 
     private val prefs  = context.getSharedPreferences(FILENAME, Context.MODE_PRIVATE)
@@ -85,4 +90,17 @@ class Prefs
     var audioRecorded: String?
         get() = prefs.getString(AUDIO_RECORDED, "")
         set(value) = prefs.edit().putString(AUDIO_RECORDED, value).apply()
+
+    var audioRecordedPath: String?
+        get() = prefs.getString(AUDIO_RECORDED_PATH, "")
+        set(value) = prefs.edit().putString(AUDIO_RECORDED_PATH,value).apply()
+
+    var audioSelected: String?
+        get() = prefs.getString(AUDIO_SELECTED, "")
+        set(value) = prefs.edit().putString(AUDIO_SELECTED,value).apply()
+
+    var audioSelectedPath: String?
+        get() = prefs.getString(AUDIO_SELECTED_PATH, "")
+        set(value) = prefs.edit().putString(AUDIO_SELECTED_PATH,value).apply()
+
 }
