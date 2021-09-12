@@ -2,7 +2,6 @@ package com.tawa.allinapp.data.repository
 
 import android.annotation.SuppressLint
 import android.util.Log
-import com.tawa.allinapp.core.dialog.MessageDialogFragment
 import com.tawa.allinapp.core.functional.Either
 import com.tawa.allinapp.core.functional.Failure
 import com.tawa.allinapp.core.functional.NetworkHandler
@@ -10,9 +9,7 @@ import com.tawa.allinapp.data.local.Prefs
 import com.tawa.allinapp.data.local.datasource.QuestionsDataSource
 import com.tawa.allinapp.data.local.datasource.ReportsDataSource
 import com.tawa.allinapp.data.local.models.*
-import com.tawa.allinapp.data.remote.MovieDetailEntity
 import com.tawa.allinapp.data.remote.entities.ReportsSkuRemote
-import com.tawa.allinapp.data.remote.entities.SynReportStandardMassiveRemote
 import com.tawa.allinapp.data.remote.entities.SynReportStandardRemote
 import com.tawa.allinapp.data.remote.entities.UpdateStatusRemote
 import com.tawa.allinapp.data.remote.service.ReportsService
@@ -20,12 +17,9 @@ import com.tawa.allinapp.models.AudioReport
 import com.tawa.allinapp.models.PhotoReport
 import com.tawa.allinapp.models.Report
 import com.tawa.allinapp.models.ReportStatus
-import com.tawa.allinapp.features.init.usecase.GetIdCompany
 import com.tawa.allinapp.models.*
-import retrofit2.Call
 import java.util.*
 import javax.inject.Inject
-import kotlin.math.log
 
 interface ReportsRepository {
     fun setReports(company: String): Either<Failure, Boolean>
@@ -61,12 +55,12 @@ interface ReportsRepository {
     fun deletePhotoReports(): Either<Failure, Boolean>
     fun getTypeSku(): Either<Failure,String>
     fun setSession(value: Boolean) :Either<Failure,Boolean>
-    fun getAudioReport(idPv:String, idUser: String): Either<Failure, List<AudioReportModel>>
-    fun updateAudioReport(idPv: String, idUser: String, selected: String, selectedName: String, record:String, recordPath: String, comments: String) : Either<Failure, Boolean>
+    fun getAudioReport(idPv:String, idUser: String): Either<Failure, AudioReport>
+    fun updateAudioReport(idPv: String, idUser: String, selected: String, selectedName: String, record:String, recordPath: String, recordSent:String,  comments: String) : Either<Failure, Boolean>
     class Network
     @Inject constructor(private val networkHandler: NetworkHandler,
                         private val reportsDataSource: ReportsDataSource,
-                        private  val questionsDataSource: QuestionsDataSource,
+                        private val questionsDataSource: QuestionsDataSource,
                         private val prefs: Prefs,
                         private val service: ReportsService,
     ): ReportsRepository{
@@ -587,17 +581,18 @@ interface ReportsRepository {
                         val reportData = mutableListOf<ReportStandard>()
                         var image =""
                         val report = reportsDataSource.getReportsPvReady(prefs.companyId ?: "", prefs.pvId ?: "", prefs.idUser ?: "")
-                        Log.d("syncReportAudio", report.toString())
-                        for(audio in report){
 
-                        }
+                        val audio = reportsDataSource.getAudioReports(prefs.pvId ?: "", prefs.idUser ?: "")
+                        //Log.d("syncReportAudio", report.toString())
+                        //Log.d ("syncReportAudios ", audio.toString())
+
                         val questions  = questionsDataSource.getQuestionsByIdReport("").map { it.toView() }
                         for(question in questions) {
                                 val answerData= mutableListOf<AnswerStandard>()
                                 val answers = questionsDataSource.getReadyAnswers(question.id).map { it.toView() }
                                 for(answer in answers)
                                 {
-                                    answerData.add(AnswerStandard(answer.idAnswer,"INGRESE EL AUDIO",answer.nameAnswer))
+                                    answerData.add(AnswerStandard(answer.idAnswer,answer.nameAnswer,"")) //NO SE SABE A QUE SE REFIERE CON INPUT
                                     if(answer.img.isNotEmpty())
                                     {
                                         image = answer.img
@@ -607,7 +602,7 @@ interface ReportsRepository {
 
                         }
                         Log.d("reportAudio", "$reportData - $image")
-                        val response = service.synStandardReports("Bearer ${prefs.token!!}",SynReportStandardRemote.Request("61080334ad6bca97e82d94a9",prefs.pvId?:"",prefs.companyId?:"",reportData.map { it.toRequestRemote() },"","","")).execute()
+                        val response = service.synStandardReports("Bearer ${prefs.token!!}",SynReportStandardRemote.Request("",prefs.pvId?:"",prefs.companyId?:"",reportData.map { it.toRequestRemote() },"","","")).execute()
                         when (response.isSuccessful) {
                             true -> {
                                 response.body()?.let { body ->
@@ -628,6 +623,7 @@ interface ReportsRepository {
                 false -> Either.Left(Failure.NetworkConnection)
             }
         }
+
         override fun getStateSku(idPv: String): Either<Failure, String> {
             return try {
                 Either.Right(reportsDataSource.getStateSku(prefs.pvId?:"",prefs.companyId?:"",prefs.idUser?:""))
@@ -760,13 +756,13 @@ interface ReportsRepository {
             prefs.session = true
             return Either.Right(true)
         }
-        override fun getAudioReport(idPv: String, idUser:String): Either<Failure, List<AudioReportModel>> {
+        override fun getAudioReport(idPv: String, idUser:String): Either<Failure,AudioReport> {
             return try {
-                val response = reportsDataSource.getAudioReports(idPv, idUser)
-                if (response.isNotEmpty()) {
-                    Either.Right(response)
-                } else {
-                    Either.Right(emptyList())
+                val audioReport = reportsDataSource.getAudioReports(idPv, idUser)
+                if(audioReport != null){
+                    Either.Right(audioReport.toView())
+                }else{
+                    Either.Right(AudioReport("","","","","","","",""))
                 }
             } catch (e: Exception) {
                 Either.Left(Failure.DefaultError(e.message!!))
@@ -780,11 +776,12 @@ interface ReportsRepository {
             selectedName: String,
             record: String,
             recordPath: String,
+            recordSent: String,
             comments: String
         ): Either<Failure, Boolean> {
             return try{
 
-                reportsDataSource.updateAudioReport(idPv,idUser, selected,selectedName,record,recordPath,comments)
+                reportsDataSource.updateAudioReport(idPv,idUser, selected,selectedName,record,recordPath,recordSent,comments)
                 Either.Right(true)
             }catch (e : Exception){
                 Either.Left(Failure.DefaultError(e.message!!))

@@ -151,10 +151,10 @@ class ReportsDataSource @Inject constructor(private val reportsDao: ReportsDao){
     fun getCountSku(idPV: String,idUser: String):Int{
         return reportsDao.getCountSku(idPV,idUser)
     }
-    fun getAudioReports(idPv: String,idUser: String):List<AudioReportModel>{
+    fun getAudioReports(idPv: String,idUser: String): AudioReportModel? {
         return reportsDao.getAudioReports(idPv = idPv, idUser = idUser)
     }
-    fun updateAudioReport(idPv: String, idUser:String, selected: String, selectedName: String, record:String, recordPath: String, comments: String){
-        reportsDao.updateAudioReport(idPv,idUser,selected,selectedName,record,recordPath,comments)
+    fun updateAudioReport(idPv: String, idUser:String, selected: String, selectedName: String, record:String, recordPath: String, recordSent: String, comments: String){
+        reportsDao.updateAudioReport(idPv,idUser,selected,selectedName,record,recordPath,recordSent, comments)
     }
 }

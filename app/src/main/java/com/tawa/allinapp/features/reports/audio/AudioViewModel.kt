@@ -64,7 +64,7 @@ class AudioViewModel
     val fileString = _fileString
 
     //SyncAudio
-    private val _syncAudioReport = MutableLiveData(false)
+    private val _syncAudioReport = MutableLiveData<Boolean>()
     val syncAudioReport: LiveData<Boolean> = _syncAudioReport
 
     // Guardano en memoria
@@ -96,8 +96,8 @@ class AudioViewModel
     val textPlaying: LiveData<Boolean> get() = _textPlaying
 
     //Room
-    private val _getAudiosReport = MutableLiveData<List<AudioReportModel>>(emptyList())
-    val getAudiosReport: LiveData<List<AudioReportModel>> get() = _getAudiosReport
+    private val _getAudiosReport = MutableLiveData<AudioReport>(null)
+    val getAudiosReport: LiveData<AudioReport> get() = _getAudiosReport
 
     private val _updateAudioReports = MutableLiveData<Boolean>(false)
     val updateAudioReports: LiveData<Boolean> get() = _updateAudioReports
@@ -254,9 +254,8 @@ class AudioViewModel
     fun getAudioReport(idPv: String,idUser: String) = getAudioReport(GetAudioReport.Params(idPv,idUser)){
         it.either(::handleFailure,::handleGetAudioReport )
     }
-    private fun handleGetAudioReport(list: List<AudioReportModel>){
-        Log.d("viewModel",list.toString())
-        _getAudiosReport.value = list ?: emptyList()
+    private fun handleGetAudioReport(audio: AudioReport){
+        _getAudiosReport.value = audio
     }
 
     fun updateAudioReport(audioReportModel: AudioReport) = updateAudioReport(audioReportModel){

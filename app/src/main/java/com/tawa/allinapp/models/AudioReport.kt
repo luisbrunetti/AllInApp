@@ -9,6 +9,7 @@ data class AudioReport (
     val selectedName: String,
     val record:String,
     val recordPath: String,
+    val recordSent: String,
     val comments:String,
 ){
     fun toModel(): AudioReportModel {
@@ -19,6 +20,7 @@ data class AudioReport (
             selectedName = this.selectedName,
             record = this.record,
             recordPath = this.recordPath,
+            recordSent = this.recordSent,
             comments = this.comments
         )
     }

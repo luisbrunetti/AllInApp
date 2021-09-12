@@ -91,7 +91,11 @@ class InitFragment : BaseFragment() {
             } })
             observe(successSyncSku, { it?.let {
                 Log.d(TAG,"SuccessSyncSku se realizado correctamente")
-                if (it) initViewModel.syncAudio()
+                if(it){
+                    hideProgressDialog()
+                    MessageDialogFragment.newInstance(message = "", title = R.string.end_sync,icon = R.drawable.ic_checkin).show(childFragmentManager, "dialog")
+                }
+                //if (it) initViewModel.syncAudio()
             } })
             observe(successSyncReportStandard, { it?.let {
                 getActualLocation()

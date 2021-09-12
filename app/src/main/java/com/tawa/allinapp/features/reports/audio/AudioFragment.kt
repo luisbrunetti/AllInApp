@@ -11,6 +11,8 @@ import android.os.Bundle
 import android.os.Environment
 import android.os.SystemClock
 import android.provider.DocumentsContract
+import android.provider.MediaStore
+import android.provider.OpenableColumns
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -27,10 +29,6 @@ import com.tawa.allinapp.features.reports.standard.ConfirmSyncDialogFragment
 import com.tawa.allinapp.models.AudioReport
 import java.io.File
 import java.util.*
-import android.provider.MediaStore
-import android.provider.OpenableColumns
-import com.tawa.allinapp.data.local.models.AudioReportModel
-import kotlin.collections.ArrayList
 
 
 class AudioFragment : BaseFragment() {
@@ -54,14 +52,11 @@ class AudioFragment : BaseFragment() {
     private var audioSelected64: String = ""
     private var audioSelectedName: String = ""
 
-    private lateinit var listAudioReport: ArrayList<AudioReportModel>
-
-    companion object{
+    private var audioReportSaved: AudioReport? = null
+    companion object {
         val REQUEST_CODE = 200
         val TAG = "AudioFragment"
     }
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         appComponent.inject(this)
@@ -87,57 +82,48 @@ class AudioFragment : BaseFragment() {
             this.idPv = idPv
         }
         arguments?.getString("idUser").toString().also { idUser ->
-            this.idUser= idUser
+            this.idUser = idUser
         }
-        arguments?.getString("state").toString().also { state->
+        arguments?.getString("state").toString().also { state ->
             this.state = state
-            if(state == "Enviado") disableComponents()
+            if (state == "Enviado") disableComponents()
         }
         Log.d("Arguments", "$idReport $idPv $idUser $state")
-
-
-
-        listAudioReport = ArrayList()
         checkListViewModel = viewModel(viewModelFactory) {
 
         }
 
         audioViewModel = viewModel(viewModelFactory) {
             observe(getAudiosReport, {
-                it?.let {
-                    //Log.d("listAudio", it.toString())
-                    if (it.isNotEmpty()) {
-                        for(i in it){
-                            listAudioReport.add(i)
+                if(it?.idUser != ""){
+                    it?.let { info ->
+                        //Log.d("listAudio", it.toString())
+                        audioReportSaved = info
+                        audio64 = info.record
+                        audioPath = info.recordPath
+                        audioViewModel.setRecordPath(audioPath)
+
+                        audioSelected64 = info.selected
+                        audioSelectedName = info.selectedName
+                        //////Vistas
+                        if (audioSelectedName != "") {
+                            binding.lyRecordSelected.visible()
+                            binding.tvRecordSelected.text = info.selectedName
+                        } else {
+                            binding.lyRecordSelected.invisible()
                         }
-                        it[0].let { info->
-                            audio64 = info.record
-                            audioPath =info.recordPath
-                            audioViewModel.setRecordPath(audioPath)
 
-                            audioSelected64 = info.selected
-                            audioSelectedName = info.selectedName
-                            //////Vistas
-                            if(audioSelectedName != ""){
-                                binding.lyRecordSelected.visible()
-                                binding.tvRecordSelected.text = info.selectedName
-                            }else{
-                                binding.lyRecordSelected.invisible()
-                            }
-
-                            if(audioPath != ""){
-                                binding.rvAudioRecord.visible()
-                            }else{
-                                binding.rvAudioRecord.invisible()
-                            }
+                        if (audioPath != "") {
+                            binding.rvAudioRecord.visible()
+                        } else {
+                            binding.rvAudioRecord.invisible()
                         }
                     }
                 }
             })
-            observe(updateAudioReports){
-                if (it == true){
+            observe(updateAudioReports) {
+                if (it == true) {
                     notify(requireActivity(), R.string.successful_update_audio)
-                }else{
                 }
             }
             observe(fileString, {
@@ -148,8 +134,8 @@ class AudioFragment : BaseFragment() {
                         binding.rvAudioRecord.visible()
                         //binding.tvRecordSelected.text = getSelected()
                     } else
-                        //audio64 = ""
-                        //audioPath = ""
+                    //audio64 = ""
+                    //audioPath = ""
                         binding.rvAudioRecord.invisible()
                 }
             })
@@ -187,7 +173,7 @@ class AudioFragment : BaseFragment() {
                     } else {
                         binding.chronometer.base = SystemClock.elapsedRealtime()
                         binding.chronometer.stop()
-                        if(audio64 != "" && audioPath != "") binding.rvAudioRecord.visible()
+                        if (audio64 != "" && audioPath != "") binding.rvAudioRecord.visible()
                     }
                 }
             })
@@ -200,9 +186,11 @@ class AudioFragment : BaseFragment() {
                     }
                 }
             })
-            observe(syncAudioReport,{
-                it?.let{
-                    notify(requireActivity(), R.string.success_sync_audio)
+            observe(syncAudioReport, {
+                it?.let {
+                    if(it){
+                        notify(requireActivity(), R.string.success_sync_audio)
+                    }
                 }
             })
             observe(answersAudio, {
@@ -277,9 +265,29 @@ class AudioFragment : BaseFragment() {
                 //Actualizando reportesa
                 audioViewModel.updateStateReport(idReport, "En proceso", "Terminado")
                 checkListViewModel.updateReportPv(idReport, "En proceso", "Terminado", Calendar.getInstance().toInstant().toString(), latitude, longitude)
+
                 //Guardando audio
-                if(listAudioReport.isEmpty()) audioViewModel.saveReport(AudioReport(idPv,idUser,audioSelected64, audioSelectedName, audio64, audioPath, ""))
-                else audioViewModel.updateAudioReport(AudioReport(idPv,idUser,audioSelected64, audioSelectedName, audio64, audioPath, ""))
+                if (audioReportSaved != null) {
+                    if (audio64 != ""){
+                        Log.d("AudioReport","Reportguardado  Actualizando audio 64 -- -> audio")
+                        audioViewModel.updateAudioReport(AudioReport(idPv, idUser, audioSelected64, audioSelectedName, audio64, audioPath, audio64, ""))
+                    }
+                    else if (audioSelected64 != "") {
+                        Log.d("AudioReport","Report guardado  Actualizando audioSelected64 -- -> audio")
+                        audioViewModel.updateAudioReport(AudioReport(idPv, idUser, audioSelected64, audioSelectedName, audio64, audioPath, audioSelected64, ""))
+                    }
+                } else {
+                    if (audio64 != "") {
+                        Log.d("AudioReport","Report no guardado  Creando audio64 -- -> audio")
+                        audioViewModel.saveReport(AudioReport(idPv, idUser, audioSelected64, audioSelectedName, audio64, audioPath, audio64, ""))
+                    }
+                    else if (audioSelected64 != "") {
+                        Log.d("AudioReport","Report no guardado  Creando audioSelected64 -- -> audio")
+                        audioViewModel.saveReport(
+                            AudioReport(idPv, idUser, audioSelected64, audioSelectedName, audio64, audioPath, audioSelected64, "")
+                        )
+                    }
+                }
                 audioViewModel.syncStandardReports(idReport, latitude, longitude)
 
                 activity?.onBackPressed()
@@ -298,21 +306,27 @@ class AudioFragment : BaseFragment() {
             }
         }
         binding.btErraser.setOnClickListener {
-            val report = AudioReport(idPv,idUser,audioSelected64, audioSelectedName, audio64, audioPath, "")
-            Log.d(TAG, "Audio report que se guardará "+ report.toModel())
+            val report = AudioReport(idPv, idUser, audioSelected64, audioSelectedName, audio64, audioPath, "NO CONFIRMED", "")
+            Log.d(TAG, "Audio report que se guardará " + report.toModel())
             //audioViewModel.setReadyAnswers(idQuestion, nameQuestion, idAnswer, audio64, "") // Aqui faltaria poner en la estructura la c
             //checkListViewModel.setAnswerPv(idAnswer, idQuestion, audio64, "") // Falta cheuear lo de Answer (Ingrese Audio
 
-            checkListViewModel.updateReportPv(idReport, "En proceso", "Borrador", Calendar.getInstance().toInstant().toString(), latitude, longitude)
+            checkListViewModel.updateReportPv(
+                idReport,
+                "En proceso",
+                "Borrador",
+                Calendar.getInstance().toInstant().toString(),
+                latitude,
+                longitude
+            )
             audioViewModel.updateStateReport(idReport, "En proceso", "Borrador")
 
-            if(listAudioReport.isEmpty()){
-                Log.d(TAG, "Guardando Audio")
-                audioViewModel.saveReport(report)
-            }
-            else {
+            if (audioReportSaved != null) {
                 Log.d(TAG, "Actualizando Audio")
                 audioViewModel.updateAudioReport(report)
+            } else {
+                Log.d(TAG, "Guardando Audio")
+                audioViewModel.saveReport(report)
             }
 
             activity?.onBackPressed()
@@ -323,13 +337,13 @@ class AudioFragment : BaseFragment() {
         audioViewModel.getAudioQuestions()
 
         //Room
-        audioViewModel.getAudioReport(idPv,idUser)
+        audioViewModel.getAudioReport(idPv, idUser)
 
         return binding.root
     }
 
     private fun disableComponents() {
-        binding.btTakeAudioSelect.apply{
+        binding.btTakeAudioSelect.apply {
             isEnabled = false
             alpha = 0.5F
         }
@@ -339,7 +353,7 @@ class AudioFragment : BaseFragment() {
             alpha = 0.5F
         }
         binding.btErraser.apply {
-            isEnabled =  false
+            isEnabled = false
             alpha = 0.5F
         }
         binding.btSavePictures.apply {

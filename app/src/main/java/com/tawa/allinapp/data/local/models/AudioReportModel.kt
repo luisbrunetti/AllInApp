@@ -13,6 +13,7 @@ data class AudioReportModel(
     val selectedName: String,
     val record: String,
     val recordPath: String,
+    val recordSent: String,
     val comments: String?,
 ) {
     fun toView() = AudioReport(
@@ -22,6 +23,7 @@ data class AudioReportModel(
         selectedName = selectedName,
         record = record,
         recordPath = recordPath,
+        recordSent = recordSent,
         comments = comments!!
     )
 }

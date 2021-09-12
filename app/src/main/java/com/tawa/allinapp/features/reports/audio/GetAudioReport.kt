@@ -9,8 +9,7 @@ import com.tawa.allinapp.models.Question
 import javax.inject.Inject
 
 class GetAudioReport
-@Inject constructor(private val  reportsRepository: ReportsRepository) : UseCase<List<AudioReportModel>, GetAudioReport.Params>() {
-
+@Inject constructor(private val  reportsRepository: ReportsRepository) : UseCase<AudioReport, GetAudioReport.Params>() {
     override suspend fun run(params: Params) = reportsRepository.getAudioReport(params.idPv, params.idUser)
 
     data class Params(val idPv:String, val idUser: String)

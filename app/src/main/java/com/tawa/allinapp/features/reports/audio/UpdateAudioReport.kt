@@ -17,6 +17,7 @@ class UpdateAudioReport
         params.selectedName,
         params.record,
         params.recordPath,
+        params.recordSent,
         params.comments!!
     )
 

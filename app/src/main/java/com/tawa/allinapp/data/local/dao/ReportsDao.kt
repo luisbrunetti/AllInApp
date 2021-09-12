@@ -119,8 +119,8 @@ interface ReportsDao {
     fun deletePhotos()
 
     @Query("SELECT * FROM reports_audio where idPv=:idPv and idUser= :idUser")
-    fun getAudioReports(idPv: String,idUser: String) : List<AudioReportModel>
+    fun getAudioReports(idPv: String,idUser: String) : AudioReportModel?
 
-    @Query("UPDATE reports_audio SET selected = :selected, selectedName = :selectedName, record =:record, recordPath = :recordPath, comments = :comments WHERE idPv = :idPv and idUser = :idUser" )
-    fun updateAudioReport(idPv: String,idUser:String, selected: String, selectedName: String, record:String, recordPath: String, comments: String)
+    @Query("UPDATE reports_audio SET selected = :selected, selectedName = :selectedName, record =:record, recordPath = :recordPath, recordSent = :recordSent, comments = :comments WHERE idPv = :idPv and idUser = :idUser" )
+    fun updateAudioReport(idPv: String,idUser:String, selected: String, selectedName: String, record:String, recordPath: String, recordSent:String, comments: String)
 }
