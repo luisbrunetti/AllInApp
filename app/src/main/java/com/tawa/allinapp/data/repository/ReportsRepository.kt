@@ -1,5 +1,6 @@
 package com.tawa.allinapp.data.repository
 
+import android.annotation.SuppressLint
 import android.util.Log
 import com.tawa.allinapp.core.dialog.MessageDialogFragment
 import com.tawa.allinapp.core.functional.Either
@@ -51,7 +52,6 @@ interface ReportsRepository {
     fun syncReportStandard(idReport: String,latitude: String,longitude: String):Either<Failure, Boolean>
     fun syncReportStandardMassive(latitude: String,longitude: String):Either<Failure, Boolean>
     fun syncReportAudio():Either<Failure, Boolean>
-    //fun getAudioReport(): Either<Failure, List<ReportModel>>
     fun getLocalPhotoReport(): Either<Failure, PhotoReport>
     fun getStateReport(idReport: String): Either<Failure,String>
     fun getStatePhotoReport(): Either<Failure, String>
@@ -61,8 +61,8 @@ interface ReportsRepository {
     fun deletePhotoReports(): Either<Failure, Boolean>
     fun getTypeSku(): Either<Failure,String>
     fun setSession(value: Boolean) :Either<Failure,Boolean>
-    fun getAudioReport(idPv:String): Either<Failure, List<AudioReportModel>>
-    fun updateAudioReport(idPv: String, selected: String, selectedName: String, record:String, recordPath: String, comments: String) : Either<Failure, Boolean>
+    fun getAudioReport(idPv:String, idUser: String): Either<Failure, List<AudioReportModel>>
+    fun updateAudioReport(idPv: String, idUser: String, selected: String, selectedName: String, record:String, recordPath: String, comments: String) : Either<Failure, Boolean>
     class Network
     @Inject constructor(private val networkHandler: NetworkHandler,
                         private val reportsDataSource: ReportsDataSource,
@@ -350,6 +350,7 @@ interface ReportsRepository {
         override fun saveLocalAudioReport(report: AudioReport): Either<Failure, Boolean> {
             return try {
                 reportsDataSource.insertAudioReport(report.toModel())
+                Log.d("Audio Insert","Audio Insertado con exito ---> " + report.toModel())
                 Either.Right(true)
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))
@@ -471,7 +472,7 @@ interface ReportsRepository {
                             listIdSku.add(sku.id)
                             listSku.add(ReportsSkuRemote.RequestMassive(sku.id,sku.idPv,sku.idCompany,linesAnswer.map { it.toRequest() },"COMPLETADO",sku.dateCreation,sku.longitude,sku.latitude,longitude,latitude,Calendar.getInstance().toInstant().toString()))
                         }
-                        Log.d("lineas",linesAnswer.toString())
+                        Log.d("lineas Sku Standard",linesAnswer.toString())
                         val response = service.syncSkuMassive("Bearer ${prefs.token!!}",listSku).execute()
                         when (response.isSuccessful) {
                             true -> {
@@ -540,7 +541,9 @@ interface ReportsRepository {
                     try {
                         val reportData = mutableListOf<ReportStandard>()
                         val report = reportsDataSource.getReportPv(prefs.companyId?:"",prefs.pvId?:"",prefs.idUser?:"",idReport)
+                        Log.d("syncReportStandard", "Obteniendo reportes -->  $report")
                         val questions  = questionsDataSource.getQuestionsByIdReport(idReport).map { it.toView() }
+                        Log.d("syncReportStandard", "Questions ->>>  $questions")
                         for(question in questions)
                         {
                                val answerData= mutableListOf<AnswerStandard>()
@@ -557,12 +560,12 @@ interface ReportsRepository {
                             true -> {
                                 response.body()?.let { body ->
                                     if(body.success) {
-                                        Log.d("success",body.message.toString())
+                                        Log.d("success  ---->> ",body.message.toString())
                                         updateReportPvSync(idReport,"Enviado","Terminado")
                                         Either.Right(true)
                                     }
                                     else{
-                                        Log.d("errorsincro",body.message.toString())
+                                        Log.d("errorsincro --->> ",body.message.toString())
                                         Either.Left(Failure.DefaultError(body.message))}
 
                                 }?: Either.Left(Failure.DefaultError(""))
@@ -584,7 +587,11 @@ interface ReportsRepository {
                         val reportData = mutableListOf<ReportStandard>()
                         var image =""
                         val report = reportsDataSource.getReportsPvReady(prefs.companyId ?: "", prefs.pvId ?: "", prefs.idUser ?: "")
-                        val questions  = questionsDataSource.getQuestionsByIdReport("61080334ad6bca97e82d94a9").map { it.toView() }
+                        Log.d("syncReportAudio", report.toString())
+                        for(audio in report){
+
+                        }
+                        val questions  = questionsDataSource.getQuestionsByIdReport("").map { it.toView() }
                         for(question in questions) {
                                 val answerData= mutableListOf<AnswerStandard>()
                                 val answers = questionsDataSource.getReadyAnswers(question.id).map { it.toView() }
@@ -621,20 +628,6 @@ interface ReportsRepository {
                 false -> Either.Left(Failure.NetworkConnection)
             }
         }
-/*
-        override fun getAudioReport(): Either<Failure, List<ReportModel>> {
-            return try {
-                val response = reportsDataSource.getAudioReport()
-                if(response.isEmpty()){
-                    Either.Right(AudioReport("","",""))
-                }else{
-                    Either.Right(respo)
-                }
-            }catch (e:Exception){
-                Either.Left(Failure.DefaultError(e.message!!))
-            }
-        }
-*/
         override fun getStateSku(idPv: String): Either<Failure, String> {
             return try {
                 Either.Right(reportsDataSource.getStateSku(prefs.pvId?:"",prefs.companyId?:"",prefs.idUser?:""))
@@ -707,7 +700,8 @@ interface ReportsRepository {
             }
         }
 
-        override fun syncReportStandardMassive(latitude: String,longitude: String): Either<Failure, Boolean> {
+        @SuppressLint("LongLogTag")
+        override fun syncReportStandardMassive(latitude: String, longitude: String): Either<Failure, Boolean> {
             return when (networkHandler.isConnected) {
                 true ->{
                     try {
@@ -734,13 +728,13 @@ interface ReportsRepository {
                             reportMassive.add(ReportStandardMassive(report.id,report.idPv,report.idCompany,reportData,"COMPLETADO",stateReport.time,stateReport.longitude,stateReport.latitude,longitude,latitude,Calendar.getInstance().toInstant().toString()))
                         }
 
-                        Log.d("report", "$reportData")
+                        Log.d("reportStandarMassive", "$reportData")
                         val response = service.synStandardReportsMassive("Bearer ${prefs.token!!}",reportMassive.map { it.toRequestRemote() }).execute()
                         when (response.isSuccessful) {
                             true -> {
                                 response.body()?.let { body ->
                                     if(body.success) {
-                                        Log.d("success",body.message.toString())
+                                        Log.d("success sync Report Standard -> ",body.message.toString())
                                         for(id in listIdStandard)
                                             updateReportPvSync(id,"Enviado","Terminado")
                                         Either.Right(true)
@@ -766,9 +760,9 @@ interface ReportsRepository {
             prefs.session = true
             return Either.Right(true)
         }
-        override fun getAudioReport(idPv: String): Either<Failure, List<AudioReportModel>> {
+        override fun getAudioReport(idPv: String, idUser:String): Either<Failure, List<AudioReportModel>> {
             return try {
-                val response = reportsDataSource.getAudioReports(idPv)
+                val response = reportsDataSource.getAudioReports(idPv, idUser)
                 if (response.isNotEmpty()) {
                     Either.Right(response)
                 } else {
@@ -781,6 +775,7 @@ interface ReportsRepository {
 
         override fun updateAudioReport(
             idPv: String,
+            idUser:String,
             selected: String,
             selectedName: String,
             record: String,
@@ -789,7 +784,7 @@ interface ReportsRepository {
         ): Either<Failure, Boolean> {
             return try{
 
-                reportsDataSource.updateAudioReport(idPv,selected,selectedName,record,recordPath,comments)
+                reportsDataSource.updateAudioReport(idPv,idUser, selected,selectedName,record,recordPath,comments)
                 Either.Right(true)
             }catch (e : Exception){
                 Either.Left(Failure.DefaultError(e.message!!))

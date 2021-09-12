@@ -74,6 +74,9 @@
                 android:name="idPv"
                 app:argType="string"/>
             <argument
+                android:name="idUser"
+                app:argType="string" />
+            <argument
                 android:name="state"
                 app:argType="string" />
         </action>

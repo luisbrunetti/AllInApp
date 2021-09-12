@@ -1,5 +1,6 @@
 package com.tawa.allinapp.data.repository
 
+import android.util.Log
 import com.tawa.allinapp.core.functional.Either
 import com.tawa.allinapp.core.functional.Failure
 import com.tawa.allinapp.core.functional.NetworkHandler
@@ -57,11 +58,14 @@ interface CheckRepository {
                 true ->{
                     try {
                         val request = checkDataSource.getChecks().map { it.toRemote() }
+                        Log.d("requestSyncChecks ->> ",request.toString())
                         val response = service.syncChecks("Bearer ${prefs.token!!}", request).execute()
+                        Log.d("responseSyncChecks ->> ",response.toString())
                         when (response.isSuccessful) {
                             true -> {
                                 response.body()?.let { body ->
                                     if(body.success) {
+                                        Log.d("syncChecks", "Se ha realizado la sincronización de Checks correctamente" )
                                         Either.Right(true)
                                     }
                                     else Either.Left(Failure.DefaultError(body.message))

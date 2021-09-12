@@ -10,7 +10,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.tawa.allinapp.core.interactor.UseCase
 import com.tawa.allinapp.core.platform.BaseViewModel
-import com.tawa.allinapp.data.local.Prefs
 import com.tawa.allinapp.data.local.models.AudioReportModel
 import com.tawa.allinapp.features.init.usecase.SyncAudio
 import com.tawa.allinapp.features.init.usecase.SyncStandardReports
@@ -74,9 +73,9 @@ class AudioViewModel
     val successRecord: LiveData<Boolean>
         get() = _successRecord
 
-    private val _successAudio = MutableLiveData<List<Question>>()
-    val successAudio: LiveData<List<Question>>
-        get() = _successAudio
+    private val _successAudioQuestions = MutableLiveData<List<Question>>()
+    val successAudioQuestions: LiveData<List<Question>>
+        get() = _successAudioQuestions
 
     private val _answersAudio = MutableLiveData<List<Answer>>()
     val answersAudio: LiveData<List<Answer>>
@@ -241,7 +240,7 @@ class AudioViewModel
 
     private fun handleAudioQuestions(audioQuestions: List<Question>) {
         Log.d("audioQuestions", audioQuestions.toString())
-        _successAudio.value = audioQuestions
+        _successAudioQuestions.value = audioQuestions
     }
 
     fun getAnswersAudio(idQuestion: String) = getAnswers(GetAnswers.Params(idQuestion)) {
@@ -252,7 +251,7 @@ class AudioViewModel
         _answersAudio.value = answers
     }
 
-    fun getAudioReport(idPv: String) = getAudioReport(GetAudioReport.Params(idPv)){
+    fun getAudioReport(idPv: String,idUser: String) = getAudioReport(GetAudioReport.Params(idPv,idUser)){
         it.either(::handleFailure,::handleGetAudioReport )
     }
     private fun handleGetAudioReport(list: List<AudioReportModel>){
@@ -266,8 +265,6 @@ class AudioViewModel
     private fun handleUpdateReport(success: Boolean){
         _updateAudioReports.value = success
     }
-
-
 
     fun setReadyAnswers(idQuestion: String, nameQuestion: String, idAnswer: String, nameAnswer: String, img: String) {
         setReadyAnswers(

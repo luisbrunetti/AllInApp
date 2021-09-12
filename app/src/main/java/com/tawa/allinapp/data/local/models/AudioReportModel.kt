@@ -8,6 +8,7 @@ import com.tawa.allinapp.models.AudioReport
 data class AudioReportModel(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val idPv: String,
+    val idUser: String,
     val selected: String,
     val selectedName: String,
     val record: String,
@@ -16,6 +17,7 @@ data class AudioReportModel(
 ) {
     fun toView() = AudioReport(
         idPv = idPv,
+        idUser=idUser,
         selected = selected,
         selectedName = selectedName,
         record = record,

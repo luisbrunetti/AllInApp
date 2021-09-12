@@ -41,6 +41,7 @@ class AudioFragment : BaseFragment() {
     private var idQuestion = ""
     private var nameQuestion = ""
     private var idAnswer = ""
+    private var idUser = ""
     private var nameAnswer = ""
     private var idReport = ""
     private var idPv = ""
@@ -55,9 +56,11 @@ class AudioFragment : BaseFragment() {
 
     private lateinit var listAudioReport: ArrayList<AudioReportModel>
 
-    companion object
+    companion object{
+        val REQUEST_CODE = 200
+        val TAG = "AudioFragment"
+    }
 
-    val REQUEST_CODE = 200
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,13 +83,19 @@ class AudioFragment : BaseFragment() {
         arguments?.getString("id").toString().also { idRep ->
             idReport = idRep
         }
-        arguments?.getString("idPv").toString().also { id ->
-            idPv = id
+        arguments?.getString("idPv").toString().also { idPv ->
+            this.idPv = idPv
+        }
+        arguments?.getString("idUser").toString().also { idUser ->
+            this.idUser= idUser
         }
         arguments?.getString("state").toString().also { state->
             this.state = state
             if(state == "Enviado") disableComponents()
         }
+        Log.d("Arguments", "$idReport $idPv $idUser $state")
+
+
 
         listAudioReport = ArrayList()
         checkListViewModel = viewModel(viewModelFactory) {
@@ -182,13 +191,18 @@ class AudioFragment : BaseFragment() {
                     }
                 }
             })
-            observe(successAudio, {
+            observe(successAudioQuestions, {
                 it?.let {
                     for (audio in it) {
                         idQuestion = audio.id
                         nameQuestion = audio.questionName
                         audioViewModel.getAnswersAudio(audio.id)
                     }
+                }
+            })
+            observe(syncAudioReport,{
+                it?.let{
+                    notify(requireActivity(), R.string.success_sync_audio)
                 }
             })
             observe(answersAudio, {
@@ -259,12 +273,13 @@ class AudioFragment : BaseFragment() {
         confirmationDialog.listener = object : ConfirmSyncDialogFragment.Callback {
             override fun onClick() {
                 audioViewModel.setReadyAnswers(idQuestion, nameQuestion, idAnswer, audio64, "") // Work // Poner validación
+                checkListViewModel.setAnswerPv(idAnswer, idQuestion, audio64, "")
+                //Actualizando reportesa
                 audioViewModel.updateStateReport(idReport, "En proceso", "Terminado")
                 checkListViewModel.updateReportPv(idReport, "En proceso", "Terminado", Calendar.getInstance().toInstant().toString(), latitude, longitude)
-                checkListViewModel.setAnswerPv(idAnswer, idQuestion, audio64, "")
                 //Guardando audio
-                if(listAudioReport.isEmpty()) audioViewModel.saveReport(AudioReport(idPv,audioSelected64, audioSelectedName, audio64, audioPath, ""))
-                else audioViewModel.updateAudioReport(AudioReport(idPv,audioSelected64, audioSelectedName, audio64, audioPath, ""))
+                if(listAudioReport.isEmpty()) audioViewModel.saveReport(AudioReport(idPv,idUser,audioSelected64, audioSelectedName, audio64, audioPath, ""))
+                else audioViewModel.updateAudioReport(AudioReport(idPv,idUser,audioSelected64, audioSelectedName, audio64, audioPath, ""))
                 audioViewModel.syncStandardReports(idReport, latitude, longitude)
 
                 activity?.onBackPressed()
@@ -283,16 +298,22 @@ class AudioFragment : BaseFragment() {
             }
         }
         binding.btErraser.setOnClickListener {
-            val report = AudioReport(idPv,audioSelected64, audioSelectedName, audio64, audioPath, "")
-
-            audioViewModel.setReadyAnswers(idQuestion, nameQuestion, idAnswer, audio64, "") // Aqui faltaria poner en la estructura la c
-            checkListViewModel.setAnswerPv(idAnswer, idQuestion, audio64, "") // Falta cheuear lo de Answer (Ingrese Audio
+            val report = AudioReport(idPv,idUser,audioSelected64, audioSelectedName, audio64, audioPath, "")
+            Log.d(TAG, "Audio report que se guardará "+ report.toModel())
+            //audioViewModel.setReadyAnswers(idQuestion, nameQuestion, idAnswer, audio64, "") // Aqui faltaria poner en la estructura la c
+            //checkListViewModel.setAnswerPv(idAnswer, idQuestion, audio64, "") // Falta cheuear lo de Answer (Ingrese Audio
 
             checkListViewModel.updateReportPv(idReport, "En proceso", "Borrador", Calendar.getInstance().toInstant().toString(), latitude, longitude)
             audioViewModel.updateStateReport(idReport, "En proceso", "Borrador")
 
-            if(listAudioReport.isEmpty()) audioViewModel.saveReport(report)
-            else audioViewModel.updateAudioReport(report)
+            if(listAudioReport.isEmpty()){
+                Log.d(TAG, "Guardando Audio")
+                audioViewModel.saveReport(report)
+            }
+            else {
+                Log.d(TAG, "Actualizando Audio")
+                audioViewModel.updateAudioReport(report)
+            }
 
             activity?.onBackPressed()
         }
@@ -302,7 +323,7 @@ class AudioFragment : BaseFragment() {
         audioViewModel.getAudioQuestions()
 
         //Room
-        audioViewModel.getAudioReport(idPv)
+        audioViewModel.getAudioReport(idPv,idUser)
 
         return binding.root
     }

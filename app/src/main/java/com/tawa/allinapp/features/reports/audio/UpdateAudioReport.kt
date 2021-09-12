@@ -12,6 +12,7 @@ class UpdateAudioReport
 
     override suspend fun run(params: AudioReport) = reportsRepository.updateAudioReport(
         params.idPv,
+        params.idUser,
         params.selected,
         params.selectedName,
         params.record,

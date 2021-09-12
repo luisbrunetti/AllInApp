@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.location.LocationManager
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -39,6 +40,9 @@ class InitFragment : BaseFragment() {
     private lateinit var _long: String
     private var selector = false
 
+    companion object {
+        val TAG = "Init_Fragment"
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         appComponent.inject(this)
@@ -48,6 +52,7 @@ class InitFragment : BaseFragment() {
         binding = FragmentInitBinding.inflate(inflater)
         showProgressDialog()
         selector = activity?.intent?.getBooleanExtra("selector",false)?:false
+        //Seleccionando empresa
         if(selector) showSelector()
 
         initViewModel = viewModel(viewModelFactory) {
@@ -75,17 +80,22 @@ class InitFragment : BaseFragment() {
                 initViewModel.getCheckMode()
             } })
             observe(successSyncChecks, { it?.let {
+                Log.d(TAG,"SuccessSyncChecks se realizado correctamente")
                 if (it) initViewModel.syncPhotoReport()
             } })
             observe(successSyncPhotoReports, { it?.let {
                 getActualLocation()
+                Log.d(TAG,"SuccessSyncPhotoReports se realizado correctamente")
+//                Log.d("latlng",_lat + _long.toString())
                 if (it) initViewModel.syncStandardReportsMassive(_lat,_long)
             } })
             observe(successSyncSku, { it?.let {
+                Log.d(TAG,"SuccessSyncSku se realizado correctamente")
                 if (it) initViewModel.syncAudio()
             } })
             observe(successSyncReportStandard, { it?.let {
                 getActualLocation()
+                Log.d(TAG, "Success Report Standard")
                 if (it) initViewModel.syncSkuMassive(_lat,_long)
             }})
             observe(descPV, { it?.let {
@@ -100,6 +110,7 @@ class InitFragment : BaseFragment() {
             }})
             observe(successSyncAudio, { it?.let {
                 if(it){
+                    Log.d(TAG,"SuccessSSyncAudio se realizado correctamente")
                     hideProgressDialog()
                     MessageDialogFragment.newInstance(message = "", title = R.string.end_sync,icon = R.drawable.ic_checkin).show(childFragmentManager, "dialog")
                 }

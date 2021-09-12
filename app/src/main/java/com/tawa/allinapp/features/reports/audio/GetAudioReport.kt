@@ -11,8 +11,8 @@ import javax.inject.Inject
 class GetAudioReport
 @Inject constructor(private val  reportsRepository: ReportsRepository) : UseCase<List<AudioReportModel>, GetAudioReport.Params>() {
 
-    override suspend fun run(params: Params) = reportsRepository.getAudioReport(params.idPv)
+    override suspend fun run(params: Params) = reportsRepository.getAudioReport(params.idPv, params.idUser)
 
-    data class Params(val idPv: String)
+    data class Params(val idPv:String, val idUser: String)
 
 }
