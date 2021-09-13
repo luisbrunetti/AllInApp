@@ -22,6 +22,7 @@ import com.tawa.allinapp.models.Question
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.IOException
+import java.lang.Exception
 import java.util.*
 import javax.inject.Inject
 
@@ -40,6 +41,7 @@ class AudioViewModel
 
     private var recorder: MediaRecorder? = null
     private var player: MediaPlayer? = null
+    private var playerAudioSelected: MediaPlayer? = null
     private var output: File? = null
     private var audioLimit: Int = 0
     private var playingAudio: Boolean = false
@@ -70,8 +72,7 @@ class AudioViewModel
     // Guardano en memoria
     private val _successRecord = MutableLiveData(false)
 
-    val successRecord: LiveData<Boolean>
-        get() = _successRecord
+    val successRecord: LiveData<Boolean> get() = _successRecord
 
     private val _successAudioQuestions = MutableLiveData<List<Question>>()
     val successAudioQuestions: LiveData<List<Question>>
@@ -95,6 +96,13 @@ class AudioViewModel
     private val _textPlaying = MutableLiveData<Boolean>(false)
     val textPlaying: LiveData<Boolean> get() = _textPlaying
 
+    //AudioSelected
+    private val _textPlayingSelected = MutableLiveData<Boolean>(false)
+    val textPlayingSelected: LiveData<Boolean> get() =  _textPlayingSelected
+
+    private val _playingSelected = MutableLiveData<Boolean>(false)
+    val playingSelected : LiveData<Boolean> get() = _playingSelected
+
     //Room
     private val _getAudiosReport = MutableLiveData<AudioReport>(null)
     val getAudiosReport: LiveData<AudioReport> get() = _getAudiosReport
@@ -110,6 +118,7 @@ class AudioViewModel
             }
             stopRecord()
         } else {
+            Log.d("fileString",_fileString.value.toString())
             if (_fileString.value == "") {
                 startRecord()
             } else {
@@ -136,9 +145,9 @@ class AudioViewModel
             }
         }
     }
-    fun setRecordPath(recordPath:String){
-        this.recordPath = recordPath
-    }
+    fun setFileString(fileString:String){ this._fileString.value = fileString}
+    fun setRecordPath(recordPath:String){ this.recordPath = recordPath }
+    fun getAudioRecordPath() = recordPath
 
     private fun convertImageFileToBase64(file: File): String {
         return ByteArrayOutputStream().use { outputStream ->
@@ -182,15 +191,13 @@ class AudioViewModel
             release()
             val audio64 = convertImageFileToBase64(output!!)
             _fileString.value = audio64
-            //prefs.audioRecorded = audio64
-            //prefs.audioRecordedPath = recordPath
             _recording.value = false
         }
         recorder = null
     }
-    fun getAudioRecordPath() = recordPath
 
-    private fun stopAudioPlaying() {
+
+    fun stopAudioPlaying() {
         player?.let {
             player?.apply {
                 _textPlaying.value = false
@@ -217,67 +224,72 @@ class AudioViewModel
                 playingAudio = true
                 _recording.value = true
             } catch (e: IOException) {
-                Log.e("PLAYING ERROR", "No se encuentra ael recordpat -> "+recordPath.toString())
+                Log.e("PLAYING ERROR", " $e \n No se encuentra ael recordpat -> "+ recordPath.toString())
             }
         }
     }
 
-    fun saveReport(report: AudioReport) = setAudioReport(SetAudioReport.Params(report)) {
-        it.either(
-            ::handleFailure,
-            ::handleReports
-        )
+    fun doSelectedAudio(path: String){
+        playerAudioSelected = MediaPlayer().apply {
+            try{
+                setDataSource(path)
+                prepare()
+                setOnCompletionListener {
+                    //_recording.value = false
+                    _playingSelected.value = false
+                    _textPlayingSelected.value = false
+                }
+                start()
+                _textPlayingSelected.value = true
+                _playingSelected.value = true
+                playingAudio = true
+            }catch(e : Exception) {
+                Log.d("doSelectedAudio", "Ha ocurrido un error al reproducir el audio " + e.toString())
+            }
+        }
     }
+    fun stopAudioSelectedPlaying(){
+        playerAudioSelected?.let {
+            playerAudioSelected?.apply {
+                _textPlayingSelected.value = false
+                _playingSelected.value = false
+                playingAudio = false
+                stop()
+                release()
+            }
+        }
+        playerAudioSelected = null
+    }
+    fun saveReport(report: AudioReport) = setAudioReport(SetAudioReport.Params(report)) { it.either(::handleFailure, ::handleReports) }
 
 
-    private fun handleReports(reports: Boolean) {
-        _successRecord.value = reports
-    }
+    private fun handleReports(reports: Boolean) { _successRecord.value = reports }
 
-    fun getAudioQuestions() = getAudioQuestion(UseCase.None()) {
-        it.either(::handleFailure, ::handleAudioQuestions)
-    }
+    fun getAudioQuestions() = getAudioQuestion(UseCase.None()) { it.either(::handleFailure, ::handleAudioQuestions) }
 
     private fun handleAudioQuestions(audioQuestions: List<Question>) {
         Log.d("audioQuestions", audioQuestions.toString())
-        _successAudioQuestions.value = audioQuestions
-    }
+        _successAudioQuestions.value = audioQuestions }
 
-    fun getAnswersAudio(idQuestion: String) = getAnswers(GetAnswers.Params(idQuestion)) {
-        it.either(::handleFailure, ::handleAnswersPhoto)
-    }
+    fun getAnswersAudio(idQuestion: String) = getAnswers(GetAnswers.Params(idQuestion)) { it.either(::handleFailure, ::handleAnswersPhoto) }
 
-    private fun handleAnswersPhoto(answers: List<Answer>) {
-        _answersAudio.value = answers
-    }
+    private fun handleAnswersPhoto(answers: List<Answer>) { _answersAudio.value = answers }
 
-    fun getAudioReport(idPv: String,idUser: String) = getAudioReport(GetAudioReport.Params(idPv,idUser)){
-        it.either(::handleFailure,::handleGetAudioReport )
-    }
-    private fun handleGetAudioReport(audio: AudioReport){
-        _getAudiosReport.value = audio
-    }
+    fun getAudioReport(idPv: String,idUser: String) = getAudioReport(GetAudioReport.Params(idPv,idUser)){ it.either(::handleFailure,::handleGetAudioReport ) }
 
-    fun updateAudioReport(audioReportModel: AudioReport) = updateAudioReport(audioReportModel){
-        it.either(::handleFailure,::handleUpdateReport)
-    }
-    private fun handleUpdateReport(success: Boolean){
-        _updateAudioReports.value = success
-    }
+    private fun handleGetAudioReport(audio: AudioReport){ _getAudiosReport.value = audio }
 
-    fun setReadyAnswers(idQuestion: String, nameQuestion: String, idAnswer: String, nameAnswer: String, img: String) {
-        setReadyAnswers(SetReadyAnswers.Params(0, idQuestion, nameQuestion, idAnswer, nameAnswer, img)) { it.either(::handleFailure, ::handleReadyAnswers) }
-    }
+    fun updateAudioReport(audioReportModel: AudioReport) = updateAudioReport(audioReportModel){ it.either(::handleFailure,::handleUpdateReport) }
 
-    private fun handleReadyAnswers(success: Boolean) {
-        this._successReadyAnswers.value = success
-    }
+    private fun handleUpdateReport(success: Boolean){ _updateAudioReports.value = success }
+
+    fun setReadyAnswers(idQuestion: String, nameQuestion: String, idAnswer: String, nameAnswer: String, img: String) { setReadyAnswers(SetReadyAnswers.Params(0, idQuestion, nameQuestion, idAnswer, nameAnswer, img)) { it.either(::handleFailure, ::handleReadyAnswers) } }
+
+    private fun handleReadyAnswers(success: Boolean) { this._successReadyAnswers.value = success }
 
     fun updateStateReport(idReport: String, state: String, type: String) { updateStateReport(UpdateStateReport.Params(idReport, state, type)) { it.either(::handleFailure, ::handleUpdateStateReport) } }
 
-    private fun handleUpdateStateReport(success: Boolean) {
-        this._updateReportState.value = success
-    }
+    private fun handleUpdateStateReport(success: Boolean) { this._updateReportState.value = success }
 
     fun reRecordAudio() {
         this._displayMessage.value = false
@@ -286,24 +298,16 @@ class AudioViewModel
         doRecordAudio()
     }
 
-    fun setAudioLimit(limit: Int) {
-        audioLimit = limit
-    }
+    fun setAudioLimit(limit: Int) { audioLimit = limit }
 
-    fun stopRecordingByLimit() {
-        stopRecord()
-    }
+    fun stopRecordingByLimit() { stopRecord() }
 
     fun clearAudioRecorded() {
-        //prefs.audioRecorded = ""
-        //prefs.audioRecordedPath = ""
         this._fileString.value = ""
         this.recordPath = ""
     }
 
     fun clearAudioSelected(){
-        //prefs.audioSelected = ""
-        //prefs.audioSelectedPath = ""
         _fileSelectedString.value = ""
         selectedPath = ""
     }
@@ -316,7 +320,5 @@ class AudioViewModel
         syncStandardReports(SyncStandardReports.Params(idReport,latitude,longitude))
         { it.either(::handleFailure, ::handleSyncAudioReport) }
 
-    private fun handleSyncAudioReport(success: Boolean){
-        this._syncAudioReport.value = success
-    }
+    private fun handleSyncAudioReport(success: Boolean){ this._syncAudioReport.value = success }
 }

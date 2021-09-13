@@ -15,10 +15,10 @@ class UpdateAudioReport
         params.idUser,
         params.selected,
         params.selectedName,
+        params.selectedPath,
         params.record,
         params.recordPath,
-        params.recordSent,
-        params.comments!!
+        params.recordSent
     )
 
 

@@ -154,7 +154,7 @@ class ReportsDataSource @Inject constructor(private val reportsDao: ReportsDao){
     fun getAudioReports(idPv: String,idUser: String): AudioReportModel? {
         return reportsDao.getAudioReports(idPv = idPv, idUser = idUser)
     }
-    fun updateAudioReport(idPv: String, idUser:String, selected: String, selectedName: String, record:String, recordPath: String, recordSent: String, comments: String){
-        reportsDao.updateAudioReport(idPv,idUser,selected,selectedName,record,recordPath,recordSent, comments)
+    fun updateAudioReport(idPv: String, idUser:String, selected: String, selectedName: String, selectedPath:String, record:String, recordPath: String, recordSent: String){
+        reportsDao.updateAudioReport(idPv,idUser,selected,selectedName, selectedPath,record,recordPath,recordSent)
     }
 }

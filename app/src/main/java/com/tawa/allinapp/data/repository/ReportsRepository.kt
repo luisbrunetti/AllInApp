@@ -56,7 +56,7 @@ interface ReportsRepository {
     fun getTypeSku(): Either<Failure,String>
     fun setSession(value: Boolean) :Either<Failure,Boolean>
     fun getAudioReport(idPv:String, idUser: String): Either<Failure, AudioReport>
-    fun updateAudioReport(idPv: String, idUser: String, selected: String, selectedName: String, record:String, recordPath: String, recordSent:String,  comments: String) : Either<Failure, Boolean>
+    fun updateAudioReport(idPv: String, idUser: String, selected: String, selectedName: String, selectedPath:String, record:String, recordPath: String, recordSent:String) : Either<Failure, Boolean>
     class Network
     @Inject constructor(private val networkHandler: NetworkHandler,
                         private val reportsDataSource: ReportsDataSource,
@@ -774,14 +774,13 @@ interface ReportsRepository {
             idUser:String,
             selected: String,
             selectedName: String,
+            selectedPath:String,
             record: String,
             recordPath: String,
             recordSent: String,
-            comments: String
         ): Either<Failure, Boolean> {
             return try{
-
-                reportsDataSource.updateAudioReport(idPv,idUser, selected,selectedName,record,recordPath,recordSent,comments)
+                reportsDataSource.updateAudioReport(idPv,idUser, selected,selectedName,selectedPath,record,recordPath,recordSent)
                 Either.Right(true)
             }catch (e : Exception){
                 Either.Left(Failure.DefaultError(e.message!!))

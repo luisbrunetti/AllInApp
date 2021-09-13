@@ -1,14 +1,13 @@
 package com.tawa.allinapp.features.reports.audio
 
+import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.ActivityNotFoundException
-import android.content.ContentUris
 import android.content.Context
 import android.content.Intent
 import android.database.Cursor
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
-import android.os.Environment
 import android.os.SystemClock
 import android.provider.DocumentsContract
 import android.provider.MediaStore
@@ -18,6 +17,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.loader.content.CursorLoader
+import com.jaiselrahman.filepicker.activity.FilePickerActivity
+import com.jaiselrahman.filepicker.config.Configurations
+import com.jaiselrahman.filepicker.model.MediaFile
 import com.tawa.allinapp.R
 import com.tawa.allinapp.core.dialog.ConditionalDialogFragment
 import com.tawa.allinapp.core.dialog.MessageDialogFragment
@@ -28,15 +31,7 @@ import com.tawa.allinapp.databinding.FragmentAudioBinding
 import com.tawa.allinapp.features.reports.standard.CheckListViewModel
 import com.tawa.allinapp.features.reports.standard.ConfirmSyncDialogFragment
 import com.tawa.allinapp.models.AudioReport
-import java.io.File
 import java.util.*
-import android.os.Build
-
-import android.annotation.SuppressLint
-import androidx.loader.content.CursorLoader
-import com.jaiselrahman.filepicker.activity.FilePickerActivity
-import com.jaiselrahman.filepicker.config.Configurations
-import com.jaiselrahman.filepicker.model.MediaFile
 
 
 class AudioFragment : BaseFragment() {
@@ -59,7 +54,7 @@ class AudioFragment : BaseFragment() {
     private var audioPath = ""
     private var audioSelected64: String = ""
     private var audioSelectedName: String = ""
-
+    private var audioSelectedPath: String = ""
     private var audioReportSaved: AudioReport? = null
 
     companion object {
@@ -75,24 +70,23 @@ class AudioFragment : BaseFragment() {
             val mediaFile = file?.get(0)
             mediaFile?.let { path ->
                 Log.d("data", mediaFile.toString())
+                Log.d(TAG, "Obteniendo el path real -- >  ${mediaFile.uri.path}  ${mediaFile.path}" )
 
-
-
-                Log.d(TAG, "Obteniendo el path real -- >  ${mediaFile.path}" )
-                audioSelected64 = audioViewModel.convertAudioSelectedTo64Format(mediaFile.path).toString()
+                audioSelectedPath = mediaFile.path
+                audioSelected64 = audioViewModel.convertAudioSelectedTo64Format(audioSelectedPath).toString()
                 audioSelectedName = mediaFile.name
-                Log.d(TAG, audioSelected64.toString())
 
+                Log.d(TAG, audioSelected64.toString())
                 binding.tvRecordSelected.text = mediaFile.name
                 binding.lyRecordSelected.visibility = View.VISIBLE
             }
         }else{
-            notify(requireActivity(), R.string.error_get_file)
+            //notify(requireActivity(), R.string.error_get_file)
         }
     }
 
     @SuppressLint("ObsoleteSdkInt")
-    fun getPathFromURI(uri: Uri?): String? {
+    fun getPathFromURI(uri: Uri?): String {
         var realPath = ""
         // SDK < API11
         if (Build.VERSION.SDK_INT < 11) {
@@ -209,6 +203,7 @@ class AudioFragment : BaseFragment() {
 
                         audioSelected64 = info.selected
                         audioSelectedName = info.selectedName
+                        audioSelectedPath = info.selectedPath
                         //////Vistas
                         if (audioSelectedName != "") {
                             binding.lyRecordSelected.visible()
@@ -222,6 +217,8 @@ class AudioFragment : BaseFragment() {
                         } else {
                             binding.rvAudioRecord.invisible()
                         }
+
+                        audioViewModel.setFileString(audio64)
                     }
                 }
             })
@@ -325,6 +322,27 @@ class AudioFragment : BaseFragment() {
                 if (it == true) binding.tvPlaying.visibility = View.VISIBLE
                 else binding.tvPlaying.visibility = View.GONE
             })
+            observe(playingSelected,{
+                if(it == true){
+                    binding.lyPlayingAudioSelected.visibility = View.VISIBLE
+                }else{
+                    binding.lyPlayingAudioSelected.visibility = View.GONE
+                }
+            })
+            observe(textPlayingSelected,{
+                if(it == true){
+                    //val timeLimitString = getMiliSeoncdsOnFormat(audioLimit)
+                    binding.chronometerSelectAudio.base = SystemClock.elapsedRealtime()
+                    binding.chronometerSelectAudio.start()
+                    binding.lyRecordSelected.visibility = View.GONE
+                }
+                else{
+                    binding.chronometer.base = SystemClock.elapsedRealtime()
+                    binding.chronometer.stop()
+                    if(audioSelectedPath != "" && audioSelected64 != "") binding.lyRecordSelected.visible()
+                    enableComponentsRecord()
+                }
+            })
             observe(displayMessage, {
                 it?.let {
                     if (it) {
@@ -347,13 +365,12 @@ class AudioFragment : BaseFragment() {
             })
         }
 
-        binding.tvRecord.setOnClickListener {
-            audioViewModel.doSelectAudio(audioPath)
-        }
+        binding.tvRecord.setOnClickListener { audioViewModel.doSelectAudio(audioPath) }
         binding.ivRecordSelectedDelete.setOnClickListener {
             binding.lyRecordSelected.invisible()
             audioSelected64 = ""
             audioSelectedName = ""
+            audioSelectedPath = ""
             audioViewModel.clearAudioSelected()
         }
         binding.ivClose.setOnClickListener {
@@ -374,21 +391,21 @@ class AudioFragment : BaseFragment() {
                 if (audioReportSaved != null) {
                     if (audio64 != ""){
                         Log.d("AudioReport","Reportguardado  Actualizando audio 64 -- -> audio")
-                        audioViewModel.updateAudioReport(AudioReport(idPv, idUser, audioSelected64, audioSelectedName, audio64, audioPath, audio64, ""))
+                        audioViewModel.updateAudioReport(AudioReport(idPv, idUser, audioSelected64, audioSelectedName, audioSelectedPath, audio64, audioPath, audio64))
                     }
                     else if (audioSelected64 != "") {
                         Log.d("AudioReport","Report guardado  Actualizando audioSelected64 -- -> audio")
-                        audioViewModel.updateAudioReport(AudioReport(idPv, idUser, audioSelected64, audioSelectedName, audio64, audioPath, audioSelected64, ""))
+                        audioViewModel.updateAudioReport(AudioReport(idPv, idUser, audioSelected64, audioSelectedName,audioSelectedPath, audio64, audioPath, audioSelected64))
                     }
                 } else {
                     if (audio64 != "") {
                         Log.d("AudioReport","Report no guardado  Creando audio64 -- -> audio")
-                        audioViewModel.saveReport(AudioReport(idPv, idUser, audioSelected64, audioSelectedName, audio64, audioPath, audio64, ""))
+                        audioViewModel.saveReport(AudioReport(idPv, idUser, audioSelected64, audioSelectedName,audioSelectedPath, audio64, audioPath, audio64))
                     }
                     else if (audioSelected64 != "") {
                         Log.d("AudioReport","Report no guardado  Creando audioSelected64 -- -> audio")
                         audioViewModel.saveReport(
-                            AudioReport(idPv, idUser, audioSelected64, audioSelectedName, audio64, audioPath, audioSelected64, "")
+                            AudioReport(idPv, idUser, audioSelected64, audioSelectedName, audioSelectedPath, audio64, audioPath, audioSelected64)
                         )
                     }
                 }
@@ -410,7 +427,7 @@ class AudioFragment : BaseFragment() {
             }
         }
         binding.btErraser.setOnClickListener {
-            val report = AudioReport(idPv, idUser, audioSelected64, audioSelectedName, audio64, audioPath, "NO CONFIRMED", "")
+            val report = AudioReport(idPv, idUser, audioSelected64, audioSelectedName,audioSelectedPath, audio64, audioPath, "NO CONFIRMED")
             Log.d(TAG, "Audio report que se guardará " + report.toModel())
             //audioViewModel.setReadyAnswers(idQuestion, nameQuestion, idAnswer, audio64, "") // Aqui faltaria poner en la estructura la c
             //checkListViewModel.setAnswerPv(idAnswer, idQuestion, audio64, "") // Falta cheuear lo de Answer (Ingrese Audio
@@ -436,7 +453,17 @@ class AudioFragment : BaseFragment() {
             activity?.onBackPressed()
         }
 
-        binding.btTakeAudioSelect.setOnClickListener { showFilePicker() }
+        binding.btTakeAudioSelect.setOnClickListener {
+            if(binding.lyPlayingAudioSelected.visibility == View.VISIBLE){
+                audioViewModel.stopAudioSelectedPlaying()
+            }else{
+                showFilePicker()
+            }
+        }
+        binding.lyRecordSelected.setOnClickListener { if(audioSelectedName != ""){
+            disableComponentsRecord()
+            audioViewModel.doSelectedAudio(audioSelectedPath)
+        } }
         audioViewModel.setAudioLimit(audioLimit)
         audioViewModel.getAudioQuestions()
 
@@ -445,7 +472,15 @@ class AudioFragment : BaseFragment() {
 
         return binding.root
     }
+    private fun disableComponentsRecord(){
+        binding.btTakeAudioRecord.isEnabled= false
+        binding.tvPlaying.isEnabled = false
 
+    }
+    private fun enableComponentsRecord(){
+        binding.btTakeAudioRecord.isEnabled= true
+        binding.tvPlaying.isEnabled = true
+    }
     private fun disableComponents() {
         binding.btTakeAudioSelect.apply {
             isEnabled = false
@@ -469,6 +504,14 @@ class AudioFragment : BaseFragment() {
             alpha = 0.5f
         }
         binding.ivClose.apply {
+            isEnabled = false
+            alpha = 0.5f
+        }
+        binding.lyRecordSelected.apply {
+            isEnabled = false
+            alpha = 0.5f
+        }
+        binding.rvAudioRecord.apply {
             isEnabled = false
             alpha = 0.5f
         }
@@ -532,6 +575,11 @@ class AudioFragment : BaseFragment() {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        audioViewModel.stopAudioSelectedPlaying()
+        audioViewModel.stopAudioPlaying()
+    }
 }
 
 

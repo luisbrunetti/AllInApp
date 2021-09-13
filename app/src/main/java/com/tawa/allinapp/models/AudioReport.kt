@@ -7,10 +7,10 @@ data class AudioReport (
     val idUser:String,
     val selected:String,
     val selectedName: String,
+    val selectedPath: String,
     val record:String,
     val recordPath: String,
-    val recordSent: String,
-    val comments:String,
+    val recordSent: String
 ){
     fun toModel(): AudioReportModel {
         return AudioReportModel(
@@ -18,10 +18,10 @@ data class AudioReport (
             idUser = this.idUser,
             selected = this.selected,
             selectedName = this.selectedName,
+            selectedPath = this.selectedPath,
             record = this.record,
             recordPath = this.recordPath,
-            recordSent = this.recordSent,
-            comments = this.comments
+            recordSent = this.recordSent
         )
     }
 }
