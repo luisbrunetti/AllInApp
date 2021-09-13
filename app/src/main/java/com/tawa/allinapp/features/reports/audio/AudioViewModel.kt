@@ -266,29 +266,14 @@ class AudioViewModel
     }
 
     fun setReadyAnswers(idQuestion: String, nameQuestion: String, idAnswer: String, nameAnswer: String, img: String) {
-        setReadyAnswers(
-            SetReadyAnswers.Params(
-                0,
-                idQuestion,
-                nameQuestion,
-                idAnswer,
-                nameAnswer,
-                img
-            )
-        ) {
-            it.either(::handleFailure, ::handleReadyAnswers)
-        }
+        setReadyAnswers(SetReadyAnswers.Params(0, idQuestion, nameQuestion, idAnswer, nameAnswer, img)) { it.either(::handleFailure, ::handleReadyAnswers) }
     }
 
     private fun handleReadyAnswers(success: Boolean) {
         this._successReadyAnswers.value = success
     }
 
-    fun updateStateReport(idReport: String, state: String, type: String) {
-        updateStateReport(UpdateStateReport.Params(idReport, state, type)) {
-            it.either(::handleFailure, ::handleUpdateStateReport)
-        }
-    }
+    fun updateStateReport(idReport: String, state: String, type: String) { updateStateReport(UpdateStateReport.Params(idReport, state, type)) { it.either(::handleFailure, ::handleUpdateStateReport) } }
 
     private fun handleUpdateStateReport(success: Boolean) {
         this._updateReportState.value = success
