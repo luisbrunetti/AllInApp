@@ -11,7 +11,7 @@ class CompanyRemote {
         @SerializedName("nombre_empresa") val name: String?,
         @SerializedName("giro_empresa") val description: String?,
     ){
-        fun toView() = Company(id,ruc?:"",name?:"",description?:"")
-        fun toModel() = CompanyModel(id,ruc?:"",name?:"",description?:"")
+        fun toView(idUser:String) = Company(id,ruc?:"",name?:"",description?:"",idUser)
+        fun toModel(idUser: String) = CompanyModel(id,ruc?:"",name?:"",description?:"",idUser)
     }
 }

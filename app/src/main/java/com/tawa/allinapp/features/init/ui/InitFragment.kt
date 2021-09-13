@@ -2,6 +2,7 @@ package com.tawa.allinapp.features.init.ui
 
 
 import android.Manifest
+import android.content.ClipDescription
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.LocationManager
@@ -123,6 +124,11 @@ class InitFragment : BaseFragment() {
                 binding.tvHeaderName.text = it
                 binding.btUser.text = if(it.isNotEmpty()) it.first().toString() else ""
             } })
+            observe(idPv,{it?.let{
+                if(it)
+                    findNavController().navigate(InitFragmentDirections.actionNavigationInitToPdvFragment())
+
+            }})
             observe(successGetRole,{
                 it?.let {
                     if(it.isNotEmpty())
@@ -192,8 +198,8 @@ class InitFragment : BaseFragment() {
     private fun showSelectPdvDialog(){
         val dialog = SelectPdvDialogFragment(this)
         dialog.listener = object : SelectPdvDialogFragment.Callback{
-            override fun onAccept(id:String) {
-                findNavController().navigate(InitFragmentDirections.actionNavigationInitToPdvFragment(id))
+            override fun onAccept(id:String,pv:String,description: String) {
+                initViewModel.setPv(id,pv,description)
             }
         }
         dialog.show(childFragmentManager,"")

@@ -4,12 +4,13 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.tawa.allinapp.models.Company
 
-@Entity(tableName = "company")
+@Entity(tableName = "company",primaryKeys = ["id","idUser"])
 data class CompanyModel(
-    @PrimaryKey val id: String,
+    val id: String,
     val ruc: String,
     val name: String,
     val description: String,
+    val idUser:String
 ){
-    fun toView() = Company(id,ruc,name,description)
+    fun toView() = Company(id,ruc,name,description,idUser)
 }

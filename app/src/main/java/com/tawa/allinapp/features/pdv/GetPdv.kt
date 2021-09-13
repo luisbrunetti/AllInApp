@@ -7,8 +7,8 @@ import com.tawa.allinapp.models.Pdv
 import javax.inject.Inject
 
 class GetPdv
-@Inject constructor(private val pdvRepository: PdvRepository) : UseCase<Pdv, GetPdv.Params>() {
+@Inject constructor(private val pdvRepository: PdvRepository) : UseCase<Pdv, UseCase.None>() {
 
-    override suspend fun run(params: Params) = pdvRepository.getPdv(params.idPdv)
-    data class Params(val idPdv:String)
+    override suspend fun run(params: None) = pdvRepository.getPdv()
+
 }

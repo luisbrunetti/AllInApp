@@ -32,7 +32,7 @@ interface ParametersRepository {
                                 response.body()?.let { body ->
                                     if(body.success) {
                                         body.data.map {
-                                            parametersDataSource.insertCompanies(it.toModel())
+                                            parametersDataSource.insertCompanies(it.toModel(prefs.idUser?:""))
                                         }
                                         prefs.companyId = body.data[0].id
                                         Either.Right(true)
@@ -52,7 +52,7 @@ interface ParametersRepository {
 
         override fun getCompanies(): Either<Failure, List<Company>> {
             return try {
-                Either.Right(parametersDataSource.getCompanies().map { it.toView() })
+                Either.Right(parametersDataSource.getCompanies(prefs.idUser?:"").map { it.toView() })
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))
             }
@@ -69,7 +69,7 @@ interface ParametersRepository {
                                     if(body.success) {
                                         body.data.map {
                                             it.pv?.map { pv ->
-                                                parametersDataSource.insertPV(pv.toModel(it.company?.id))
+                                                parametersDataSource.insertPV(pv.toModel(it.company?.id,it.userAssigned))
                                             }
                                         }
                                         Either.Right(true)
@@ -89,8 +89,8 @@ interface ParametersRepository {
 
         override fun getPV(company:String): Either<Failure, List<Schedule>> {
             return try {
-                if (parametersDataSource.getPV(company).isNotEmpty())
-                    Either.Right(parametersDataSource.getPV(company).map { it.toView() })
+                if (parametersDataSource.getPV(company,prefs.idUser?:"").isNotEmpty())
+                    Either.Right(parametersDataSource.getPV(company,prefs.idUser?:"").map { it.toView() })
                 else
                     Either.Right(emptyList())
             }catch (e:Exception){
