@@ -23,7 +23,7 @@ import javax.inject.Inject
 
 interface PdvRepository {
     fun getPdvRemote(idCompany: String): Either<Failure, Boolean>
-    fun getPdv(idPdv:String):Either<Failure, Pdv>
+    fun getPdv():Either<Failure, Pdv>
     fun updatePdvRemote(idPdv: String,nameUser:String,phoneUser:String,ruc:String,latitude:String,longitude:String,image:String): Either<Failure, Boolean>
     fun updatePdv(idPdv: String,nameUser:String,phoneUser:String,ruc:String,latitude:String,longitude:String,image:String,state:String): Either<Failure, Boolean>
     fun updatePdv(idPdv: String,state:String): Either<Failure, Boolean>
@@ -62,9 +62,9 @@ interface PdvRepository {
             }
         }
 
-        override fun getPdv(idPdv: String): Either<Failure, Pdv> {
+        override fun getPdv(): Either<Failure, Pdv> {
             return try {
-                Either.Right(pdvDataSource.getPdv(idPdv).toView())
+                Either.Right(pdvDataSource.getPdv(prefs.pvId?:"").toView())
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))
             }

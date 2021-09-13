@@ -125,18 +125,18 @@ class CheckListFragment: BaseFragment() {
                     val listAnswer = listInit.filter { it.nameQuestion==list.nameQuestion }
                     when(list.objectType)
                     {
-                        "Caja de texto" -> addAnswersInput(listAnswer,binding.contentCheckList,list.nameQuestion)
-                        "Check" -> addAnswersCheck(listAnswer,binding.contentCheckList,list.nameQuestion)
-                        "Option" ->  addAnswersRadio(listAnswer,binding.contentCheckList,list.nameQuestion)
-                        "BD - Check" -> addAnswersCheckBd(listAnswer,binding.contentCheckList,list.nameQuestion)
-                        "BD - Option" -> addAnswersRadioBd(listAnswer,binding.contentCheckList,list.nameQuestion)
-                        "Lista desplegable" -> addAnswersSpinner(listAnswer,binding.contentCheckList,list.nameQuestion)
-                        "BD - Lista desplegable" -> addAnswersSpinnerBd(listAnswer,binding.contentCheckList,list.nameQuestion)
-                        "Numérico" -> addAnswersInputNumber(listAnswer,binding.contentCheckList,list.nameQuestion)
-                        "Fecha" -> addAnswersDate(listAnswer,binding.contentCheckList,list.nameQuestion)
-                        "Hora" -> addAnswersTime(listAnswer,binding.contentCheckList,list.nameQuestion)
-                        "Imagen de cámara" -> addAnswersPhoto(listAnswer,binding.contentCheckList,list.nameQuestion)
-                        "Imagen de biblioteca" -> addAnswersSelectImage(listAnswer,binding.contentCheckList,list.nameQuestion)
+                        "Caja de texto" -> addAnswersInput(listAnswer,binding.contentCheckList,list.nameQuestion,list.orderQ)
+                        "Check" -> addAnswersCheck(listAnswer,binding.contentCheckList,list.nameQuestion,list.orderQ)
+                        "Option" ->  addAnswersRadio(listAnswer,binding.contentCheckList,list.nameQuestion,list.orderQ)
+                        "BD - Check" -> addAnswersCheckBd(listAnswer,binding.contentCheckList,list.nameQuestion,list.orderQ)
+                        "BD - Option" -> addAnswersRadioBd(listAnswer,binding.contentCheckList,list.nameQuestion,list.orderQ)
+                        "Lista desplegable" -> addAnswersSpinner(listAnswer,binding.contentCheckList,list.nameQuestion,list.orderQ)
+                        "BD - Lista desplegable" -> addAnswersSpinnerBd(listAnswer,binding.contentCheckList,list.nameQuestion,list.orderQ)
+                        "Numérico" -> addAnswersInputNumber(listAnswer,binding.contentCheckList,list.nameQuestion,list.orderQ)
+                        "Fecha" -> addAnswersDate(listAnswer,binding.contentCheckList,list.nameQuestion,list.orderQ)
+                        "Hora" -> addAnswersTime(listAnswer,binding.contentCheckList,list.nameQuestion,list.orderQ)
+                        "Imagen de cámara" -> addAnswersPhoto(listAnswer,binding.contentCheckList,list.nameQuestion,list.orderQ)
+                        "Imagen de biblioteca" -> addAnswersSelectImage(listAnswer,binding.contentCheckList,list.nameQuestion,list.orderQ)
                         //"Cuadrícula de varias opciones" -> addAnswersMultiRadio(listAnswer,binding.contentCheckList,list.nameQuestion)
                     }
                         //addAnswersRadio(listAnswer,binding.contentCheckList,list.nameQuestion)
@@ -548,13 +548,13 @@ class CheckListFragment: BaseFragment() {
                     checkListViewModel.getAnswersPhoto(id,questionName)*/
     }
 
-    private fun addAnswersSpinner(listAnswers:List<Answer>, linear: LinearLayout, nameQ:String){
+    private fun addAnswersSpinner(listAnswers:List<Answer>, linear: LinearLayout, nameQ:String,order:String){
         params1.setMargins(0,0, 0, 0)
         params1.bottomMargin = 5f.toDips().toInt()
         val linearL = LinearLayout(context)
         linearL.orientation = LinearLayout.VERTICAL
         val textView  = TextView(context)
-        textView.text = nameQ
+        textView.text = "$order. Pregunta: $nameQ"
         textView.textSize = 16f
         textView.layoutParams = params1
         textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_dark))
@@ -605,13 +605,13 @@ class CheckListFragment: BaseFragment() {
 
     }
 
-    private fun addAnswersSpinnerBd(listAnswers:List<Answer>, linear: LinearLayout, nameQ:String){
+    private fun addAnswersSpinnerBd(listAnswers:List<Answer>, linear: LinearLayout, nameQ:String,order:String){
         params1.setMargins(0,0, 0, 0)
         params1.bottomMargin = 5f.toDips().toInt()
         val linearL = LinearLayout(context)
         linearL.orientation = LinearLayout.VERTICAL
         val textView  = TextView(context)
-        textView.text = nameQ
+        textView.text = "$order. Pregunta: $nameQ"
         textView.textSize = 16f
         textView.layoutParams = params1
         textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_dark))
@@ -663,12 +663,12 @@ class CheckListFragment: BaseFragment() {
 
     }
 
-    private fun addAnswersRadio(listAnswers:List<Answer>, linear: LinearLayout, nameQ:String){
+    private fun addAnswersRadio(listAnswers:List<Answer>, linear: LinearLayout, nameQ:String,order:String){
             params.setMargins(0,0, 0, 10f.toDips().toInt())
             val linearL = LinearLayout(context)
             linearL.orientation = LinearLayout.VERTICAL
             val textView  = TextView(context)
-            textView.text = nameQ
+            textView.text = "$order. Pregunta: $nameQ"
             textView.textSize = 16f
             textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_dark))
             linearL.addView(textView)
@@ -694,12 +694,12 @@ class CheckListFragment: BaseFragment() {
 
     }
 
-    private fun addAnswersRadioBd(listAnswers:List<Answer>, linear: LinearLayout, nameQ:String){
+    private fun addAnswersRadioBd(listAnswers:List<Answer>, linear: LinearLayout, nameQ:String,order:String){
         params.setMargins(0,0, 0, 10f.toDips().toInt())
         val linearL = LinearLayout(context)
         linearL.orientation = LinearLayout.VERTICAL
         val textView  = TextView(context)
-        textView.text = nameQ
+        textView.text = "$order. Pregunta: $nameQ"
         textView.textSize = 16f
         textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_dark))
         linearL.addView(textView)
@@ -726,12 +726,12 @@ class CheckListFragment: BaseFragment() {
     }
 
 
-    private fun addAnswersMultiRadio(listAnswers:List<Answer>, linear: LinearLayout, nameQ:String){
+    private fun addAnswersMultiRadio(listAnswers:List<Answer>, linear: LinearLayout, nameQ:String,order:String){
         params.setMargins(0,0, 0, 10f.toDips().toInt())
         val linearL = LinearLayout(context)
         linearL.orientation = LinearLayout.VERTICAL
         val textView  = TextView(context)
-        textView.text = nameQ
+        textView.text = "$order. Pregunta: $nameQ"
         textView.textSize = 16f
         textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_dark))
         linearL.addView(textView)
@@ -807,12 +807,12 @@ class CheckListFragment: BaseFragment() {
         linear.addView(linearL)
     }
 
-    private fun addAnswersCheck(listAnswers:List<Answer>,linear: LinearLayout,nameQ: String){
+    private fun addAnswersCheck(listAnswers:List<Answer>,linear: LinearLayout,nameQ: String,order:String){
             params.setMargins(0,0, 0, 20f.toDips().toInt())
             val linearL = LinearLayout(context)
             linearL.orientation = LinearLayout.VERTICAL
             val textView  = TextView(context)
-            textView.text = nameQ
+            textView.text = "$order. Pregunta: $nameQ"
             textView.textSize = 16f
             textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_dark))
             linearL.addView(textView)
@@ -836,12 +836,12 @@ class CheckListFragment: BaseFragment() {
 
     }
 
-    private fun addAnswersCheckBd(listAnswers:List<Answer>,linear: LinearLayout,nameQ: String){
+    private fun addAnswersCheckBd(listAnswers:List<Answer>,linear: LinearLayout,nameQ: String,order:String){
         params.setMargins(0,0, 0, 20f.toDips().toInt())
         val linearL = LinearLayout(context)
         linearL.orientation = LinearLayout.VERTICAL
         val textView  = TextView(context)
-        textView.text = nameQ
+        textView.text = "$order. Pregunta: $nameQ"
         textView.textSize = 16f
         textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_dark))
         linearL.addView(textView)
@@ -865,13 +865,13 @@ class CheckListFragment: BaseFragment() {
 
     }
 
-    private fun addAnswersInput(listAnswers:List<Answer>,linear: LinearLayout,nameQ: String){
+    private fun addAnswersInput(listAnswers:List<Answer>,linear: LinearLayout,nameQ: String,order:String){
         params.setMargins(0,0, 0, 20f.toDips().toInt())
         params1.bottomMargin = 5f.toDips().toInt()
         val linearL = LinearLayout(context)
         linearL.orientation = LinearLayout.VERTICAL
         val textView  = TextView(context)
-        textView.text = nameQ
+        textView.text = "$order. Pregunta: $nameQ"
         textView.textSize = 16f
         textView.layoutParams = params1
         textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_dark))
@@ -899,13 +899,13 @@ class CheckListFragment: BaseFragment() {
 
     }
 
-    private fun addAnswersInputNumber(listAnswers:List<Answer>,linear: LinearLayout,nameQ: String){
+    private fun addAnswersInputNumber(listAnswers:List<Answer>,linear: LinearLayout,nameQ: String,order:String){
         params.setMargins(0,0, 0, 20f.toDips().toInt())
         params1.bottomMargin = 5f.toDips().toInt()
         val linearL = LinearLayout(context)
         linearL.orientation = LinearLayout.VERTICAL
         val textView  = TextView(context)
-        textView.text = nameQ
+        textView.text = "$order. Pregunta: $nameQ"
         textView.textSize = 16f
         textView.layoutParams = params1
         textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_dark))
@@ -934,13 +934,13 @@ class CheckListFragment: BaseFragment() {
 
     }
 
-    private fun addAnswersDate(listAnswers:List<Answer>,linear: LinearLayout,nameQ: String){
+    private fun addAnswersDate(listAnswers:List<Answer>,linear: LinearLayout,nameQ: String,order:String){
         params.setMargins(0,0, 0, 20f.toDips().toInt())
         params1.bottomMargin = 5f.toDips().toInt()
         val linearL = LinearLayout(context)
         linearL.orientation = LinearLayout.VERTICAL
         val textView  = TextView(context)
-        textView.text = nameQ
+        textView.text = "$order. Pregunta: $nameQ"
         textView.textSize = 16f
         textView.layoutParams = params1
         textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_dark))
@@ -979,13 +979,13 @@ class CheckListFragment: BaseFragment() {
 
     }
 
-    private fun addAnswersTime(listAnswers:List<Answer>,linear: LinearLayout,nameQ: String){
+    private fun addAnswersTime(listAnswers:List<Answer>,linear: LinearLayout,nameQ: String,order:String){
         params.setMargins(0,0, 0, 20f.toDips().toInt())
         params1.bottomMargin = 5f.toDips().toInt()
         val linearL = LinearLayout(context)
         linearL.orientation = LinearLayout.VERTICAL
         val textView  = TextView(context)
-        textView.text = nameQ
+        textView.text = "$order. Pregunta: $nameQ"
         textView.textSize = 16f
         textView.layoutParams = params1
         textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_dark))
@@ -1024,13 +1024,13 @@ class CheckListFragment: BaseFragment() {
 
     }
 
-    private fun addAnswersPhoto(listAnswers:List<Answer>,linear: LinearLayout,nameQ: String){
+    private fun addAnswersPhoto(listAnswers:List<Answer>,linear: LinearLayout,nameQ: String,order:String){
         params.setMargins(0,0, 0, 20f.toDips().toInt())
         params1.bottomMargin = 5f.toDips().toInt()
         val linearL = LinearLayout(context)
         linearL.orientation = LinearLayout.VERTICAL
         val textView  = TextView(context)
-        textView.text = nameQ
+        textView.text = "$order. Pregunta: $nameQ"
         textView.textSize = 16f
         textView.layoutParams = params1
         textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_dark))
@@ -1099,13 +1099,13 @@ class CheckListFragment: BaseFragment() {
 
     }
 
-    private fun addAnswersSelectImage(listAnswers:List<Answer>,linear: LinearLayout,nameQ: String){
+    private fun addAnswersSelectImage(listAnswers:List<Answer>,linear: LinearLayout,nameQ: String,order:String){
         params.setMargins(0,0, 0, 20f.toDips().toInt())
         params1.bottomMargin = 5f.toDips().toInt()
         val linearL = LinearLayout(context)
         linearL.orientation = LinearLayout.VERTICAL
         val textView  = TextView(context)
-        textView.text = nameQ
+        textView.text = "$order. Pregunta: $nameQ"
         textView.textSize = 16f
         textView.layoutParams = params1
         textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_dark))

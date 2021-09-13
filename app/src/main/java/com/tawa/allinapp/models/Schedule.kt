@@ -9,4 +9,5 @@ data class Schedule(
     val idCompany: String,
     val lat: Double,
     val long: Double,
+    val idUser:String
 )

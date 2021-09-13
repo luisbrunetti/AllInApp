@@ -16,9 +16,9 @@ interface ParametersDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertPV(scheduleModel: ScheduleModel)
 
-    @Query("SELECT * FROM company")
-    fun getCompanies(): List<CompanyModel>
+    @Query("SELECT * FROM company where idUser=:idUser")
+    fun getCompanies(idUser:String): List<CompanyModel>
 
-    @Query("SELECT * FROM schedule WHERE idCompany=:company")
-    fun getPV(company:String): List<ScheduleModel>
+    @Query("SELECT * FROM schedule WHERE idCompany=:company and idUser=:idUser")
+    fun getPV(company:String,idUser: String): List<ScheduleModel>
 }

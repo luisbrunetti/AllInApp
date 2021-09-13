@@ -31,9 +31,7 @@
         <action
             android:id="@+id/action_navigation_init_to_pdvFragment"
             app:destination="@id/navigation_pdv" >
-            <argument
-                android:name="id"
-                app:argType="string"/>
+
         </action>
     </fragment>
 
@@ -191,9 +189,7 @@
             app:destination="@id/navigation_pdv"
             app:popUpTo="@id/navigation_pdv"
             app:popUpToInclusive="true" >
-            <argument
-                android:name="id"
-                app:argType="string"/>
+
         </action>
     </fragment>
 

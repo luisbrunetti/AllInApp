@@ -43,8 +43,8 @@ class QuestionsRemote {
         @SerializedName("columna") val column:Boolean,
 
         ){
-        fun toView() = Answer(id,status,answerName,order,idQuestion,idUserCreator,idUserModifier,dateModify,dateCreation,"VACIO","","",row,column)
-        fun toModel() = AnswerModel(id,status,answerName,order,idQuestion,idUserCreator,idUserModifier,dateModify,dateCreation,"VACIO","","",row,column)
+        fun toView() = Answer(id,status,answerName,order,idQuestion,idUserCreator,idUserModifier,dateModify,dateCreation,"VACIO","","",row,column,"")
+        fun toModel() = AnswerModel(id,status,answerName,order,idQuestion,idUserCreator,idUserModifier,dateModify,dateCreation,"VACIO","","",row,column,"")
     }
 
 }

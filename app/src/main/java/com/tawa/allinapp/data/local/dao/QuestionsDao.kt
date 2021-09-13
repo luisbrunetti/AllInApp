@@ -50,7 +50,7 @@ interface QuestionsDao {
     @Query("SELECT count(id) FROM answers_pv where idPv = :idPv and idAnswers=:idAnswer and idUser=:idUser")
     fun getCountPvAnswer(idPv:String,idAnswer: String,idUser:String): Int
 
-    @Query("SELECT answers.id, answers.status,answers.answerName,answers.`order`,answers.idQuestion,answers.idUserCreator,answers.idUserModifier,answers.dateModify,answers.dateCreation,answers_pv.nameAnswer as 'data',answers.nameQuestion,answers.objectType,answers.`row`,answers.`column` FROM answers, answers_pv where answers.idQuestion=answers_pv.idQuestion and answers.id=answers_pv.idAnswers and  answers.idQuestion=:idQuestion and answers_pv.idPv =:idPv and answers_pv.idUser=:idUser")
+    @Query("SELECT answers.id, answers.status,answers.answerName,answers.`order`,answers.idQuestion,answers.idUserCreator,answers.idUserModifier,answers.dateModify,answers.dateCreation,answers_pv.nameAnswer as 'data',answers.nameQuestion,answers.objectType,answers.`row`,answers.`column`,answers.orderQ FROM answers, answers_pv where answers.idQuestion=answers_pv.idQuestion and answers.id=answers_pv.idAnswers and  answers.idQuestion=:idQuestion and answers_pv.idPv =:idPv and answers_pv.idUser=:idUser")
     fun getAnswersPv(idQuestion : String,idPv: String,idUser: String): List<AnswerModel>
 
     @Query("UPDATE answers_pv set nameAnswer=:nameAnswer, img=:img where idAnswers=:idAnswer and idPv=:idPv and idUser=:idUser")

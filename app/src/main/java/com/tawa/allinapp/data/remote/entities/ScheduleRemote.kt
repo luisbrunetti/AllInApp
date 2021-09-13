@@ -42,7 +42,7 @@ class ScheduleRemote {
         @SerializedName("id_user_creador") val idUserCreator: String?,
         @SerializedName("fe_creacion") val feCreated: String?,
     ){
-        fun toModel(id:String?,) = ScheduleModel(id?:"",this.id?:"",description?:"",zone?.id,"",company?:"", corp?.latitude?:0.0,corp?.longitude?:0.0)
+        fun toModel(id:String?,user:User) = ScheduleModel(id?:"",this.id?:"",description?:"",zone?.id,"",company?:"", corp?.latitude?:0.0,corp?.longitude?:0.0,user.id?:"")
     }
     data class Zone(
         @SerializedName("id_user_modificador") val idUserModify: Any? = null,

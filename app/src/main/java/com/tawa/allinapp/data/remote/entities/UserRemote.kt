@@ -24,13 +24,13 @@ class UserRemote {
         @SerializedName("email") val email: String?,
         @SerializedName("fe_creacion") val feCreated: String?,
     ){
-        fun toModel() = User(roles,companies.map { it.toModel() },latitude,longitude,feModify,idUserModify,status?:"",connection?:"",ulLatitude,ulLongitude,battery,id,user?:"",fullName?:"",password?:"",email?:"",feCreated?:"")
+        fun toModel() = User(roles,companies.map { it.toModel(id) },latitude,longitude,feModify,idUserModify,status?:"",connection?:"",ulLatitude,ulLongitude,battery,id,user?:"",fullName?:"",password?:"",email?:"",feCreated?:"")
     }
 
     data class CompanyRemote (
         @SerializedName("_id") val id: String,
         @SerializedName("nombre_empresa") val companyName: String
     ){
-        fun toModel() = Company(id,"", companyName, "")
+        fun toModel(idUser:String) = Company(id,"", companyName, "",idUser)
     }
 }

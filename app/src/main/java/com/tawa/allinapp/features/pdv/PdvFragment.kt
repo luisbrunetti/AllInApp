@@ -1,5 +1,6 @@
 package com.tawa.allinapp.features.pdv
 
+import android.content.ClipDescription
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
@@ -25,6 +26,7 @@ import java.io.FileNotFoundException
 import android.provider.MediaStore
 import androidx.navigation.fragment.findNavController
 import com.tawa.allinapp.R
+import com.tawa.allinapp.features.init.InitViewModel
 import com.tawa.allinapp.features.init.ui.InitFragmentDirections
 import com.tawa.allinapp.features.init.ui.SelectPdvDialogFragment
 
@@ -32,6 +34,7 @@ import com.tawa.allinapp.features.init.ui.SelectPdvDialogFragment
 class PdvFragment : BaseFragment() {
 
     private lateinit var pdvViewModel: PdvViewModel
+    private lateinit var initViewModel: InitViewModel
     private lateinit var binding: FragmentPdvBinding
     var idPdv = ""
     var latitudePdv = ""
@@ -95,10 +98,13 @@ class PdvFragment : BaseFragment() {
                     activity?.onBackPressed() }
             }})
         }
-        arguments?.getString("id")?.let {
-            idPdv = it
-            pdvViewModel.getPdv(idPdv)
+        initViewModel = viewModel(viewModelFactory){
+            observe(idPv,{it?.let{
+                if(it)
+                    findNavController().navigate(PdvFragmentDirections.actionNavigationPdvSelf())
+            }})
         }
+        pdvViewModel.getPdv()
         binding.btnBackPdv.setOnClickListener {
             activity?.onBackPressed()
         }
@@ -134,8 +140,8 @@ class PdvFragment : BaseFragment() {
     fun showPdvSelectDialog(){
         val dialog = SelectPdvDialogFragment(this)
         dialog.listener = object : SelectPdvDialogFragment.Callback{
-            override fun onAccept(id:String) {
-                findNavController().navigate(PdvFragmentDirections.actionNavigationPdvSelf(id))
+            override fun onAccept(id:String,pv:String,description: String) {
+                initViewModel.setPv(id,pv,description)
             }
         }
         dialog.show(childFragmentManager,"")

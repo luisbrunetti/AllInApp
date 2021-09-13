@@ -302,10 +302,10 @@ class InitViewModel
         this._stateCheck.value = stateCheck
     }
     private fun handleCompanyList(company: List<Company>) {
-        this._companies.value = company.map { Company(it.id,it.ruc,it.name,it.description) }
+        this._companies.value = company.map { Company(it.id,it.ruc,it.name,it.description,it.idUser) }
     }
     private fun handlePvList(schedule: List<Schedule>) {
-        this._schedule.value = schedule.map { Schedule(it.id,it.pv,it.description,it.zone,it.codGeo,it.idCompany, it.lat,it.long) }
+        this._schedule.value = schedule.map { Schedule(it.id,it.pv,it.description,it.zone,it.codGeo,it.idCompany, it.lat,it.long,it.idUser) }
     }
     private fun handleSetIdCompany(success: Boolean) {
         _setIdCompanySuccess.value = success

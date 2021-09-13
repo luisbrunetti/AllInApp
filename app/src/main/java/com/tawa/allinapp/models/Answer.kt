@@ -16,5 +16,6 @@ data class Answer(
     val nameQuestion: String,
     val objectType :String,
     val row : Boolean,
-    val column : Boolean
+    val column : Boolean,
+    val orderQ:String
 )

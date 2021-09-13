@@ -5,4 +5,5 @@ data class Company(
     val ruc: String,
     val name: String,
     val description: String,
+    val idUser:String
 )

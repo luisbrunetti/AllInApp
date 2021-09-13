@@ -2,6 +2,7 @@ package com.tawa.allinapp.features.pdv
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.tawa.allinapp.core.interactor.UseCase
 import com.tawa.allinapp.core.platform.BaseViewModel
 import com.tawa.allinapp.models.Pdv
 import javax.inject.Inject
@@ -35,7 +36,7 @@ class PdvViewModel
         get()= _successUpdatePdvState
 
 
-    fun getPdv(idPdv:String) = getPdv(GetPdv.Params(idPdv)) {
+    fun getPdv() = getPdv(UseCase.None()) {
         it.either(::handleFailure, ::handleGetPdv) }
 
     private fun handleGetPdv(pdv:Pdv) {

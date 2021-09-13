@@ -76,7 +76,7 @@ class SelectPdvDialogFragment
         setUpBinding()
         binding.btnSelectPdv.setOnClickListener {
             val positionPv  = binding.selectPdvSpinner.selectedItemPosition
-            listener?.onAccept(list[positionPv].pv)
+            listener?.onAccept(list[positionPv].id,list[positionPv].pv,list[positionPv].description)
             dismiss()
         }
         binding.closeCheckInModal.setOnClickListener{
@@ -106,7 +106,7 @@ class SelectPdvDialogFragment
     }
 
     interface Callback {
-        fun onAccept(id:String)
+        fun onAccept(id:String,pv:String,description:String)
         //fun onSnack(snack:Boolean)
     }
 }

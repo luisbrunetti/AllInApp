@@ -13,10 +13,10 @@ class ParametersDataSource @Inject constructor(private val parametersDao: Parame
     fun insertPV(schedule: ScheduleModel){
         parametersDao.insertPV(schedule)
     }
-    fun getCompanies():List<CompanyModel> {
-        return parametersDao.getCompanies()
+    fun getCompanies(idUser:String):List<CompanyModel> {
+        return parametersDao.getCompanies(idUser)
     }
-    fun getPV(company:String):List<ScheduleModel> {
-        return parametersDao.getPV(company)
+    fun getPV(company:String,idUser: String):List<ScheduleModel> {
+        return parametersDao.getPV(company,idUser)
     }
 }
