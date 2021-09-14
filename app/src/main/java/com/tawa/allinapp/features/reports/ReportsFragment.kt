@@ -71,6 +71,7 @@ class ReportsFragment : BaseFragment() {
             } })
             observe(userType, { it?.let {
                 if(it.isNotEmpty()) {
+                    Log.d("ReportFragment","Correcto User Type"+ userType.toString())
                     typeUser = it
                     reportsViewModel.getReports()
                 }
@@ -79,12 +80,8 @@ class ReportsFragment : BaseFragment() {
                 it?.let {
                     if(it.isNotEmpty()) {
                         binding.tvPVSub3.text = it
-                        if(it=="En proceso") {
-                           binding.iconSku.setImageResource(R.drawable.ic_inprocess)
-                        }
-                        if(it=="Enviado") {
-                            binding.iconSku.setImageResource(R.drawable.ic_sended)
-                        }
+                        if(it=="En proceso") { binding.iconSku.setImageResource(R.drawable.ic_inprocess) }
+                        if(it=="Enviado") { binding.iconSku.setImageResource(R.drawable.ic_sended) }
                     }
                 }
             })
@@ -125,18 +122,14 @@ class ReportsFragment : BaseFragment() {
         }
         reportsViewModel.getPVName()
 
-        binding.etDate.setOnClickListener{
-          getDay(binding.etDate)
-        }
-        binding.btnBackReports.setOnClickListener{
-            activity?.onBackPressed()
-        }
-        binding.btnSku.setOnClickListener {
-            findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToSkuFragment())
-        }
-        binding.btnReportPictures.setOnClickListener {
-            findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToPictureFragment("${binding.tvPhotoState.text}"))
-        }
+        binding.etDate.setOnClickListener{  getDay(binding.etDate) }
+
+        binding.btnBackReports.setOnClickListener{ activity?.onBackPressed() }
+
+        binding.btnSku.setOnClickListener { findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToSkuFragment()) }
+
+        binding.btnReportPictures.setOnClickListener { findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToPictureFragment("${binding.tvPhotoState.text}")) }
+
         binding.appbar.addOnOffsetChangedListener(object : OnOffsetChangedListener {
             var isShow = true
             var scrollRange = -1

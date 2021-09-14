@@ -149,9 +149,7 @@ class InitFragment : BaseFragment() {
         initViewModel.getUserName()
         binding.btCheckIn.setOnClickListener{
             if(checkIn) showSelectorCheckIn()
-            else {
-                initViewModel.getDescPV()
-            }
+            else initViewModel.getDescPV()
         }
         binding.btUser.setOnClickListener {
             val frag = UserMenuDialogFragment.newInstance()
@@ -181,9 +179,7 @@ class InitFragment : BaseFragment() {
         binding.viewBtnCalendar.setOnClickListener {
             findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationCalendar())
         }
-        binding.viewBtnReports.setOnClickListener {
-            initViewModel.getPVId()
-        }
+        binding.viewBtnReports.setOnClickListener { initViewModel.getPVId() }
         binding.viewBtnInforms.setOnClickListener{
             findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationInforms())
         }
@@ -231,8 +227,6 @@ class InitFragment : BaseFragment() {
         }
         checkOutDialog?.show(childFragmentManager, "checkOutDialog")
     }
-
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

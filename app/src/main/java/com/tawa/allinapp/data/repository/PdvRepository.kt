@@ -45,6 +45,7 @@ interface PdvRepository {
                                 response.body()?.let { body ->
                                     if(body.success) {
                                         body.data.map {
+                                            Log.d("PdvRepository", "Se ha obtenido correctamente los puntso deventa " )
                                             pdvDataSource.insertPdv(it.toModel())
                                         }
                                         Either.Right(true)
