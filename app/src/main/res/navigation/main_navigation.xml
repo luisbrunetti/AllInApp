@@ -139,7 +139,9 @@
     <fragment
         android:id="@+id/audioFragment"
         android:name="com.tawa.allinapp.features.reports.audio.AudioFragment"
-        android:label="AudioFragment" />
+        android:label="AudioFragment"
+        tools:layout="@layout/fragment_audio"
+        />
     <fragment
         android:id="@+id/navigation_informs"
         android:name="com.tawa.allinapp.features.informs.InformsFragment"

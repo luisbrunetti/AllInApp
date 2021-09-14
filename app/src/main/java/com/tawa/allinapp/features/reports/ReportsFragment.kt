@@ -54,7 +54,7 @@ class ReportsFragment : BaseFragment() {
                 //"REPORTE FOTOGRAFICO" -> findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToPictureFragment())
                // "ESTATUS DE USUARIO" -> findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToUserStatusFragment())
                 "LEVANTAMIENTO DE INFORMACIÓN" -> findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToCheckListFragment(it.id))*/
-                "REPORTE DE AUDIOS" -> findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToAudioFragment(it.id,it.idPv,it.idUser,it.state))
+                "Reporte de Audios" -> findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToAudioFragment(it.id,it.idPv,it.idUser,it.state))
                 else->  findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToCheckListFragment(it.id,it.reportName))
             }
         }
