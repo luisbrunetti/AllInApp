@@ -153,6 +153,8 @@
         <action
             android:id="@+id/action_navigation_informs_to_coverageBoardFragment"
             app:destination="@id/coverageBoardFragment" />
+
+
     </fragment>
     <fragment
         android:id="@+id/sendPasswordFragment"

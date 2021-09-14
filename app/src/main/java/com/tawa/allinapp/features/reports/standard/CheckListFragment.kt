@@ -691,7 +691,6 @@ class CheckListFragment: BaseFragment() {
            linearL.addView(radioGroup)
            linearL.layoutParams = params
            linear.addView(linearL)
-
     }
 
     private fun addAnswersRadioBd(listAnswers:List<Answer>, linear: LinearLayout, nameQ:String,order:String){
