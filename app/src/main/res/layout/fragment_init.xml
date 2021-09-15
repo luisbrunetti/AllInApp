@@ -249,7 +249,7 @@
 
 
                     <TextView
-                        android:id="@+id/textView6"
+                        android:id="@+id/textRoutes"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="11dp"
@@ -258,10 +258,11 @@
                         android:textColor="@color/blue"
                         android:textSize="16sp"
                         android:textStyle="bold"
+                        android:visibility="gone"
                         app:layout_constraintBottom_toBottomOf="@+id/viewBtnRoutes"
                         app:layout_constraintEnd_toEndOf="@+id/viewBtnRoutes"
                         app:layout_constraintStart_toStartOf="@+id/viewBtnRoutes"
-                        app:layout_constraintTop_toBottomOf="@+id/imageView8"
+                        app:layout_constraintTop_toBottomOf="@+id/imageViewRoutes"
                         app:layout_constraintVertical_bias="0.0" />
 
                     <TextView
@@ -274,11 +275,9 @@
                         android:textColor="@color/blue"
                         android:textSize="16sp"
                         android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="@+id/viewBtnCalendar"
                         app:layout_constraintEnd_toEndOf="@+id/viewBtnCalendar"
                         app:layout_constraintStart_toStartOf="@+id/viewBtnCalendar"
-                        app:layout_constraintTop_toBottomOf="@+id/imageView9"
-                        app:layout_constraintVertical_bias="0.0" />
+                        app:layout_constraintTop_toBottomOf="@+id/imageView9" />
 
                     <TextView
                         android:id="@+id/textView8"
@@ -290,11 +289,9 @@
                         android:textColor="@color/blue"
                         android:textSize="16sp"
                         android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="@+id/viewBtnDocs"
                         app:layout_constraintEnd_toEndOf="@+id/viewBtnDocs"
                         app:layout_constraintStart_toStartOf="@+id/viewBtnDocs"
-                        app:layout_constraintTop_toBottomOf="@+id/imageVie10"
-                        app:layout_constraintVertical_bias="0.0" />
+                        app:layout_constraintTop_toBottomOf="@+id/imageVie10" />
 
 
                     <TextView
@@ -330,6 +327,22 @@
                         app:layout_constraintTop_toBottomOf="@+id/imageViewInforms"
                         app:layout_constraintVertical_bias="0.0" />
 
+                    <TextView
+                        android:id="@+id/textViewMessages"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="11dp"
+                        android:elevation="4dp"
+                        android:text="Mensajes"
+                        android:textColor="@color/blue"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="@+id/viewBtnMessages"
+                        app:layout_constraintEnd_toEndOf="@+id/viewBtnMessages"
+                        app:layout_constraintStart_toStartOf="@+id/viewBtnMessages"
+                        app:layout_constraintTop_toBottomOf="@+id/imageView20"
+                        app:layout_constraintVertical_bias="0.0" />
+
                     <ImageView
                         android:id="@+id/imageView6"
                         android:layout_width="wrap_content"
@@ -353,12 +366,13 @@
                         app:layout_constraintTop_toTopOf="@+id/viewBtnReports" />
 
                     <ImageView
-                        android:id="@+id/imageView8"
+                        android:id="@+id/imageViewRoutes"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="26dp"
                         android:elevation="4dp"
                         android:src="@drawable/ic_routes_home"
+                        android:visibility="gone"
                         app:layout_constraintEnd_toEndOf="@+id/viewBtnRoutes"
                         app:layout_constraintHorizontal_bias="0.496"
                         app:layout_constraintStart_toStartOf="@+id/viewBtnRoutes"
@@ -374,6 +388,17 @@
                         app:layout_constraintEnd_toEndOf="@+id/viewBtnCalendar"
                         app:layout_constraintStart_toStartOf="@+id/viewBtnCalendar"
                         app:layout_constraintTop_toTopOf="@+id/viewBtnCalendar" />
+
+                    <ImageView
+                        android:id="@+id/imageView20"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="26dp"
+                        android:elevation="4dp"
+                        android:src="@drawable/ic_informs_home"
+                        app:layout_constraintEnd_toEndOf="@+id/viewBtnMessages"
+                        app:layout_constraintStart_toStartOf="@+id/viewBtnMessages"
+                        app:layout_constraintTop_toTopOf="@+id/viewBtnMessages" />
 
                     <ImageView
                         android:id="@+id/imageVie10"
@@ -408,6 +433,8 @@
                         app:layout_constraintEnd_toEndOf="@+id/viewBtnInforms"
                         app:layout_constraintStart_toStartOf="@+id/viewBtnInforms"
                         app:layout_constraintTop_toTopOf="@+id/viewBtnInforms" />
+
+
 
                     <View
                         android:id="@+id/viewBtnPV"
@@ -444,16 +471,50 @@
                         android:id="@+id/viewBtnRoutes"
                         android:layout_width="0dp"
                         android:layout_height="120dp"
-                        android:layout_marginStart="36dp"
+                        android:layout_marginStart="18dp"
                         android:layout_marginTop="16dp"
+                        android:layout_marginEnd="36dp"
+                        android:layout_marginBottom="10dp"
                         android:layout_weight="1"
                         android:background="@drawable/bg_button_white"
                         android:elevation="2dp"
+                        android:visibility="gone"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@id/viewBtnCalendar"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/viewBtnMessages"
+                        app:layout_constraintTop_toBottomOf="@+id/btSync" />
+
+                    <View
+                        android:id="@+id/viewBtnMessages"
+                        android:layout_width="0dp"
+                        android:layout_height="120dp"
+                        android:layout_marginStart="36dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="18dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_button_white"
+                        android:elevation="2dp"
+                        android:visibility="visible"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/viewBtnCalendar"
+                        app:layout_constraintHorizontal_bias="0.272"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/viewBtnPV"
+                        app:layout_constraintTop_toBottomOf="@id/viewBtnDocs"
                         app:layout_constraintVertical_bias="0.0" />
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/btUser2"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginTop="-5dp"
+                        android:layout_marginEnd="-5dp"
+                        android:background="@drawable/view_rounded_notification"
+                        android:elevation="10dp"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="@+id/viewBtnMessages"
+                        app:layout_constraintTop_toTopOf="@+id/viewBtnMessages" />
 
                     <View
                         android:id="@+id/viewBtnCalendar"
@@ -467,7 +528,8 @@
                         android:elevation="2dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/viewBtnRoutes"
+                        app:layout_constraintHorizontal_bias="1.0"
+                        app:layout_constraintStart_toEndOf="@+id/viewBtnDocs"
                         app:layout_constraintTop_toBottomOf="@+id/viewBtnReports"
                         app:layout_constraintVertical_bias="0.0" />
 
@@ -482,10 +544,9 @@
                         android:background="@drawable/bg_button_white"
                         android:elevation="2dp"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/btSync"
-                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintEnd_toStartOf="@id/viewBtnCalendar"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/viewBtnRoutes"
+                        app:layout_constraintTop_toBottomOf="@+id/viewBtnPV"
                         app:layout_constraintVertical_bias="0.0" />
 
                     <View
@@ -502,7 +563,7 @@
                         android:visibility="visible"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@id/viewBtnDocs"
+                        app:layout_constraintStart_toEndOf="@+id/viewBtnDocs"
                         app:layout_constraintTop_toBottomOf="@+id/viewBtnCalendar"
                         app:layout_constraintVertical_bias="0.0" />
 
@@ -513,7 +574,7 @@
                         android:layout_marginStart="36dp"
                         android:layout_marginTop="16dp"
                         android:layout_marginEnd="18dp"
-                        android:layout_marginBottom="20dp"
+                        android:layout_marginBottom="10dp"
                         android:layout_weight="1"
                         android:background="@drawable/bg_button_white"
                         android:elevation="2dp"
@@ -522,8 +583,21 @@
                         app:layout_constraintEnd_toStartOf="@+id/btSync"
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/viewBtnDocs"
-                        app:layout_constraintVertical_bias="0.0" />
+                        app:layout_constraintTop_toBottomOf="@id/viewBtnMessages" />
+
+                    <TextView
+                        android:id="@+id/textView6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:elevation="11dp"
+                        android:text="5"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="@+id/btUser2"
+                        app:layout_constraintEnd_toEndOf="@+id/btUser2"
+                        app:layout_constraintStart_toStartOf="@+id/btUser2"
+                        app:layout_constraintTop_toTopOf="@+id/btUser2" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

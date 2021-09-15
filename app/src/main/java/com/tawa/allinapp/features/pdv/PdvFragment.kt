@@ -57,6 +57,7 @@ class PdvFragment : BaseFragment() {
                 }
             })
             observe(successGetPdv,{it?.let{
+                idPdv = it.id
                 binding.tvNamePdv.text = it.pdvDescription.toString()
                 binding.edNameContact.setText(it.nameUser?:"")
                 binding.edPhoneContact.setText(it.phoneUser?:"")
@@ -95,13 +96,14 @@ class PdvFragment : BaseFragment() {
             observe(successUpdatePdvState,{it?.let {
                 if(it) {
                     notify(activity, R.string.notify_update)
-                    activity?.onBackPressed() }
+                    activity?.onBackPressed()
+                }
             }})
         }
         initViewModel = viewModel(viewModelFactory){
             observe(idPv,{it?.let{
-                if(it)
-                    findNavController().navigate(PdvFragmentDirections.actionNavigationPdvSelf())
+              /*  if(it)
+                    findNavController().navigate(PdvFragmentDirections.actionNavigationPdvSelf())*/
             }})
         }
         pdvViewModel.getPdv()
@@ -142,6 +144,7 @@ class PdvFragment : BaseFragment() {
         dialog.listener = object : SelectPdvDialogFragment.Callback{
             override fun onAccept(id:String,pv:String,description: String) {
                 initViewModel.setPv(id,pv,description)
+                findNavController().navigate(PdvFragmentDirections.actionNavigationPdvSelf())
             }
         }
         dialog.show(childFragmentManager,"")
