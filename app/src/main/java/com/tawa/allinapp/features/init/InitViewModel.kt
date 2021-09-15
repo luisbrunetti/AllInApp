@@ -7,7 +7,6 @@ import com.tawa.allinapp.core.platform.BaseViewModel
 import com.tawa.allinapp.data.local.Prefs
 import com.tawa.allinapp.features.init.usecase.*
 import com.tawa.allinapp.features.reports.GetReportsRemote
-import com.tawa.allinapp.features.reports.sku.SyncSku
 import com.tawa.allinapp.models.Company
 import com.tawa.allinapp.models.Report
 import com.tawa.allinapp.models.Schedule

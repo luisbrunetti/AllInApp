@@ -153,9 +153,20 @@
         <action
             android:id="@+id/action_navigation_informs_to_coverageBoardFragment"
             app:destination="@id/coverageBoardFragment" />
+        <action
+            android:id="@+id/action_navigation_informs_to_reportGeolocationFragment"
+            app:destination="@id/reportGeolocationFragment" />
 
 
     </fragment>
+    <fragment
+        android:id="@+id/reportGeolocationFragment"
+        android:name="com.tawa.allinapp.features.reports.geolocation.ReportGeolocationFragment"
+        android:label="fragment_report_geolocation"
+        tools:layout="@layout/fragment_report_geolocation" >
+
+    </fragment>
+
     <fragment
         android:id="@+id/sendPasswordFragment"
         android:name="com.tawa.allinapp.features.init.ui.SendPasswordFragment"

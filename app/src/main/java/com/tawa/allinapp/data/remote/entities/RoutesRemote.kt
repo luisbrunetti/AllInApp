@@ -58,6 +58,7 @@ class RoutesRemote {
         @SerializedName("_id") val id: String,
         @SerializedName("latitud") val latitude: Double,
         @SerializedName("longitud") val longitude: Double,
+        @SerializedName("fe_creacion") val creation: String,
         @SerializedName("comentario") val comment: String,
     )
 

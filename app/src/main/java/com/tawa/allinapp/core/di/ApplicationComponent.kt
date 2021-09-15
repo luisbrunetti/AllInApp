@@ -22,6 +22,7 @@ import com.tawa.allinapp.features.reports.audio.AudioFragment
 import com.tawa.allinapp.features.reports.picture.PictureFragment
 import com.tawa.allinapp.features.reports.standard.CheckListFragment
 import com.tawa.allinapp.features.reports.ReportsFragment
+import com.tawa.allinapp.features.reports.geolocation.ReportGeolocationFragment
 import com.tawa.allinapp.features.reports.sku.SkuFragment
 import com.tawa.allinapp.features.reports.userstatus.LastLocationFragment
 import com.tawa.allinapp.features.reports.userstatus.UserStatusFragment
@@ -60,5 +61,6 @@ interface ApplicationComponent{
     fun inject(coverageBoardFragment: CoverageBoardFragment)
     fun inject(coverageBoardGraphFragment: CoverageBoardGraphFragment)
     fun inject(pdvFragment: PdvFragment)
+    fun inject(reportGeolocationFragment: ReportGeolocationFragment)
 
 }

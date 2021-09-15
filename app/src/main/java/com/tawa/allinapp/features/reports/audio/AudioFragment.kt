@@ -60,14 +60,12 @@ class AudioFragment : BaseFragment() {
         val TAG = "AudioFragment"
     }
 
-    private val responseLauncher =
-        registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+    private val responseLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
             val uri = uri
             val realPath = getRealPathFromURI(requireContext(), uri)
             realPath.let { realPath->
                 audioSelectedPath = realPath.toString()
-                audioSelected64 =
-                    audioViewModel.convertAudioSelectedTo64Format(audioSelectedPath).toString()
+                audioSelected64 = audioViewModel.convertAudioSelectedTo64Format(audioSelectedPath).toString()
 
                 audioSelectedName = getFilename(uri)
 
@@ -278,7 +276,6 @@ class AudioFragment : BaseFragment() {
                             }
                         }
                         conditionalFragment.show(childFragmentManager, "dialog")
-
                     }
                 }
             })
@@ -321,7 +318,24 @@ class AudioFragment : BaseFragment() {
             }
 
             override fun onBack() {
+                var audioSend = ""
+                if(audio64 != "") audioSend = audio64
+                else if(audioSelected64 != "") audioSend = audioSelected64
+
+                //Set Ready Answers
+                audioViewModel.setReadyAnswers(idQuestion, nameQuestion, idAnswer, audioSend, "") // Work // Poner validación
+                checkListViewModel.setAnswerPv(idAnswer, idQuestion, audioSend, "")
+
+                //Actualizando reportesa
+                audioViewModel.updateStateReport(idReport, "En proceso", "Terminado")
+                checkListViewModel.updateReportPv(idReport, "En proceso", "Terminado", Calendar.getInstance().toInstant().toString(), latitude, longitude)
+
+                //Guardando audio
+                if(audioReportSaved != null) audioViewModel.updateAudioReport(AudioReport(idPv, idUser, audioSelected64, audioSelectedName, audioSelectedPath, audio64, audioPath, audioSend))
+                else audioViewModel.saveReport(AudioReport(idPv, idUser, audioSelected64, audioSelectedName,audioSelectedPath, audio64, audioPath, audioSend))
+
                 confirmationDialog.dismiss()
+                activity?.onBackPressed()
             }
         }
         binding.btSavePictures.setOnClickListener {
@@ -335,8 +349,7 @@ class AudioFragment : BaseFragment() {
         binding.btErraser.setOnClickListener {
             val report = AudioReport(idPv, idUser, audioSelected64, audioSelectedName,audioSelectedPath, audio64, audioPath, "NO CONFIRMED")
             Log.d(TAG, "Audio report que se guardará " + report.toModel())
-            //audioViewModel.setReadyAnswers(idQuestion, nameQuestion, idAnswer, audio64, "") // Aqui faltaria poner en la estructura la c
-            checkListViewModel.setAnswerPv(idAnswer, idQuestion, audio64, "") // Falta cheuear lo de Answer (Ingrese Audio
+            checkListViewModel.setAnswerPv(idAnswer, idQuestion, audio64, "") // Falta chequear lo de Answer Ingrese Audio
 
             checkListViewModel.updateReportPv(idReport, "En proceso", "Borrador", Calendar.getInstance().toInstant().toString(), latitude, longitude)
             audioViewModel.updateStateReport(idReport, "En proceso", "Borrador")

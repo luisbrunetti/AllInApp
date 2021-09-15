@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import com.tawa.allinapp.core.platform.BaseViewModel
 import com.tawa.allinapp.features.init.usecase.SyncStandardReports
 import com.tawa.allinapp.models.Answer
-import com.tawa.allinapp.models.Question
 import javax.inject.Inject
 
 class CheckListViewModel

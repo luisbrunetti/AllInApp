@@ -143,4 +143,6 @@
     <string name="checkoout_successful">Registro exitoso</string>
     <string name="success_sync_audio">El audio se ha enviado correctamente</string>
     <string name="error_get_file">Ha ocurrido un error al obtener el audio</string>
+    <string name="reporte_de_geolocalizaci_n">Reporte de geolocalización</string>
+    <string name="warningReportGeolocation">Tiene que seleccionar una fecha y al menos un usuario</string>
 </resources>

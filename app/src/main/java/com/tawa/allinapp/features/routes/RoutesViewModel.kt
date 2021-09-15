@@ -1,5 +1,6 @@
 package com.tawa.allinapp.features.routes
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.tawa.allinapp.core.interactor.UseCase
@@ -50,9 +51,11 @@ class RoutesViewModel
     }
 
     fun getTracking(idUser:String,dateStart:String) = getTracking(GetTracking.Params(idUser,dateStart)) {
-        it.either(::handleFailure, ::handleGetTracking) }
+        it.either(::handleFailure, ::handleGetTracking)
+    }
 
     private fun handleGetTracking(listTracking : List<Tracking>) {
+        Log.d("tracking", listTracking.toString())
         _successGetTracking.value = listTracking
     }
 }

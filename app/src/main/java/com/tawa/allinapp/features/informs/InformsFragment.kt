@@ -69,6 +69,9 @@ class InformsFragment : BaseFragment() {
         binding.btDashboard.setOnClickListener {
             findNavController().navigate(InformsFragmentDirections.actionNavigationInformsToCoverageBoardFragment())
         }
+        binding.btReportGeolocation.setOnClickListener {
+            findNavController().navigate(InformsFragmentDirections.actionNavigationInformsToReportGeolocationFragment())
+        }
         return binding.root
     }
 

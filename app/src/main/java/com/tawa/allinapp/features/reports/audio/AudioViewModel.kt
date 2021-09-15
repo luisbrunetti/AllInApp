@@ -10,7 +10,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.tawa.allinapp.core.interactor.UseCase
 import com.tawa.allinapp.core.platform.BaseViewModel
-import com.tawa.allinapp.data.local.models.AudioReportModel
 import com.tawa.allinapp.features.init.usecase.SyncAudio
 import com.tawa.allinapp.features.init.usecase.SyncStandardReports
 import com.tawa.allinapp.features.reports.standard.GetAnswers
