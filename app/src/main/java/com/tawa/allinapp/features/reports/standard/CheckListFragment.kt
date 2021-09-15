@@ -137,6 +137,7 @@ class CheckListFragment: BaseFragment() {
                         "Hora" -> addAnswersTime(listAnswer,binding.contentCheckList,list.nameQuestion,list.orderQ)
                         "Imagen de cámara" -> addAnswersPhoto(listAnswer,binding.contentCheckList,list.nameQuestion,list.orderQ)
                         "Imagen de biblioteca" -> addAnswersSelectImage(listAnswer,binding.contentCheckList,list.nameQuestion,list.orderQ)
+
                         //"Cuadrícula de varias opciones" -> addAnswersMultiRadio(listAnswer,binding.contentCheckList,list.nameQuestion)
                     }
                         //addAnswersRadio(listAnswer,binding.contentCheckList,list.nameQuestion)

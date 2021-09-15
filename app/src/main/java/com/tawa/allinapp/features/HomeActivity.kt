@@ -55,6 +55,7 @@ class HomeActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
         binding.navView.menu.findItem(R.id.navigation_informs).isVisible = false
+        binding.navView.menu.findItem(R.id.navigation_routes).isVisible = false
     }
 
     private fun devMod():Int{
@@ -75,5 +76,6 @@ class HomeActivity : AppCompatActivity() {
     fun showNavBar(){ binding.navView.visibility = View.VISIBLE }
 
     fun showInforms(){ binding.navView.menu.findItem(R.id.navigation_informs).isVisible = true}
+    fun showRoutes(){ binding.navView.menu.findItem(R.id.navigation_routes).isVisible = true}
 
 }

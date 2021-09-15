@@ -125,8 +125,8 @@ class InitFragment : BaseFragment() {
                 binding.btUser.text = if(it.isNotEmpty()) it.first().toString() else ""
             } })
             observe(idPv,{it?.let{
-                if(it)
-                    findNavController().navigate(InitFragmentDirections.actionNavigationInitToPdvFragment())
+              /*  if(it)
+                    findNavController().navigate(InitFragmentDirections.actionNavigationInitToPdvFragment())*/
 
             }})
             observe(successGetRole,{
@@ -135,9 +135,13 @@ class InitFragment : BaseFragment() {
                     {
                         if(it=="SUPERVISOR") {
                             (activity as HomeActivity).showInforms()
+                            (activity as HomeActivity).showRoutes()
                             binding.viewBtnInforms.isVisible = true
                             binding.imageViewInforms.isVisible= true
                             binding.textViewInforms.isVisible = true
+                            binding.viewBtnRoutes.isVisible = true
+                            binding.imageViewRoutes.isVisible= true
+                            binding.textRoutes.isVisible = true
                         }
                     }
                 }
@@ -183,9 +187,16 @@ class InitFragment : BaseFragment() {
         binding.viewBtnInforms.setOnClickListener{
             findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationInforms())
         }
+        binding.viewBtnMessages.setOnClickListener {
+            showMessagesDialog()
+        }
         return binding.root
     }
 
+    private fun showMessagesDialog(){
+        val dialog = MessagesDialogFragment(this)
+        dialog.show(childFragmentManager,"dialogMessages")
+    }
     private fun showSelector(){
         val dialog = SelectorDialogFragment(this)
         dialog.show(childFragmentManager, "dialog")
@@ -196,6 +207,7 @@ class InitFragment : BaseFragment() {
         dialog.listener = object : SelectPdvDialogFragment.Callback{
             override fun onAccept(id:String,pv:String,description: String) {
                 initViewModel.setPv(id,pv,description)
+                findNavController().navigate(InitFragmentDirections.actionNavigationInitToPdvFragment())
             }
         }
         dialog.show(childFragmentManager,"")

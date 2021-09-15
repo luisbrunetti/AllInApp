@@ -159,14 +159,14 @@ class RoutesFragment : BaseFragment() {
     private fun createListRoutes(listView: ListView,list:List<Routes>){
         val listRoutes  = ArrayList<String>()
         for(route in list)
-            listRoutes.add( route.Pv + " - "+route.zoneName)
+            listRoutes.add(route.nameCorpPv?:"")
         val aa = ArrayAdapter(requireContext(), R.layout.item_routes,listRoutes)
         listView.adapter = aa
     }
     private fun createListTracking(listView: ListView,list:List<Tracking>){
         val listTracking = ArrayList<String>()
         for(track in list)
-            listTracking.add( track.Pv + " - "+track.zoneName)
+            listTracking.add( track.nameCorpPv)
         val aa = ArrayAdapter(requireContext(), R.layout.item_routes,listTracking)
         listView.adapter = aa
     }

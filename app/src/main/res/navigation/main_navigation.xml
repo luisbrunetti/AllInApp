@@ -187,12 +187,12 @@
         android:id="@+id/navigation_pdv"
         android:name="com.tawa.allinapp.features.pdv.PdvFragment"
         android:label="fragment_pdv"
-        tools:layout="@layout/fragment_pdv" >
+        tools:layout="@layout/fragment_pdv">
         <action
             android:id="@+id/action_navigation_pdv_self"
             app:destination="@id/navigation_pdv"
             app:popUpTo="@id/navigation_pdv"
-            app:popUpToInclusive="true" >
+            app:popUpToInclusive="true">
 
         </action>
     </fragment>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <View
+        android:id="@+id/vNotify"
+        android:layout_width="wrap_content"
+        android:layout_height="65dp"
+        android:background="#E4E8ED"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/view17"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="20dp"
+        android:background="@drawable/view_rounded_notify"
+        app:layout_constraintBottom_toBottomOf="@+id/vNotify"
+        app:layout_constraintStart_toStartOf="@+id/vNotify"
+        app:layout_constraintTop_toTopOf="@+id/vNotify" />
+
+    <TextView
+        android:id="@+id/txContent"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        android:text="Se ha cambiado el punto de venta para el usuario Alejandra Casas"
+        android:textColor="@color/colorTextAll"
+        app:layout_constraintBottom_toBottomOf="@+id/vNotify"
+        app:layout_constraintEnd_toEndOf="@+id/vNotify"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/view17"
+        app:layout_constraintTop_toTopOf="@+id/vNotify" />
+
+    <TextView
+        android:id="@+id/txInit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="EG"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/view17"
+        app:layout_constraintEnd_toEndOf="@+id/view17"
+        app:layout_constraintStart_toStartOf="@+id/view17"
+        app:layout_constraintTop_toTopOf="@+id/view17" />
+
+    <View
+        android:id="@+id/view12"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/vNotify" />
+</androidx.constraintlayout.widget.ConstraintLayout>
+
