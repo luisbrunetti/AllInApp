@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.tawa.allinapp.core.interactor.UseCase
 import com.tawa.allinapp.core.platform.BaseViewModel
+import com.tawa.allinapp.data.local.Prefs
 import com.tawa.allinapp.features.init.usecase.GetDescPV
 import com.tawa.allinapp.features.reports.picture.usecase.GetStatePicture
 import com.tawa.allinapp.models.Report
@@ -16,7 +17,8 @@ class ReportsViewModel
     private val getUserType: GetUserType,
     private val getStateSku: GetStateSku,
     private val getStatePicture: GetStatePicture,
-    private val getCountSku: GetCountSku
+    private val getCountSku: GetCountSku,
+    private val prefs: Prefs
 ):BaseViewModel() {
 
     private val _reports = MutableLiveData<List<Report>>()
@@ -43,6 +45,8 @@ class ReportsViewModel
     val countSku:LiveData<Int>
         get() = _countSku
 
+    private val _getUserId = MutableLiveData<String>("")
+    val getUserId : LiveData<String> get() = _getUserId
     init {
         getUserType()
     }
@@ -82,4 +86,6 @@ class ReportsViewModel
     private fun handleCountSku(count: Int) {
         _countSku.value = count
     }
+
+    fun getUserId() = prefs.idUser
 }

@@ -55,6 +55,9 @@
             android:id="@+id/action_navigation_reports_to_pictureFragment"
             app:destination="@id/pictureFragment" >
             <argument
+                android:name="idUser"
+                app:argType="string"/>
+            <argument
                 android:name="state"
                 app:argType="string"/>
         </action>

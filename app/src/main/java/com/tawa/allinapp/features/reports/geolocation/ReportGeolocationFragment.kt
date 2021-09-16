@@ -15,7 +15,6 @@ import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.FragmentReportGeolocationBinding
 import com.tawa.allinapp.features.reports.geolocation.ui.CheckableSpinnerAdapter
 import com.tawa.allinapp.features.reports.geolocation.ui.CheckableSpinnerAdapter.SpinnerItem
-import com.tawa.allinapp.models.RoutesInform
 import com.tawa.allinapp.models.RoutesUser
 import com.tawa.allinapp.models.TrackingInform
 import java.time.LocalDate
@@ -87,8 +86,12 @@ class ReportGeolocationFragment : BaseFragment(){
     }
 
     private fun showUser(list:List<RoutesUser>){
-        for(user in list){
-            spinner_items.add(SpinnerItem(user, user.name))
+        for((count, user) in list.withIndex()){
+            if(count < 1 ){
+                val route = RoutesUser("1","Selecionar todos")
+                spinner_items.add(SpinnerItem(route, route.name))
+            }
+            else spinner_items.add(SpinnerItem(user, user.name))
         }
         val headerText = "Selecionar usuario"
         adapterUser = CheckableSpinnerAdapter(requireActivity(),headerText,spinner_items,selected_items)

@@ -53,6 +53,7 @@ class PictureFragment : BaseFragment() {
     private var photoReport: PhotoReport? = null
     private var balloon: Balloon? = null
 
+    private var idUser: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         appComponent.inject(this)
@@ -62,16 +63,14 @@ class PictureFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         setUpBinding()
         checkPermissions()
-        binding.rvPhotoBefore.layoutManager =
-            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.rvPhotoBefore.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.rvPhotoBefore.adapter = pictureBeforeAdapter
         pictureBeforeAdapter.clickListener = { openImage(it) }
         pictureBeforeAdapter.deleteListener = {
             pictureBeforeAdapter.collection.remove(it)
             pictureBeforeAdapter.notifyDataSetChanged()
         }
-        binding.rvPhotoAfter.layoutManager =
-            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.rvPhotoAfter.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.rvPhotoAfter.adapter = pictureAfterAdapter
         pictureAfterAdapter.clickListener = { openImage(it) }
         pictureAfterAdapter.deleteListener = {
@@ -91,6 +90,9 @@ class PictureFragment : BaseFragment() {
         binding = FragmentPictureBinding.inflate(inflater)
         if (arguments?.getString("state") == "Enviado") {
             disableComponents()
+        }
+        arguments?.getString("idUser")?.let {
+            idUser = it
         }
         pictureViewModel = viewModel(viewModelFactory) {
             observe(successReport, {

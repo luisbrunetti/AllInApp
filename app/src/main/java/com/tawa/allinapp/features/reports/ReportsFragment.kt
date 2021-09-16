@@ -71,7 +71,7 @@ class ReportsFragment : BaseFragment() {
             } })
             observe(userType, { it?.let {
                 if(it.isNotEmpty()) {
-                    Log.d("ReportFragment","Correcto User Type"+ userType.toString())
+                    Log.d("ReportFragment","Correcto User Type"+ userType.value.toString())
                     typeUser = it
                     reportsViewModel.getReports()
                 }
@@ -128,7 +128,11 @@ class ReportsFragment : BaseFragment() {
 
         binding.btnSku.setOnClickListener { findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToSkuFragment()) }
 
-        binding.btnReportPictures.setOnClickListener { findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToPictureFragment("${binding.tvPhotoState.text}")) }
+        binding.btnReportPictures.setOnClickListener {
+            reportsViewModel.getUserId()?.let {
+                findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToPictureFragment(idUser = it,"${binding.tvPhotoState.text}"))
+            }
+        }
 
         binding.appbar.addOnOffsetChangedListener(object : OnOffsetChangedListener {
             var isShow = true

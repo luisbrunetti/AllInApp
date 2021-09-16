@@ -5,10 +5,11 @@ import com.tawa.allinapp.data.remote.entities.ReportsPhotoRemote
 import com.tawa.allinapp.models.PhotoReport
 
 
-@Entity(tableName = "reports_photo",primaryKeys = ["company","pv"])
+@Entity(tableName = "reports_photo",primaryKeys = ["company","pv","idUser"])
 data class PhotoReportModel(
     val company: String,
     val pv: String,
+    val idUser:String,
     val before1: String?="",
     val before2: String?="",
     val before3: String?="",
@@ -42,6 +43,6 @@ data class PhotoReportModel(
         if(after3!!.isNotEmpty()) after.add(after3)
         if(after4!!.isNotEmpty()) after.add(after4)
         if(after5!!.isNotEmpty()) after.add(after5)
-        return PhotoReport(before,after,comments?:"",createAt?:"",longitude,latitude,syncLongitude,syncLatitude,syncAt)
+        return PhotoReport( before,after,comments?:"",createAt?:"",longitude,latitude,syncLongitude,syncLatitude,syncAt)
     }
 }

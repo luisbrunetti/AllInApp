@@ -63,8 +63,8 @@ class ReportsDataSource @Inject constructor(private val reportsDao: ReportsDao){
         reportsDao.insertPhotoReport(reportModel)
     }
 
-    fun getPhotoReports(pv:String, company:String):List<PhotoReportModel> {
-        return reportsDao.getPhotoReports(pv,company)
+    fun getPhotoReports(pv:String, company:String,idUser: String):List<PhotoReportModel> {
+        return reportsDao.getPhotoReports(pv,company,idUser)
     }
 
     fun getAllPhotoReports():List<PhotoReportModel> {
@@ -112,8 +112,8 @@ class ReportsDataSource @Inject constructor(private val reportsDao: ReportsDao){
         return reportsDao.deletePhotos()
     }
 
-    fun getStatePhoto(pv: String):String?{
-        return reportsDao.getStatePhoto(pv)
+    fun getStatePhoto(pv: String, idUser: String):String?{
+        return reportsDao.getStatePhoto(pv, idUser)
     }
 
     fun insertSkuObservation(skuObservationModel: SkuObservationModel){

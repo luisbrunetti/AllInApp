@@ -126,7 +126,7 @@ interface ReportsRepository {
 
         override fun getStatePhotoReport(): Either<Failure, String> {
             return try {
-                Either.Right(reportsDataSource.getStatePhoto(prefs.pvId!!)?:"No iniciado")
+                Either.Right(reportsDataSource.getStatePhoto(prefs.pvId!!, prefs.idUser!!)?:"No iniciado")
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))
             }
@@ -153,6 +153,7 @@ interface ReportsRepository {
                             PhotoReportModel(
                                 prefs.companyId?:"",
                                 prefs.pvId?:"",
+                                prefs.idUser?:"",
                                 if (before >0) report.before[0] else "",
                                 if (before >1) report.before[1] else "",
                                 if (before >2) report.before[2] else "",
@@ -173,11 +174,35 @@ interface ReportsRepository {
                                 report.syncAt,
                             )
                         )
+                        Log.d("savePhotoMODEL",PhotoReportModel(
+                            prefs.companyId?:"",
+                            prefs.pvId?:"",
+                            prefs.idUser?:"",
+                            if (before >0) report.before[0] else "",
+                            if (before >1) report.before[1] else "",
+                            if (before >2) report.before[2] else "",
+                            if (before >3) report.before[3] else "",
+                            if (before >4) report.before[4] else "",
+                            if (after >0) report.after[0] else "",
+                            if (after >1) report.after[1] else "",
+                            if (after >2) report.after[2] else "",
+                            if (after >3) report.after[3] else "",
+                            if (after >4) report.after[4] else "",
+                            report.comments,
+                            report.createAt,
+                            state,
+                            report.longitude,
+                            report.latitude,
+                            report.syncLongitude,
+                            report.syncLatitude,
+                            report.syncAt,
+                        ).toString())
                     } ?: kotlin.run {
                         reportsDataSource.insertPhotoReport(
                             PhotoReportModel(
                                 prefs.companyId?:"",
                                 prefs.pvId?:"",
+                                prefs.idUser ?:"",
                                 "", "", "", "", "", "", "", "", "", "",
                                 null,
                                 null,
@@ -194,7 +219,7 @@ interface ReportsRepository {
 
         override fun getLocalPhotoReport(): Either<Failure, PhotoReport> {
             return try {
-                val response = reportsDataSource.getPhotoReports(prefs.pvId?:"",prefs.companyId?:"")
+                val response = reportsDataSource.getPhotoReports(prefs.pvId?:"",prefs.companyId?:"",prefs.idUser ?: "")
                 if(response.isEmpty())
                     Either.Right( PhotoReport(emptyList(), emptyList(),"","",0.0,0.0,0.0,0.0,"") )
                 else
@@ -208,7 +233,7 @@ interface ReportsRepository {
             return when (networkHandler.isConnected) {
                 true ->{
                     try {
-                        val reports = reportsDataSource.getPhotoReports(prefs.pvId?:"",prefs.companyId?:"")
+                        val reports = reportsDataSource.getPhotoReports(prefs.pvId?:"",prefs.companyId?:"", prefs.idUser ?: "")
                         var regs = 0
                         reports.map {
                             val response = service.setPhotoReports(
@@ -292,7 +317,7 @@ interface ReportsRepository {
                                         {
                                             products.idProducto.nombreProducto?.let { it1 ->
                                                 products.idProducto.idSubsegmentoProd?.idSegmentoProd?.idSubcategoriaProd?.nombreSubcategoria?.let { it2 ->
-                                                    products.idProducto.idSubsegmentoProd?.idSegmentoProd?.idSubcategoriaProd?.idCategoriaProd?.nombreCategoria?.let { it3 ->
+                                                    products.idProducto.idSubsegmentoProd.idSegmentoProd.idSubcategoriaProd.idCategoriaProd?.nombreCategoria?.let { it3 ->
                                                         SkuDetailModel(products.id,products.idProducto.feCreacion,products.idProducto.id,
                                                             it1,
                                                             it3,
