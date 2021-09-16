@@ -17,6 +17,7 @@ import com.tawa.allinapp.features.reports.geolocation.ui.CheckableSpinnerAdapter
 import com.tawa.allinapp.features.reports.geolocation.ui.CheckableSpinnerAdapter.SpinnerItem
 import com.tawa.allinapp.models.RoutesUser
 import com.tawa.allinapp.models.TrackingInform
+import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -31,6 +32,10 @@ class ReportGeolocationFragment : BaseFragment(){
     private val spinner_items: ArrayList<SpinnerItem<RoutesUser>> = ArrayList()
     private val selected_items: MutableSet<RoutesUser> = HashSet()
     private var adapterUser : CheckableSpinnerAdapter<RoutesUser>? = null
+
+    private var mDay: Int? = null
+    private var mMonth: Int ? = null
+    private var mYear: Int? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -68,18 +73,24 @@ class ReportGeolocationFragment : BaseFragment(){
             val date = binding.edDateUserRoutes.text.toString()
             adapterUser?.selected_items?.let {
                 if (date != "" && it.size > 0) {
-
                     val mutableListUser: MutableList<RoutesUser> = it.stream().collect(Collectors.toList()) as MutableList<RoutesUser>
-
                     Log.d("mutableList", mutableListUser.toString())
-
-                    reportGeoViewModel.getRoutesFromListUsers(mutableListUser, convertDate(binding.edDateUserRoutes.text.toString()))
+                    reportGeoViewModel.getRoutesFromListUsers(mutableListUser, reportGeoViewModel.convertDate(binding.edDateUserRoutes.text.toString()))
 
                 } else {
                     notify(requireActivity(), R.string.warningReportGeolocation)
                 }
             }
         }
+        val (day,month,year) = reportGeoViewModel.getCurrentDay()
+        this.mDay = day
+        this.mMonth = month + 1
+        this.mYear = year
+        val currentDate = SimpleDateFormat("dd/MM/yyyy", Locale("es", "ES")).format(Date())
+        Log.d("current_date", currentDate.toString())
+        binding.edDateUserRoutes.setText(currentDate)
+
+
         //Llamadas a los servicios
         reportGeoViewModel.getListUser()
         return binding.root
@@ -100,14 +111,22 @@ class ReportGeolocationFragment : BaseFragment(){
 
 
     private fun getCurrentDay(et:EditText){
-        val c = Calendar.getInstance()
-        val year = c.get(Calendar.YEAR)
-        val month = c.get(Calendar.MONTH)
-        val day = c.get(Calendar.DAY_OF_MONTH)
-        val dpd = DatePickerDialog(requireContext(),{ _, _, month, day ->
-            et.setText(""+ day + "/" + getMonth(month)+ "/"+ year)
-        },year, month,day)
-        dpd.show()
+        //Log.d("log",(mDay.toString()+mMonth.toString()+mYear.toString()).toString())
+        mDay?.let { day->
+            mMonth?.let { month ->
+                mYear?.let { year ->
+                    val dpd = DatePickerDialog(requireContext(),{ _, yearDP, monthDP, dayDP ->
+                        if(dayDP < 10){
+                            val zeroDay = "0$dayDP"
+                            et.setText(""+ zeroDay + "/" + getMonth(monthDP)+ "/"+ yearDP)
+                        }else{
+                            et.setText(""+ dayDP + "/" + getMonth(monthDP)+ "/"+ yearDP)
+                        }
+                    },year, month-1,day)
+                    dpd.show()
+                }
+            }
+        }
     }
 
     private fun getMonth(monthYear: Int) = when(monthYear){
@@ -129,13 +148,6 @@ class ReportGeolocationFragment : BaseFragment(){
     private fun showMapRoutesDialog(listRoutes:List<TrackingInform>){
         val dialog = InformRoutesMapDialogFragment.newInstance(listRoutes)
         dialog.show(childFragmentManager,"")
-    }
-
-    private fun convertDate(date:String):String{
-        val inputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
-        val outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.ENGLISH)
-        val dateTime = LocalDate.parse(date,inputFormatter)
-        return outputFormatter.format(dateTime)
     }
 
 }
