@@ -17,12 +17,23 @@ import android.content.Context
 import android.graphics.BitmapFactory
 import android.os.Build
 import android.provider.Settings
+import android.util.Log
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.gson.JsonObject
+import com.pusher.client.Pusher
+import com.pusher.client.PusherOptions
+import com.pusher.client.connection.ConnectionEventListener
+import com.pusher.client.connection.ConnectionState
+import com.pusher.client.connection.ConnectionStateChange
 import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.models.Notify
+import org.json.JSONObject
 import javax.inject.Inject
+
+
+
 
 
 class MessagesDialogFragment
@@ -51,6 +62,7 @@ class MessagesDialogFragment
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        callPusher()
         binding.rvNotify.layoutManager = LinearLayoutManager(context)
         arguments?.let { bundle ->
             //bundle.getInt(TITLE).let { binding.tvItem.text = context?.getString(it) }
@@ -99,6 +111,51 @@ class MessagesDialogFragment
             .setSmallIcon(R.mipmap.ic_launcher)
             .setContentText(messageBody)
         notify(0, builder.build())
+    }
+
+    private fun callPusher(){
+
+        val options = PusherOptions()
+        options.setCluster("mt1");
+
+        val pusher = Pusher("0d6f6d9db14d727748c7", options)
+
+        pusher.connect(object : ConnectionEventListener {
+            override fun onConnectionStateChange(change: ConnectionStateChange) {
+                Log.i("Pusher", "State changed from ${change.previousState} to ${change.currentState}")
+            }
+
+            override fun onError(
+                message: String,
+                code: String,
+                e: Exception
+            ) {
+                Log.i("Pusher", "There was a problem connecting! code ($code), message ($message), exception($e)")
+            }
+        }, ConnectionState.ALL)
+
+        val channel = pusher.subscribe("my-channel")
+        channel.bind("my-event") { event ->
+            Log.i("Pusher","${event}")
+            val js = JSONObject(event.data.toString())
+            activity?.runOnUiThread {
+                val channels  = "ch1"
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    val name = "ch2"
+                    val descriptionText = "descrip"
+                    val importance = NotificationManager.IMPORTANCE_DEFAULT
+                    val channel = NotificationChannel(channels, name, importance).apply {
+                        description = descriptionText
+                    }
+                    val nm = requireContext().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                    nm.createNotificationChannel(channel)
+                    nm.sendNotification(js.getString("message"),requireContext(),channels)
+                }
+                notify.add(Notify("7",js.getString("message"),js.getString("dato")))
+                notify.sortByDescending { it.id }
+                notifyAdapter.setData(notify)
+            }
+        }
     }
 
     override fun onResume() {

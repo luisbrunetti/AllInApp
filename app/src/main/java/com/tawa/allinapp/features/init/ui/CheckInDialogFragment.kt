@@ -48,7 +48,9 @@ class CheckInDialogFragment
     lateinit var list: List<Schedule>
     private var _pv: String = ""
     private var _pvId: String = ""
+    private var _description: String = ""
     var listener: Callback? = null
+    private var _positionPv = -1
     var stateUser  = ArrayList<String>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -65,7 +67,7 @@ class CheckInDialogFragment
                 list= it
             } })
             observe(successCheckIn, { it?.let {
-                listener?.onAccept(_pvId,_pv, latitude,longitude)
+                listener?.onAccept(_pvId,_pv, latitude,longitude,_description)
             } })
             observe(successGetCompanyId, { it?.let {
                 initViewModel.getPv(it)
@@ -101,16 +103,17 @@ class CheckInDialogFragment
         }
 
         binding.btnDoCheckin.setOnClickListener {
-            val positionPv  = binding.pdvSpinner.selectedItemPosition
+             _positionPv  = binding.pdvSpinner.selectedItemPosition
             //Toast.makeText(context,getBatteryPercentage(requireContext()).toString()+" - "+getHour() + " - "+latitude+","+longitude,Toast.LENGTH_LONG).show()
             if(checkState)
             {
                 //if(getDistance("${list[positionPv].lat}","${list[positionPv].long}",latitude,longitude)<=250)
                 //{
-                    _pv = list[positionPv].description
-                    _pvId = list[positionPv].id
-                    initViewModel.setPv(list[positionPv].id,list[positionPv].pv,list[positionPv].description)
-                    initViewModel.setCheckIn(idUsers,list[positionPv].pv,latitude,longitude)
+                    _pv = list[_positionPv].description
+                    _pvId = list[_positionPv].id
+                    _description = list[_positionPv].description
+                    initViewModel.setPv(list[_positionPv].id,list[_positionPv].pv,list[_positionPv].description)
+                    initViewModel.setCheckIn(idUsers,list[_positionPv].pv,latitude,longitude)
                     initViewModel.updateStatus(latitude,longitude,getBatteryPercentage(requireContext()).toString())
                     dismiss()
                 //}
@@ -263,7 +266,7 @@ class CheckInDialogFragment
     }
 
     interface Callback {
-        fun onAccept(pvId:String, pv:String, lat:String, long:String)
+        fun onAccept(pvId:String, pv:String, lat:String, long:String,description:String)
         fun onSnack(snack:Boolean)
     }
 }

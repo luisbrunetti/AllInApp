@@ -51,7 +51,7 @@ class TrackingMapDialogFragment: DialogFragment() {
                     {
                         arrayLatitude.add(visit?.latitude.toString())
                         arrayLongitude.add(visit?.longitude.toString())
-                        arrayDirections.add(track.Pv+" - "+track.zoneName)
+                        arrayDirections.add(track.dirCorpPv)
                         arrayType.add(visit?.comment.toString())
                     }
                    // Log.d("visitasDato",track.visits.toString())
@@ -62,7 +62,7 @@ class TrackingMapDialogFragment: DialogFragment() {
                         {
                             arrayLatitude.add(task?.latitude.toString())
                             arrayLongitude.add(task?.longitude.toString())
-                            arrayDirections.add(track.Pv+" - "+track.zoneName)
+                            arrayDirections.add(track.dirCorpPv)
                             arrayType.add(task?.reportState.toString())
                         }
                     }
@@ -71,7 +71,7 @@ class TrackingMapDialogFragment: DialogFragment() {
                 {
                     arrayLatitude.add(track.latitude.toString())
                     arrayLongitude.add(track.longitude.toString())
-                    arrayDirections.add(track.Pv+" - "+track.zoneName)
+                    arrayDirections.add(track.dirCorpPv)
                     arrayType.add("none")
                 }
             }

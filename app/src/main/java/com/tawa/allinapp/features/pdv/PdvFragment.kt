@@ -117,6 +117,7 @@ class PdvFragment : BaseFragment() {
             getLastLocation()
             latitudePdv= latitude
             longitudePdv = longitude
+            notify(activity, R.string.notify_update_location)
         }
         binding.btnShowModalPhotoPdv.setOnClickListener {
             showDialogTakePhoto()
@@ -139,7 +140,7 @@ class PdvFragment : BaseFragment() {
         return binding.root
     }
 
-    fun showPdvSelectDialog(){
+    private fun showPdvSelectDialog(){
         val dialog = SelectPdvDialogFragment(this)
         dialog.listener = object : SelectPdvDialogFragment.Callback{
             override fun onAccept(id:String,pv:String,description: String) {

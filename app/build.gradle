@@ -6,7 +6,7 @@ plugins {
     id 'androidx.navigation.safeargs.kotlin'
 }
 
-def dev = 1000
+def dev = 1
 
 android {
     compileSdkVersion 30
@@ -151,4 +151,7 @@ dependencies {
 
     implementation "io.github.vanpra.compose-material-dialogs:datetime:0.5.1"
     //https://vanpra.github.io/compose-material-dialogs/DateTimePicker/
+
+    //Pusher
+    implementation 'com.pusher:pusher-java-client:2.2.6'
 }

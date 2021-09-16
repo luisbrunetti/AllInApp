@@ -14,7 +14,7 @@ data class AnswerModel(
     @PrimaryKey val id: String,
     val status: String,
     val answerName: String,
-    val order : Int,
+    val order : String,
     val idQuestion: String,
     val idUserCreator: String,
     val idUserModifier: String?,

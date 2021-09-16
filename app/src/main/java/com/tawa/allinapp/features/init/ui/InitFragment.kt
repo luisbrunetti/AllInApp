@@ -23,7 +23,7 @@ import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.FragmentInitBinding
 import com.tawa.allinapp.features.HomeActivity
 import com.tawa.allinapp.features.init.InitViewModel
-
+import com.tawa.allinapp.models.Schedule
 
 
 class InitFragment : BaseFragment() {
@@ -166,7 +166,6 @@ class InitFragment : BaseFragment() {
                     findNavController().navigate(InitFragmentDirections.actionNavigationInitToSendPasswordFragment())
                 }
             }
-
             frag.show(childFragmentManager, "participant")
         }
 
@@ -216,8 +215,9 @@ class InitFragment : BaseFragment() {
     private fun showSelectorCheckIn(){
         val dialog = CheckInDialogFragment(this)
         dialog.listener = object : CheckInDialogFragment.Callback {
-            override fun onAccept(pvId:String, pv:String,lat:String, long:String) {
+            override fun onAccept(pvId:String, pv:String,lat:String, long:String,description: String) {
                 _pv = pv; _lat = lat; _long = long; _pvId = pvId
+                binding.tvCheckIn.text = description
                 initViewModel.getCheckMode()
             }
             override fun onSnack(snack: Boolean) {

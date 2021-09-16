@@ -16,7 +16,7 @@ class QuestionsRemote {
     data class ResponseQuestion(
         @SerializedName("_id") val id: String,
         @SerializedName("nombre_pregunta") val questionName: String,
-        @SerializedName("numero_orden") val order : Int,
+        @SerializedName("numero_orden") val order : Float,
         @SerializedName("id_reporte") val idReport: String,
         @SerializedName("objeto") val objectType: String,
         @SerializedName("id_user_creador") val idUserCreator: String,
@@ -25,15 +25,15 @@ class QuestionsRemote {
         @SerializedName("fe_creacion") val dateCreation: String,
         )
     {
-          fun toView() = Question(id,questionName,order,idReport,objectType,idUserCreator,idUserModifier,dateModify,dateCreation)
-          fun toModel() = QuestionModel(id,questionName,order,idReport,objectType,idUserCreator,idUserModifier,dateModify,dateCreation)
+          fun toView() = Question(id,questionName,order.toInt(),idReport,objectType,idUserCreator,idUserModifier,dateModify,dateCreation)
+          fun toModel() = QuestionModel(id,questionName,order.toInt(),idReport,objectType,idUserCreator,idUserModifier,dateModify,dateCreation)
     }
 
     data class ResponseAnswers(
         @SerializedName("_id") val id: String,
         @SerializedName("status") val status: String,
         @SerializedName("nombre_respuesta") val answerName: String,
-        @SerializedName("numero_orden") val order : Int,
+        @SerializedName("numero_orden") val order : String,
         @SerializedName("id_pregunta") val idQuestion: String,
         @SerializedName("id_user_creador") val idUserCreator: String,
         @SerializedName("id_user_modificador") val idUserModifier: String?,
