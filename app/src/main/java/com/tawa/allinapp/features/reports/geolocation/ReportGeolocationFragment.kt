@@ -3,20 +3,30 @@ package com.tawa.allinapp.features.reports.geolocation
 import android.app.DatePickerDialog
 import android.content.Context
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import androidx.compose.ui.text.toLowerCase
+import androidx.core.widget.addTextChangedListener
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.tawa.allinapp.R
+import com.tawa.allinapp.core.dialog.MessageDialogFragment
+import com.tawa.allinapp.core.extensions.invisible
 import com.tawa.allinapp.core.extensions.observe
 import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.FragmentReportGeolocationBinding
 import com.tawa.allinapp.features.reports.geolocation.ui.CheckableSpinnerAdapter
 import com.tawa.allinapp.features.reports.geolocation.ui.CheckableSpinnerAdapter.SpinnerItem
+import com.tawa.allinapp.features.reports.geolocation.ui.RecyclerUser
 import com.tawa.allinapp.models.RoutesUser
 import com.tawa.allinapp.models.TrackingInform
+import okhttp3.Route
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -32,7 +42,9 @@ class ReportGeolocationFragment : BaseFragment(){
     private val spinner_items: ArrayList<SpinnerItem<RoutesUser>> = ArrayList()
     private val selected_items: MutableSet<RoutesUser> = HashSet()
     private var adapterUser : CheckableSpinnerAdapter<RoutesUser>? = null
-
+    private var recyclerAdapter : RecyclerUser? = null
+    private var listRecycleView: ArrayList<RoutesUser>? = null
+    private var backupRecycleView: ArrayList<RoutesUser> ? = ArrayList()
     private var mDay: Int? = null
     private var mMonth: Int ? = null
     private var mYear: Int? = null
@@ -56,14 +68,26 @@ class ReportGeolocationFragment : BaseFragment(){
                 }
             })
             observe(getRouteUsers, {
+                hideProgressDialog()
                 it?.let {
                     if (it.isNotEmpty()) {
                         showMapRoutesDialog(it)
                     }
                 }
             })
+            observe(failure,{
+                hideProgressDialog()
+                it?.let {
+                    val dialog = MessageDialogFragment.newInstance(it.toString())
+                    dialog.show(childFragmentManager,"dialog")
+                }
+            })
         }
 
+        binding.edUserRoutes.setOnClickListener {
+            if(binding.cvUsersReportLocation.visibility == View.VISIBLE) binding.cvUsersReportLocation.visibility = View.GONE
+            else binding.cvUsersReportLocation.visibility = View.VISIBLE
+        }
         //Binding
         binding.edDateUserRoutes.setOnClickListener {
             getCurrentDay(binding.edDateUserRoutes)
@@ -71,11 +95,15 @@ class ReportGeolocationFragment : BaseFragment(){
         binding.btnSearchGeolocation.setOnClickListener {
             //val value =
             val date = binding.edDateUserRoutes.text.toString()
-            adapterUser?.selected_items?.let {
+            recyclerAdapter?.listChecked?.let {
                 if (date != "" && it.size > 0) {
-                    val mutableListUser: MutableList<RoutesUser> = it.stream().collect(Collectors.toList()) as MutableList<RoutesUser>
-                    Log.d("mutableList", mutableListUser.toString())
-                    reportGeoViewModel.getRoutesFromListUsers(mutableListUser, reportGeoViewModel.convertDate(binding.edDateUserRoutes.text.toString()))
+                    //val mutableListUser: MutableList<RoutesUser> = it.stream().collect(Collectors.toList()) as MutableList<RoutesUser>
+                    //Log.d("mutableList", mutableListUser.toString()) // Modificar tipo a arraylist
+                    showProgressDialog()
+                    reportGeoViewModel.getRoutesFromListUsers(
+                        it, reportGeoViewModel.convertDate(binding.edDateUserRoutes.text.toString())
+                    )
+
 
                 } else {
                     notify(requireActivity(), R.string.warningReportGeolocation)
@@ -87,9 +115,25 @@ class ReportGeolocationFragment : BaseFragment(){
         this.mMonth = month + 1
         this.mYear = year
         val currentDate = SimpleDateFormat("dd/MM/yyyy", Locale("es", "ES")).format(Date())
-        Log.d("current_date", currentDate.toString())
+        binding.clReportGeolocation.setOnClickListener {
+            if (binding.cvUsersReportLocation.visibility == View.VISIBLE) binding.cvUsersReportLocation.visibility = View.GONE
+        }
         binding.edDateUserRoutes.setText(currentDate)
+        binding.edUserRoutes.addTextChangedListener( object: TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                binding.cvUsersReportLocation.visibility = View.VISIBLE
+            }
 
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                if(s.toString() == "") binding.cvUsersReportLocation.invisible()
+                filter(s.toString())
+            }
+
+        })
 
         //Llamadas a los servicios
         reportGeoViewModel.getListUser()
@@ -97,18 +141,37 @@ class ReportGeolocationFragment : BaseFragment(){
     }
 
     private fun showUser(list:List<RoutesUser>){
-        for((count, user) in list.withIndex()){
-            if(count < 1 ){
-                val route = RoutesUser("1","Selecionar todos")
-                spinner_items.add(SpinnerItem(route, route.name))
+        listRecycleView = ArrayList<RoutesUser>()
+        listRecycleView?.let { it->
+            for((count, user) in list.withIndex()){
+                if(count < 1 ){
+                    val route = RoutesUser("1","Selecionar todos")
+                    it.add(route)
+                    backupRecycleView?.add(route)
+                }
+                else{
+                    it.add(user)
+                    backupRecycleView?.add(user)
+                }
             }
-            else spinner_items.add(SpinnerItem(user, user.name))
-        }
-        val headerText = "Selecionar usuario"
-        adapterUser = CheckableSpinnerAdapter(requireActivity(),headerText,spinner_items,selected_items)
-        binding.spinner.adapter = adapterUser
+        } ?: emptyList<RoutesUser>()
+        recyclerAdapter = RecyclerUser(listRecycleView!!,requireContext())
+        binding.rvUsersReportLocation.layoutManager = LinearLayoutManager(requireContext())
+        binding.rvUsersReportLocation.adapter = recyclerAdapter
+        //val headerText = "Selecionar usuario"
+        //adapterUser = CheckableSpinnerAdapter(requireActivity(),headerText,spinner_items,selected_items)
+        //binding.spinner.adapter = adapterUser
     }
 
+    private fun filter(text: String){
+        val newList = ArrayList<RoutesUser>()
+        backupRecycleView?.let{  orgList ->
+            for(user in orgList){
+                if(user.name.toLowerCase(Locale.ROOT).contains(text.toLowerCase(Locale.ROOT))){ newList.add(user) }
+            }
+        }
+        recyclerAdapter?.filteredList(newList)
+    }
 
     private fun getCurrentDay(et:EditText){
         //Log.d("log",(mDay.toString()+mMonth.toString()+mYear.toString()).toString())

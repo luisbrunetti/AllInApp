@@ -20,6 +20,7 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 class ReportGeolocationViewModel @Inject constructor(
     private val getListUser: GetListUser,
@@ -39,7 +40,7 @@ class ReportGeolocationViewModel @Inject constructor(
         this._getUserList.value = userList
     }
 
-    fun getRoutesFromListUsers(mutableListUser : MutableList<RoutesUser>, dateStart: String) {
+    fun getRoutesFromListUsers(mutableListUser : ArrayList<RoutesUser>, dateStart: String) {
         getTrackingFromListUsers(GetTrackingFromListUsers.Params(mutableListUser,dateStart)) { it.either(::handleFailure, ::handleRoutesFromListUser) }
     }
 

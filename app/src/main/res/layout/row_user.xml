@@ -1,21 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:app="http://schemas.android.com/apk/res-auto"
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
         <View
             android:id="@+id/viewUserAdapter"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="58dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0" />
 
         <CheckBox
             android:id="@+id/cbUserAdapter"
@@ -25,7 +28,7 @@
             app:layout_constraintBottom_toBottomOf="@id/viewUserAdapter"
             app:layout_constraintStart_toStartOf="@id/viewUserAdapter"
             app:layout_constraintTop_toTopOf="@id/viewUserAdapter"
-            app:layout_constraintVertical_bias="0.101" />
+            app:layout_constraintVertical_bias="0.384" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvUserAdapter"
@@ -39,6 +42,6 @@
             app:layout_constraintHorizontal_bias="0.052"
             app:layout_constraintStart_toEndOf="@+id/cbUserAdapter"
             app:layout_constraintTop_toTopOf="@id/viewUserAdapter"
-            app:layout_constraintVertical_bias="0.1" />
+            app:layout_constraintVertical_bias="0.384" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.appcompat.widget.LinearLayoutCompat>

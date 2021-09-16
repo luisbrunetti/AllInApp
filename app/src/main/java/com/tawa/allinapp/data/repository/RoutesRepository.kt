@@ -6,12 +6,6 @@ import com.tawa.allinapp.core.functional.Either
 import com.tawa.allinapp.core.functional.Failure
 import com.tawa.allinapp.core.functional.NetworkHandler
 import com.tawa.allinapp.data.local.Prefs
-import com.tawa.allinapp.data.local.datasource.QuestionsDataSource
-import com.tawa.allinapp.data.local.datasource.ReportsDataSource
-import com.tawa.allinapp.data.local.models.AnswersPvModel
-import com.tawa.allinapp.data.local.models.ReadyAnswerModel
-import com.tawa.allinapp.data.remote.entities.RoutesRemote
-import com.tawa.allinapp.data.remote.service.QuestionsService
 import com.tawa.allinapp.data.remote.service.RoutesService
 import com.tawa.allinapp.models.*
 import javax.inject.Inject
@@ -21,7 +15,7 @@ interface RoutesRepository {
     fun getRoutes(idUser:String,dateStart:String): Either<Failure, List<Routes>>
     fun getTracking(idUser:String,dateStart:String): Either<Failure, List<Tracking>>
     fun getRoutesFromListUsers(mutableListUser: MutableList<RoutesUser>, dateStart: String): Either<Failure,List<RoutesInform>>
-    fun getTrackingFromListUsers(mutableListUser: MutableList<RoutesUser>, dateStart: String): Either<Failure,List<TrackingInform >>
+    fun getTrackingFromListUsers(mutableListUser: ArrayList<RoutesUser>, dateStart: String): Either<Failure,List<TrackingInform >>
 
     class Network
     @Inject constructor(private val networkHandler: NetworkHandler,
@@ -128,7 +122,7 @@ interface RoutesRepository {
         }
 
         override fun getTrackingFromListUsers(
-            mutableListUser: MutableList<RoutesUser>,
+            mutableListUser: ArrayList<RoutesUser>,
             dateStart: String
         ): Either<Failure, List<TrackingInform>> {
             val arrayResponse : ArrayList<TrackingInform> = ArrayList()

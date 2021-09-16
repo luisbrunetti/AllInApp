@@ -12,6 +12,6 @@ class GetTrackingFromListUsers
 @Inject constructor(private val routesRepository: RoutesRepository) : UseCase<List<TrackingInform>, GetTrackingFromListUsers.Params>() {
 
     override suspend fun run(params: Params) = routesRepository.getTrackingFromListUsers(params.listUsers,params.dateStart)
-    data class Params(val listUsers : MutableList<RoutesUser>, val dateStart: String)
+    data class Params(val listUsers : ArrayList<RoutesUser>, val dateStart: String)
 
 }
