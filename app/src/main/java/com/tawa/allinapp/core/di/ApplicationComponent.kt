@@ -19,6 +19,7 @@ import com.tawa.allinapp.features.reports.audio.AudioFragment
 import com.tawa.allinapp.features.reports.picture.PictureFragment
 import com.tawa.allinapp.features.reports.standard.CheckListFragment
 import com.tawa.allinapp.features.reports.ReportsFragment
+import com.tawa.allinapp.features.reports.audiodinamico.DynamicAudioFragment
 import com.tawa.allinapp.features.reports.geolocation.ReportGeolocationFragment
 import com.tawa.allinapp.features.reports.sku.SkuFragment
 import com.tawa.allinapp.features.reports.userstatus.LastLocationFragment
@@ -60,5 +61,6 @@ interface ApplicationComponent{
     fun inject(pdvFragment: PdvFragment)
     fun inject(reportGeolocationFragment: ReportGeolocationFragment)
     fun inject(messagesDialogFragment: MessagesDialogFragment)
+    fun inject(dynamicAudioFragment: DynamicAudioFragment)
 
 }

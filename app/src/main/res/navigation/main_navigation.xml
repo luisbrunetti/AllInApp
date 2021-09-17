@@ -66,7 +66,7 @@
             app:destination="@id/skuFragment" />
         <action
             android:id="@+id/action_navigation_reports_to_audioFragment"
-            app:destination="@id/audioFragment">
+            app:destination="@id/reportAudioFragment">
 
             <argument
                 android:name="id"
@@ -81,7 +81,20 @@
                 android:name="state"
                 app:argType="string" />
         </action>
+        <action
+            android:id="@+id/action_navigation_reports_to_reportAudioFragment"
+            app:destination="@id/reportAudioFragment">
+            <argument
+                android:name="id"
+                app:argType="string"/>
+            <argument
+                android:name="name"
+                app:argType="string"/>
+
+        </action>
+
     </fragment>
+
 
     <fragment
         android:id="@+id/navigation_calendar"
@@ -145,6 +158,13 @@
         android:label="AudioFragment"
         tools:layout="@layout/fragment_audio"
         />
+    <fragment
+        android:id="@+id/reportAudioFragment"
+        android:name="com.tawa.allinapp.features.reports.audiodinamico.DynamicAudioFragment"
+        android:label="ReportAudioFragment"
+        tools:layout="@layout/fragment_dynamic_audio">
+
+    </fragment>
     <fragment
         android:id="@+id/navigation_informs"
         android:name="com.tawa.allinapp.features.informs.InformsFragment"

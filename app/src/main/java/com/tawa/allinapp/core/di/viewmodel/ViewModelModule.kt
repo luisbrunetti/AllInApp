@@ -13,6 +13,7 @@ import com.tawa.allinapp.features.reports.audio.AudioViewModel
 import com.tawa.allinapp.features.reports.picture.PictureViewModel
 import com.tawa.allinapp.features.reports.standard.CheckListViewModel
 import com.tawa.allinapp.features.reports.ReportsViewModel
+import com.tawa.allinapp.features.reports.audiodinamico.DynamicAudioViewModel
 import com.tawa.allinapp.features.reports.geolocation.ReportGeolocationViewModel
 import com.tawa.allinapp.features.reports.sku.SkuViewModel
 import com.tawa.allinapp.features.reports.userstatus.UserStatusViewModel
@@ -106,5 +107,10 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(ReportGeolocationViewModel::class)
     abstract fun bindsReportGeolocationViewModel(reportGeolocationViewModel: ReportGeolocationViewModel) : ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(DynamicAudioViewModel::class)
+    abstract fun bindsDynamicAudioViewModel(dinamicAudioViewModel: DynamicAudioViewModel) : ViewModel
 
 }

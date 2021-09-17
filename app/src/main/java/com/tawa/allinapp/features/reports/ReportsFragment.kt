@@ -48,14 +48,20 @@ class ReportsFragment : BaseFragment() {
         binding.rvReports.layoutManager = LinearLayoutManager(context)
         binding.rvReports.adapter = reportsAdapter
         reportsAdapter.clickListener = {
-            Log.d("reportname",it.reportName)
-            when(it.reportName){
+            Log.d("reportname", it.reportName)
+            when (it.reportName) {
                 /*"CHECK LIST PUNTO DE VENTA" -> findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToCheckListFragment(it.id))
                 //"REPORTE FOTOGRAFICO" -> findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToPictureFragment())
                // "ESTATUS DE USUARIO" -> findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToUserStatusFragment())
                 "LEVANTAMIENTO DE INFORMACIÓN" -> findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToCheckListFragment(it.id))*/
                 "Reporte de Audios" -> findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToAudioFragment(it.id,it.idPv,it.idUser,it.state))
-                else->  findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToCheckListFragment(it.id,it.reportName))
+                //"Reporte de Audios" -> findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToReportAudioFragment(it.id,it.reportName))
+                else -> findNavController().navigate(
+                    ReportsFragmentDirections.actionNavigationReportsToCheckListFragment(
+                        it.id,
+                        it.reportName
+                    )
+                )
             }
         }
     }
