@@ -348,19 +348,14 @@ interface ReportsRepository {
                     Either.Right(reportsDataSource.getReports(prefs.companyId?:"",prefs.idUser?:"").map { it.toView() })
                 else{
                     val count = reportsDataSource.getReportPvCount(prefs.companyId?:"",prefs.pvId?:"",prefs.idUser?:"")
-                    if(count==0)
+                    val reports = reportsDataSource.getReports(prefs.companyId?:"",prefs.idUser?:"").map { it.toView() }
+                    for(report in reports)
                     {
-                        val reports = reportsDataSource.getReports(prefs.companyId?:"",prefs.idUser?:"").map { it.toView() }
-                        for(report in reports)
-                        {
-                            reportsDataSource.insertReportPv(ReportPvModel(0,prefs.pvId?:"",report.id,prefs.idUser?:"","No iniciado","0","","",""))
-                        }
+                        reportsDataSource.insertReportPv(ReportPvModel(prefs.pvId?:"",report.id,prefs.idUser?:"","No iniciado","0","","",""))
                     }
                     Log.d("reportStandard",reportsDataSource.getReportsPv(prefs.companyId?:"",prefs.pvId?:"",prefs.idUser?:"").map { it.toView() }.toString())
                     Either.Right(reportsDataSource.getReportsPv(prefs.companyId?:"",prefs.pvId?:"",prefs.idUser?:"").map { it.toView() })
-
                 }
-
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))
             }

@@ -22,6 +22,7 @@ class Prefs
         const val DATA_SKU = "data_sku"
         const val STATE_CHECKLIST = "stateChecklist"
         const val VERIFY_CHECKLIST = "verifyChecklist"
+        const val LOGO_COMPANY = "logoCompany"
 
 
     }
@@ -66,6 +67,10 @@ class Prefs
     var pvName:String?
         get() = prefs.getString(PV_NAME,"")
         set(value) = prefs.edit().putString(PV_NAME,value).apply()
+
+    var logoCompany:String?
+        get() = prefs.getString(LOGO_COMPANY,"")
+        set(value) = prefs.edit().putString(LOGO_COMPANY,value).apply()
 
     var session:Boolean
         get() = prefs.getBoolean(SESSION,false)

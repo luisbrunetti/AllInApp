@@ -24,6 +24,7 @@ import java.io.ByteArrayOutputStream
 import java.io.FileInputStream
 import java.io.FileNotFoundException
 import android.provider.MediaStore
+import androidx.core.graphics.scale
 import androidx.navigation.fragment.findNavController
 import com.tawa.allinapp.R
 import com.tawa.allinapp.features.init.InitViewModel
@@ -190,8 +191,9 @@ class PdvFragment : BaseFragment() {
             e.printStackTrace()
         }
         val bm = BitmapFactory.decodeStream(fis)
+        val bb =Bitmap.createScaledBitmap(bm, 400, 800, false)
         val outputStream = ByteArrayOutputStream()
-        bm.compress(Bitmap.CompressFormat.JPEG, 50, outputStream)
+        bb.compress(Bitmap.CompressFormat.JPEG, 50, outputStream)
         return Base64.encodeToString(outputStream.toByteArray(), Base64.DEFAULT)
     }
 
@@ -201,7 +203,7 @@ class PdvFragment : BaseFragment() {
         val path = MediaStore.Images.Media.insertImage(
             context.contentResolver,
             inImage,
-            "Title",
+            "IMG_" + System.currentTimeMillis(),
             null
         )
         return Uri.parse(path)

@@ -7,8 +7,8 @@ import javax.inject.Inject
 class SetIdCompany
 @Inject constructor(private val checkRepository: CheckRepository) : UseCase<Boolean, SetIdCompany.Params>() {
 
-    override suspend fun run(params: Params) = checkRepository.setIdCompany(params.idCompany)
+    override suspend fun run(params: Params) = checkRepository.setIdCompany(params.idCompany,params.image)
 
-    data class Params(val idCompany: String)
+    data class Params(val idCompany: String, val image:String)
 
 }

@@ -17,5 +17,6 @@ data class Answer(
     val objectType :String,
     val row : Boolean,
     val column : Boolean,
-    val orderQ:String
+    val orderQ:String,
+    val required:Boolean
 )
