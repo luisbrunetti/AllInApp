@@ -36,10 +36,14 @@ class DynamicAudioViewModel
     private var _setAnswers = MutableLiveData<Boolean>(false)
     val setAnswers: LiveData<Boolean> get() = _setAnswers
 
+    private var _errorRecord = MutableLiveData(false)
+    val errorRecord : LiveData<Boolean> get() = _errorRecord
+
     private var recorder: MediaRecorder? = null
     private var playerRecorded: MediaPlayer? = null
 
-    var recording: Boolean? = false
+    var recording: Boolean = false
+    var errorRecording : Boolean= false
     var recordPath: String = ""
 
     fun playAudioRecord(path:String){
@@ -76,19 +80,23 @@ class DynamicAudioViewModel
                 start()
                 recording = true
             } catch (e: IOException) {
-                //prefs.audioRecorded = ""
+                errorRecording = true
+                recorder = null
+                _errorRecord.value = true
                 Log.e("RECORD", e.toString())
             }
         }
     }
     fun stopRecord() {
-        recorder?.apply {
-            stop()
-            release()
-            //val audio64 = convertImageFileToBase64(output!!)
-            recording = false
+        if(recorder  != null){
+            recorder?.let {
+                it.stop()
+                it.release()
+                //val audio64 = convertImageFileToBase64(output!!)
+                recording = false
+            }
+            recorder = null
         }
-        recorder = null
     }
 
     private fun convertImageFileToBase64(file: File): String {

@@ -243,7 +243,7 @@ class AudioViewModel
                 _playingSelected.value = true
                 playingAudio = true
             }catch(e : Exception) {
-                Log.d("doSelectedAudio", "Ha ocurrido un error al reproducir el audio " + e.toString())
+                Log.d("doSelectedAudio", "Ha ocurrido un error al reproducir el audio $e")
             }
         }
     }

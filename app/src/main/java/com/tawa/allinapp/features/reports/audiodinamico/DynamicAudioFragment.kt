@@ -34,6 +34,8 @@ import com.tawa.allinapp.features.reports.audiodinamico.usecase.RecordAudioViews
 import com.tawa.allinapp.models.Answer
 import java.io.File
 import java.io.IOException
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class DynamicAudioFragment : BaseFragment() {
@@ -43,16 +45,23 @@ class DynamicAudioFragment : BaseFragment() {
     private var reportType:String? =""
     private var params= LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT)
     private var param1= LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT)
-    private var param2= LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT)
-    private var listRecordAudioButton: ArrayList<Button> = ArrayList()
-    private var listSelectedAudioButton: ArrayList<Button> = ArrayList()
+
     private var listAnswers : ArrayList<Answer> = ArrayList()
     //RecordAudio
-    private var audioLimit: Int = 1000 * 60 * 1 // 7 minutos
+    private var audioLimit: Int = 1000 * 60 * 7 // 7 minutos
     private var mutableHashMapTag: MutableMap<String,RecordAudioViews> = mutableMapOf()
     private var hashPathAudioRecorded: MutableMap<String,String> = mutableMapOf()
     private var hashPathAudioSelected: MutableMap<String,String> = mutableMapOf()
     private var currentLayout: String = ""
+
+    private var recording: Boolean = false
+    private var errorRecording: Boolean = false
+
+    private var recorder: MediaRecorder? = null
+    private var playerRecorded: MediaPlayer? = null
+
+    var recordPath: String = ""
+
 
     companion object{
         val TYPE_SELECTED = "SELECTED"
@@ -132,6 +141,9 @@ class DynamicAudioFragment : BaseFragment() {
                     }
                 }
             })
+            observe(errorRecord,{
+
+            })
             observe(failure,{
                 val frag = MessageDialogFragment.newInstance(failure.toString())
                 frag.show(childFragmentManager, "dialog")
@@ -161,8 +173,14 @@ class DynamicAudioFragment : BaseFragment() {
                 }else{
                     Log.d("list",listAnswers.toString())
                     Log.d("answers", "selected ->" + i.answerSelected + "\nnrecorded ->"+i.answerRecorded)
-                    val answerbyQuestions = if(i.answerSelected == "") i.answerRecorded else i.answerSelected
-                    dynamicAudioViewModel.setAnswerPvAudio(i.idAnswer,i.idQuestion,answerbyQuestions ?: "","")
+                    val answerbyQuestion = if(i.answerSelected == ""){
+                        if(i.answerRecorded != "") "$TYPE_RECCORDED&${i.answerRecorded}"
+                        else ""
+                    } else{
+                        if(i.answerSelected != "") "$TYPE_SELECTED&${i.answerSelected}"
+                        else ""
+                    }
+                    dynamicAudioViewModel.setAnswerPvAudio(i.idAnswer,i.idQuestion,answerbyQuestion ?: "","")
                     activity?.onBackPressed()
 
                 }
@@ -238,10 +256,6 @@ class DynamicAudioFragment : BaseFragment() {
 
             Log.d("object", recordAudioViews.toString())
             mutableHashMapTag[tagLayoutContainer] = recordAudioViews
-            //listSelectedAudioButton.add(btnSelectedAudio)
-            //listRecordAudioButton.add(btnRecordAudio)
-            //linearLayoutContainer.addView(layoutTwoButtons)
-            //linearLayoutContainer.addView(layoutRecordingAudio)
             linearLayoutContainer.addView(layoutTwoButtons)
         }
         linearLayoutContainer.layoutParams = params
@@ -266,79 +280,148 @@ class DynamicAudioFragment : BaseFragment() {
 
     private fun recordingAudio(tag: String) {
         mutableHashMapTag[tag]?.let { recordAudio ->
-            hashPathAudioRecorded[tag]?.let { Log.d("hashmap", it) }
-            val tagLayoutContainer = recordAudio.layoutContainer?.tag
-            val previousRecord = hashPathAudioRecorded[tagLayoutContainer] ?: ""
-            if(previousRecord == ""){
-                val recording = dynamicAudioViewModel.recording
-                if (recording == true) {
-                    recordAudio.chrometerRecording?.apply {
-                        visibility = View.GONE
-                        base = SystemClock.elapsedRealtime()
-                        stop()
-                    }
-                    recordAudio.textViewRecording?.visibility = View.VISIBLE
-                    recordAudio.layoutShowRecord?.visibility = View.VISIBLE
-                    dynamicAudioViewModel.stopRecord()
-                    hashPathAudioRecorded[tag] = dynamicAudioViewModel.recordPath
-                    recordAudio.answerRecorded = dynamicAudioViewModel.recordPath
-                } else {
-                    val timeLimitString = getMiliSeoncdsOnFormat(audioLimit)
-                    recordAudio.textViewRecording?.invisible()
-                    recordAudio.chrometerRecording?.apply {
-                        visibility = View.VISIBLE
-                        base = SystemClock.elapsedRealtime()
-                        setOnChronometerTickListener { chrometer ->
-                            if (text.trim() == timeLimitString) {
-                                stop()
-                                onChronometerTickListener = null
-                                visibility = View.GONE
-                                base = SystemClock.elapsedRealtime()
-                                notify(activity, R.string.error_audio_limit)
-                                dynamicAudioViewModel.stopRecord()
-                                recordAudio.textViewRecording?.visibility = View.VISIBLE
-                                recordAudio.layoutShowRecord?.visibility = View.VISIBLE
-                                hashPathAudioRecorded[tag] = dynamicAudioViewModel.recordPath
-                                recordAudio.answerRecorded = dynamicAudioViewModel.recordPath
-                            }
+            if (playerRecorded?.isPlaying == true) {
+                recordAudio.layoutShowRecord?.visibility = View.VISIBLE
+                recordAudio.textViewRecording?.visible()
+                recordAudio.textViewShowRecord?.visible()
+                recordAudio.chrometerRecording?.apply {
+                    visibility = View.GONE
+                    base = SystemClock.elapsedRealtime()
+                    stop()
+                    playerRecorded = null
+                }
+                playerRecorded?.stop()
+                playerRecorded?.release()
+            } else {
+                val previousRecord = hashPathAudioRecorded[tag] ?: ""
+                if (previousRecord == "") {
+                    if (recording) {
+                        recordAudio.chrometerRecording?.apply {
+                            visibility = View.GONE
+                            base = SystemClock.elapsedRealtime()
+                            stop()
                         }
-                        start()
+                        recordAudio.textViewRecording?.visibility = View.VISIBLE
+                        recordAudio.layoutShowRecord?.visibility = View.VISIBLE
+                        stopRecord(recordAudio)
+                        hashPathAudioRecorded[tag] = dynamicAudioViewModel.recordPath
+                        recordAudio.answerRecorded = dynamicAudioViewModel.recordPath
+                    } else {
+                        val timeLimitString = getMiliSeoncdsOnFormat(audioLimit)
+                        recordAudio.textViewRecording?.invisible()
+                        recordAudio.chrometerRecording?.apply {
+                            visibility = View.VISIBLE
+                            base = SystemClock.elapsedRealtime()
+                            setOnChronometerTickListener { chrometer ->
+                                if (text.trim() == timeLimitString) {
+                                    stop()
+                                    onChronometerTickListener = null
+                                    visibility = View.GONE
+                                    base = SystemClock.elapsedRealtime()
+                                    notify(activity, R.string.error_audio_limit)
+                                    stopRecord(recordAudio)
+                                    recordAudio.textViewRecording?.visibility = View.VISIBLE
+                                    recordAudio.layoutShowRecord?.visibility = View.VISIBLE
+                                    hashPathAudioRecorded[tag] = dynamicAudioViewModel.recordPath
+                                    recordAudio.answerRecorded = dynamicAudioViewModel.recordPath
+                                }
+                            }
+                            start()
+                        }
+                        startRecord(recordAudio)
                     }
-                    dynamicAudioViewModel.startRecord()
-                }
-            }else{
-                val conditionalFragment = ConditionalDialogFragment.newInstance(
-                    title = "El audio anterior será borrado",
-                    message = "¿Desea sobrescribir el audio que ya se grabó?",
-                    icon = R.drawable.ic_warning,
-                    btn1 = "Sí",
-                    btn2 = "No"
-                )
-                conditionalFragment.listener = object : ConditionalDialogFragment.Callback {
-                    override fun onAccept() {
-                        hashPathAudioRecorded[tagLayoutContainer.toString()] = ""
-                        recordingAudio(tag)
+                } else {
+                    val conditionalFragment = ConditionalDialogFragment.newInstance(
+                        title = "El audio anterior será borrado",
+                        message = "¿Desea sobrescribir el audio que ya se grabó?",
+                        icon = R.drawable.ic_warning,
+                        btn1 = "Sí",
+                        btn2 = "No"
+                    )
+                    conditionalFragment.listener = object : ConditionalDialogFragment.Callback {
+                        override fun onAccept() {
+                            hashPathAudioRecorded[tag] = ""
+                            recordingAudio(tag)
+                        }
                     }
+                    conditionalFragment.show(childFragmentManager, "dialog")
                 }
-                conditionalFragment.show(childFragmentManager, "dialog")
+
             }
         }
     }
 
+    fun startRecord(recordAudio : RecordAudioViews) {
+        recorder = MediaRecorder().apply {
+            setAudioSource(MediaRecorder.AudioSource.MIC)
+            setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
+            setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
+
+            val outputFolder = File(Environment.getExternalStorageDirectory().toString() + "/download/")
+            val output = File(outputFolder.absolutePath + "/out" + Date().time + ".3gpp")
+
+            Log.i("DIRECTORIO", output.absolutePath)
+            recordPath = output.absolutePath
+            setOutputFile(output.absolutePath)
+            setMaxDuration(420000)
+            try {
+                prepare()
+                start()
+                recording = true
+            } catch (e: IOException) {
+                errorRecording = true
+                recorder = null
+                recording = false
+                recordAudio.chrometerRecording?.apply {
+                    visibility = View.GONE
+                    base = SystemClock.elapsedRealtime()
+                    stop()
+                }
+                recordAudio.textViewRecording?.visibility = View.VISIBLE
+                recordAudio.layoutShowRecord?.visibility = View.VISIBLE
+                Log.e("RECORD", e.toString())
+                 val msg = MessageDialogFragment.newInstance("Ha ocurrido un error al grabar el audio")
+                msg.show(childFragmentManager, "dialog")
+            }
+        }
+    }
+    fun stopRecord(recordAudio : RecordAudioViews) {
+        if(recorder  != null){
+            recorder?.let {
+                it.stop()
+                it.release()
+                //val audio64 = convertImageFileToBase64(output!!)
+                recording = false
+            }
+            recorder = null
+        }
+    }
     private fun playingAudioRecorded(tag: String) {
         mutableHashMapTag[tag]?.let { recordAudio ->
             hashPathAudioRecorded[tag]?.let { path ->
-//                recordAudio.textViewShowRecord?.invisible()
                 try {
-                    val playerRecorded = MediaPlayer().apply {
-                        setDataSource(path)
-                        prepare()
-                        setOnCompletionListener {
+                    playerRecorded = MediaPlayer().apply {
+                        if(isPlaying){
+                            recordAudio.layoutShowRecord?.visibility = View.VISIBLE
+                            recordAudio.textViewRecording?.visible()
+                            recordAudio.textViewShowRecord?.visible()
                             recordAudio.chrometerRecording?.apply {
                                 visibility = View.GONE
                                 base = SystemClock.elapsedRealtime()
                                 stop()
+                                playerRecorded = null
                             }
+                            stop()
+                            release()
+                        }else{
+                            setDataSource(path)
+                            prepare()
+                            setOnCompletionListener {
+                                recordAudio.chrometerRecording?.apply {
+                                    visibility = View.GONE
+                                    base = SystemClock.elapsedRealtime()
+                                    stop()
+                                }
                             recordAudio.layoutShowRecord?.visibility = View.VISIBLE
                             recordAudio.textViewRecording?.visible()
                             recordAudio.textViewShowRecord?.visible()
@@ -351,6 +434,7 @@ class DynamicAudioFragment : BaseFragment() {
                             visibility = View.VISIBLE
                             base = SystemClock.elapsedRealtime()
                             start()
+                        }
                         }
                     }
                 } catch (e: IOException) {
@@ -421,8 +505,7 @@ class DynamicAudioFragment : BaseFragment() {
         tvRecording.text = "Grabar un audio"
         tvRecording.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
         val tagRecordingtv = "tv${questions}"
-        tvRecording.tag = tag
-        //hashTextView[tagRecordingtv] = tvRecording
+        tvRecording.tag = tagRecordingtv
         recordAudioViews.textViewRecording =  tvRecording
         layoutRecordingAudio.addView(tvRecording)
 
@@ -454,10 +537,15 @@ class DynamicAudioFragment : BaseFragment() {
         if(answer.data == ""){
             layoutShowAudioRecorded.visibility = View.GONE
         }else{
-            hashPathAudioSelected[parent.tag.toString()] = answer.data
+            val (type,path) = getTypeAndPathRecord(answer.data)
+            if(type == TYPE_RECCORDED){
+                recordAudioViews.answerRecorded = path
+                hashPathAudioRecorded[parent.tag.toString()] = path
+            }else{
+                layoutShowAudioRecorded.visibility = View.GONE
+            }
         }
         recordAudioViews.layoutShowRecord = layoutShowAudioRecorded
-        //hashLayoutShowRecord[tagLayoutShowRecorded] = layoutShowAudioRecorded
 
         //Creating AppCompatImageVIew
         val imageViewClip = ImageView(requireContext())
@@ -478,7 +566,6 @@ class DynamicAudioFragment : BaseFragment() {
         }
         val tagRecordedText = "tvClip${questions}"
         tvRecordedText.tag = tagRecordedText
-        //hashTextViewRecord[tagRecordedText] = tvRecordedText
         layoutShowAudioRecorded.addView(tvRecordedText)
         recordAudioViews.textViewShowRecord =  tvRecordedText
 
@@ -492,7 +579,6 @@ class DynamicAudioFragment : BaseFragment() {
         imageViewClipClose.setOnClickListener {
             deleteAudioRecorded(parent.tag.toString(), TYPE_RECCORDED)
         }
-        //hashImageVIewClipClose[tagIvClose] =imageViewClipClose
         recordAudioViews.imageViewClipClose = imageViewClipClose
         layoutShowAudioRecorded.addView(imageViewClipClose)
 
@@ -569,7 +655,12 @@ class DynamicAudioFragment : BaseFragment() {
         if(answer.data == ""){
             layoutAudioSelectedClip.visibility = View.GONE
         }else{
-            hashPathAudioSelected[parent.tag.toString()] = answer.data
+            val (type,path) = getTypeAndPathRecord(answer.data)
+            if(type == TYPE_SELECTED){
+                recordAudioViews.answerSelected = path
+                hashPathAudioSelected[parent.tag.toString()] = path
+            }
+            else layoutAudioSelectedClip.visibility = View.GONE
         }
         recordAudioViews.layoutShowSelectedAudio =  layoutAudioSelectedClip
 
@@ -627,6 +718,14 @@ class DynamicAudioFragment : BaseFragment() {
             "0$minutes:$seconds"
         }
     }
+    private fun getTypeAndPathRecord(data:String): Pair<String,String>{
+        data.apply {
+            val type = substring(0,indexOf("&",0,true))
+            val path = substring(indexOf("&",0,true)+1, data.length)
+            return Pair(type,path)
+        }
+    }
+
 
     private fun getRealPathFromURI(context: Context, uri: Uri): String? {
         when {
