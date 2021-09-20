@@ -104,10 +104,11 @@ class SelectorDialogFragment
             baseFragment.showProgressDialog()
             val positionCompany = binding.spinnerCompany.selectedItemPosition
             selectedCompany = listCompany[positionCompany].id
-            initViewModel.setIdCompany(selectedCompany)
+            initViewModel.setIdCompany(selectedCompany,listCompany[positionCompany].image)
             // initViewModel.getAudioRemote()
             initViewModel.getReportsSku(selectedCompany)
             initViewModel.getPdvRemote(selectedCompany)
+            listener?.onAccept()
         }
     }
 

@@ -31,6 +31,6 @@ class UserRemote {
         @SerializedName("_id") val id: String,
         @SerializedName("nombre_empresa") val companyName: String
     ){
-        fun toModel(idUser:String) = Company(id,"", companyName, "",idUser)
+        fun toModel(idUser:String) = Company(id,"", companyName, "",idUser,"")
     }
 }

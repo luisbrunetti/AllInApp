@@ -15,7 +15,8 @@ data class QuestionModel(
     val idUserModifier: String?,
     val dateModify: String?,
     val dateCreation: String,
+    val required : Boolean
 
 ){
-    fun toView() = Question(id,questionName,order,idReport,objectType,idUserCreator,idUserModifier,dateModify,dateCreation)
+    fun toView() = Question(id,questionName,order,idReport,objectType,idUserCreator,idUserModifier,dateModify,dateCreation,required)
 }

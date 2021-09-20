@@ -5,9 +5,8 @@ import androidx.room.PrimaryKey
 import com.tawa.allinapp.models.Company
 import com.tawa.allinapp.models.ReportPv
 
-@Entity(tableName = "report_pv")
+@Entity(tableName = "report_pv",primaryKeys = ["idPv","idReport","idUser"])
 data class ReportPvModel(
-    @PrimaryKey (autoGenerate = true)  val id: Int,
     val idPv: String,
     val idReport: String,
     val idUser:String,
@@ -17,5 +16,5 @@ data class ReportPvModel(
     val latitude:String,
     val longitude:String
 ){
-    fun toView() = ReportPv(id,idPv,idReport,idUser,state,type,time,latitude,longitude)
+    fun toView() = ReportPv(idPv,idReport,idUser,state,type,time,latitude,longitude)
 }

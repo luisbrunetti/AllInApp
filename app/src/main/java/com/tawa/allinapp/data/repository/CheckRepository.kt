@@ -14,9 +14,10 @@ import javax.inject.Inject
 interface CheckRepository {
 
     fun setCheck(id: Int,pv:String,idUser:String,registerDate:String,latitude:String,longitude:String,comment:String): Either<Failure, Boolean>
-    fun setIdCompany(idCompany:String): Either<Failure, Boolean>
+    fun setIdCompany(idCompany:String,image:String): Either<Failure, Boolean>
     fun setIdPv(schedule:String,pv:String,namePv:String): Either<Failure, Boolean>
     fun getDescPv(): Either<Failure, String>
+    fun getLogoCompany(): Either<Failure, String>
     fun getIdPv(): Either<Failure, String>
     fun getIdCompany(): Either<Failure, String>
     fun getIdUser(): Either<Failure, String>
@@ -44,9 +45,10 @@ interface CheckRepository {
             }
         }
 
-        override fun setIdCompany(idCompany: String): Either<Failure, Boolean> {
+        override fun setIdCompany(idCompany: String,image:String): Either<Failure, Boolean> {
             return try {
                 prefs.companyId = idCompany
+                prefs.logoCompany  = image
                 Either.Right(true)
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))
@@ -152,6 +154,14 @@ interface CheckRepository {
         override fun getRoleUser(): Either<Failure, String> {
             return try {
                  Either.Right(prefs.role?:"")
+            }catch (e:Exception){
+                Either.Left(Failure.DefaultError(e.message!!))
+            }
+        }
+
+        override fun getLogoCompany(): Either<Failure, String> {
+            return try {
+                Either.Right(prefs.logoCompany?:"")
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))
             }

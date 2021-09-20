@@ -5,12 +5,18 @@ import android.Manifest
 import android.content.ClipDescription
 import android.content.Context
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.location.LocationManager
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
+import android.util.Base64
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
@@ -24,6 +30,7 @@ import com.tawa.allinapp.databinding.FragmentInitBinding
 import com.tawa.allinapp.features.HomeActivity
 import com.tawa.allinapp.features.init.InitViewModel
 import com.tawa.allinapp.models.Schedule
+import java.io.ByteArrayOutputStream
 
 
 class InitFragment : BaseFragment() {
@@ -39,6 +46,7 @@ class InitFragment : BaseFragment() {
     private var _pv: String = ""
     private lateinit var _lat: String
     private lateinit var _long: String
+    private var title  = "Check In"
     private var selector = false
 
     companion object {
@@ -55,7 +63,6 @@ class InitFragment : BaseFragment() {
         selector = activity?.intent?.getBooleanExtra("selector",false)?:false
         //Seleccionando empresa
         if(selector) showSelector()
-
         initViewModel = viewModel(viewModelFactory) {
             observe(dayState, { it?.let { if(it) {
                 val currentDay = getString(R.string.current_day, getDayWeek(),getDayMonth(),getMonth(),getYear())
@@ -77,6 +84,12 @@ class InitFragment : BaseFragment() {
                 _pvId = it
                 showCheckOut()
             }})
+            observe(logoCompany,{it?.let{
+                if(it.isNotEmpty())
+                    setLogoCompany(it)
+                else
+                    binding.ivCompanyLogo.setActualImageResource(R.drawable.ic_img)
+            }})
             observe(successCheckOut, { it?.let {
                 initViewModel.getCheckMode()
             } })
@@ -87,7 +100,7 @@ class InitFragment : BaseFragment() {
             observe(successSyncPhotoReports, { it?.let {
                 getActualLocation()
                 Log.d(TAG,"SuccessSyncPhotoReports se realizado correctamente")
-//                Log.d("latlng",_lat + _long.toString())
+                //Log.d("latlng",_lat + _long.toString())
                 if (it) initViewModel.syncStandardReportsMassive(_lat,_long)
             } })
             observe(successSyncSku, { it?.let {
@@ -99,13 +112,16 @@ class InitFragment : BaseFragment() {
                 //if (it) initViewModel.syncAudio()
             } })
             observe(successSyncReportStandard, { it?.let {
-                getActualLocation()
-                Log.d(TAG, "Success Report Standard")
-                if (it) initViewModel.syncSkuMassive(_lat,_long)
+               // getActualLocation()
+               // Log.d(TAG, "Success Report Standard")
+                if(it)
+                    Log.d(TAG, "Success Report Standard")
+               // if (it) initViewModel.syncSkuMassive(_lat,_long)
             }})
             observe(descPV, { it?.let {
-                if (it.isNotEmpty())
+                if (it.isNotEmpty()){
                     binding.tvCheckIn.text = it
+                    }
             }})
             observe(idPV, { it?.let {
                 if(it.isNotEmpty())
@@ -149,6 +165,7 @@ class InitFragment : BaseFragment() {
             failure(failure, ::handleFailure)
         }
         initViewModel.getPVDesc()
+        initViewModel.getLogoCompany()
         initViewModel.getIdUser()
         initViewModel.getUserName()
         binding.btCheckIn.setOnClickListener{
@@ -170,8 +187,9 @@ class InitFragment : BaseFragment() {
         }
 
         binding.btSync.setOnClickListener {
-            showProgressDialog()
-            initViewModel.syncCheck()
+            //showProgressDialog()
+           // initViewModel.syncCheck()
+            initViewModel.syncStandardReportsMassive("12","10")
         }
         binding.viewBtnRoutes.setOnClickListener {
             findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationRoutes())
@@ -198,6 +216,11 @@ class InitFragment : BaseFragment() {
     }
     private fun showSelector(){
         val dialog = SelectorDialogFragment(this)
+        dialog.listener = object : SelectorDialogFragment.Callback{
+            override fun onAccept() {
+                initViewModel.getLogoCompany()
+            }
+        }
         dialog.show(childFragmentManager, "dialog")
     }
 
@@ -217,14 +240,48 @@ class InitFragment : BaseFragment() {
         dialog.listener = object : CheckInDialogFragment.Callback {
             override fun onAccept(pvId:String, pv:String,lat:String, long:String,description: String) {
                 _pv = pv; _lat = lat; _long = long; _pvId = pvId
-                binding.tvCheckIn.text = description
+                 binding.tvCheckIn.text = description
+                initViewModel.getPVDesc()
                 initViewModel.getCheckMode()
             }
             override fun onSnack(snack: Boolean) {
                 if (snack) notify(activity,R.string.notify_already)
             }
+
+            override fun onClose() {
+                initViewModel.getPVDesc()
+            }
         }
         dialog.show(childFragmentManager, "dialog")
+    }
+
+    private fun setLogoCompany(image:String){
+        binding.ivCompanyLogo.isVisible = true
+        binding.ivCompanyLogo.setImageURI(
+            getImageUri(
+                requireContext(),
+                decodeBase64(image)
+            ), ""
+        )
+    }
+
+    private fun decodeBase64(base64:String): Bitmap {
+        val encodedString = "data:image/jpg;base64, $base64"
+        val pureBase64Encoded: String = encodedString.substring(encodedString.indexOf(",") + 1)
+        val decodedString: ByteArray = Base64.decode(pureBase64Encoded, Base64.DEFAULT)
+        return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
+    }
+
+    private fun getImageUri(context: Context, inImage: Bitmap): Uri? {
+        val bytes = ByteArrayOutputStream()
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
+        val path = MediaStore.Images.Media.insertImage(
+            context.contentResolver,
+            inImage,
+            "IMG_" + System.currentTimeMillis(),
+            null
+        )
+        return Uri.parse(path)
     }
 
     private fun showCheckOut(){

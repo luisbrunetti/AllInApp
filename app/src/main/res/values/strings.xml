@@ -31,6 +31,7 @@
     <string name="notify_update">Actualización exitosa</string>
     <string name="notify_update_location">Se actualizó la ubicación</string>
     <string name="register_ready">Ya se registró</string>
+    <string name="notify_error_register">No se pudo registrar, debe completar las preguntas obligatorias</string>
     <string name="ok">OK</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"

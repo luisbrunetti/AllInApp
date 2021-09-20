@@ -13,4 +13,5 @@ data class Question(
     val idUserModifier: String?,
     val dateModify: String?,
     val dateCreation: String,
+    val required:Boolean
 )

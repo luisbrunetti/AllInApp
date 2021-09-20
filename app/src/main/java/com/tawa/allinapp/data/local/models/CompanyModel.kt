@@ -10,7 +10,8 @@ data class CompanyModel(
     val ruc: String,
     val name: String,
     val description: String,
-    val idUser:String
+    val idUser:String,
+    val image:String
 ){
-    fun toView() = Company(id,ruc,name,description,idUser)
+    fun toView() = Company(id,ruc,name,description,idUser,image)
 }

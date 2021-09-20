@@ -50,7 +50,7 @@ interface QuestionsRepository {
                                             Log.d("PREGUNTAS",it.toString())
                                             questionsDataSource.insertQuestions(it.question.toModel())
                                             for(answers in it.answers )
-                                                questionsDataSource.insertAnswers(AnswerModel(answers.id,answers.status,answers.answerName,answers.order,answers.idQuestion,answers.idUserCreator,answers.idUserModifier,answers.dateModify,answers.dateCreation,"",it.question.questionName,it.question.objectType,answers.row,answers.column,it.question.order.toInt().toString())) }
+                                                questionsDataSource.insertAnswers(AnswerModel(answers.id,answers.status,answers.answerName,answers.order,answers.idQuestion,answers.idUserCreator,answers.idUserModifier,answers.dateModify,answers.dateCreation,"",it.question.questionName,it.question.objectType,answers.row,answers.column,it.question.order.toInt().toString(),it.question.required)) }
                                         Either.Right(true)
                                     }
                                     else {

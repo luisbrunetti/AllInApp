@@ -24,6 +24,7 @@ class InitViewModel
     private val getQuestionsRemote: GetQuestionsRemote,
     private val getPV: GetPV,
     private val getDescPV: GetDescPV,
+    private val getLogoCompany: GetLogoCompany,
     private val getIdPV: GetIdPV,
     private val setIdCompany: SetIdCompany,
     private val setCheckIn: SetCheckIn,
@@ -106,6 +107,10 @@ class InitViewModel
     private val _userName= MutableLiveData<String>("")
     val userName: LiveData<String>
         get()= _userName
+
+    private val _logoCompany= MutableLiveData<String>("")
+    val logoCompany: LiveData<String>
+        get()= _logoCompany
 
     private val _positionCompany= MutableLiveData<Int>(-1)
     val positionCompany: LiveData<Int>
@@ -225,7 +230,7 @@ class InitViewModel
 
     fun getUserName() = getUserName(UseCase.None()) { it.either(::handleFailure, ::handleGetUserName) }
 
-    fun setIdCompany(idCompany:String) = setIdCompany(SetIdCompany.Params(idCompany)) {
+    fun setIdCompany(idCompany:String,image:String) = setIdCompany(SetIdCompany.Params(idCompany,image)) {
         it.either(::handleFailure, ::handleSetIdCompany) }
 
     fun setPv(schedule:String,pv:String,descPv:String) = setIdPv(SetIdPv.Params(schedule,pv,descPv)) { it.either(::handleFailure, ::handleSetIdPv) }
@@ -301,7 +306,7 @@ class InitViewModel
         this._stateCheck.value = stateCheck
     }
     private fun handleCompanyList(company: List<Company>) {
-        this._companies.value = company.map { Company(it.id,it.ruc,it.name,it.description,it.idUser) }
+        this._companies.value = company.map { Company(it.id,it.ruc,it.name,it.description,it.idUser,it.image) }
     }
     private fun handlePvList(schedule: List<Schedule>) {
         this._schedule.value = schedule.map { Schedule(it.id,it.pv,it.description,it.zone,it.codGeo,it.idCompany, it.lat,it.long,it.idUser) }
@@ -380,6 +385,13 @@ class InitViewModel
 
     private fun handleGetPdvRemote(success: Boolean) {
         this._successGetPdvRemote.value = success
+    }
+
+    fun getLogoCompany() =getLogoCompany(UseCase.None()) {
+        it.either(::handleFailure, ::handleGetLogoCompany) }
+
+    private fun handleGetLogoCompany(image  : String) {
+        this._logoCompany.value = image
     }
 
     fun setSession(value : Boolean){ pref.session =value}

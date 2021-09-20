@@ -22,7 +22,7 @@ interface ReportsDao {
     @Query("SELECT * FROM report_pv WHERE idReport=:idReport and idPv=:idPv and idUser=:idUser")
     fun getReportsPvState(idReport: String,idPv: String,idUser: String): ReportPv
 
-    @Query("SELECT reports.id,reports.reportName,reports.idCompany,reports.nameCompany,reports.idUser,reports.idUserMod,reports.feMod,reports.feCreate,report_pv.state,report_pv.type,report_pv.idPv FROM reports,report_pv WHERE reports.id=report_pv.idReport and reports.idUser=report_pv.idUser and  reports.idCompany=:idCompany and report_pv.idPv=:idPv and report_pv.idUser=:idUser")
+    @Query("SELECT reports.id,reports.reportName,reports.idCompany,reports.nameCompany,reports.idUser,reports.idUserMod,reports.feMod,reports.feCreate,report_pv.state,report_pv.type,report_pv.idPv FROM reports,report_pv WHERE reports.id=report_pv.idReport and reports.idUser=report_pv.idUser and  reports.idCompany=:idCompany and report_pv.idPv=:idPv and report_pv.idUser=:idUser order by reports.id asc")
     fun getReportsPv(idCompany: String,idPv: String,idUser: String): List<ReportModel>
 
     @Query("SELECT reports.id,reports.reportName,reports.idCompany,reports.nameCompany,reports.idUser,reports.idUserMod,reports.feMod,reports.feCreate,report_pv.state,report_pv.type,report_pv.idPv FROM reports,report_pv WHERE reports.id=report_pv.idReport and reports.idUser=report_pv.idUser and  reports.idCompany=:idCompany and report_pv.idPv=:idPv and report_pv.idUser=:idUser and report_pv.type='Terminado'")
@@ -100,7 +100,7 @@ interface ReportsDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertReportPv(reportPvModel: ReportPvModel)
 
-    @Query("SELECT count(id) FROM report_pv WHERE idReport = :idReport and idPv = :idPv   ")
+    @Query("SELECT count(idPv) FROM report_pv WHERE idReport = :idReport and idPv = :idPv   ")
     fun reportPvCount(idReport: String,idPv: String):Int
 
     @Query("SELECT count(reports.id) FROM reports,report_pv WHERE reports.id=report_pv.idReport and reports.idUser=report_pv.idUser and  reports.idCompany=:idCompany and report_pv.idPv=:idPv and report_pv.idUser=:idUser")

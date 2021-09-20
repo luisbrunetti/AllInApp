@@ -126,6 +126,7 @@ class CheckInDialogFragment
             }
         }
         binding.closeCheckInModal.setOnClickListener{
+            listener?.onClose()
             dismiss()
         }
 
@@ -268,5 +269,6 @@ class CheckInDialogFragment
     interface Callback {
         fun onAccept(pvId:String, pv:String, lat:String, long:String,description:String)
         fun onSnack(snack:Boolean)
+        fun onClose()
     }
 }
