@@ -2,24 +2,28 @@ package com.tawa.allinapp.features.reports.audiodinamico.usecase
 
 import android.widget.*
 
-data class RecordAudio(
-    val tagLayout:String,
-    val tagTextView: String,
-    val tagChrometer: String,
-    val tagLayoutShowRecord:String,
-    val tagTextViewShowRecord:String,
-    val tagImageViewClipClose:String
-)
 
 data class RecordAudioViews(
-    val layoutContainer: LinearLayout,
+    var idQuestion: String,
+    var idAnswer:String,
+    var layoutContainer: LinearLayout?,
     //AudioSelected
-    val layoutSelectAudio : Button,
+    var layoutAudioSelectedButton : LinearLayout?,
+    var textViewAudioSelected: TextView?,
+    var chrometerSeleceted: Chronometer?,
+    var layoutShowSelectedAudio: LinearLayout?,
+    var textViewShowSelecetedAudio: TextView?,
+    var imageViewClipCloseSelected: ImageView?,
+
     //RecordButton
-    val layoutRecordButton: LinearLayout,
-    val textViewRecording: TextView,
-    val chrometerRecording: Chronometer,
-    val layoutShowRecord: LinearLayout,
-    val textViewShowRecord: TextView,
-    val imageViewClipClose: ImageView)
+    var layoutRecordButton: LinearLayout?,
+    var textViewRecording: TextView?,
+    var chrometerRecording: Chronometer?,
+    var layoutShowRecord: LinearLayout?,
+    var textViewShowRecord: TextView?,
+    var imageViewClipClose: ImageView?,
+    //Records
+    var answerSelected:String?,
+    var answerRecorded: String?
+    )
 

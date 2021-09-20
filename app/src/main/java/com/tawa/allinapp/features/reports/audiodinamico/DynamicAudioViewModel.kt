@@ -12,6 +12,7 @@ import androidx.lifecycle.MutableLiveData
 import com.tawa.allinapp.core.platform.BaseViewModel
 import com.tawa.allinapp.features.reports.audiodinamico.usecase.GetQuestionsAudioReport
 import com.tawa.allinapp.features.reports.audiodinamico.usecase.GetStateAudioReport
+import com.tawa.allinapp.features.reports.audiodinamico.usecase.SetAnswerPvAudio
 import com.tawa.allinapp.models.Answer
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -22,7 +23,8 @@ import javax.inject.Inject
 class DynamicAudioViewModel
 @Inject constructor(
     private val getStateAudioReport: GetStateAudioReport,
-    private val getQuestionsAudioReport: GetQuestionsAudioReport
+    private val getQuestionsAudioReport: GetQuestionsAudioReport,
+    private val setAnswerPvAudio: SetAnswerPvAudio
 ) : BaseViewModel() {
 
     private var _getStateReport = MutableLiveData<String>()
@@ -30,6 +32,9 @@ class DynamicAudioViewModel
 
     private var _getQuestions = MutableLiveData<List<Answer>>()
     val getQuestions : LiveData<List<Answer>> get() =  _getQuestions
+
+    private var _setAnswers = MutableLiveData<Boolean>(false)
+    val setAnswers: LiveData<Boolean> get() = _setAnswers
 
     private var recorder: MediaRecorder? = null
     private var playerRecorded: MediaPlayer? = null
@@ -102,9 +107,10 @@ class DynamicAudioViewModel
     }
 
 
-    fun getStateReport(idReport: String,type:Int) { getStateAudioReport(GetStateAudioReport.Params(idReport)) {
-        it.either(::handleFailure, ::handleGetStateReport)
-    }
+    fun getStateReport(idReport: String, type: Int) {
+        getStateAudioReport(GetStateAudioReport.Params(idReport)) {
+            it.either(::handleFailure, ::handleGetStateReport)
+        }
     }
     private fun handleGetStateReport(type: String) {
         this._getStateReport.value = type
@@ -119,4 +125,12 @@ class DynamicAudioViewModel
         this._getQuestions.value = list
     }
 
+    fun setAnswerPvAudio(idAnswer: String,idQuestion: String,nameAnswer: String,img: String){
+        setAnswerPvAudio(SetAnswerPvAudio.Params(idAnswer,idQuestion,nameAnswer,img)){
+            it.either(::handleFailure, ::handleSetAnswerPvAudio)
+        }
+    }
+    private fun handleSetAnswerPvAudio(success: Boolean){
+        _setAnswers.value = false
+    }
 }

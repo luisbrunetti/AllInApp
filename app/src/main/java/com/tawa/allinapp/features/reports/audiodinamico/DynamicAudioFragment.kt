@@ -21,7 +21,6 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
-import androidx.core.view.marginTop
 import com.tawa.allinapp.R
 import com.tawa.allinapp.core.dialog.ConditionalDialogFragment
 import com.tawa.allinapp.core.dialog.MessageDialogFragment
@@ -31,7 +30,6 @@ import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.extensions.visible
 import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.FragmentDynamicAudioBinding
-import com.tawa.allinapp.features.reports.audiodinamico.usecase.RecordAudio
 import com.tawa.allinapp.features.reports.audiodinamico.usecase.RecordAudioViews
 import com.tawa.allinapp.models.Answer
 import java.io.File
@@ -48,40 +46,40 @@ class DynamicAudioFragment : BaseFragment() {
     private var param2= LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT)
     private var listRecordAudioButton: ArrayList<Button> = ArrayList()
     private var listSelectedAudioButton: ArrayList<Button> = ArrayList()
-    private var listTagRecordBtn: ArrayList<RecordAudio> = ArrayList()
     private var listAnswers : ArrayList<Answer> = ArrayList()
     //RecordAudio
+    private var audioLimit: Int = 1000 * 60 * 1 // 7 minutos
     private var mutableHashMapTag: MutableMap<String,RecordAudioViews> = mutableMapOf()
-    private var hashTextView: MutableMap<String, TextView> = mutableMapOf()
-    private var hashChronometer: MutableMap<String,Chronometer> = mutableMapOf()
-
-    private var hashLayoutShowRecord: MutableMap<String,LinearLayout> = mutableMapOf()
-    private var hashTextViewRecord : MutableMap<String,TextView> = mutableMapOf()
-    private var hashImageVIewClipClose: MutableMap<String,ImageView> = mutableMapOf()
     private var hashPathAudioRecorded: MutableMap<String,String> = mutableMapOf()
+    private var hashPathAudioSelected: MutableMap<String,String> = mutableMapOf()
+    private var currentLayout: String = ""
 
+    companion object{
+        val TYPE_SELECTED = "SELECTED"
+        val TYPE_RECCORDED = "RECORDED"
+    }
 
 
     private val responseLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-
-        val realPath = getRealPathFromURI(requireContext(), uri)
-        realPath?.let { realPath->
-            try{
-                Log.d("realPath", realPath.toString())
-
-                val audioSelectedName = getFilename(uri)
-                Log.d("audioSelectedNmae",audioSelectedName.toString())
-                val converted = dynamicAudioViewModel.convertAudioSelectedTo64Format(realPath.toString())
-            }catch (e : Exception){
-                Log.d("exception", e.toString())
+        uri?.let { uri ->
+            val realPath = getRealPathFromURI(requireContext(), uri)
+            realPath?.let { realPath->
+                try{
+                    Log.d("realPath", realPath.toString())
+                    val audioSelectedName = getFilename(uri)
+                    Log.d("audioSelectedNmae",audioSelectedName.toString())
+                    mutableHashMapTag[currentLayout]?.let {
+                        it.answerSelected = realPath
+                        //it.textViewAudioSelected?.visibility = View.GONE
+                        it.layoutShowSelectedAudio?.visibility = View.VISIBLE
+                        it.textViewShowSelecetedAudio?.text = audioSelectedName
+                        hashPathAudioSelected[currentLayout] = realPath
+                    }
+                    //val converted = dynamicAudioViewModel.convertAudioSelectedTo64Format(realPath.toString())
+                }catch (e : Exception){
+                    Log.d("exception", e.toString())
+                }
             }
-            //audioSelectedPath = realPath.toString()
-            //audioSelected64 = audioViewModel.convertAudioSelectedTo64Format(audioSelectedPath).toString()
-
-            //audioSelectedName = getFilename(uri)
-
-            //binding.tvRecordSelected.text = audioSelectedName
-            //binding.lyRecordSelected.visibility = View.VISIBLE
         }
     }
 
@@ -124,6 +122,14 @@ class DynamicAudioFragment : BaseFragment() {
                         val listAnswer = answersList.filter{ ans -> ans.nameQuestion == list.nameQuestion }
                         addTwoButtonsAudio(listAnswer,binding.contentCheckList,list.nameQuestion, list.orderQ)
                     }
+
+                }
+            })
+            observe(setAnswers,{
+                it?.let {
+                    if(it){
+                        notify(requireActivity(),R.string.successful_update_audio)
+                    }
                 }
             })
             observe(failure,{
@@ -141,6 +147,27 @@ class DynamicAudioFragment : BaseFragment() {
 
         arguments?.getString("name").toString().also {
             binding.tvTitleStandard.text = it
+        }
+
+        binding.btnBr.setOnClickListener {
+            Log.d("mutableHashMap",hashPathAudioRecorded.toString())
+            Log.d("mutableHashMap",hashPathAudioSelected.toString())
+            Log.d("mutablehashmaptag", mutableHashMapTag.toString())
+            for(i in mutableHashMapTag.values){
+                if(i.answerRecorded != "" && i.answerSelected != ""){
+                    val dialog = MessageDialogFragment.newInstance("Solo se puede guardar un audio por pregunta")
+                    dialog.show(childFragmentManager, "dialog")
+                    break
+                }else{
+                    Log.d("list",listAnswers.toString())
+                    Log.d("answers", "selected ->" + i.answerSelected + "\nnrecorded ->"+i.answerRecorded)
+                    val answerbyQuestions = if(i.answerSelected == "") i.answerRecorded else i.answerSelected
+                    dynamicAudioViewModel.setAnswerPvAudio(i.idAnswer,i.idQuestion,answerbyQuestions ?: "","")
+                    activity?.onBackPressed()
+
+                }
+            }
+
         }
 
         return binding.root
@@ -161,48 +188,36 @@ class DynamicAudioFragment : BaseFragment() {
 
         linearLayoutContainer.addView(tv)
 
-        for(list in listAnswer){
+        for(answer in listAnswer){
+
+            val recordAudioViews = RecordAudioViews(answer.idQuestion,answer.id, null,null,null,null,null,null,
+                null,null,null,null,null,null,null,"","")
+
             val layoutTwoButtons = LinearLayout(requireContext())
             val paramsTV = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT)
-            val tagLayoutContainer = "lyContainer${list.idQuestion}"
+            val tagLayoutContainer = "lyContainer${answer.idQuestion}"
             layoutTwoButtons.orientation = LinearLayout.VERTICAL
             layoutTwoButtons.tag = tagLayoutContainer
             paramsTV.setMargins(0,0,0,32f.toDips().toInt())
+
             //Creando View
             val titleSelected = TextView(requireContext())
             titleSelected.text = "Seleciona un audio"
             titleSelected.textSize = 16f
             titleSelected.layoutParams = paramsTV
             titleSelected.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_dark))
+            recordAudioViews.layoutContainer = layoutTwoButtons
             layoutTwoButtons.addView(titleSelected)
 
 
             //Creando Selecionnar audio
-            val btnSelectedAudio = Button(context)
-            val paramBtnSelected = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT)
 
-            paramBtnSelected.bottomMargin = (48f).toDips().toInt()
-            btnSelectedAudio.layoutParams = paramBtnSelected
-            btnSelectedAudio.background = ContextCompat.getDrawable(requireContext(),R.drawable.bg_blue_button_reports)
-            btnSelectedAudio.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
-            btnSelectedAudio.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_record,0,R.drawable.ic_recording,0)
-            btnSelectedAudio.setPadding((16f).toDips().toInt(),0,(16f).toDips().toInt(),0)
-            btnSelectedAudio.height = (50f).toDips().toInt()
-            btnSelectedAudio.text = "Seleccionar un audio"
-            btnSelectedAudio.setOnClickListener {
-                responseLauncher.launch("audio/*")
-            }
-            val listTag = ArrayList<String>()
-            listTag.add(list.id)
-            listTag.add(list.idQuestion)
-            listTag.add(question)
-            btnSelectedAudio.tag = listTag
-            layoutTwoButtons.addView(btnSelectedAudio)
+            creatingSelectedAudioLayout(answer,layoutTwoButtons,answer.idQuestion,recordAudioViews)
 
 
             //Creando TitleRecordAudio
             val paramsTitleRecordAudio = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT)
-            paramsTitleRecordAudio.setMargins(0,0,0,5f.toDips().toInt())
+            paramsTitleRecordAudio.setMargins(0,15f.toDips().toInt(),0,5f.toDips().toInt())
             val titleRecordAudio = TextView(requireContext())
             titleRecordAudio.text = "Grabar un audio"
             titleRecordAudio.textSize = 16f
@@ -218,153 +233,75 @@ class DynamicAudioFragment : BaseFragment() {
             titleAdvise.layoutParams = paramsTitleAdvise
             layoutTwoButtons.addView(titleAdvise)
 
+            creatingAudioRecordLayout(answer,layoutTwoButtons,answer.idQuestion,recordAudioViews)
 
-            //Creating Record button
-            val layoutRecordingAudio = LinearLayout(requireContext())
-            val paramsLayoutRecording = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT)
-            val tagLayout = "ly${list.idQuestion}"
-            layoutRecordingAudio.tag = tagLayout
-            layoutRecordingAudio.orientation = LinearLayout.HORIZONTAL
-            layoutRecordingAudio.layoutParams = paramsLayoutRecording
-            layoutRecordingAudio.background = ContextCompat.getDrawable(requireContext(),R.drawable.bg_blue_button_reports)
-            layoutRecordingAudio.gravity = Gravity.CENTER
-            layoutRecordingAudio.setPadding(16f.toDips().toInt(),16f.toDips().toInt(),16f.toDips().toInt(),16f.toDips().toInt())
-            layoutRecordingAudio.setOnClickListener {
-                recordingAudio(tagLayoutContainer)
-            }
 
-            //Creating AppCompatImageVIew
-            val imageView = ImageView(requireContext())
-            val paramsImageView = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT)
-            imageView.setImageResource(R.drawable.ic_record)
-            imageView.layoutParams = paramsImageView
-            layoutRecordingAudio.addView(imageView)
-
-            //Creatin TextView Recording
-            val paramsRecordingtv = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT)
-            paramsRecordingtv.setMargins(0,0,0,5f.toDips().toInt())
-            val tvRecording = TextView(requireContext())
-            tvRecording.text = "Grabar un audio"
-            tvRecording.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
-            val tagRecordingtv = "tv${list.idQuestion}"
-            tvRecording.tag = tag
-            hashTextView[tagRecordingtv] = tvRecording
-            layoutRecordingAudio.addView(tvRecording)
-
-            //Creating Chronometer
-            val chronometer = Chronometer(requireContext())
-            val paramsChronometer = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT)
-            paramsChronometer.setMargins(20f.toDips().toInt(),0,5f.toDips().toInt(),0)
-            chronometer.isAllCaps = false
-            chronometer.visibility = View.GONE
-            chronometer.textSize = 16f
-            chronometer.gravity = Gravity.CENTER
-            chronometer.setTextColor(ContextCompat.getColor(requireContext(),R.color.white))
-            chronometer.layoutParams = paramsChronometer
-            val tagChronometer = "ch${list.idQuestion}"
-            chronometer.tag = tag
-            layoutRecordingAudio.addView(chronometer)
-            //mutableHashMapTag[tagLayout] = Chr
-            hashChronometer[tagChronometer] = chronometer
-
-            //Creando grabacion - Clip
-            val layoutShowAudioRecorded= LinearLayout(requireContext())
-            val paramsLayoutAudioRecorded = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT)
-            paramsLayoutAudioRecorded.topMargin = 10f.toDips().toInt()
-            val tagLayoutShowRecorded= "lyClip${list.idQuestion}"
-            layoutShowAudioRecorded.tag = tagLayoutShowRecorded
-            layoutShowAudioRecorded.orientation = LinearLayout.HORIZONTAL
-            layoutShowAudioRecorded.layoutParams = paramsLayoutAudioRecorded
-            layoutShowAudioRecorded.gravity = Gravity.CENTER
-            hashLayoutShowRecord[tagLayoutShowRecorded] = layoutShowAudioRecorded
-
-            //Creating AppCompatImageVIew
-            val imageViewClip = ImageView(requireContext())
-            val paramsImageViewClip = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT)
-            imageViewClip.setImageResource(R.drawable.ic_clip)
-            imageViewClip.layoutParams = paramsImageViewClip
-            layoutShowAudioRecorded.addView(imageViewClip)
-
-            //Creatin TextView Recording
-            val paramsRecordedText = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT)
-            paramsRecordedText.setMargins(20f.toDips().toInt(),0,15f.toDips().toInt(),0)
-            val tvRecordedText = TextView(requireContext())
-            tvRecordedText.text = "Grabación 1"
-            tvRecordedText.layoutParams = paramsRecordedText
-            tvRecordedText.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
-            tvRecordedText.setOnClickListener {
-                playingAudioRecorded(tagLayoutContainer)
-            }
-            val tagRecordedText = "tvClip${list.idQuestion}"
-            tvRecordedText.tag = tagRecordedText
-            hashTextViewRecord[tagRecordedText] = tvRecordedText
-            layoutShowAudioRecorded.addView(tvRecordedText)
-
-            //Creating ImageView
-            val imageViewClipClose= ImageView(requireContext())
-            val paramsImageViewClipClose = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT)
-            imageViewClipClose.setImageResource(R.drawable.ic_close)
-            imageViewClipClose.layoutParams = paramsImageViewClipClose
-            val tagIvClose = "ivClip${list.idQuestion}"
-            imageViewClipClose.tag = tagIvClose
-            imageViewClipClose.setOnClickListener {
-                deleteAudioRecorded(tagLayoutContainer)
-            }
-            hashImageVIewClipClose[tagIvClose] =imageViewClipClose
-            layoutShowAudioRecorded.addView(imageViewClipClose)
-
-            listTagRecordBtn.add(RecordAudio(tagLayout,tagRecordingtv,tagChronometer,tagLayoutShowRecorded,tagRecordedText,tagIvClose))
-            //mutableHashMapTag[tagLayout] = RecordAudio(tagLayout,tagRecordingtv,tagChronometer,tagLayoutShowRecorded,tagRecordedText,tagIvClose)
-            mutableHashMapTag[tagLayoutContainer] = RecordAudioViews(
-                layoutTwoButtons,
-                btnSelectedAudio,
-                layoutRecordingAudio,
-                tvRecording,
-                chronometer,
-                layoutShowAudioRecorded,
-                tvRecordedText,
-                imageViewClipClose)
-            listSelectedAudioButton.add(btnSelectedAudio)
+            Log.d("object", recordAudioViews.toString())
+            mutableHashMapTag[tagLayoutContainer] = recordAudioViews
+            //listSelectedAudioButton.add(btnSelectedAudio)
             //listRecordAudioButton.add(btnRecordAudio)
+            //linearLayoutContainer.addView(layoutTwoButtons)
+            //linearLayoutContainer.addView(layoutRecordingAudio)
             linearLayoutContainer.addView(layoutTwoButtons)
-            linearLayoutContainer.addView(layoutRecordingAudio)
-            linearLayoutContainer.addView(layoutShowAudioRecorded)
         }
         linearLayoutContainer.layoutParams = params
         view.addView(linearLayoutContainer)
     }
 
-    private fun deleteAudioRecorded(tag: String) {
+    private fun deleteAudioRecorded(tag: String, type:String) {
         mutableHashMapTag[tag]?.let { recordAudio ->
-            val tagLayoutContainer =recordAudio.layoutContainer.tag
-            hashPathAudioRecorded[tagLayoutContainer.toString()] = ""
-            recordAudio.layoutShowRecord.invisible()
+            if(type == TYPE_SELECTED){
+                hashPathAudioSelected[tag] = ""
+                recordAudio.layoutShowSelectedAudio?.invisible()
+                recordAudio.answerSelected = ""
+            }else if(type == TYPE_RECCORDED){
+                hashPathAudioRecorded[tag] = ""
+                recordAudio.answerRecorded = ""
+                recordAudio.layoutShowRecord?.invisible()
+            }
         }
     }
 
     private fun Float.toDips() = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, this, resources.displayMetrics)
+
     private fun recordingAudio(tag: String) {
         mutableHashMapTag[tag]?.let { recordAudio ->
             hashPathAudioRecorded[tag]?.let { Log.d("hashmap", it) }
-            val tagLayoutContainer = recordAudio.layoutContainer.tag
+            val tagLayoutContainer = recordAudio.layoutContainer?.tag
             val previousRecord = hashPathAudioRecorded[tagLayoutContainer] ?: ""
             if(previousRecord == ""){
                 val recording = dynamicAudioViewModel.recording
                 if (recording == true) {
-                    recordAudio.chrometerRecording.apply {
+                    recordAudio.chrometerRecording?.apply {
                         visibility = View.GONE
                         base = SystemClock.elapsedRealtime()
                         stop()
                     }
-                    recordAudio.textViewRecording.visibility = View.VISIBLE
-                    recordAudio.layoutShowRecord.visibility = View.VISIBLE
+                    recordAudio.textViewRecording?.visibility = View.VISIBLE
+                    recordAudio.layoutShowRecord?.visibility = View.VISIBLE
                     dynamicAudioViewModel.stopRecord()
-                    hashPathAudioRecorded[tagLayoutContainer.toString()] = dynamicAudioViewModel.recordPath
+                    hashPathAudioRecorded[tag] = dynamicAudioViewModel.recordPath
+                    recordAudio.answerRecorded = dynamicAudioViewModel.recordPath
                 } else {
-                    recordAudio.textViewRecording.invisible()
-                    recordAudio.chrometerRecording.apply {
+                    val timeLimitString = getMiliSeoncdsOnFormat(audioLimit)
+                    recordAudio.textViewRecording?.invisible()
+                    recordAudio.chrometerRecording?.apply {
                         visibility = View.VISIBLE
                         base = SystemClock.elapsedRealtime()
+                        setOnChronometerTickListener { chrometer ->
+                            if (text.trim() == timeLimitString) {
+                                stop()
+                                onChronometerTickListener = null
+                                visibility = View.GONE
+                                base = SystemClock.elapsedRealtime()
+                                notify(activity, R.string.error_audio_limit)
+                                dynamicAudioViewModel.stopRecord()
+                                recordAudio.textViewRecording?.visibility = View.VISIBLE
+                                recordAudio.layoutShowRecord?.visibility = View.VISIBLE
+                                hashPathAudioRecorded[tag] = dynamicAudioViewModel.recordPath
+                                recordAudio.answerRecorded = dynamicAudioViewModel.recordPath
+                            }
+                        }
                         start()
                     }
                     dynamicAudioViewModel.startRecord()
@@ -391,22 +328,26 @@ class DynamicAudioFragment : BaseFragment() {
     private fun playingAudioRecorded(tag: String) {
         mutableHashMapTag[tag]?.let { recordAudio ->
             hashPathAudioRecorded[tag]?.let { path ->
-                recordAudio.textViewShowRecord.invisible()
+//                recordAudio.textViewShowRecord?.invisible()
                 try {
                     val playerRecorded = MediaPlayer().apply {
                         setDataSource(path)
                         prepare()
                         setOnCompletionListener {
-                            recordAudio.chrometerRecording.apply {
+                            recordAudio.chrometerRecording?.apply {
                                 visibility = View.GONE
                                 base = SystemClock.elapsedRealtime()
                                 stop()
                             }
-                            recordAudio.layoutShowRecord.visibility = View.VISIBLE
+                            recordAudio.layoutShowRecord?.visibility = View.VISIBLE
+                            recordAudio.textViewRecording?.visible()
+                            recordAudio.textViewShowRecord?.visible()
                         }
                         start()
-                        recordAudio.layoutShowRecord.invisible()
-                        recordAudio.chrometerRecording.apply {
+                        recordAudio.textViewShowRecord?.invisible()
+                        recordAudio.layoutShowRecord?.invisible()
+                        recordAudio.textViewRecording?.invisible()
+                        recordAudio.chrometerRecording?.apply {
                             visibility = View.VISIBLE
                             base = SystemClock.elapsedRealtime()
                             start()
@@ -418,8 +359,276 @@ class DynamicAudioFragment : BaseFragment() {
             }
         }
     }
-    @JvmName("getRealPathFromURI1")
-    fun getRealPathFromURI(context: Context, uri: Uri): String? {
+
+    private fun playingAudioSelected(tag:String){
+        mutableHashMapTag[tag]?.let { recordAudio ->
+            try {
+                val playerRecorded = MediaPlayer().apply {
+                    Log.d("recordSelected",hashPathAudioSelected[tag].toString())
+                    setDataSource(hashPathAudioSelected[tag])
+                    prepare()
+                    setOnCompletionListener {
+                        recordAudio.chrometerSeleceted?.apply {
+                            visibility = View.GONE
+                            base = SystemClock.elapsedRealtime()
+                            stop()
+                        }
+                        recordAudio.textViewAudioSelected?.visibility = View.VISIBLE
+                        recordAudio.layoutShowSelectedAudio?.visibility = View.VISIBLE
+                    }
+                    start()
+                    recordAudio.layoutShowSelectedAudio?.invisible()
+                    recordAudio.textViewAudioSelected?.invisible()
+                    recordAudio.chrometerSeleceted?.apply {
+                        visibility = View.VISIBLE
+                        base = SystemClock.elapsedRealtime()
+                        start()
+                    }
+                }
+            } catch (e: IOException) {
+                Log.e("PLAYING ERROR", " $e \n No se encuentra ael recordpat -> ")
+            }
+        }
+    }
+    private fun creatingAudioRecordLayout(answer: Answer,parent: LinearLayout, questions:String, recordAudioViews: RecordAudioViews){
+        //Creating Record button
+        val layoutRecordingAudio = LinearLayout(requireContext())
+        val paramsLayoutRecording = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT)
+        val tagLayout = "ly${questions}"
+        layoutRecordingAudio.tag = tagLayout
+        layoutRecordingAudio.orientation = LinearLayout.HORIZONTAL
+        layoutRecordingAudio.layoutParams = paramsLayoutRecording
+        layoutRecordingAudio.background = ContextCompat.getDrawable(requireContext(),R.drawable.bg_blue_button_reports)
+        layoutRecordingAudio.gravity = Gravity.CENTER
+        layoutRecordingAudio.setPadding(16f.toDips().toInt(),16f.toDips().toInt(),16f.toDips().toInt(),16f.toDips().toInt())
+        layoutRecordingAudio.setOnClickListener {
+            checkPermissions()
+            recordingAudio(parent.tag.toString())
+        }
+        recordAudioViews.layoutRecordButton = layoutRecordingAudio
+
+        //Creating AppCompatImageVIew
+        val imageView = ImageView(requireContext())
+        val paramsImageView = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT)
+        imageView.setImageResource(R.drawable.ic_record)
+        imageView.layoutParams = paramsImageView
+        layoutRecordingAudio.addView(imageView)
+
+        //Creatin TextView Recording
+        val paramsRecordingtv = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT)
+        paramsRecordingtv.setMargins(0,0,0,5f.toDips().toInt())
+        val tvRecording = TextView(requireContext())
+        tvRecording.text = "Grabar un audio"
+        tvRecording.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+        val tagRecordingtv = "tv${questions}"
+        tvRecording.tag = tag
+        //hashTextView[tagRecordingtv] = tvRecording
+        recordAudioViews.textViewRecording =  tvRecording
+        layoutRecordingAudio.addView(tvRecording)
+
+        //Creating Chronometer
+        val chronometer = Chronometer(requireContext())
+        val paramsChronometer = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT)
+        paramsChronometer.setMargins(20f.toDips().toInt(),0,5f.toDips().toInt(),0)
+        chronometer.isAllCaps = false
+        chronometer.visibility = View.GONE
+        chronometer.textSize = 16f
+        chronometer.gravity = Gravity.CENTER
+        chronometer.setTextColor(ContextCompat.getColor(requireContext(),R.color.white))
+        chronometer.layoutParams = paramsChronometer
+        val tagChronometer = "ch${questions}"
+        chronometer.tag = tagChronometer
+        recordAudioViews.chrometerRecording = chronometer
+        layoutRecordingAudio.addView(chronometer)
+
+
+        //Creando grabacion - Clip
+        val layoutShowAudioRecorded= LinearLayout(requireContext())
+        val paramsLayoutAudioRecorded = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT)
+        paramsLayoutAudioRecorded.topMargin = 10f.toDips().toInt()
+        val tagLayoutShowRecorded= "lyClip${questions}"
+        layoutShowAudioRecorded.tag = tagLayoutShowRecorded
+        layoutShowAudioRecorded.orientation = LinearLayout.HORIZONTAL
+        layoutShowAudioRecorded.layoutParams = paramsLayoutAudioRecorded
+        layoutShowAudioRecorded.gravity = Gravity.CENTER
+        if(answer.data == ""){
+            layoutShowAudioRecorded.visibility = View.GONE
+        }else{
+            hashPathAudioSelected[parent.tag.toString()] = answer.data
+        }
+        recordAudioViews.layoutShowRecord = layoutShowAudioRecorded
+        //hashLayoutShowRecord[tagLayoutShowRecorded] = layoutShowAudioRecorded
+
+        //Creating AppCompatImageVIew
+        val imageViewClip = ImageView(requireContext())
+        val paramsImageViewClip = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT)
+        imageViewClip.setImageResource(R.drawable.ic_clip)
+        imageViewClip.layoutParams = paramsImageViewClip
+        layoutShowAudioRecorded.addView(imageViewClip)
+
+        //Creatin TextView Recording
+        val paramsRecordedText = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT)
+        paramsRecordedText.setMargins(20f.toDips().toInt(),0,15f.toDips().toInt(),0)
+        val tvRecordedText = TextView(requireContext())
+        tvRecordedText.text = "Grabación 1"
+        tvRecordedText.layoutParams = paramsRecordedText
+        tvRecordedText.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
+        tvRecordedText.setOnClickListener {
+            playingAudioRecorded(parent.tag.toString())
+        }
+        val tagRecordedText = "tvClip${questions}"
+        tvRecordedText.tag = tagRecordedText
+        //hashTextViewRecord[tagRecordedText] = tvRecordedText
+        layoutShowAudioRecorded.addView(tvRecordedText)
+        recordAudioViews.textViewShowRecord =  tvRecordedText
+
+        //Creating ImageView
+        val imageViewClipClose= ImageView(requireContext())
+        val paramsImageViewClipClose = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT)
+        imageViewClipClose.setImageResource(R.drawable.ic_close)
+        imageViewClipClose.layoutParams = paramsImageViewClipClose
+        val tagIvClose = "ivClip${questions}"
+        imageViewClipClose.tag = tagIvClose
+        imageViewClipClose.setOnClickListener {
+            deleteAudioRecorded(parent.tag.toString(), TYPE_RECCORDED)
+        }
+        //hashImageVIewClipClose[tagIvClose] =imageViewClipClose
+        recordAudioViews.imageViewClipClose = imageViewClipClose
+        layoutShowAudioRecorded.addView(imageViewClipClose)
+
+        parent.addView(layoutRecordingAudio)
+        parent.addView(layoutShowAudioRecorded)
+
+    }
+
+    private fun creatingSelectedAudioLayout(answer: Answer,parent: LinearLayout, questions:String, recordAudioViews: RecordAudioViews){
+        //Creating Selected  button
+        val layoutSelectedAudio = LinearLayout(requireContext())
+        val paramsLayoutRecording = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT)
+        val tagLayout = "ly$questions"
+        layoutSelectedAudio.tag = tagLayout
+        layoutSelectedAudio.orientation = LinearLayout.HORIZONTAL
+        layoutSelectedAudio.layoutParams = paramsLayoutRecording
+        layoutSelectedAudio.background = ContextCompat.getDrawable(requireContext(),R.drawable.bg_blue_button_reports)
+        layoutSelectedAudio.gravity = Gravity.CENTER
+        layoutSelectedAudio.setPadding(16f.toDips().toInt(),16f.toDips().toInt(),16f.toDips().toInt(),16f.toDips().toInt())
+        recordAudioViews.layoutAudioSelectedButton = layoutSelectedAudio
+        layoutSelectedAudio.setOnClickListener {
+            checkPermissions()
+            currentLayout =  parent.tag.toString()
+            responseLauncher.launch("audio/*")
+        }
+
+        //Creating AppCompatImageVIew
+        val imageViewSelectedButton = ImageView(requireContext())
+        val paramsImageView = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT)
+        imageViewSelectedButton.setImageResource(R.drawable.ic_record)
+        imageViewSelectedButton.layoutParams = paramsImageView
+        layoutSelectedAudio.addView(imageViewSelectedButton)
+
+        //Creatin TextView Recording
+        val tvSelectedAudio = TextView(requireContext())
+        val paramsSelectedTv = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT)
+        paramsSelectedTv.setMargins(0,0,0,5f.toDips().toInt())
+        val tagRecordingtv = "tv$questions"
+        tvSelectedAudio.text = "Selecciona un audio"
+        tvSelectedAudio.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+        tvSelectedAudio.tag = tag
+        //hashTextView[tagRecordingtv] = tvRecording
+        recordAudioViews.textViewAudioSelected = tvSelectedAudio
+        layoutSelectedAudio.addView(tvSelectedAudio)
+
+        //Creating Chronometer
+        val chronometerSelectedAudio = Chronometer(requireContext())
+        val paramsChronometer = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT)
+        paramsChronometer.setMargins(20f.toDips().toInt(),0,5f.toDips().toInt(),0)
+        chronometerSelectedAudio.isAllCaps = false
+        chronometerSelectedAudio.visibility = View.GONE
+        chronometerSelectedAudio.textSize = 16f
+        chronometerSelectedAudio.gravity = Gravity.CENTER
+        chronometerSelectedAudio.setTextColor(ContextCompat.getColor(requireContext(),R.color.white))
+        chronometerSelectedAudio.layoutParams = paramsChronometer
+        val tagChronometer = "ch$questions}"
+        chronometerSelectedAudio.tag = tag
+        recordAudioViews.chrometerSeleceted = chronometerSelectedAudio
+        layoutSelectedAudio.addView(chronometerSelectedAudio)
+
+
+        //Layout AudioSelkected view - clip
+        val layoutAudioSelectedClip = LinearLayout(requireContext())
+        val paramslayoutAudioSelected = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+        paramslayoutAudioSelected.topMargin = 10f.toDips().toInt()
+        val tagLayoutAudioSelected = "lyClip${questions}"
+        layoutAudioSelectedClip.tag = tagLayoutAudioSelected
+        layoutAudioSelectedClip.orientation = LinearLayout.HORIZONTAL
+        layoutAudioSelectedClip.layoutParams = paramslayoutAudioSelected
+        layoutAudioSelectedClip.gravity = Gravity.CENTER
+        if(answer.data == ""){
+            layoutAudioSelectedClip.visibility = View.GONE
+        }else{
+            hashPathAudioSelected[parent.tag.toString()] = answer.data
+        }
+        recordAudioViews.layoutShowSelectedAudio =  layoutAudioSelectedClip
+
+        //Creating AppCompatImageVIew
+        val imageViewClipSelected = ImageView(requireContext())
+        val paramsImageViewClipSelected = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT)
+        imageViewClipSelected.setImageResource(R.drawable.ic_clip)
+        imageViewClipSelected.layoutParams = paramsImageViewClipSelected
+        layoutAudioSelectedClip.addView(imageViewClipSelected)
+
+        //Creatin TextView Recording
+        val paramsSelectedText = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+        paramsSelectedText.setMargins(20f.toDips().toInt(), 0, 15f.toDips().toInt(), 0)
+        val tagSelectedText = "tvClip${questions}"
+        val tvSelectedTxt = TextView(requireContext())
+        tvSelectedTxt.text = "Audio Seleccionado"
+        tvSelectedTxt.layoutParams = paramsSelectedText
+        tvSelectedTxt.tag = tagSelectedText
+        tvSelectedTxt.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
+        tvSelectedTxt.setOnClickListener {
+            playingAudioSelected(parent.tag.toString())
+        }
+        recordAudioViews.textViewShowSelecetedAudio = tvSelectedTxt
+        layoutAudioSelectedClip.addView(tvSelectedTxt)
+
+        //Creating ImageView
+        val imageViewClipCloseSelected = ImageView(requireContext())
+        val tagIvClose = "ivClip${questions}"
+        val paramsImageViewClipCloseSelected = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+        imageViewClipCloseSelected.setImageResource(R.drawable.ic_close)
+        imageViewClipCloseSelected.layoutParams = paramsImageViewClipCloseSelected
+        imageViewClipCloseSelected.tag = tagIvClose
+        imageViewClipCloseSelected.setOnClickListener {
+            deleteAudioRecorded(parent.tag.toString(), TYPE_SELECTED)
+        }
+        recordAudioViews.imageViewClipCloseSelected = imageViewClipCloseSelected
+        layoutAudioSelectedClip.addView(imageViewClipCloseSelected)
+
+        parent.addView(layoutSelectedAudio)
+        parent.addView(layoutAudioSelectedClip)
+    }
+
+    private fun getMiliSeoncdsOnFormat(timeMiliseconds: Int): String {
+        val seconds = (timeMiliseconds / 1000) % 60
+        val minutes = timeMiliseconds / (1000 * 60)
+        return if (seconds < 10) {
+            "0$minutes:0$seconds"
+        } else {
+            "0$minutes:$seconds"
+        }
+    }
+
+    private fun getRealPathFromURI(context: Context, uri: Uri): String? {
         when {
             // DocumentProvider
             DocumentsContract.isDocumentUri(context, uri) -> {
