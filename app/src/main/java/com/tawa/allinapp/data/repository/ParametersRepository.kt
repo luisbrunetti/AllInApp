@@ -69,7 +69,7 @@ interface ParametersRepository {
                                     if(body.success) {
                                         body.data.map {
                                             it.pv?.map { pv ->
-                                                parametersDataSource.insertPV(pv.toModel(it.company?.id,it.userAssigned))
+                                                parametersDataSource.insertPV(pv.toModel(it.company?.id,it.userAssigned,pv.corp!!))
                                             }
                                         }
                                         Either.Right(true)

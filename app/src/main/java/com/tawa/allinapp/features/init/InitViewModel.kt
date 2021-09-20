@@ -309,7 +309,7 @@ class InitViewModel
         this._companies.value = company.map { Company(it.id,it.ruc,it.name,it.description,it.idUser,it.image) }
     }
     private fun handlePvList(schedule: List<Schedule>) {
-        this._schedule.value = schedule.map { Schedule(it.id,it.pv,it.description,it.zone,it.codGeo,it.idCompany, it.lat,it.long,it.idUser) }
+        this._schedule.value = schedule.map { Schedule(it.id,it.pv,it.description,it.zone,it.codGeo,it.idCompany, it.lat,it.long,it.idUser,it.nameCorp) }
     }
     private fun handleSetIdCompany(success: Boolean) {
         _setIdCompanySuccess.value = success

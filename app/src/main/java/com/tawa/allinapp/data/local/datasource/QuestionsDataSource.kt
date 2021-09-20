@@ -26,6 +26,10 @@ class QuestionsDataSource @Inject constructor(private val questionsDao: Question
         questionsDao.insertAnswersPv(answersPvModel)
     }
 
+    fun insertSubAnswers(subAnswerModel: SubAnswerModel){
+        questionsDao.insertSubAnswers(subAnswerModel)
+    }
+
     fun getQuestions():List<QuestionModel> {
         return questionsDao.getQuestions()
     }

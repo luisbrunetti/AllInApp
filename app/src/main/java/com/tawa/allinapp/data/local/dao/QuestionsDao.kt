@@ -23,6 +23,9 @@ interface QuestionsDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertAnswersPv(answersPvModel: AnswersPvModel)
 
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun insertSubAnswers(subAnswerModel: SubAnswerModel)
+
     @Query("SELECT * FROM questions order by `order` asc")
     fun getQuestions(): List<QuestionModel>
 

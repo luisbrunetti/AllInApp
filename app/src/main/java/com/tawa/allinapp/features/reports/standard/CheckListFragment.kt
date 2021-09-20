@@ -108,8 +108,11 @@ class CheckListFragment: BaseFragment() {
     private var  listMultiCheck = ArrayList<CheckBox>()
     private var  listMultiText = ArrayList<EditText>()
     private var  listColumnsRadio = ArrayList<TextView>()
+    private var  listRowsRadio = ArrayList<TextView>()
+    private var  listRowsCheck = ArrayList<TextView>()
     private var  listColumnsCheck = ArrayList<TextView>()
     private var  listColumnsInput = ArrayList<TextView>()
+    private var  listRowsInput = ArrayList<TextView>()
     private var listErrorText = ArrayList<TextView>()
     private var listErrorRadio = ArrayList<TextView>()
     private var listErrorCheck = ArrayList<TextView>()
@@ -990,7 +993,6 @@ class CheckListFragment: BaseFragment() {
                     }
 
                 }
-
                 val countRequired = listFlag.filter { it == 0 }.count()
                 if(countRequired==0)
                 {
@@ -1096,12 +1098,27 @@ class CheckListFragment: BaseFragment() {
                         checkListViewModel.setAnswerPv(tag[0],tag[1],input.text.toString(),urlImage)
                         //checkListViewModel.updateAnswers(tag[0], input.text.toString())
                     }
+                    for (input in listRowsRadio) {
+                        val tag = input.tag as ArrayList<String>
+                        checkListViewModel.setAnswerPv(tag[0],tag[1],input.text.toString(),urlImage)
+                        //checkListViewModel.updateAnswers(tag[0], input.text.toString())
+                    }
                     for (input in listColumnsCheck) {
                         val tag = input.tag as ArrayList<String>
                         checkListViewModel.setAnswerPv(tag[0],tag[1],input.text.toString(),urlImage)
                         //checkListViewModel.updateAnswers(tag[0], input.text.toString())
                     }
+                    for (input in listRowsCheck) {
+                        val tag = input.tag as ArrayList<String>
+                        checkListViewModel.setAnswerPv(tag[0],tag[1],input.text.toString(),urlImage)
+                        //checkListViewModel.updateAnswers(tag[0], input.text.toString())
+                    }
                     for (input in listColumnsInput) {
+                        val tag = input.tag as ArrayList<String>
+                        checkListViewModel.setAnswerPv(tag[0],tag[1],input.text.toString(),urlImage)
+                        //checkListViewModel.updateAnswers(tag[0], input.text.toString())
+                    }
+                    for (input in listRowsInput) {
                         val tag = input.tag as ArrayList<String>
                         checkListViewModel.setAnswerPv(tag[0],tag[1],input.text.toString(),urlImage)
                         //checkListViewModel.updateAnswers(tag[0], input.text.toString())
@@ -1455,14 +1472,18 @@ class CheckListFragment: BaseFragment() {
         val linearColumn = LinearLayout(context)
         linearColumn.orientation = LinearLayout.VERTICAL
         val listColumns  = arrayListOf<String>()
+        val listElements  = arrayListOf<String>()
         val listRows  = mutableListOf<String>()
         val listId  = arrayListOf<String>()
         val listIdQuestion = arrayListOf<String>()
         val listNameQ = arrayListOf<String>()
-        val listData = arrayListOf<Boolean>()
         val listCId  = arrayListOf<String>()
         val listCIdQuestion = arrayListOf<String>()
         val listCNameQ = arrayListOf<String>()
+        val listEId  = arrayListOf<String>()
+        val listEIdQuestion = arrayListOf<String>()
+        val listENameQ = arrayListOf<String>()
+        val listEData = arrayListOf<Boolean>()
         for(list in listAnswers.sortedBy { it.order })
         {
             if(list.column)
@@ -1478,20 +1499,36 @@ class CheckListFragment: BaseFragment() {
                 listId.add(list.id)
                 listIdQuestion.add(list.idQuestion)
                 listNameQ.add(nameQ)
-                listData.add(list.data.toBoolean())
-
+            }
+            if(!list.row && !list.column)
+            {
+                listElements.add(list.answerName)
+                listEId.add(list.id)
+                listEIdQuestion.add(list.idQuestion)
+                listENameQ.add(nameQ)
+                listEData.add(list.data.toBoolean())
             }
         }
         val countRow  = listRows.distinct().count()+1
         val countColumn  = listColumns.count()
         var count = 0
+        var countRadio = 0
         for(i in 0 until countRow)
         {
+
             if(i==0)
             {
                 val linearRow = LinearLayout(context)
                 linearRow.orientation = LinearLayout.HORIZONTAL
                 var countC = 0
+                val textColumn = TextView(context)
+                textColumn.width = 50f.toDips().toInt()
+                textColumn.textSize = 16f
+                textColumn.setTextColor(resources.getColor(R.color.colorTextAll))
+                textColumn.height = 30f.toDips().toInt()
+                textColumn.gravity = Gravity.END or Gravity.CENTER_VERTICAL
+                textColumn.text = ""
+                linearRow.addView(textColumn)
                 listColumns.forEach {
                     val textColumn = TextView(context)
                     textColumn.width = 80f.toDips().toInt()
@@ -1517,28 +1554,51 @@ class CheckListFragment: BaseFragment() {
                 linearRow.orientation = LinearLayout.HORIZONTAL
                 val rg = RadioGroup(context)
                 rg.orientation = RadioGroup.HORIZONTAL
+
                 for(j in 0 until countColumn)
                 {
+
                     val radioButton  = RadioButton(context)
                     radioButton.width= 80f.toDips().toInt()
                     radioButton.height = 50f.toDips().toInt()
                     radioButton.textSize = 16f
                     radioButton.gravity = Gravity.END or Gravity.CENTER_VERTICAL
                     if(typeReport!="0")
-                        radioButton.isChecked = listData[count]
-                    val textColumn = TextView(context)
+                        radioButton.isChecked =  listEData[countRadio]
                     if(j==0)
-                        radioButton.text = listRows[count]
+                    {
+                        val params4 = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                        val text = TextView(context)
+                        text.setTextColor(resources.getColor(R.color.colorTextAll))
+                        text.textSize = 16f
+                        params4.rightMargin = 5f.toDips().toInt()
+                        params4.topMargin = 10f.toDips().toInt()
+                        // params4.width = 20f.toDips().toInt()
+                        //params4.height = 20f.toDips().toInt()
+                        text.layoutParams = params4
+                        // text.setPadding(0,(30f).toDips().toInt(),(10f).toDips().toInt(),0)
+                        text.gravity = Gravity.CENTER_VERTICAL
+                        text.text = listRows[count]
+                        val listTag =ArrayList<String>(2)
+                        listTag.add(listId[count])
+                        listTag.add(listIdQuestion[count])
+                        listTag.add(listNameQ[count])
+                        text.tag = listTag
+                        listRowsRadio.add(text)
+                        linearRow.addView(text)
+                    }
+                        //radioButton.text = listRows[count]
                     radioButton.layoutDirection = View.LAYOUT_DIRECTION_RTL
-                    val listTag =ArrayList<String>(2)
-                    listTag.add(listId[count])
-                    listTag.add(listIdQuestion[count])
-                    listTag.add(listNameQ[count])
+                   val listTag =ArrayList<String>(2)
+                    listTag.add(listEId[countRadio])
+                    listTag.add(listEIdQuestion[countRadio])
+                    listTag.add(listENameQ[countRadio])
                     radioButton.tag = listTag
                     listMultiRadio.add(radioButton)
                     rg.addView(radioButton)
-                    count++
+                    countRadio++
                 }
+                count++
                 linearRow.addView(rg)
                 linearColumn.addView(linearRow)
             }
@@ -1570,6 +1630,7 @@ class CheckListFragment: BaseFragment() {
         linearColumn.orientation = LinearLayout.VERTICAL
         val listColumns  = arrayListOf<String>()
         val listRows  = mutableListOf<String>()
+        val listElements = arrayListOf<String>()
         val listId  = arrayListOf<String>()
         val listIdQuestion = arrayListOf<String>()
         val listNameQ = arrayListOf<String>()
@@ -1577,6 +1638,10 @@ class CheckListFragment: BaseFragment() {
         val listCId  = arrayListOf<String>()
         val listCIdQuestion = arrayListOf<String>()
         val listCNameQ = arrayListOf<String>()
+        val listEId  = arrayListOf<String>()
+        val listEIdQuestion = arrayListOf<String>()
+        val listENameQ = arrayListOf<String>()
+        val listEData = arrayListOf<Boolean>()
         for(list in listAnswers.sortedBy { it.order })
         {
             if(list.column)
@@ -1593,12 +1658,20 @@ class CheckListFragment: BaseFragment() {
                 listIdQuestion.add(list.idQuestion)
                 listNameQ.add(nameQ)
                 listData.add(list.data.toBoolean())
-
+            }
+            if(!list.row&&!list.column)
+            {
+                listElements.add(list.answerName)
+                listEId.add(list.id)
+                listEIdQuestion.add(list.idQuestion)
+                listENameQ.add(nameQ)
+                listEData.add(list.data.toBoolean())
             }
         }
         val countRow  = listRows.distinct().count()+1
         val countColumn  = listColumns.count()
         var count = 0
+        var countCheck = 0
         for(i in 0 until countRow)
         {
             if(i==0)
@@ -1606,13 +1679,21 @@ class CheckListFragment: BaseFragment() {
                 val linearRow = LinearLayout(context)
                 linearRow.orientation = LinearLayout.HORIZONTAL
                 var countC = 0
+                val textColumn = TextView(context)
+                textColumn.width = 50f.toDips().toInt()
+                textColumn.textSize = 16f
+                textColumn.setTextColor(resources.getColor(R.color.colorTextAll))
+                textColumn.height = 30f.toDips().toInt()
+                textColumn.gravity = Gravity.END or Gravity.CENTER_VERTICAL
+                textColumn.text = ""
+                linearRow.addView(textColumn)
                 listColumns.forEach {
                     val textColumn = TextView(context)
                     textColumn.width = 80f.toDips().toInt()
                     textColumn.textSize = 16f
                     textColumn.setTextColor(resources.getColor(R.color.colorTextAll))
                     textColumn.height = 30f.toDips().toInt()
-                    textColumn.gravity = Gravity.END or Gravity.CENTER_VERTICAL
+                    textColumn.gravity = Gravity.CENTER_HORIZONTAL or Gravity.CENTER_VERTICAL
                     textColumn.text = it
                     val listTag =ArrayList<String>(2)
                     listTag.add(listCId[countC])
@@ -1635,21 +1716,42 @@ class CheckListFragment: BaseFragment() {
                     checkBox.width= 80f.toDips().toInt()
                     checkBox.height = 50f.toDips().toInt()
                     checkBox.textSize = 16f
-                    checkBox.gravity = Gravity.END or Gravity.CENTER_VERTICAL
+                    checkBox.gravity = Gravity.CENTER_HORIZONTAL or Gravity.CENTER_VERTICAL
                     if(typeReport!="0")
-                        checkBox.isChecked = listData[count]
-                    if(j==0)
-                        checkBox.text = listRows[count]
-                    checkBox.layoutDirection = View.LAYOUT_DIRECTION_RTL
+                        checkBox.isChecked = listEData[countCheck]
+                    if(j==0){
+                        val params4 = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                        val text = TextView(context)
+                        text.setTextColor(resources.getColor(R.color.colorTextAll))
+                        text.textSize = 16f
+                        params4.rightMargin = 5f.toDips().toInt()
+                        params4.topMargin = 0f.toDips().toInt()
+                        // params4.width = 20f.toDips().toInt()
+                        //params4.height = 20f.toDips().toInt()
+                        text.layoutParams = params4
+                        // text.setPadding(0,(30f).toDips().toInt(),(10f).toDips().toInt(),0)
+                        text.gravity = Gravity.CENTER_VERTICAL
+                        text.text = listRows[count]
+                        val listTag =ArrayList<String>(2)
+                        listTag.add(listId[count])
+                        listTag.add(listIdQuestion[count])
+                        listTag.add(listNameQ[count])
+                        text.tag = listTag
+                        listRowsCheck.add(text)
+                        linearRow.addView(text)
+                    }
+                        //checkBox.text = listRows[count]
+                   checkBox.layoutDirection = View.LAYOUT_DIRECTION_RTL
                     val listTag =ArrayList<String>(2)
-                    listTag.add(listId[count])
-                    listTag.add(listIdQuestion[count])
-                    listTag.add(listNameQ[count])
+                    listTag.add(listEId[countCheck])
+                    listTag.add(listEIdQuestion[countCheck])
+                    listTag.add(listENameQ[countCheck])
                     checkBox.tag = listTag
                     listMultiCheck.add(checkBox)
                     linearRow.addView(checkBox)
-                    count++
+                    countCheck++
                 }
+                count++
                 linearColumn.addView(linearRow)
             }
         }
@@ -1680,6 +1782,7 @@ class CheckListFragment: BaseFragment() {
         linearColumn.orientation = LinearLayout.VERTICAL
         val listColumns  = arrayListOf<String>()
         val listRows  = mutableListOf<String>()
+        val listElements  = arrayListOf<String>()
         val listId  = arrayListOf<String>()
         val listIdQuestion = arrayListOf<String>()
         val listNameQ = arrayListOf<String>()
@@ -1687,6 +1790,10 @@ class CheckListFragment: BaseFragment() {
         val listCId  = arrayListOf<String>()
         val listCIdQuestion = arrayListOf<String>()
         val listCNameQ = arrayListOf<String>()
+        val listEId  = arrayListOf<String>()
+        val listEIdQuestion = arrayListOf<String>()
+        val listENameQ = arrayListOf<String>()
+        val listEData = arrayListOf<String>()
         for(list in listAnswers.sortedBy { it.order })
         {
             if(list.column)
@@ -1703,12 +1810,20 @@ class CheckListFragment: BaseFragment() {
                 listIdQuestion.add(list.idQuestion)
                 listNameQ.add(nameQ)
                 listData.add(list.data)
-
+            }
+            if(!list.row&&!list.column)
+            {
+                listElements.add(list.answerName)
+                listEId.add(list.id)
+                listEIdQuestion.add(list.idQuestion)
+                listENameQ.add(nameQ)
+                listEData.add(list.data)
             }
         }
         val countRow  = listRows.distinct().count()+1
         val countColumn  = listColumns.count()
         var count = 0
+        var countInput = 0
         for(i in 0 until countRow)
         {
             if(i==0)
@@ -1716,13 +1831,21 @@ class CheckListFragment: BaseFragment() {
                 val linearRow = LinearLayout(context)
                 linearRow.orientation = LinearLayout.HORIZONTAL
                 var countC = 0
+                val textColumn = TextView(context)
+                textColumn.width = 50f.toDips().toInt()
+                textColumn.textSize = 16f
+                textColumn.setTextColor(resources.getColor(R.color.colorTextAll))
+                textColumn.height = 30f.toDips().toInt()
+                textColumn.gravity = Gravity.CENTER_HORIZONTAL or Gravity.CENTER_VERTICAL
+                textColumn.text = ""
+                linearRow.addView(textColumn)
                 listColumns.forEach {
                     val textColumn = TextView(context)
-                    textColumn.width = 90f.toDips().toInt()
+                    textColumn.width = 80f.toDips().toInt()
                     textColumn.textSize = 16f
                     textColumn.setTextColor(resources.getColor(R.color.colorTextAll))
                     textColumn.height = 30f.toDips().toInt()
-                    textColumn.gravity = Gravity.END or Gravity.CENTER_VERTICAL
+                    textColumn.gravity = Gravity.CENTER_HORIZONTAL or Gravity.CENTER_VERTICAL
                     textColumn.text = it
                     val listTag =ArrayList<String>(2)
                     listTag.add(listCId[countC])
@@ -1744,7 +1867,7 @@ class CheckListFragment: BaseFragment() {
                     val editText  = EditText(context)
                     params2.rightMargin = 10f.toDips().toInt()
                     params2.height = 50f.toDips().toInt()
-                    params2.width = 90f.toDips().toInt()
+                    params2.width = 80f.toDips().toInt()
                     //editText.width= 80f.toDips().toInt()
                    // editText.height = 50f.toDips().toInt()
                     editText.setBackgroundResource(R.drawable.rounded)
@@ -1755,32 +1878,39 @@ class CheckListFragment: BaseFragment() {
                     editText.hint = "números"
                     editText.textSize = 16f
                     if(typeReport!="0")
-                       editText.setText(listData[count])
+                       editText.setText(listEData[countInput])
                     if(j==0){
                         val params4 = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
                         val text = TextView(context)
                         text.setTextColor(resources.getColor(R.color.colorTextAll))
                         text.textSize = 16f
-                        params4.rightMargin = 5f.toDips().toInt()
-                        params4.topMargin = 8f.toDips().toInt()
-                       // params4.width = 20f.toDips().toInt()
+                        params4.rightMargin = 1f.toDips().toInt()
+                        params4.topMargin = 0f.toDips().toInt()
+                        params4.width = 50f.toDips().toInt()
                         //params4.height = 20f.toDips().toInt()
                         text.layoutParams = params4
                        // text.setPadding(0,(30f).toDips().toInt(),(10f).toDips().toInt(),0)
                         text.gravity = Gravity.CENTER_VERTICAL
                         text.text = listRows[count]
+                        val listTag =ArrayList<String>(2)
+                        listTag.add(listId[count])
+                        listTag.add(listIdQuestion[count])
+                        listTag.add(listNameQ[count])
+                        text.tag = listTag
+                        listRowsInput.add(text)
                         linearRow.addView(text)
                     }
                         //editText.text = listRows[count]
                     val listTag =ArrayList<String>(2)
-                    listTag.add(listId[count])
-                    listTag.add(listIdQuestion[count])
-                    listTag.add(listNameQ[count])
+                    listTag.add(listEId[countInput])
+                    listTag.add(listEIdQuestion[countInput])
+                    listTag.add(listENameQ[countInput])
                     editText.tag = listTag
                     listMultiText.add(editText)
                     linearRow.addView(editText)
-                    count++
+                    countInput++
                 }
+                count++
                 linearColumn.addView(linearRow)
             }
         }

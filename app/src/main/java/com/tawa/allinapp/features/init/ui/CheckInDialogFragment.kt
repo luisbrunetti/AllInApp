@@ -109,10 +109,10 @@ class CheckInDialogFragment
             {
                 //if(getDistance("${list[positionPv].lat}","${list[positionPv].long}",latitude,longitude)<=250)
                 //{
-                    _pv = list[_positionPv].description
+                    _pv = list[_positionPv].nameCorp
                     _pvId = list[_positionPv].id
-                    _description = list[_positionPv].description
-                    initViewModel.setPv(list[_positionPv].id,list[_positionPv].pv,list[_positionPv].description)
+                    _description = list[_positionPv].nameCorp
+                    initViewModel.setPv(list[_positionPv].id,list[_positionPv].pv,list[_positionPv].nameCorp)
                     initViewModel.setCheckIn(idUsers,list[_positionPv].pv,latitude,longitude)
                     initViewModel.updateStatus(latitude,longitude,getBatteryPercentage(requireContext()).toString())
                     dismiss()
@@ -248,7 +248,7 @@ class CheckInDialogFragment
     private fun toArrayPv(list : List<Schedule>):ArrayList<String>{
         val arrayList = ArrayList<String>()
         for(element in list) {
-            arrayList.add(element.description)
+            arrayList.add(element.nameCorp)
         }
         return  arrayList
     }

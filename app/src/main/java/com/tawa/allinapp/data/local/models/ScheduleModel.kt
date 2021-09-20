@@ -14,7 +14,8 @@ data class ScheduleModel (
     val idCompany: String?,
     val latitude: Double?,
     val longitude: Double?,
-    val idUser:String
+    val idUser:String,
+    val nameCorp : String,
 ){
-    fun toView() = Schedule(id, pv,description?:"",zone?:"",codGeo?:"",idCompany?:"",latitude?:0.0,longitude?:0.0,idUser)
+    fun toView() = Schedule(id, pv,description?:"",zone?:"",codGeo?:"",idCompany?:"",latitude?:0.0,longitude?:0.0,idUser,nameCorp)
 }
