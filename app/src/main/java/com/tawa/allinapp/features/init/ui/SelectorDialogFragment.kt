@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.DialogFragment
+import com.tawa.allinapp.core.dialog.MessageDialogFragment
 import com.tawa.allinapp.core.extensions.observe
 import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.platform.BaseFragment
@@ -74,6 +75,13 @@ class SelectorDialogFragment
                 dismiss()
 
             } })
+            observe(failure,{
+                it?.let {
+                    val message= MessageDialogFragment.newInstance("Ha ocurrido al contectarse con el servidor \n ERROR : ${it.toString()}")
+                    message.show(childFragmentManager,"")
+                    dismiss()
+                }
+            })
         }
         authViewModel = viewModel(baseFragment.viewModelFactory){
             observe(successGetPV, { it?.let {
