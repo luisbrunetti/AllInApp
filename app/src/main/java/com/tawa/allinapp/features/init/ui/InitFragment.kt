@@ -2,7 +2,6 @@ package com.tawa.allinapp.features.init.ui
 
 
 import android.Manifest
-import android.content.ClipDescription
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -16,7 +15,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
@@ -29,7 +27,6 @@ import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.FragmentInitBinding
 import com.tawa.allinapp.features.HomeActivity
 import com.tawa.allinapp.features.init.InitViewModel
-import com.tawa.allinapp.models.Schedule
 import java.io.ByteArrayOutputStream
 
 

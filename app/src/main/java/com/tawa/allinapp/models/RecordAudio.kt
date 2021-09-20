@@ -1,4 +1,4 @@
-package com.tawa.allinapp.features.reports.audiodinamico.usecase
+package com.tawa.allinapp.models
 
 import android.widget.*
 
@@ -6,6 +6,7 @@ import android.widget.*
 data class RecordAudioViews(
     var idQuestion: String,
     var idAnswer:String,
+    var nameQuestion: String,
     var layoutContainer: LinearLayout?,
     //AudioSelected
     var layoutAudioSelectedButton : LinearLayout?,
