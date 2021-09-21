@@ -32,8 +32,8 @@ class PdvRemote {
         @SerializedName("tlf_jefe") val phoneUser: String?,
         @SerializedName("id_ptv_corp") val corp: IdPtvCorp,
     ){
-        fun toView() = Pdv(id,image?:"",ruc?:"",pdvDescription?:"",nameUser?:"",phoneUser?:"",corp.latitude?:0.0,corp.longitude?:0.0,"")
-        fun toModel() = PdvModel(id,image?:"",ruc?:"",pdvDescription?:"",nameUser?:"",phoneUser?:"",corp.latitude?:0.0,corp.longitude?:0.0,"")
+        fun toView() = Pdv(id,image?:"",ruc?:"",corp.nameCorpPv,nameUser?:"",phoneUser?:"",corp.latitude?:0.0,corp.longitude?:0.0,"")
+        fun toModel() = PdvModel(id,image?:"",ruc?:"",corp.nameCorpPv,nameUser?:"",phoneUser?:"",corp.latitude?:0.0,corp.longitude?:0.0,"")
     }
 
     data class IdPtvCorp(

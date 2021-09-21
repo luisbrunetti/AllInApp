@@ -76,7 +76,7 @@ class SelectPdvDialogFragment
         setUpBinding()
         binding.btnSelectPdv.setOnClickListener {
             val positionPv  = binding.selectPdvSpinner.selectedItemPosition
-            listener?.onAccept(list[positionPv].id,list[positionPv].pv,list[positionPv].description)
+            listener?.onAccept(list[positionPv].id,list[positionPv].pv,list[positionPv].nameCorp)
             dismiss()
         }
         binding.closeCheckInModal.setOnClickListener{
@@ -87,7 +87,7 @@ class SelectPdvDialogFragment
     private fun toArrayPv(list : List<Schedule>):ArrayList<String>{
         val arrayList = ArrayList<String>()
         for(element in list) {
-            arrayList.add(element.description)
+            arrayList.add(element.nameCorp)
         }
         return  arrayList
     }
