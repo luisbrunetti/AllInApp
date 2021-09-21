@@ -139,7 +139,6 @@
     <string name="error_photo_limit">Solo se puede agregar cinco fotografías</string>
     <string name="time_audio_limit">(Máximo 7 minutos)</string>
     <string name="error_audio_limit">Solo puedes grabar 7 minutos como máximo</string>
-    <string name="only_one_audio">Solo se debería enviar un audio. Por favor elimina alguno</string>
     <string name="no_audios">Se debe enviar por lo menos un audio</string>
     <string name="successful_update_audio">El audio se ha actualizado correctamente</string>
     <string name="checkoout_successful">Registro exitoso</string>
@@ -147,5 +146,5 @@
     <string name="error_get_file">Ha ocurrido un error al obtener el audio</string>
     <string name="reporte_de_geolocalizaci_n">Reporte de geolocalización</string>
     <string name="warningReportGeolocation">Tiene que seleccionar una fecha y al menos un usuario</string>
-    <string name="only_one_audio_per_question">Solo se puede guardar un audio por pregunta</string>
+    <string name="only_one_audio_per_question">Solo se puede grabar un audio por pregunta. Borre un audio para poder grabar otro</string>
 </resources>

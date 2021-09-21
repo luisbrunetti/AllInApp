@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.fragment.findNavController
@@ -45,11 +46,6 @@ class CoverageBoardFragment : BaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         appComponent.inject(this)
-        coverageViewModel = viewModel(viewModelFactory) {
-            observe(graph, { it?.let {
-                findNavController().navigate(CoverageBoardFragmentDirections.actionCoverageBoardFragmentToCoverageBoardGraphFragment(it))
-            }})
-        }
     }
 
     private fun initViewModels(){
@@ -60,36 +56,21 @@ class CoverageBoardFragment : BaseFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        coverageViewModel = viewModel(viewModelFactory) {
+            observe(graph, { it?.let {
+                findNavController().navigate(CoverageBoardFragmentDirections.actionCoverageBoardFragmentToCoverageBoardGraphFragment(it))
+            }})
+        }
         initViewModels()
         return ComposeView(requireContext()).apply {
             setContent {
-                Column(
-                    Modifier.verticalScroll(rememberScrollState())
-                ){
-                    HeaderPage("Dashboard","Cobertura") {
-                        findNavController().popBackStack()
-                    }
-                    Filters()
-                    Button(
-                        colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.colorLayoutTop)),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(80.dp)
-                            .padding(12.dp),
-                        onClick = {
-                            coverageViewModel.getGraph(startDate,endDate,selectedUser,selectedChain)
-                        }
-                    ) {
-                        Text("Buscar", color = Color.White, fontSize = 18.sp)
-                    }
-                }
+                main()
             }
         }
     }
 
     @Composable
     fun Filters(){
-
         val channels by coverageViewModel.channels.observeAsState()
         val retails by coverageViewModel.retails.observeAsState()
         val chains by coverageViewModel.chains.observeAsState()
@@ -150,5 +131,35 @@ class CoverageBoardFragment : BaseFragment() {
                 }
             }
         }
+    }
+
+    @Composable
+    fun main(){
+        Column(
+            Modifier.verticalScroll(rememberScrollState())
+        ){
+            HeaderPage("Dashboard","Cobertura") {
+                findNavController().popBackStack()
+            }
+            Filters()
+            Button(
+                colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.colorLayoutTop)),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(80.dp)
+                    .padding(12.dp),
+                onClick = {
+                    coverageViewModel.getGraph(startDate,endDate,selectedUser,selectedChain)
+                }
+            ) {
+                Text("Buscar", color = Color.White, fontSize = 18.sp)
+            }
+        }
+    }
+
+    @Preview("Text Preview")
+    @Composable
+    fun MainContainer(){
+        main()
     }
 }

@@ -340,7 +340,7 @@ class AudioFragment : BaseFragment() {
         }
         binding.btSavePictures.setOnClickListener {
             if (audio64 != "" && audioSelected64 != "") {
-                notify(activity, R.string.only_one_audio)
+                //notify(activity, R.string.only_one_audio)
             } else {
                 if (audio64 == "" && audioSelected64 == "") notify(activity, R.string.no_audios)
                 else confirmationDialog.show(childFragmentManager, "dialog")

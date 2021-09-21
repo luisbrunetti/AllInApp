@@ -2581,12 +2581,17 @@ class CheckListFragment: BaseFragment() {
         layoutRecordingAudio.gravity = Gravity.CENTER
         layoutRecordingAudio.setPadding(16f.toDips().toInt(),16f.toDips().toInt(),16f.toDips().toInt(),16f.toDips().toInt())
         layoutRecordingAudio.setOnClickListener {
-            if (playerRecorded != null){
-                stopPlayingAudioRecorded(parent.tag.toString())
+            if (mutableHashMapTag[parent.tag.toString()]?.answerSelected == "") {
+                if (playerRecorded != null) {
+                    stopPlayingAudioRecorded(parent.tag.toString())
+                } else {
+                    checkPermissions()
+                    recordingAudio(parent.tag.toString())
+                }
             }else{
-                checkPermissions()
-                recordingAudio(parent.tag.toString())
+                notify(requireActivity(),R.string.only_one_audio_per_question)
             }
+
         }
         recordAudioViews.layoutRecordButton = layoutRecordingAudio
 
@@ -2699,11 +2704,15 @@ class CheckListFragment: BaseFragment() {
         layoutSelectedAudio.setPadding(16f.toDips().toInt(),16f.toDips().toInt(),16f.toDips().toInt(),16f.toDips().toInt())
         recordAudioViews.layoutAudioSelectedButton = layoutSelectedAudio
         layoutSelectedAudio.setOnClickListener {
-            if(playerSelected != null) stopPlayingAudioSelected(parent.tag.toString())
-            else{
-                checkPermissions()
-                currentLayout =  parent.tag.toString()
-                responseLauncher.launch("audio/*")
+            if(mutableHashMapTag[parent.tag.toString()]?.answerRecorded == ""){
+                if (playerSelected != null) stopPlayingAudioSelected(parent.tag.toString())
+                else {
+                    checkPermissions()
+                    currentLayout = parent.tag.toString()
+                    responseLauncher.launch("audio/*")
+                }
+            }else{
+                notify(requireActivity(),R.string.only_one_audio_per_question)
             }
         }
 
@@ -2852,12 +2861,15 @@ class CheckListFragment: BaseFragment() {
                         }
                         recordAudio.textViewRecording?.visibility = View.VISIBLE
                         recordAudio.layoutShowRecord?.visibility = View.VISIBLE
+                        recordAudio.textViewShowRecord?.visibility =View.VISIBLE
                         stopRecord(recordAudio)
                         hashPathAudioRecorded[tag] = recordPath
                         recordAudio.answerRecorded = recordPath
                     } else {
                         val timeLimitString = getMiliSeoncdsOnFormat(audioLimit)
                         recordAudio.textViewRecording?.invisible()
+                        recordAudio.textViewShowRecord?.invisible()
+                        recordAudio.layoutShowRecord?.invisible()
                         recordAudio.chrometerRecording?.apply {
                             visibility = View.VISIBLE
                             base = SystemClock.elapsedRealtime()
@@ -2905,10 +2917,6 @@ class CheckListFragment: BaseFragment() {
             setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
             setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
             val outputFolder = File(Environment.getExternalStorageDirectory().toString() + "/download/")
-            //val dir = ContextCompat.getExternalFilesDirs(requireContext(), Environment.DIRECTORY_MUSIC).toString()
-            //Log.d("dir",dir.toString())
-            //val outputFolder = File(dir, "out" + Date().time + ".3gpp")
-
             val output = File(outputFolder.absolutePath + "/record" + Date().time + ".3gpp")
 
             Log.i("DIRECTORIO", output.absolutePath)
@@ -2929,6 +2937,7 @@ class CheckListFragment: BaseFragment() {
                     base = SystemClock.elapsedRealtime()
                     stop()
                 }
+                recordAudio.textViewShowRecord?.visibility = View.VISIBLE
                 recordAudio.textViewRecording?.visibility = View.VISIBLE
                 recordAudio.layoutShowRecord?.visibility = View.VISIBLE
                 Log.e("RECORD", e.toString())
@@ -2987,7 +2996,7 @@ class CheckListFragment: BaseFragment() {
                             base = SystemClock.elapsedRealtime()
                             start()
                         }
-                        disableButtons(DISABLED,recordAudio.layoutRecordButton!!)
+                        //disableButtons(DISABLED,recordAudio.layoutRecordButton!!)
                     }
                 } catch (e: IOException) {
                     Log.e("PLAYING ERROR", " $e \n No se encuentra ael recordpat ->$path")
@@ -3023,7 +3032,7 @@ class CheckListFragment: BaseFragment() {
                         base = SystemClock.elapsedRealtime()
                         start()
                     }
-                    disableButtons(DISABLED,recordAudio.layoutAudioSelectedButton!!)
+                    //disableButtons(DISABLED,recordAudio.layoutAudioSelectedButton!!)
                 }
             } catch (e: IOException) {
                 val message =
@@ -3045,7 +3054,7 @@ class CheckListFragment: BaseFragment() {
                 this?.stop()
                 this?.release()
                 playerSelected = null
-                disableButtons(ENABLED,recordAudio.layoutAudioSelectedButton!!)
+                //disableButtons(ENABLED,recordAudio.layoutAudioSelectedButton!!)
                 recordAudio.textViewAudioSelected?.visibility = View.VISIBLE
                 recordAudio.layoutShowSelectedAudio?.visibility = View.VISIBLE
 
@@ -3064,7 +3073,7 @@ class CheckListFragment: BaseFragment() {
                 this?.stop()
                 this?.release()
                 playerRecorded = null
-                disableButtons(ENABLED,recordAudio.layoutRecordButton!!)
+                //disableButtons(ENABLED,recordAudio.layoutRecordButton!!)
                 recordAudio.textViewRecording?.visibility = View.VISIBLE
                 recordAudio.layoutShowRecord?.visibility = View.VISIBLE
                 recordAudio.textViewShowRecord?.visibility = View.VISIBLE
