@@ -69,7 +69,6 @@ class RoutesFragment : BaseFragment() {
                 }
             } })
             observe(successGetTracking,{it?.let {
-
                 if(it.isNotEmpty()){
                     listTrackingUser = it
                     binding.contRoutes.isVisible = true
@@ -128,8 +127,9 @@ class RoutesFragment : BaseFragment() {
             val newList = listUserData.filter { it.name == user }
             if (newList.isNullOrEmpty())
                 Toast.makeText(context,"No se encontró el usuario",Toast.LENGTH_SHORT).show()
-            else
-                routesViewModel.getTracking(newList[0].id,dateFormat)
+            else {
+                routesViewModel.getTracking(newList[0].id, dateFormat)
+            }
         }
         binding.edDateUserRoutes.setText(formatter.format(timestamp))
         dateFormat = formatter1.format(timestamp)

@@ -15,6 +15,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
@@ -40,6 +41,7 @@ class InitFragment : BaseFragment() {
     private var checkIn:Boolean = true
     private var _user = ""
     private var _pvId = ""
+    private var _battery = ""
     private var _pv: String = ""
     private lateinit var _lat: String
     private lateinit var _long: String
@@ -81,6 +83,28 @@ class InitFragment : BaseFragment() {
                 _pvId = it
                 showCheckOut()
             }})
+            observe(successCheckIn, { it?.let {
+                    if(it) {
+                        initViewModel.getCheckMode()
+                        initViewModel.updateStatus(_lat,_long,_battery,0)
+                        notify(activity,R.string.checkoout_successful)
+                    }
+            } })
+            observe(successSendCheck, { it?.let {
+                if(it == "CREADO SATISFACTORIAMENTE")
+                    notify(activity,R.string.notify_sended)
+                if(it=="YA REALIZO UN INGRESO EN ESTE PUNTO DE VENTA EL DIA DE HOY")
+                    notify(activity,R.string.notify_sended_error)
+                if(it=="YA REALIZO UN SALIDA EN ESTE PUNTO DE VENTA EL DIA DE HOY")
+                    notify(activity,R.string.notify_sended_error)
+
+            } })
+            observe(successUpdate, { it?.let {
+                if(it){
+                    initViewModel.sendCheck(_lat, _long, type.value!!)
+                   // Toast.makeText(context,"Se envío actualizacion",Toast.LENGTH_SHORT).show()
+                    }
+            } })
             observe(logoCompany,{it?.let{
                 if(it.isNotEmpty())
                     setLogoCompany(it)
@@ -88,7 +112,14 @@ class InitFragment : BaseFragment() {
                     binding.ivCompanyLogo.setActualImageResource(R.drawable.ic_img)
             }})
             observe(successCheckOut, { it?.let {
-                initViewModel.getCheckMode()
+                if(it)
+                {
+                    initViewModel.getCheckMode()
+                    initViewModel.updateStatus(_lat,_long,_battery,1)
+                    notify(activity,R.string.checkoout_successful)
+                }
+
+
             } })
             observe(successSyncChecks, { it?.let {
                 Log.d(TAG,"SuccessSyncChecks se realizado correctamente")
@@ -235,11 +266,10 @@ class InitFragment : BaseFragment() {
     private fun showSelectorCheckIn(){
         val dialog = CheckInDialogFragment(this)
         dialog.listener = object : CheckInDialogFragment.Callback {
-            override fun onAccept(pvId:String, pv:String,lat:String, long:String,description: String) {
-                _pv = pv; _lat = lat; _long = long; _pvId = pvId
-                 binding.tvCheckIn.text = description
-                initViewModel.getPVDesc()
-                initViewModel.getCheckMode()
+            override fun onAccept(idUser:String,pvId:String, pv:String,lat:String, long:String,description: String,battery:String) {
+                _pv = pv; _lat = lat; _long = long; _pvId = pvId;_battery = battery
+                initViewModel.setCheckIn(idUser,pvId,_lat,_long)
+                binding.tvCheckIn.text = description
             }
             override fun onSnack(snack: Boolean) {
                 if (snack) notify(activity,R.string.notify_already)
@@ -288,7 +318,8 @@ class InitFragment : BaseFragment() {
                 showProgressDialog()
                 getActualLocation()
                 initViewModel.setCheckOut(_user,_pvId,_lat,_long)
-                notify(requireActivity(), R.string.checkoout_successful)
+                //initViewModel.sendCheck(_lat,_long,1)
+               // notify(requireActivity(), R.string.checkoout_successful)
             }
         }
         checkOutDialog?.show(childFragmentManager, "checkOutDialog")

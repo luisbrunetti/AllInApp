@@ -6,6 +6,7 @@ import com.tawa.allinapp.core.functional.Failure
 import com.tawa.allinapp.core.functional.NetworkHandler
 import com.tawa.allinapp.data.local.Prefs
 import com.tawa.allinapp.data.local.datasource.CheckDataSource
+import com.tawa.allinapp.data.remote.entities.CheckRemote
 import com.tawa.allinapp.data.remote.service.CheckService
 import com.tawa.allinapp.data.remote.service.ParametersService
 import com.tawa.allinapp.models.Check
@@ -13,7 +14,7 @@ import javax.inject.Inject
 
 interface CheckRepository {
 
-    fun setCheck(id: Int,pv:String,idUser:String,registerDate:String,latitude:String,longitude:String,comment:String): Either<Failure, Boolean>
+    fun setCheck(id: Int,pv:String,idUser:String,registerDate:String,latitude:String,longitude:String,comment:String,state: String): Either<Failure, Boolean>
     fun setIdCompany(idCompany:String,image:String): Either<Failure, Boolean>
     fun setIdPv(schedule:String,pv:String,namePv:String): Either<Failure, Boolean>
     fun getDescPv(): Either<Failure, String>
@@ -26,6 +27,7 @@ interface CheckRepository {
     fun getCheckMode(): Either<Failure, Boolean>
     fun getStateCheck(idPv: String): Either<Failure, Boolean>
     fun syncChecks(): Either<Failure, Boolean>
+    fun sendCheck(latitude: String,longitude: String,type:Int): Either<Failure, String>
 
     class Network
     @Inject constructor(private val networkHandler: NetworkHandler,
@@ -34,9 +36,9 @@ interface CheckRepository {
                         private val service: CheckService
     ): CheckRepository{
 
-        override fun setCheck(id: Int,pv:String,idUser:String,registerDate:String,latitude:String,longitude:String,comment:String): Either<Failure, Boolean> {
+        override fun setCheck(id: Int,pv:String,idUser:String,registerDate:String,latitude:String,longitude:String,comment:String,state:String): Either<Failure, Boolean> {
             return try {
-                val check = Check(id,prefs.schedule?:"",prefs.companyId?:"",pv,idUser,registerDate,latitude,longitude,comment)
+                val check = Check(id,prefs.schedule?:"",prefs.companyId?:"",pv,idUser,registerDate,latitude,longitude,comment,state)
                 checkDataSource.insertCheck(check.toModel())
                 prefs.checkIn = !prefs.checkIn
                 Either.Right(true)
@@ -165,6 +167,87 @@ interface CheckRepository {
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))
             }
+        }
+
+        override fun sendCheck(latitude:String,longitude: String,type:Int): Either<Failure, String> {
+            return when (type) {
+                0 -> return when (networkHandler.isConnected) {
+                    true -> {
+                        try {
+                            val response = service.sendCheckIn(
+                                "Bearer ${prefs.token!!}",
+                                CheckRemote.Check(
+                                    prefs.schedule ?: "",
+                                    prefs.companyId ?: "",
+                                    prefs.pvId,
+                                    latitude.toDouble(),
+                                    longitude.toDouble()
+                                )
+                            ).execute()
+                            when (response.isSuccessful) {
+                                true -> {
+                                    response.body()?.let { body ->
+                                        if (body.success) {
+                                            Log.d("sendCheckIn", body.message.toString())
+                                            if(body.message.toString() == "CREADO SATISFACTORIAMENTE") {
+
+                                                checkDataSource.updateCheck(prefs.schedule?:"",prefs.pvId?:"",prefs.companyId?:"",prefs.idUser?:"","CHECKIN","enviado")
+                                            }
+                                            Either.Right(body.message.toString())
+                                        } else {
+                                            Log.d("errorSendCheckIn", body.message.toString())
+                                            Either.Left(Failure.DefaultError(body.message))
+                                        }
+                                    } ?: Either.Left(Failure.DefaultError(""))
+                                }
+                                false -> Either.Left(Failure.ServerError)
+                            }
+                        } catch (e: Exception) {
+                            Either.Left(Failure.DefaultError(e.message!!))
+                        }
+                    }
+                    false -> Either.Left(Failure.NetworkConnection)
+                }
+                1 -> return when (networkHandler.isConnected) {
+                    true -> {
+                        try {
+                            val response = service.sendCheckOut(
+                                "Bearer ${prefs.token!!}",
+                                CheckRemote.Check(
+                                    prefs.schedule ?: "",
+                                    prefs.companyId ?: "",
+                                    prefs.pvId,
+                                    latitude.toDouble(),
+                                    longitude.toDouble()
+                                )
+                            ).execute()
+                            when (response.isSuccessful) {
+                                true -> {
+                                    response.body()?.let { body ->
+                                        if (body.success) {
+                                            Log.d("sendCheckOut", body.message.toString())
+                                            if(body.message.toString() == "CREADO SATISFACTORIAMENTE") {
+                                                checkDataSource.updateCheck(prefs.schedule?:"",prefs.pvId?:"",prefs.companyId?:"",prefs.idUser?:"","CHECKOUT","enviado")
+                                            }
+                                            Either.Right(body.message.toString())
+                                        } else {
+                                            Log.d("errorSendCheckOut", body.message.toString())
+                                            Either.Left(Failure.DefaultError(body.message))
+                                        }
+                                    } ?: Either.Left(Failure.DefaultError(""))
+                                }
+                                false -> Either.Left(Failure.ServerError)
+                            }
+                        } catch (e: Exception) {
+                            Either.Left(Failure.DefaultError(e.message!!))
+                        }
+                    }
+                    false -> Either.Left(Failure.NetworkConnection)
+                }
+
+                else -> Either.Right("")
+            }
+
         }
     }
 }

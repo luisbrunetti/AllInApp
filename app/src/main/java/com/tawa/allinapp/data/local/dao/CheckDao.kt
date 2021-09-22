@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.tawa.allinapp.data.local.models.CheckModel
+import com.tawa.allinapp.features.init.usecase.GetIdCompany
 
 @Dao
 interface CheckDao {
@@ -16,4 +17,7 @@ interface CheckDao {
 
     @Query("SELECT * FROM `check`")
     fun getChecks(): List<CheckModel>
+
+    @Query("UPDATE `check` set state =:state where schedule=:schedule and pv=:pv and company=:idCompany and idUser=:idUser and comment=:type")
+    fun updateCheck(schedule:String,pv:String,idCompany: String,idUser: String,type:String,state:String)
 }

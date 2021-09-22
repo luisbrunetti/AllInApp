@@ -21,7 +21,7 @@ class RoutesRemote {
         @SerializedName("visitas") val visits: List<Visits?>,
         @SerializedName("tareas") val tasks: List<Tasks?>,
     ){
-        fun toView() = Tracking(pv.id,pv.Pv,pv.zone.zoneName?:"",pv.zone.zoneDistrict,pv.corp.dirCorpPv,pv.corp.nameCorpPv,pv.corp.latitude,pv.corp.longitude,
+        fun toView() = Tracking(pv.id,pv.Pv,pv.zone.zoneName?:"",pv.zone.zoneDistrict?:"",pv.corp.dirCorpPv,pv.corp.nameCorpPv,pv.corp.latitude,pv.corp.longitude,
             visits,tasks)
     }
 

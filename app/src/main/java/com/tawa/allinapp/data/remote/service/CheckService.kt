@@ -12,8 +12,8 @@ class CheckService
 @Inject constructor(retrofit: Retrofit) : CheckApi {
     private val checkApi by lazy { retrofit.create(CheckApi::class.java) }
 
-    override fun sendCheckIn(request: CheckRemote.Request) = checkApi.sendCheckIn(request)
-    override fun sendCheckOut(request: CheckRemote.Request) = checkApi.sendCheckOut(request)
+    override fun sendCheckIn(token:String,request: CheckRemote.Check) = checkApi.sendCheckIn(token,request)
+    override fun sendCheckOut(token: String,request: CheckRemote.Check) = checkApi.sendCheckOut(token,request)
     override fun syncChecks(token: String, request:List<CheckRemote.Request>) = checkApi.syncChecks(token,request)
 
 }

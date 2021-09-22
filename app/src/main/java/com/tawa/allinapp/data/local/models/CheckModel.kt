@@ -16,7 +16,8 @@ data class CheckModel (
     val latitude: String,
     val longitude: String,
     val comment: String,
+    val state: String,
 ){
-    fun toView() = Check(id,schedule,company,pv,idUser,registerDate,latitude,longitude,comment)
+    fun toView() = Check(id,schedule,company,pv,idUser,registerDate,latitude,longitude,comment,state)
     fun toRemote() = CheckRemote.Request(schedule,company,pv,comment,registerDate,latitude.toDouble(),longitude.toDouble())
 }

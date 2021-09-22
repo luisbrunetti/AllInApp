@@ -12,6 +12,7 @@ data class Check(
     val latitud: String,
     val longitud: String,
     val comment: String,
+    val state:String
 ){
-    fun toModel() = CheckModel(id,schedule,company,pv,idUser,fechaRegistro,latitud,longitud,comment)
+    fun toModel() = CheckModel(id,schedule,company,pv,idUser,fechaRegistro,latitud,longitud,comment,state)
 }

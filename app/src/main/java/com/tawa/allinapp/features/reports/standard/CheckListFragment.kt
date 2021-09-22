@@ -69,6 +69,7 @@ class CheckListFragment: BaseFragment() {
     private var idReport=""
     private var typeReport = ""
     val params = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+    val paramsMulti = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
     val params1 = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
     val params2 = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
     var urlImage = ""
@@ -284,9 +285,9 @@ class CheckListFragment: BaseFragment() {
             urlImage=""
         }
         binding.btnSaveReport.setOnClickListener{
-            //checkListViewModel.updateState(true)
             if(typeReport!="Terminado") {
                 listFlag.clear()
+                hideTextError()
                 for(question in listFilter)
                 {
                     if(question.objectType=="Caja de texto")
@@ -762,6 +763,7 @@ class CheckListFragment: BaseFragment() {
         binding.btnBr.setOnClickListener {
             if(typeReport!="Terminado") {
                 listFlag.clear()
+                hideTextError()
                 for(question in listFilter)
                 {
                     if(question.objectType=="Caja de texto")
@@ -1592,6 +1594,7 @@ class CheckListFragment: BaseFragment() {
     private fun addAnswersMultiRadio(listAnswers:List<Answer>, linear: LinearLayout, nameQ:String,order:String,required:Boolean){
         params.setMargins(0,0, 0, 10f.toDips().toInt())
         params1.bottomMargin  = 5f.toDips().toInt()
+        val scroll = HorizontalScrollView(context)
         val linearL = LinearLayout(context)
         linearL.orientation = LinearLayout.VERTICAL
         val textView  = TextView(context)
@@ -1734,7 +1737,9 @@ class CheckListFragment: BaseFragment() {
                 linearColumn.addView(linearRow)
             }
         }
-        linearL.addView(linearColumn)
+        scroll.layoutParams = paramsMulti
+        scroll.addView(linearColumn)
+        linearL.addView(scroll)
         val textView1 = TextView(context)
         textView1.tag = listAnswers[0].idQuestion
         textView1.setTextColor(ContextCompat.getColor(requireContext(), R.color.colorErrors))
@@ -1743,6 +1748,7 @@ class CheckListFragment: BaseFragment() {
         listErrorMultiRadio.add(textView1)
         linearL.addView(textView1)
         linearL.layoutParams = params
+        //scroll.addView(linearL)
         linear.addView(linearL)
     }
 
@@ -1750,6 +1756,7 @@ class CheckListFragment: BaseFragment() {
         params.setMargins(0,0, 0, 10f.toDips().toInt())
         params1.bottomMargin  = 5f.toDips().toInt()
         val linearL = LinearLayout(context)
+        val scroll = HorizontalScrollView(context)
         linearL.orientation = LinearLayout.VERTICAL
         val textView  = TextView(context)
         textView.text = "$order. Pregunta: $nameQ"
@@ -1886,7 +1893,9 @@ class CheckListFragment: BaseFragment() {
                 linearColumn.addView(linearRow)
             }
         }
-        linearL.addView(linearColumn)
+        scroll.layoutParams = paramsMulti
+        scroll.addView(linearColumn)
+        linearL.addView(scroll)
         val textView1 = TextView(context)
         textView1.tag = listAnswers[0].idQuestion
         textView1.setTextColor(ContextCompat.getColor(requireContext(), R.color.colorErrors))
@@ -1902,6 +1911,7 @@ class CheckListFragment: BaseFragment() {
         params.setMargins(0,0, 0, 10f.toDips().toInt())
         params1.bottomMargin  = 5f.toDips().toInt()
         val linearL = LinearLayout(context)
+        val scroll = HorizontalScrollView(context)
         linearL.orientation = LinearLayout.VERTICAL
         val textView  = TextView(context)
         textView.text = "$order. Pregunta: $nameQ"
@@ -1963,8 +1973,10 @@ class CheckListFragment: BaseFragment() {
                 linearRow.orientation = LinearLayout.HORIZONTAL
                 var countC = 0
                 val textColumn = TextView(context)
-                textColumn.width = 50f.toDips().toInt()
+                textColumn.width = 70f.toDips().toInt()
                 textColumn.textSize = 16f
+                params2.rightMargin = 10f.toDips().toInt()
+                textColumn.layoutParams = params2
                 textColumn.setTextColor(resources.getColor(R.color.colorTextAll))
                 textColumn.height = 30f.toDips().toInt()
                 textColumn.gravity = Gravity.CENTER_HORIZONTAL or Gravity.CENTER_VERTICAL
@@ -1974,6 +1986,8 @@ class CheckListFragment: BaseFragment() {
                     val textColumn = TextView(context)
                     textColumn.width = 80f.toDips().toInt()
                     textColumn.textSize = 16f
+                    params2.rightMargin = 10f.toDips().toInt()
+                    textColumn.layoutParams = params2
                     textColumn.setTextColor(resources.getColor(R.color.colorTextAll))
                     textColumn.height = 30f.toDips().toInt()
                     textColumn.gravity = Gravity.CENTER_HORIZONTAL or Gravity.CENTER_VERTICAL
@@ -2015,9 +2029,9 @@ class CheckListFragment: BaseFragment() {
                         val text = TextView(context)
                         text.setTextColor(resources.getColor(R.color.colorTextAll))
                         text.textSize = 16f
-                        params4.rightMargin = 1f.toDips().toInt()
+                        params4.rightMargin = 10f.toDips().toInt()
                         params4.topMargin = 0f.toDips().toInt()
-                        params4.width = 50f.toDips().toInt()
+                        params4.width = 70f.toDips().toInt()
                         //params4.height = 20f.toDips().toInt()
                         text.layoutParams = params4
                        // text.setPadding(0,(30f).toDips().toInt(),(10f).toDips().toInt(),0)
@@ -2045,7 +2059,9 @@ class CheckListFragment: BaseFragment() {
                 linearColumn.addView(linearRow)
             }
         }
-        linearL.addView(linearColumn)
+        scroll.layoutParams = paramsMulti
+        scroll.addView(linearColumn)
+        linearL.addView(scroll)
         val textView1 = TextView(context)
         textView1.tag = listAnswers[0].idQuestion
         textView1.setTextColor(ContextCompat.getColor(requireContext(), R.color.colorErrors))
@@ -3204,6 +3220,25 @@ class CheckListFragment: BaseFragment() {
         dialog.show(childFragmentManager,"")
     }
 
+    private fun hideTextError(){
+        listErrorText.forEach { it.isVisible = false }
+        listErrorRadio.forEach { it.isVisible = false }
+        listErrorCheck.forEach { it.isVisible = false }
+        listErrorCheckBd.forEach { it.isVisible = false }
+        listErrorRadioBd.forEach { it.isVisible = false }
+        listErrorList.forEach { it.isVisible = false }
+        listErrorListBd.forEach { it.isVisible = false }
+        listErrorNumber.forEach { it.isVisible = false }
+        listErrorDate.forEach { it.isVisible = false }
+        listErrorTime.forEach { it.isVisible = false }
+        listErrorPhoto.forEach { it.isVisible = false }
+        listErrorImageSelect.forEach { it.isVisible = false }
+        listErrorMultiRadio.forEach { it.isVisible = false }
+        listErrorMultiCheck.forEach { it.isVisible = false }
+        listErrorMultiInput.forEach { it.isVisible = false }
+        listErrorAudio.forEach { it.isVisible = false }
+    }
+
     private fun Float.toDips() = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, this, resources.displayMetrics)
 
     private fun validatePermissions() {
@@ -3306,7 +3341,7 @@ class CheckListFragment: BaseFragment() {
         }
     }
 
-    fun getRealPathFromURI(context: Context, uri: Uri): String? {
+    private fun getRealPathFromURI(context: Context, uri: Uri): String? {
         when {
             // DocumentProvider
             DocumentsContract.isDocumentUri(context, uri) -> {

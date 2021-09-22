@@ -27,4 +27,12 @@ class CheckRemote {
         @SerializedName("id_user_creador") val idUserCreate: String?,
     )
 
+    data class Check(
+        @SerializedName("id_cronograma") val schedule: String?,
+        @SerializedName("id_empresa") val company: String?,
+        @SerializedName("id_punto_venta") val pv: String?,
+        @SerializedName("latitud") val latitude: Double?,
+        @SerializedName("longitud") val longitude: Double?,
+    )
+
 }

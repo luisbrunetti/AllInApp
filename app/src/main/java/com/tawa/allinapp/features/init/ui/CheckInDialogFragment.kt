@@ -66,9 +66,9 @@ class CheckInDialogFragment
                 binding.pdvSpinner.adapter = aaPv
                 list= it
             } })
-            observe(successCheckIn, { it?.let {
-                listener?.onAccept(_pvId,_pv, latitude,longitude,_description)
-            } })
+            /*observe(successCheckIn, { it?.let {
+                listener?.onAccept("",_pvId,_pv, latitude,longitude,_description)
+            } })*/
             observe(successGetCompanyId, { it?.let {
                 initViewModel.getPv(it)
             } })
@@ -113,8 +113,10 @@ class CheckInDialogFragment
                     _pvId = list[_positionPv].id
                     _description = list[_positionPv].nameCorp
                     initViewModel.setPv(list[_positionPv].id,list[_positionPv].pv,list[_positionPv].nameCorp)
-                    initViewModel.setCheckIn(idUsers,list[_positionPv].pv,latitude,longitude)
-                    initViewModel.updateStatus(latitude,longitude,getBatteryPercentage(requireContext()).toString())
+                   // initViewModel.setCheckIn(idUsers,list[_positionPv].pv,latitude,longitude)
+                    //initViewModel.updateStatus(latitude,longitude,getBatteryPercentage(requireContext()).toString())
+                    //initViewModel.sendCheck(latitude,longitude,0)
+                    listener?.onAccept(idUsers,_pvId,_pv, latitude,longitude,_description,getBatteryPercentage(requireContext()).toString())
                     dismiss()
                 //}
               //  else
@@ -267,7 +269,7 @@ class CheckInDialogFragment
     }
 
     interface Callback {
-        fun onAccept(pvId:String, pv:String, lat:String, long:String,description:String)
+        fun onAccept(idUsers:String,pvId:String, pv:String, lat:String, long:String,description:String,battery:String)
         fun onSnack(snack:Boolean)
         fun onClose()
     }

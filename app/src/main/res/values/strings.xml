@@ -28,6 +28,8 @@
     <string name="select_company">Selecciona la empresa</string>
     <string name="trade_marketing">Trade Marketing</string>
     <string name="notify_already">Ya realizaste check-in en el punto de venta</string>
+    <string name="notify_sended">Información registrada y enviada con éxito</string>
+    <string name="notify_sended_error">Información registrada y no enviada</string>
     <string name="notify_update">Actualización exitosa</string>
     <string name="notify_update_location">Se actualizó la ubicación</string>
     <string name="register_ready">Ya se registró</string>

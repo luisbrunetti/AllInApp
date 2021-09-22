@@ -83,9 +83,13 @@ interface RoutesRepository {
                             true -> {
                                 response.body()?.let { body ->
                                     if(body.success) {
+                                        Log.d("Tracking",body.message.toString())
                                         Either.Right(body.data.map { it.toView() })
                                     }
-                                    else Either.Left(Failure.DefaultError(body.message))
+                                    else {
+                                        Log.d("Error",body.message.toString())
+                                        Either.Left(Failure.DefaultError(body.message))
+                                    }
                                 }?: Either.Left(Failure.DefaultError(""))
                             }
                             false -> Either.Left(Failure.ServerError)

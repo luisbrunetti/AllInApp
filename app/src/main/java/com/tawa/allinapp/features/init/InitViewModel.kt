@@ -43,6 +43,7 @@ class InitViewModel
     private val listReports: ListReports,
     private val sendPassword: SendPassword,
     private val getPdvRemote: GetPdvRemote,
+    private val sendCheck: SendCheck,
     private val pref:Prefs
 
 ) : BaseViewModel()  {
@@ -195,6 +196,15 @@ class InitViewModel
     val successGetPdvRemote: LiveData<Boolean>
         get() = _successGetPdvRemote
 
+    private val _successSendCheck = MutableLiveData<String>("")
+    val successSendCheck: LiveData<String>
+        get() = _successSendCheck
+
+    private val _type= MutableLiveData<Int>(-1)
+    val type: LiveData<Int>
+        get()= _type
+
+
     init {
         startHome()
         startCheckIn()
@@ -203,13 +213,13 @@ class InitViewModel
 
     fun setCheckIn(idUser:String,pv:String,lat:String,lon:String) {
         _startSetCheckIn.value = true
-        setCheckIn(SetCheckIn.Params(0,pv,idUser,formatter.format(timestamp),lat,lon,"CHECKIN")) {
+        setCheckIn(SetCheckIn.Params(0,pv,idUser,formatter.format(timestamp),lat,lon,"CHECKIN","no enviado")) {
             it.either(::handleFailure, ::handleCheckIn)
         }
     }
     fun setCheckOut(idUser:String,pv:String,lat:String,long:String) {
         _startSetCheckIn.value = false
-        setCheckIn(SetCheckIn.Params(0,pv,idUser,formatter.format(timestamp),lat,long,"CHECKOUT")) {
+        setCheckIn(SetCheckIn.Params(0,pv,idUser,formatter.format(timestamp),lat,long,"CHECKOUT","no enviado")) {
             it.either(::handleFailure, ::handleCheckOut)
         }
     }
@@ -265,7 +275,9 @@ class InitViewModel
 
     fun getStateCheck(idPv:String) = getStateCheck(GetStateCheck.Params(idPv)) { it.either(::handleFailure, ::handleGetStateCheck) }
 
-    fun updateStatus(latitude:String,longitude:String,battery:String) = updateStatus(UpdateStatus.Params(latitude,longitude,battery)) { it.either(::handleFailure, ::handleUpdateStatus) }
+    fun updateStatus(latitude:String,longitude:String,battery:String,type:Int) = updateStatus(UpdateStatus.Params(latitude,longitude,battery)) {
+        _type.value  = type
+        it.either(::handleFailure, ::handleUpdateStatus) }
 
     fun getReportsSku(company: String) = getReportsSku(GetReportsSku.Params(company)) { it.either(::handleFailure, ::handleReportsSku) }
 
@@ -392,6 +404,13 @@ class InitViewModel
 
     private fun handleGetLogoCompany(image  : String) {
         this._logoCompany.value = image
+    }
+
+    fun sendCheck(latitude: String,longitude: String,type:Int) =sendCheck(SendCheck.Params(latitude,longitude,type)) {
+        it.either(::handleFailure, ::handleSendCheck) }
+
+    private fun handleSendCheck(success: String) {
+        this._successSendCheck.value = success
     }
 
     fun setSession(value : Boolean){ pref.session =value}
