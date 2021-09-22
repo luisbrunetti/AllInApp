@@ -13,7 +13,7 @@ import com.tawa.allinapp.R
 import com.tawa.allinapp.models.RoutesUser
 
 
-open class RecyclerUser (data: ArrayList<RoutesUser>, var context: Context?):
+open class RecyclerUser (data: ArrayList<RoutesUser>, var context: Context?, var listener:onClickButton):
     RecyclerView.Adapter<RecyclerUser.ViewHolder>() {
     var mData: ArrayList<RoutesUser>? = data
     private var mAllData: ArrayList<RoutesUser> = data
@@ -21,6 +21,9 @@ open class RecyclerUser (data: ArrayList<RoutesUser>, var context: Context?):
     var listChecked: ArrayList<RoutesUser> = ArrayList()
     val listChexBoxes: HashSet<CheckBox> = hashSetOf()
     private var allSelected : Boolean = false
+
+    val ALL_SELECTED = "Selecionar todos"
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view: View = mInflater!!.inflate(R.layout.row_user, parent, false)
@@ -81,6 +84,14 @@ open class RecyclerUser (data: ArrayList<RoutesUser>, var context: Context?):
                     else{ listChecked.remove(item) }
                 }
             }
+            mCheckBox?.setOnClickListener {
+                if(item.name == ALL_SELECTED) listener.onClick(true)
+                else listener.onClick(false)
+            }
         }
+    }
+
+    interface onClickButton{
+        fun onClick(selectedAll: Boolean)
     }
 }

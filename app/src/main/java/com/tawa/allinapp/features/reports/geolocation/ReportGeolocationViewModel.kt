@@ -1,19 +1,13 @@
 package com.tawa.allinapp.features.reports.geolocation
 
-import android.app.DatePickerDialog
 import android.util.Log
-import android.widget.EditText
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.tawa.allinapp.core.interactor.UseCase
 import com.tawa.allinapp.core.platform.BaseViewModel
 import com.tawa.allinapp.features.reports.geolocation.usecase.GetRoutesFromListUsers
 import com.tawa.allinapp.features.reports.geolocation.usecase.GetTrackingFromListUsers
-import com.tawa.allinapp.features.reports.picture.DeletePhotoReports
-import com.tawa.allinapp.features.reports.picture.usecase.GetLocalPhotoReport
 import com.tawa.allinapp.features.routes.usercase.GetListUser
-import com.tawa.allinapp.models.Routes
-import com.tawa.allinapp.models.RoutesInform
 import com.tawa.allinapp.models.RoutesUser
 import com.tawa.allinapp.models.TrackingInform
 import java.time.LocalDate

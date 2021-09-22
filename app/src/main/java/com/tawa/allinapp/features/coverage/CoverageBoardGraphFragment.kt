@@ -1,6 +1,7 @@
 package com.tawa.allinapp.features.coverage
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -48,6 +49,7 @@ class CoverageBoardGraphFragment: BaseFragment() {
 
     private fun initArgs(){
         graph = arguments?.getParcelable("graph")
+        Log.d("graph",graph.toString())
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -74,7 +76,8 @@ class CoverageBoardGraphFragment: BaseFragment() {
         ) {
             val visits = if (graph?.visits?.total==0.0) 0.0f
             else (graph?.visits?.concluded?.div(graph?.visits?.total?:0.0))?.toFloat()?:0.0f
-            val reports = if (graph?.reports?.total==0.0) 0.0f
+            val reports =
+                if (graph?.reports?.total==0.0) 0.0f
             else (graph?.reports?.concluded?.div(graph?.reports?.total?:0.0))?.toFloat()?:0.0f
             Column(
                 modifier = Modifier
@@ -126,7 +129,7 @@ class CoverageBoardGraphFragment: BaseFragment() {
         Canvas(modifier = Modifier.fillMaxSize()){
             drawLine(
                 start = Offset(x = 0f, y = -0f),
-                end = Offset(x = 0f, y = -percentage.value),
+                end = Offset(x = 0f,y = -percentage.value),
                 color = when {
                     percentage.value <= (540 * 50.0)/100 -> red
                     (540 * 50.0)/100 < percentage.value  && percentage.value < (540 * 75.0)/100 -> yellow
@@ -159,9 +162,10 @@ class CoverageBoardGraphFragment: BaseFragment() {
                 Text(text = "0" , modifier = Modifier.padding(bottom = 19.dp))
             }
             val cover = graph?.coverage?.infoChain
-            for (a in 0 until (cover?.size?:1)){
+            for (a in 0 until (cover?.size ?: 1)){
                 val size = if(cover?.get(a)?.tasksFinished == 0.0) 0.0
                 else (cover?.get(a)?.tasksToDo?.plus(cover[a].tasksFinished)?.div(cover[a].tasksFinished))?:0.0
+                Log.d("sizeBar",size.toString())
                 Column(
                     modifier = Modifier.padding(10.dp),
                     verticalArrangement = Arrangement.Bottom,
@@ -190,7 +194,8 @@ class CoverageBoardGraphFragment: BaseFragment() {
                 UserCount(title = "Usuarios activos",color = colorResource(id = R.color.green), qty = graph?.user?.active?.toInt()?:0, icon = R.drawable.ic_contract2)
             }
             Surface(modifier = Modifier.weight(1f)) {
-                UserCount(title = "Usuarios no reportados",color = colorResource(id = R.color.red), qty = graph?.user?.activeReported?.toInt()?:0,icon = R.drawable.ic_contract1)
+                UserCount(title = "Usuarios no reportados",color = colorResource(id = R.color.red),
+                    qty = (graph?.user?.active?.toInt() ?: 0) - (graph?.user?.activeReported?.toInt() ?:0),icon = R.drawable.ic_contract1)
             }
         }
     }

@@ -147,4 +147,6 @@
     <string name="reporte_de_geolocalizaci_n">Reporte de geolocalización</string>
     <string name="warningReportGeolocation">Tiene que seleccionar una fecha y al menos un usuario</string>
     <string name="only_one_audio_per_question">Solo se puede grabar un audio por pregunta. Borre un audio para poder grabar otro</string>
+    <string name="no_data_tracking">No hay datos en esta fecha para los usuarios selecionados</string>
+    <string name="select_dates">"Se debe seleccionar fecha de inicio y final "</string>
 </resources>

@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import com.tawa.allinapp.core.interactor.UseCase
 import com.tawa.allinapp.core.platform.BaseViewModel
 import com.tawa.allinapp.features.init.usecase.SyncPhotoReports
-import com.tawa.allinapp.features.reports.picture.DeletePhotoReports
-import com.tawa.allinapp.features.reports.picture.SetPhotoReport
+import com.tawa.allinapp.features.reports.picture.usecase.DeletePhotoReports
+import com.tawa.allinapp.features.reports.picture.usecase.SetPhotoReport
 import com.tawa.allinapp.features.reports.picture.usecase.GetLocalPhotoReport
 import com.tawa.allinapp.models.PhotoReport
 import javax.inject.Inject

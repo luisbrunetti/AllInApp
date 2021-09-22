@@ -1,5 +1,6 @@
 package com.tawa.allinapp.data.repository
 
+import android.util.Log
 import com.tawa.allinapp.core.functional.Either
 import com.tawa.allinapp.core.functional.Failure
 import com.tawa.allinapp.core.functional.NetworkHandler
@@ -54,14 +55,20 @@ interface DashboardRepository {
                             true -> {
                                 response.body()?.let { body ->
                                     if(body.success) {
+                                        Log.d("sucessRetail",
+                                            body.data.map { it.toModel() }.toString()
+                                        )
                                         Either.Right(body.data.map { it.toModel() })
                                     }
-                                    else Either.Left(Failure.DefaultError(body.message))
+                                    else{
+                                        Either.Left(Failure.DefaultError(body.message))
+                                    }
                                 }?: Either.Left(Failure.DefaultError(""))
                             }
                             false -> Either.Left(Failure.ServerError)
                         }
                     } catch (e: Exception) {
+                        Log.d("getReatails", e.toString())
                         Either.Left(Failure.DefaultError(e.message!!))
                     }
                 }
@@ -72,6 +79,7 @@ interface DashboardRepository {
             return when (networkHandler.isConnected) {
                 true ->{
                     try {
+                        Log.d("Params_getchain", "idCompanny -> ${prefs.companyId} channel -> $channel  retail --> $retail" )
                         val response = service.getChains("Bearer ${prefs.token!!}", prefs.companyId!!,channel,retail).execute()
                         when (response.isSuccessful) {
                             true -> {
@@ -79,12 +87,15 @@ interface DashboardRepository {
                                     if(body.success) {
                                         Either.Right(body.data.map { it.toModel() })
                                     }
-                                    else Either.Left(Failure.DefaultError(body.message))
+                                    else{
+                                        Either.Left(Failure.DefaultError(body.message))
+                                    }
                                 }?: Either.Left(Failure.DefaultError(""))
                             }
                             false -> Either.Left(Failure.ServerError)
                         }
                     } catch (e: Exception) {
+                        Log.d("getChains", e.toString())
                         Either.Left(Failure.DefaultError(e.message!!))
                     }
                 }
@@ -118,13 +129,14 @@ interface DashboardRepository {
             return when (networkHandler.isConnected) {
                 true ->{
                     try {
+                        Log.d("getGraph", "dateStart -> $dateStart \ndataEmd -> $dateEnd\nuser -> $user\nchains -> $chains")
                         val response = service.getGraph(
                             "Bearer ${prefs.token!!}",
                             prefs.companyId!!,
                             dateStart,
                             dateEnd,
-                            emptyList(),
-                            emptyList()
+                            user,
+                            chains
                         ).execute()
                         when (response.isSuccessful) {
                             true -> {

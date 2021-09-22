@@ -27,6 +27,7 @@ import com.tawa.allinapp.features.reports.geolocation.ui.RecyclerUser
 import com.tawa.allinapp.models.RoutesUser
 import com.tawa.allinapp.models.TrackingInform
 import okhttp3.Route
+import okhttp3.internal.notify
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -35,19 +36,20 @@ import java.util.stream.Collectors
 import kotlin.collections.ArrayList
 
 
-class ReportGeolocationFragment : BaseFragment(){
+class ReportGeolocationFragment : BaseFragment(), RecyclerUser.onClickButton{
 
     private lateinit var binding: FragmentReportGeolocationBinding
     private lateinit var reportGeoViewModel: ReportGeolocationViewModel
-    private val spinner_items: ArrayList<SpinnerItem<RoutesUser>> = ArrayList()
-    private val selected_items: MutableSet<RoutesUser> = HashSet()
-    private var adapterUser : CheckableSpinnerAdapter<RoutesUser>? = null
     private var recyclerAdapter : RecyclerUser? = null
     private var listRecycleView: ArrayList<RoutesUser>? = null
     private var backupRecycleView: ArrayList<RoutesUser> ? = ArrayList()
+    //private var listView: ArrayList<String> = ArrayList()
     private var mDay: Int? = null
     private var mMonth: Int ? = null
     private var mYear: Int? = null
+    companion object{
+        val ALL_SELECTED = "Selecionar todos"
+    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -70,9 +72,18 @@ class ReportGeolocationFragment : BaseFragment(){
             observe(getRouteUsers, {
                 hideProgressDialog()
                 it?.let {
-                    if (it.isNotEmpty()) {
-                        showMapRoutesDialog(it)
+                    Log.d("tracking info", it.toString())
+                    var fullEmpty = true
+                    for(tracking in it){
+                        if(tracking.listTracking.isEmpty()){
+                            fullEmpty = true
+                        }else{
+                            fullEmpty = false
+                            break
+                        }
                     }
+                    if (!fullEmpty) showMapRoutesDialog(it)
+                    else notify(requireActivity() ,R.string.no_data_tracking)
                 }
             })
             observe(failure,{
@@ -93,7 +104,6 @@ class ReportGeolocationFragment : BaseFragment(){
             getCurrentDay(binding.edDateUserRoutes)
         }
         binding.btnSearchGeolocation.setOnClickListener {
-            //val value =
             val date = binding.edDateUserRoutes.text.toString()
             recyclerAdapter?.listChecked?.let {
                 if (date != "" && it.size > 0) {
@@ -103,8 +113,6 @@ class ReportGeolocationFragment : BaseFragment(){
                     reportGeoViewModel.getRoutesFromListUsers(
                         it, reportGeoViewModel.convertDate(binding.edDateUserRoutes.text.toString())
                     )
-
-
                 } else {
                     notify(requireActivity(), R.string.warningReportGeolocation)
                 }
@@ -117,6 +125,7 @@ class ReportGeolocationFragment : BaseFragment(){
         val currentDate = SimpleDateFormat("dd/MM/yyyy", Locale("es", "ES")).format(Date())
         binding.clReportGeolocation.setOnClickListener {
             if (binding.cvUsersReportLocation.visibility == View.VISIBLE) binding.cvUsersReportLocation.visibility = View.GONE
+            binding.edUserRoutes.setText("")
         }
         binding.edDateUserRoutes.setText(currentDate)
         binding.edUserRoutes.addTextChangedListener( object: TextWatcher {
@@ -155,12 +164,9 @@ class ReportGeolocationFragment : BaseFragment(){
                 }
             }
         } ?: emptyList<RoutesUser>()
-        recyclerAdapter = RecyclerUser(listRecycleView!!,requireContext())
+        recyclerAdapter = RecyclerUser(listRecycleView!!,requireContext(),this)
         binding.rvUsersReportLocation.layoutManager = LinearLayoutManager(requireContext())
         binding.rvUsersReportLocation.adapter = recyclerAdapter
-        //val headerText = "Selecionar usuario"
-        //adapterUser = CheckableSpinnerAdapter(requireActivity(),headerText,spinner_items,selected_items)
-        //binding.spinner.adapter = adapterUser
     }
 
     private fun filter(text: String){
@@ -213,4 +219,21 @@ class ReportGeolocationFragment : BaseFragment(){
         dialog.show(childFragmentManager,"")
     }
 
+    override fun onClick(selectedAll: Boolean) {
+        var namesConcant = ""
+        var count = 0
+        for (userChecked in recyclerAdapter?.listChecked!!) {
+            if(selectedAll){
+                namesConcant = "Todos los usuarios seleccionados"
+            }else{
+                if(count == 0){
+                    namesConcant = "${userChecked.name}"
+                    count++
+                }else{
+                    namesConcant = "$namesConcant, ${userChecked.name}"
+                }
+            }
+        }
+        binding.edUserRoutes.hint = namesConcant
+    }
 }

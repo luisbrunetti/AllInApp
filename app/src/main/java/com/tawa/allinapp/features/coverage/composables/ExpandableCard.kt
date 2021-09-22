@@ -1,5 +1,6 @@
 package com.tawa.allinapp.features.coverage.composables
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -23,7 +24,6 @@ fun ExpandableCard(
     onSelected: (List<String>) -> Unit
 ){
     var expandedState by remember { mutableStateOf(false) }
-
     Surface(
         modifier = Modifier
             .fillMaxWidth()

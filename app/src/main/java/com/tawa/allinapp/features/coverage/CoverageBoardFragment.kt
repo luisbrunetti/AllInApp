@@ -1,6 +1,7 @@
 package com.tawa.allinapp.features.coverage
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -60,6 +61,12 @@ class CoverageBoardFragment : BaseFragment() {
             observe(graph, { it?.let {
                 findNavController().navigate(CoverageBoardFragmentDirections.actionCoverageBoardFragmentToCoverageBoardGraphFragment(it))
             }})
+            observe(failure,{
+                it?.let {
+                    Log.d("failure",failure.value.toString())
+                }
+            })
+
         }
         initViewModels()
         return ComposeView(requireContext()).apply {
@@ -72,8 +79,8 @@ class CoverageBoardFragment : BaseFragment() {
     @Composable
     fun Filters(){
         val channels by coverageViewModel.channels.observeAsState()
-        val retails by coverageViewModel.retails.observeAsState()
-        val chains by coverageViewModel.chains.observeAsState()
+        val chains by coverageViewModel.chains.observeAsState()//
+        val retails by coverageViewModel.retails.observeAsState()//
         val userList by coverageViewModel.userList.observeAsState()
         Column(
 
@@ -82,13 +89,16 @@ class CoverageBoardFragment : BaseFragment() {
                 { startDate = it },{ endDate = it }
             )
             channels?.let { ch ->
+//                Log.d("channels",ch[0].toString())
                 ExpandableCard(
                     title = "Canal",
                     content = ch.map { it.description?:"" }
                 ){ list ->
                     if(list.isNotEmpty()){
                         selectedChannel = ch.filter { c ->
-                            c.description == list.find { it == c.description }
+                            c.description == list.find {
+                                it == c.description
+                            }
                         }.map { it.id?:"" }
                         coverageViewModel.getChains(selectedChannel?: emptyList(),selectedRetail?: emptyList())
                     }
@@ -99,11 +109,16 @@ class CoverageBoardFragment : BaseFragment() {
             retails?.let { r ->
                 ExpandableCard(
                     title = "Tipo Retail",
-                    content = r.map { it.description?:"" }
+                    content = r.map {
+                        it.description?:""
+                    }
                 ){ list ->
+                    //Log.d("retails",list[0].toString())
                     if(list.isNotEmpty()){
                         selectedRetail = r.filter { c ->
-                            c.description == list.find { it == c.description }
+                            c.description == list.find {
+                                it == c.description
+                            }
                         }.map { it.id?:"" }
                         coverageViewModel.getChains(selectedChannel?: emptyList(),selectedRetail?: emptyList())
                     }
@@ -112,6 +127,7 @@ class CoverageBoardFragment : BaseFragment() {
                 }
             }
             chains?.let { c ->
+//                Log.d("chains",c[0].toString())
                 ExpandableCard(
                     title = "Cadena",
                     content = c.map { it.description?:"" }
@@ -120,6 +136,7 @@ class CoverageBoardFragment : BaseFragment() {
                 }
             }
             userList?.let { u ->
+      //          Log.d("userList",u[0].toString())
                 ExpandableCard(
                     title = "Usuarios",
                     content = u.map { it.fullName?:"" }
@@ -149,7 +166,8 @@ class CoverageBoardFragment : BaseFragment() {
                     .height(80.dp)
                     .padding(12.dp),
                 onClick = {
-                    coverageViewModel.getGraph(startDate,endDate,selectedUser,selectedChain)
+                    if(startDate != null && endDate != null) notify(requireActivity(), R.string.select_dates)
+                    else coverageViewModel.getGraph(startDate,endDate,selectedUser,selectedChain)
                 }
             ) {
                 Text("Buscar", color = Color.White, fontSize = 18.sp)

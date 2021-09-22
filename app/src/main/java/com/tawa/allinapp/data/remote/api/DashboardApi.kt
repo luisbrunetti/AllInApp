@@ -15,7 +15,10 @@ interface DashboardApi {
     fun getRetails(@Header("Authorization") token: String, @Query("id_empresa") company:String): Call<BaseResponse<List<RetailRemote.Response>>>
 
     @GET("/api/cadena/1/")
-    fun getChains(@Header("Authorization") token: String, @Query("id_empresa") company:String, @Query("id_canal") channel:List<String>, @Query("id_retail") retail:List<String>): Call<BaseResponse<List<ChainRemote.Response>>>
+    fun getChains(@Header("Authorization") token: String,
+                  @Query("id_empresa") company:String,
+                  @Query("id_canal") channel:List<String>,
+                  @Query("id_retail") retail:List<String>): Call<BaseResponse<List<ChainRemote.Response>>>
 
     @GET("/api/group/user/list/")
     fun getUserList(@Header("Authorization") token: String, @Query("empresas") company:String): Call<BaseResponse<List<UserRemote.Response>>>
