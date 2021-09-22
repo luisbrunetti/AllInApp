@@ -125,10 +125,10 @@ class ReportGeolocationFragment : BaseFragment(), RecyclerUser.onClickButton{
         val currentDate = SimpleDateFormat("dd/MM/yyyy", Locale("es", "ES")).format(Date())
         binding.clReportGeolocation.setOnClickListener {
             if (binding.cvUsersReportLocation.visibility == View.VISIBLE) binding.cvUsersReportLocation.visibility = View.GONE
-            binding.edUserRoutes.setText("")
+            //binding.edUserRoutes.setText("")
         }
         binding.edDateUserRoutes.setText(currentDate)
-        binding.edUserRoutes.addTextChangedListener( object: TextWatcher {
+        /*binding.edUserRoutes.addTextChangedListener( object: TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 binding.cvUsersReportLocation.visibility = View.VISIBLE
             }
@@ -142,8 +142,7 @@ class ReportGeolocationFragment : BaseFragment(), RecyclerUser.onClickButton{
                 filter(s.toString())
             }
 
-        })
-
+        })*/
         //Llamadas a los servicios
         reportGeoViewModel.getListUser()
         return binding.root
@@ -224,7 +223,7 @@ class ReportGeolocationFragment : BaseFragment(), RecyclerUser.onClickButton{
         var count = 0
         for (userChecked in recyclerAdapter?.listChecked!!) {
             if(selectedAll){
-                namesConcant = "Todos los usuarios seleccionados"
+                namesConcant = "Todos seleccionados"
             }else{
                 if(count == 0){
                     namesConcant = "${userChecked.name}"
@@ -234,6 +233,6 @@ class ReportGeolocationFragment : BaseFragment(), RecyclerUser.onClickButton{
                 }
             }
         }
-        binding.edUserRoutes.hint = namesConcant
+        binding.edUserRoutes.setText(namesConcant)
     }
 }

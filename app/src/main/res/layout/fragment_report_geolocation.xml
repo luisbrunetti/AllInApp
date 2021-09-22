@@ -45,7 +45,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/appCompatTextView2" />
 
-        <AutoCompleteTextView
+        <EditText
             android:id="@+id/edUserRoutes"
             android:layout_width="0dp"
             android:layout_height="56dp"
@@ -55,10 +55,12 @@
             android:background="@drawable/rounded"
             android:drawableEnd="@drawable/ic_search_user"
             android:hint="Ingresar Usuarios"
-            android:visibility="visible"
+            android:textSize="18sp"
+            android:focusable="false"
+            android:inputType="textNoSuggestions"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
-            android:maxLines="2"
+            android:maxLines="1"
             android:ellipsize="end"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"

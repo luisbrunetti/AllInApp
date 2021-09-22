@@ -18,6 +18,8 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
@@ -82,6 +84,7 @@ class CoverageBoardFragment : BaseFragment() {
         val chains by coverageViewModel.chains.observeAsState()//
         val retails by coverageViewModel.retails.observeAsState()//
         val userList by coverageViewModel.userList.observeAsState()
+
         Column(
 
         ) {
@@ -132,7 +135,11 @@ class CoverageBoardFragment : BaseFragment() {
                     title = "Cadena",
                     content = c.map { it.description?:"" }
                 ){ list ->
-                    selectedChain = c.map{ it.description }.flatMap { e -> list.filter { e == it }}
+                    selectedChain = c.map{
+                        it.description
+                    }.flatMap { e ->
+                        list.filter { e == it }
+                    }
                 }
             }
             userList?.let { u ->
@@ -166,7 +173,7 @@ class CoverageBoardFragment : BaseFragment() {
                     .height(80.dp)
                     .padding(12.dp),
                 onClick = {
-                    if(startDate != null && endDate != null) notify(requireActivity(), R.string.select_dates)
+                    if(startDate == null || endDate == null) notify(requireActivity(), R.string.select_dates)
                     else coverageViewModel.getGraph(startDate,endDate,selectedUser,selectedChain)
                 }
             ) {
