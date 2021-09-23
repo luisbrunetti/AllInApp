@@ -7,7 +7,4 @@ data class PhotoReport (
     val createAt:String,
     val longitude: Double?,
     val latitude: Double?,
-    var syncLongitude: Double?,
-    var syncLatitude: Double?,
-    var syncAt: String?,
 )

@@ -71,6 +71,10 @@ class ReportsDataSource @Inject constructor(private val reportsDao: ReportsDao){
         return reportsDao.getAllPhotoReports()
     }
 
+    fun updatePhotoReports(state: String,type: String) {
+        reportsDao.updatePhotoReport(state,type)
+    }
+
     fun insertAudioReport(reportModel: AudioReportModel){
         reportsDao.insertAudioReport(reportModel)
     }
@@ -112,8 +116,12 @@ class ReportsDataSource @Inject constructor(private val reportsDao: ReportsDao){
         return reportsDao.deletePhotos()
     }
 
-    fun getStatePhoto(pv: String, idUser: String):String?{
-        return reportsDao.getStatePhoto(pv, idUser)
+    fun getStatePhoto(idCompany: String,pv: String, idUser: String):String?{
+        return reportsDao.getStatePhoto(idCompany,pv, idUser)
+    }
+
+    fun getTypePhoto(idCompany: String,pv: String, idUser: String):String?{
+        return reportsDao.getTypePhoto(idCompany,pv, idUser)
     }
 
     fun insertSkuObservation(skuObservationModel: SkuObservationModel){

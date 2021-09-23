@@ -84,7 +84,8 @@ class InitFragment : BaseFragment() {
                 showCheckOut()
             }})
             observe(successCheckIn, { it?.let {
-                    if(it) {
+                    if(it)
+                    { getActualLocation()
                         initViewModel.getCheckMode()
                         initViewModel.updateStatus(_lat,_long,_battery,0)
                         notify(activity,R.string.checkoout_successful)
@@ -114,6 +115,7 @@ class InitFragment : BaseFragment() {
             observe(successCheckOut, { it?.let {
                 if(it)
                 {
+                    getActualLocation()
                     initViewModel.getCheckMode()
                     initViewModel.updateStatus(_lat,_long,_battery,1)
                     notify(activity,R.string.checkoout_successful)
@@ -122,14 +124,15 @@ class InitFragment : BaseFragment() {
 
             } })
             observe(successSyncChecks, { it?.let {
-                Log.d(TAG,"SuccessSyncChecks se realizado correctamente")
-                if (it) initViewModel.syncPhotoReport()
+                if (it)
+                {
+                    initViewModel.syncPhotoReportMassive(_lat,_long)
+                }
             } })
             observe(successSyncPhotoReports, { it?.let {
                 getActualLocation()
-                Log.d(TAG,"SuccessSyncPhotoReports se realizado correctamente")
-                //Log.d("latlng",_lat + _long.toString())
-                if (it) initViewModel.syncStandardReportsMassive(_lat,_long)
+                if(it)
+                    initViewModel.syncStandardReportsMassive(_lat,_long)
             } })
             observe(successSyncSku, { it?.let {
                 Log.d(TAG,"SuccessSyncSku se realizado correctamente")
@@ -140,11 +143,8 @@ class InitFragment : BaseFragment() {
                 //if (it) initViewModel.syncAudio()
             } })
             observe(successSyncReportStandard, { it?.let {
-               // getActualLocation()
-               // Log.d(TAG, "Success Report Standard")
-                if(it)
-                    Log.d(TAG, "Success Report Standard")
-               // if (it) initViewModel.syncSkuMassive(_lat,_long)
+                getActualLocation()
+                if (it) initViewModel.syncSkuMassive(_lat,_long)
             }})
             observe(descPV, { it?.let {
                 if (it.isNotEmpty()){
@@ -196,6 +196,7 @@ class InitFragment : BaseFragment() {
         initViewModel.getLogoCompany()
         initViewModel.getIdUser()
         initViewModel.getUserName()
+        initViewModel.getCheckMode()
         binding.btCheckIn.setOnClickListener{
             if(checkIn) showSelectorCheckIn()
             else initViewModel.getDescPV()
@@ -215,9 +216,10 @@ class InitFragment : BaseFragment() {
         }
 
         binding.btSync.setOnClickListener {
-            //showProgressDialog()
-           // initViewModel.syncCheck()
-            initViewModel.syncStandardReportsMassive("12","10")
+            showProgressDialog()
+            getActualLocation()
+            initViewModel.syncCheck(_lat,_long)
+           // initViewModel.syncStandardReportsMassive("12","10")
         }
         binding.viewBtnRoutes.setOnClickListener {
             findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationRoutes())
@@ -267,7 +269,8 @@ class InitFragment : BaseFragment() {
         val dialog = CheckInDialogFragment(this)
         dialog.listener = object : CheckInDialogFragment.Callback {
             override fun onAccept(idUser:String,pvId:String, pv:String,lat:String, long:String,description: String,battery:String) {
-                _pv = pv; _lat = lat; _long = long; _pvId = pvId;_battery = battery
+                getActualLocation()
+                _pv = pv;_pvId = pvId;_battery = battery
                 initViewModel.setCheckIn(idUser,pvId,_lat,_long)
                 binding.tvCheckIn.text = description
             }

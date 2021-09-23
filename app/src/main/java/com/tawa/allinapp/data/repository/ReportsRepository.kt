@@ -24,12 +24,13 @@ import javax.inject.Inject
 interface ReportsRepository {
     fun setReports(company: String): Either<Failure, Boolean>
     fun listReports(idCompany: String): Either<Failure, List<Report>>
-    fun saveLocalPhotoReport(report:PhotoReport?,state:String): Either<Failure, Boolean>
+    fun saveLocalPhotoReport(report:PhotoReport?,state:String,type: String): Either<Failure, Boolean>
     fun getReports(): Either<Failure,List<Report>>
     fun getSkuDetail(idSku:String): Either<Failure,List<SkuDetail>>
     fun getSku(): Either<Failure,List<Sku>>
     fun getStateSku(idPv:String): Either<Failure,String>
-    fun syncPhotoReports(): Either<Failure,Boolean>
+    fun syncPhotoReports(latitude: String,longitude: String): Either<Failure,Boolean>
+    fun syncOnePhoto(): Either<Failure,Boolean>
     fun savePhotoReport(): Either<Failure, Boolean>
     fun getReportStatus(): Either<Failure, List<ReportStatus>>
     fun updateStatus(latitude:String,longitude:String,battery:String): Either<Failure, Boolean>
@@ -49,6 +50,7 @@ interface ReportsRepository {
     fun getLocalPhotoReport(): Either<Failure, PhotoReport>
     fun getStateReport(idReport: String): Either<Failure,String>
     fun getStatePhotoReport(): Either<Failure, String>
+    fun getTypePhotoReport(): Either<Failure, String>
     fun getCountSku(): Either<Failure, Int>
     fun updateReportPv(idReport: String,state: String,type: String,time:String,latitude: String,longitude: String):Either<Failure, Boolean>
     fun updateReportPvSync(idReport: String,state: String,type: String):Either<Failure, Boolean>
@@ -99,19 +101,54 @@ interface ReportsRepository {
             }
         }
 
-        override fun syncPhotoReports(): Either<Failure,Boolean>{
+        override fun syncOnePhoto(): Either<Failure, Boolean> {
             return when (networkHandler.isConnected) {
                 true ->{
                     try {
-                        val request = reportsDataSource.getAllPhotoReports().map { it.toRemote() }
+                        val request = reportsDataSource.getPhotoReports(prefs.pvId?:"",prefs.companyId?:"",prefs.idUser?:"").map {it.toRemoteOne() }
+                        val response = service.syncOnePhotoReport("Bearer ${prefs.token!!}", request.first()).execute()
+                        when (response.isSuccessful) {
+                            true -> {
+                                response.body()?.let { body ->
+                                    if(body.success) {
+                                        Log.d("syncOnePhoto",body.message.toString())
+                                        Either.Right(true)
+                                    }
+                                    else {
+                                        Log.d("errorOnePhoto",body.message.toString())
+                                        Either.Left(Failure.DefaultError(body.message))
+                                    }
+                                }?: Either.Left(Failure.DefaultError(""))
+                            }
+                            false -> Either.Left(Failure.ServerError)
+                        }
+                    } catch (e: Exception) {
+                        Either.Left(Failure.DefaultError(e.message!!))
+                    }
+                }
+                false -> Either.Left(Failure.NetworkConnection)
+            }
+
+        }
+
+        override fun syncPhotoReports(latitude: String,longitude: String): Either<Failure,Boolean>{
+            return when (networkHandler.isConnected) {
+                true ->{
+                    try {
+                        val request = reportsDataSource.getAllPhotoReports().map { it.toRemote(longitude.toDouble(),latitude.toDouble(),Calendar.getInstance().toInstant().toString()) }
                         val response = service.syncPhotoReports("Bearer ${prefs.token!!}", request).execute()
                         when (response.isSuccessful) {
                             true -> {
                                 response.body()?.let { body ->
                                     if(body.success) {
+                                        reportsDataSource.updatePhotoReports("Enviado","terminado")
+                                        Log.d("syncMassiveReport",body.message.toString())
                                         Either.Right(true)
                                     }
-                                    else Either.Left(Failure.DefaultError(body.message))
+                                    else {
+                                        Log.d("errorMassiveReport",body.message.toString())
+                                        Either.Left(Failure.DefaultError(body.message))
+                                    }
                                 }?: Either.Left(Failure.DefaultError(""))
                             }
                             false -> Either.Left(Failure.ServerError)
@@ -126,7 +163,15 @@ interface ReportsRepository {
 
         override fun getStatePhotoReport(): Either<Failure, String> {
             return try {
-                Either.Right(reportsDataSource.getStatePhoto(prefs.pvId!!, prefs.idUser!!)?:"No iniciado")
+                Either.Right(reportsDataSource.getStatePhoto(prefs.companyId?:"",prefs.pvId!!, prefs.idUser!!)?:"No iniciado")
+            }catch (e:Exception){
+                Either.Left(Failure.DefaultError(e.message!!))
+            }
+        }
+
+        override fun getTypePhotoReport(): Either<Failure, String> {
+            return try {
+                Either.Right(reportsDataSource.getTypePhoto(prefs.companyId?:"",prefs.pvId?:"", prefs.idUser?:"")?:"0")
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))
             }
@@ -141,7 +186,7 @@ interface ReportsRepository {
             }
         }
 
-        override fun saveLocalPhotoReport(report:PhotoReport?,state:String): Either<Failure, Boolean> {
+        override fun saveLocalPhotoReport(report:PhotoReport?,state:String,type:String): Either<Failure, Boolean> {
             if (prefs.pvId!!.isEmpty())
                 return Either.Left(Failure.DefaultError("Debe seleccionar hacer Checkin en un Punto de Venta"))
             else
@@ -169,9 +214,7 @@ interface ReportsRepository {
                                 state,
                                 report.longitude,
                                 report.latitude,
-                                report.syncLongitude,
-                                report.syncLatitude,
-                                report.syncAt,
+                                type
                             )
                         )
                         Log.d("savePhotoMODEL",PhotoReportModel(
@@ -193,9 +236,7 @@ interface ReportsRepository {
                             state,
                             report.longitude,
                             report.latitude,
-                            report.syncLongitude,
-                            report.syncLatitude,
-                            report.syncAt,
+                            type
                         ).toString())
                     } ?: kotlin.run {
                         reportsDataSource.insertPhotoReport(
@@ -207,7 +248,7 @@ interface ReportsRepository {
                                 null,
                                 null,
                                 state,
-                                null, null,null,null,null,
+                                null, null,type
                             )
                         )
                     }
@@ -221,7 +262,7 @@ interface ReportsRepository {
             return try {
                 val response = reportsDataSource.getPhotoReports(prefs.pvId?:"",prefs.companyId?:"",prefs.idUser ?: "")
                 if(response.isEmpty())
-                    Either.Right( PhotoReport(emptyList(), emptyList(),"","",0.0,0.0,0.0,0.0,"") )
+                    Either.Right( PhotoReport(emptyList(), emptyList(),"","",0.0,0.0) )
                 else
                     Either.Right( response.first().toView() )
             }catch (e:Exception){
@@ -716,7 +757,6 @@ interface ReportsRepository {
             }
         }
 
-        @SuppressLint("LongLogTag")
         override fun syncReportStandardMassive(latitude: String, longitude: String): Either<Failure, Boolean> {
             return when (networkHandler.isConnected) {
                 true ->{
@@ -750,13 +790,13 @@ interface ReportsRepository {
                             true -> {
                                 response.body()?.let { body ->
                                     if(body.success) {
-                                        Log.d("success sync Report Standard -> ",body.message.toString())
+                                        Log.d("syncStandardMassive",body.message.toString())
                                         for(id in listIdStandard)
                                             updateReportPvSync(id,"Enviado","Terminado")
                                         Either.Right(true)
                                     }
                                     else{
-                                        Log.d("errorsincro",body.message.toString())
+                                        Log.d("errorStandarMassive",body.message.toString())
                                         Either.Left(Failure.DefaultError(body.message))}
 
                                 }?: Either.Left(Failure.DefaultError(""))

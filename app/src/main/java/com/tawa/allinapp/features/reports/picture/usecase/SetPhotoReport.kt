@@ -9,8 +9,8 @@ import javax.inject.Inject
 class SetPhotoReport
 @Inject constructor(private val reportsRepository: ReportsRepository) : UseCase<Boolean, SetPhotoReport.Params>() {
 
-    override suspend fun run(params: Params) = reportsRepository.saveLocalPhotoReport(params.report, params.state)
+    override suspend fun run(params: Params) = reportsRepository.saveLocalPhotoReport(params.report, params.state,params.type)
 
-    class Params(val report: PhotoReport?, val state:String)
+    class Params(val report: PhotoReport?, val state:String,val type:String)
 
 }

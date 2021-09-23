@@ -24,6 +24,9 @@ interface ReportsApi {
     @POST("/api/fotografico/masivo/add")
     fun syncPhotoReports(@Header("Authorization") token:String, @Body request:List<ReportsPhotoRemote.Request>): Call<BaseResponse<List<ReportsPhotoRemote.Response>>>
 
+    @POST("/api/fotografico/add")
+    fun syncOnePhotoReport(@Header("Authorization") token:String, @Body request:ReportsPhotoRemote.RequestOne): Call<BaseResponse<ReportsPhotoRemote.Response>>
+
     @PUT("/api/user/estado")
     fun updateStatus(@Header("Authorization") token: String, @Body  request: UpdateStatusRemote.Request):Call<BaseResponse<UpdateStatusRemote.Response>>
 

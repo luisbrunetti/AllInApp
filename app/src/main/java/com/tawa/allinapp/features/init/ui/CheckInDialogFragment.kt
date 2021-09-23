@@ -103,12 +103,14 @@ class CheckInDialogFragment
         }
 
         binding.btnDoCheckin.setOnClickListener {
+            newLocationData()
+            getLastLocation()
              _positionPv  = binding.pdvSpinner.selectedItemPosition
             //Toast.makeText(context,getBatteryPercentage(requireContext()).toString()+" - "+getHour() + " - "+latitude+","+longitude,Toast.LENGTH_LONG).show()
             if(checkState)
             {
-                //if(getDistance("${list[positionPv].lat}","${list[positionPv].long}",latitude,longitude)<=250)
-                //{
+                //if(getDistance("${list[_positionPv].lat}","${list[_positionPv].long}",latitude,longitude)<=250)
+               // {
                     _pv = list[_positionPv].nameCorp
                     _pvId = list[_positionPv].id
                     _description = list[_positionPv].nameCorp
@@ -118,9 +120,9 @@ class CheckInDialogFragment
                     //initViewModel.sendCheck(latitude,longitude,0)
                     listener?.onAccept(idUsers,_pvId,_pv, latitude,longitude,_description,getBatteryPercentage(requireContext()).toString())
                     dismiss()
-                //}
-              //  else
-                //    showErrorSelector()
+               // }
+                //else
+                //   showErrorSelector()
             }
             else{
                 listener?.onSnack(true)

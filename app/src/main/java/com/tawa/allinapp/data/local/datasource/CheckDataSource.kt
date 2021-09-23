@@ -21,4 +21,8 @@ class CheckDataSource @Inject constructor(private val checkDao: CheckDao){
     fun updateCheck(schedule:String,pv:String,idCompany: String,idUser: String,type:String,state:String){
         checkDao.updateCheck(schedule,pv,idCompany,idUser,type,state)
     }
+
+    fun updateCheck(state:String){
+        checkDao.updateCheck(state)
+    }
 }

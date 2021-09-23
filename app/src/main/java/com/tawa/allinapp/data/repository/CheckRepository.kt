@@ -10,6 +10,7 @@ import com.tawa.allinapp.data.remote.entities.CheckRemote
 import com.tawa.allinapp.data.remote.service.CheckService
 import com.tawa.allinapp.data.remote.service.ParametersService
 import com.tawa.allinapp.models.Check
+import java.util.*
 import javax.inject.Inject
 
 interface CheckRepository {
@@ -26,7 +27,7 @@ interface CheckRepository {
     fun getUserName(): Either<Failure, String>
     fun getCheckMode(): Either<Failure, Boolean>
     fun getStateCheck(idPv: String): Either<Failure, Boolean>
-    fun syncChecks(): Either<Failure, Boolean>
+    fun syncChecks(latitude: String,longitude: String): Either<Failure, Boolean>
     fun sendCheck(latitude: String,longitude: String,type:Int): Either<Failure, String>
 
     class Network
@@ -57,11 +58,11 @@ interface CheckRepository {
             }
         }
 
-        override fun syncChecks(): Either<Failure, Boolean>{
+        override fun syncChecks(latitude: String,longitude: String): Either<Failure, Boolean>{
             return when (networkHandler.isConnected) {
                 true ->{
                     try {
-                        val request = checkDataSource.getChecks().map { it.toRemote() }
+                        val request = checkDataSource.getChecks().map { it.toRemote(latitude.toDouble(),longitude.toDouble(),Calendar.getInstance().toInstant().toString()) }
                         Log.d("requestSyncChecks ->> ",request.toString())
                         val response = service.syncChecks("Bearer ${prefs.token!!}", request).execute()
                         Log.d("responseSyncChecks ->> ",response.toString())
@@ -69,10 +70,14 @@ interface CheckRepository {
                             true -> {
                                 response.body()?.let { body ->
                                     if(body.success) {
-                                        Log.d("syncChecks", "Se ha realizado la sincronización de Checks correctamente" )
+                                        Log.d("syncChecks", body.message.toString() )
+                                        checkDataSource.updateCheck("enviado")
                                         Either.Right(true)
                                     }
-                                    else Either.Left(Failure.DefaultError(body.message))
+                                    else {
+                                        Log.d("errorSyncCheck", body.message.toString() )
+                                        Either.Left(Failure.DefaultError(body.message))
+                                    }
                                 }?: Either.Left(Failure.DefaultError(""))
                             }
                             false -> Either.Left(Failure.ServerError)

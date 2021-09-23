@@ -32,6 +32,7 @@ class ReportsService
     )
 
     override fun syncPhotoReports(token:String,request:List<ReportsPhotoRemote.Request>) = reportsApi.syncPhotoReports(token,request)
+    override fun syncOnePhotoReport(token:String,request:ReportsPhotoRemote.RequestOne) = reportsApi.syncOnePhotoReport(token,request)
     override fun synStandardReports(token: String, request: SynReportStandardRemote.Request) =  reportsApi.synStandardReports(token,request)
     override fun synStandardReportsMassive(token: String, request: List<SynReportStandardMassiveRemote.Request>) =  reportsApi.synStandardReportsMassive(token,request)
 

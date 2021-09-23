@@ -14,6 +14,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.net.toUri
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.karumi.dexter.Dexter
@@ -31,6 +32,7 @@ import com.tawa.allinapp.core.functional.Failure
 import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.FragmentPictureBinding
 import com.tawa.allinapp.features.reports.sku.ConfirmDialogFragment
+import com.tawa.allinapp.features.reports.standard.ConfirmSyncDialogFragment
 import com.tawa.allinapp.models.PhotoReport
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -52,6 +54,7 @@ class PictureFragment : BaseFragment() {
     private val before = 200
     private val after = 300
     private var state = true
+    private var type = ""
 
     private var photoReport: PhotoReport? = null
     private var balloon: Balloon? = null
@@ -112,15 +115,19 @@ class PictureFragment : BaseFragment() {
                         .show(childFragmentManager, "dialog")
                 }
             })
-            observe(successSyncPhotoReports, {
+            observe(successSyncOne, {
                 it?.let {
                     hideProgressDialog()
                     if (it) {
-                        pictureViewModel.saveReport(photoReport, "Enviado")
+                        pictureViewModel.saveReport(photoReport, "Enviado","terminado")
                         activity?.onBackPressed()
                     }
                 }
             })
+            observe(successType,{it?.let{
+                if(it.isNotEmpty())
+                    type = it
+            }})
             observe(successDeletePhotoReports, {
                 it?.let {
                     hideProgressDialog()
@@ -136,10 +143,6 @@ class PictureFragment : BaseFragment() {
                         before = pictureBeforeAdapter.collection
                         after = pictureAfterAdapter.collection
                         comments = binding.tvComments.text.toString()
-                        syncLongitude = longitude
-                        syncLatitude = latitude
-                        syncAt = Calendar.getInstance().time.toString()
-                        syncLatitude = longitude
                     }
                     photoReport = it
                 }
@@ -160,6 +163,7 @@ class PictureFragment : BaseFragment() {
                 }
             })
         }
+        pictureViewModel.getTypePicture()
         binding.iHeader.ivHeader.setOnClickListener { activity?.onBackPressed() }
         binding.btTakePhotoBefore.setOnClickListener {
             if (pictureBeforeAdapter.collection.size < 5) {
@@ -178,29 +182,55 @@ class PictureFragment : BaseFragment() {
             }
         }
         binding.btSavePictures.setOnClickListener {
-            showProgressDialog()
-            getLastLocation()
-            val report = PhotoReport(
-                pictureBeforeAdapter.collection,
-                pictureAfterAdapter.collection,
-                binding.tvComments.text.toString(),
-                Calendar.getInstance().time.toString(),
-                longitude.toDouble(), latitude.toDouble(),
-                longitude.toDouble(), latitude.toDouble(),
-                Calendar.getInstance().time.toString(),
-            )
-            pictureViewModel.saveReport(report, "En proceso")
-            activity?.onBackPressed()
+            if(type!="terminado")
+            {
+                showProgressDialog()
+                getLastLocation()
+                val report = PhotoReport(
+                    pictureBeforeAdapter.collection,
+                    pictureAfterAdapter.collection,
+                    binding.tvComments.text.toString(),
+                    Calendar.getInstance().toInstant().toString(),
+                    longitude.toDouble(), latitude.toDouble(),
+                )
+                pictureViewModel.saveReport(report, "En proceso","borrador")
+                activity?.onBackPressed()
+            }
+            else
+                notify(activity,R.string.register_ready)
         }
         binding.btSendPictures.setOnClickListener {
-            val confirm = ConfirmDialogFragment()
-            confirm.listener = object : ConfirmDialogFragment.Callback {
-                override fun onClick() {
-                    showProgressDialog()
-                    pictureViewModel.syncPhotoReport()
+            if(type!="terminado")
+            {
+                showProgressDialog()
+                getLastLocation()
+                val report = PhotoReport(
+                    pictureBeforeAdapter.collection,
+                    pictureAfterAdapter.collection,
+                    binding.tvComments.text.toString(),
+                    Calendar.getInstance().toInstant().toString(),
+                    longitude.toDouble(), latitude.toDouble(),
+                )
+                pictureViewModel.saveReport(report, "En proceso","terminado")
+
+                val confirm = ConfirmSyncDialogFragment()
+                confirm.listener = object : ConfirmSyncDialogFragment.Callback {
+                    override fun onClick() {
+
+                        showProgressDialog()
+                        pictureViewModel.syncOnePicture()
+                    }
+
+                    override fun onBack() {
+                        activity?.onBackPressed()
+                    }
                 }
+                confirm.show(childFragmentManager, "dialog")
             }
-            confirm.show(childFragmentManager, "dialog")
+            else
+                notify(activity,R.string.register_ready)
+
+
         }
         return binding.root
     }

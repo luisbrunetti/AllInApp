@@ -12,6 +12,7 @@ import com.tawa.allinapp.models.Report
 import com.tawa.allinapp.models.Schedule
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
 
 class InitViewModel
@@ -213,13 +214,13 @@ class InitViewModel
 
     fun setCheckIn(idUser:String,pv:String,lat:String,lon:String) {
         _startSetCheckIn.value = true
-        setCheckIn(SetCheckIn.Params(0,pv,idUser,formatter.format(timestamp),lat,lon,"CHECKIN","no enviado")) {
+        setCheckIn(SetCheckIn.Params(0,pv,idUser,Calendar.getInstance().toInstant().toString(),lat,lon,"CHECKIN","no enviado")) {
             it.either(::handleFailure, ::handleCheckIn)
         }
     }
     fun setCheckOut(idUser:String,pv:String,lat:String,long:String) {
         _startSetCheckIn.value = false
-        setCheckIn(SetCheckIn.Params(0,pv,idUser,formatter.format(timestamp),lat,long,"CHECKOUT","no enviado")) {
+        setCheckIn(SetCheckIn.Params(0,pv,idUser,Calendar.getInstance().toInstant().toString(),lat,long,"CHECKOUT","no enviado")) {
             it.either(::handleFailure, ::handleCheckOut)
         }
     }
@@ -281,9 +282,11 @@ class InitViewModel
 
     fun getReportsSku(company: String) = getReportsSku(GetReportsSku.Params(company)) { it.either(::handleFailure, ::handleReportsSku) }
 
-    fun syncCheck() = syncCheck(UseCase.None()) { it.either(::handleFailure, ::handleSyncCheck) }
+    fun syncCheck(latitude: String,longitude: String) = syncCheck(SyncCheck.Params(latitude,longitude)) {
+        it.either(::handleFailure, ::handleSyncCheck)
+    }
 
-    fun syncPhotoReport() = syncPhotoReports(UseCase.None()) { it.either(::handleFailure, ::handleSyncPhotoReport) }
+    fun syncPhotoReportMassive(latitude: String,longitude: String) = syncPhotoReports(SyncPhotoReports.Params(latitude,longitude)) { it.either(::handleFailure, ::handleSyncPhotoReport) }
 
     private fun handleSyncPhotoReport(success:Boolean) {
         this._successSyncPhotoReports.value = success

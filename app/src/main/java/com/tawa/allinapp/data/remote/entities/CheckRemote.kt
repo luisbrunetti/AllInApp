@@ -13,6 +13,9 @@ class CheckRemote {
         @SerializedName("fe_creacion") val createAt: String?,
         @SerializedName("latitud") val latitude: Double?,
         @SerializedName("longitud") val longitude: Double?,
+        @SerializedName("latitud_sincronizacion") val latitudeSync: Double?,
+        @SerializedName("longitud_sincronizacion") val longitudeSync: Double?,
+        @SerializedName("fe_sincronizacion") val dateSync: String?,
     )
 
     data class Response(

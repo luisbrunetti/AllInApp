@@ -52,8 +52,11 @@ interface ReportsDao {
     @Query("SELECT * FROM reports_photo WHERE pv=:pv AND company=:company AND idUser = :idUser")
     fun getPhotoReports(pv:String, company:String, idUser:String): List<PhotoReportModel>
 
-    @Query("SELECT * FROM reports_photo")
+    @Query("SELECT * FROM reports_photo where type='terminado'")
     fun getAllPhotoReports(): List<PhotoReportModel>
+
+    @Query("UPDATE reports_photo set state=:state, type=:type where type='terminado'")
+    fun updatePhotoReport(state:String,type: String)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertAudioReport(report:AudioReportModel)
@@ -85,8 +88,11 @@ interface ReportsDao {
     @Query("SELECT type FROM sku WHERE idPv=:idPv and idCompany=:idCompany and idUser=:idUser")
     fun getTypeSku(idPv:String,idCompany: String,idUser: String): String
 
-    @Query("SELECT state FROM reports_photo WHERE pv=:pv AND idUser = :idUser")
-    fun getStatePhoto(pv:String, idUser:String): String?
+    @Query("SELECT state FROM reports_photo WHERE pv=:pv AND idUser = :idUser AND company=:idCompany")
+    fun getStatePhoto(idCompany: String,pv:String, idUser:String): String?
+
+    @Query("SELECT type FROM reports_photo WHERE pv=:pv AND idUser = :idUser AND company=:idCompany")
+    fun getTypePhoto(idCompany: String,pv:String, idUser:String): String?
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertSkuObservation(skuObservationModel: SkuObservationModel)
