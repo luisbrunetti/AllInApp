@@ -1,14 +1,17 @@
 package com.tawa.allinapp.features.coverage.composables
 
-import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
+import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -22,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.tawa.allinapp.R
 import java.util.*
+import kotlin.collections.ArrayList
 
 @Composable
 fun ExpandableCard(
@@ -29,17 +33,16 @@ fun ExpandableCard(
     content:List<String>,
     onSelected: (List<String>) -> Unit
 ){
-    var expandedState by remember { mutableStateOf(true) }
     val hashCheckedItem = remember{ mutableStateMapOf<String,Boolean>()}
+    var expandedState by remember { mutableStateOf(false) }
     var mainCheckState by remember { mutableStateOf(false) }
     val checkedList = remember { mutableListOf<String>() }
     content.map { hashCheckedItem[it] = false }
-    Log.d("listChckedeItem", hashCheckedItem.values.toString())
     Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .wrapContentHeight(align = Alignment.Top)
-            .clickable { expandedState = !expandedState },
+            .wrapContentHeight(align = Alignment.Top),
+            //clickable { expandedState = !expandedState },
         color = Color.White,
         elevation = 5.dp
     ) {
@@ -60,7 +63,8 @@ fun ExpandableCard(
                     fontSize = 16.sp,
                 )
                 Icon(
-                    modifier = Modifier.padding(12.dp),
+                    modifier = Modifier.padding(12.dp)
+                        .clickable { expandedState = !expandedState },
                     painter = if(expandedState) painterResource(id = R.drawable.ic_less) else painterResource(id = R.drawable.ic_add),
                     contentDescription = "ArrowDropDown"
                 )
@@ -69,6 +73,19 @@ fun ExpandableCard(
                 Column(Modifier.padding(start = 12.dp, end = 12.dp, bottom = 12.dp)) {
                     val textState = remember{ mutableStateOf(TextFieldValue(""))}
                     SearchView(textState)
+                    val list = checkedList as ArrayList<String>
+                    LazyRow(){
+                        items(list, itemContent = {item: String ->
+                            nameCard(text = item) {
+                                hashCheckedItem[item] = false
+                                checkedList.remove(item)
+                                onSelected(checkedList)
+                                mainCheckState = false
+                            }
+                            Spacer(modifier = Modifier.padding(1.dp))
+                        })
+                    }
+                    Spacer(modifier = Modifier.padding(3.dp))
                     Row{
                         Checkbox(
                             modifier = Modifier.padding(bottom = 10.dp),
@@ -88,7 +105,6 @@ fun ExpandableCard(
                         )
                         Text(text = " Seleccionar todos", fontSize = 16.sp)
                     }
-                    Log.d("asd",textState.value.text)
                     var listFiltered = content
                     if(textState.value.text != ""){
                         listFiltered = listFiltered.filter {
@@ -96,6 +112,7 @@ fun ExpandableCard(
                         }
                     }
                     for (element in listFiltered){
+
                         Row(
                             Modifier.padding(start = 20.dp)
                         ){
@@ -139,6 +156,39 @@ fun ExpandableCard(
         }
     }
 }
+@Composable
+fun nameCard(text: String,onClick: () -> Unit){
+    Card(
+        modifier = Modifier
+            .padding(start = 4.dp, top = 5.dp, bottom = 4.dp, end = 5.dp)
+            .wrapContentWidth(Alignment.Start)
+            .background(Color.LightGray,RoundedCornerShape(12.dp))
+            .border(width = 1.dp, color = Color.Gray, shape = RoundedCornerShape(12.dp)),
+        elevation = 2.dp
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.Center//,
+            //modifier = Modifier.background(Color.LightGray)
+        ){
+            Text(
+                text = text,
+                fontSize = 16.sp,
+                modifier = Modifier
+                    .wrapContentWidth(Alignment.Start)
+                    //.background(Color.Transparent)
+                    .padding(start = 10.dp, end = 5.dp,bottom = 6.dp,top = 6.dp)
+            )
+            Icon(
+                painter = painterResource(id = R.drawable.ic_close),
+                contentDescription = "close",
+                modifier = Modifier
+                    .padding(2.dp)
+                    //.wrapContentSize(Alignment.CenterEnd)
+                    .clickable(onClick = onClick),
+            )
+        }
+    }
+}
 
 @Composable
 fun SearchView(textState: MutableState<TextFieldValue>){
@@ -178,9 +228,12 @@ fun SearchView(textState: MutableState<TextFieldValue>){
 @Composable
 @Preview
 fun DefaultPreview(){
-    ExpandableCard(
+    /*ExpandableCard(
         title = "Canal",
-        content = listOf("Lorem","ipsum","dolor","sit amet")
-    ){}
+        content = listOf("Lorem","ipsum","dolor","sit amet"),
+    ){}*/
+    //
+//
+// LazyRowChecked(mutableListOf("Lorem","ipsum","dolor","sit amet"), hashCheckedItem)
     //SearchView(content = listOf("Lorem","ipsum","dolor","sit amet"))
 }

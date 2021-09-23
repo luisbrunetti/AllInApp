@@ -40,8 +40,8 @@ class CoverageBoardFragment : BaseFragment() {
 
     private lateinit var coverageViewModel: CoverageViewModel
     private var selectedChannel:List<String>? = null
-    private var selectedRetail:List<String>? = null
     private var selectedChain:List<String>? = null
+    private var selectedRetail:List<String>? = null
     private var selectedUser:List<String>? = null
     private var startDate:String? = null
     private var endDate:String? = null
@@ -92,7 +92,6 @@ class CoverageBoardFragment : BaseFragment() {
                 { startDate = it },{ endDate = it }
             )
             channels?.let { ch ->
-//                Log.d("channels",ch[0].toString())
                 ExpandableCard(
                     title = "Canal",
                     content = ch.map { it.description?:"" }
@@ -103,10 +102,9 @@ class CoverageBoardFragment : BaseFragment() {
                                 it == c.description
                             }
                         }.map { it.id?:"" }
-                        coverageViewModel.getChains(selectedChannel?: emptyList(),selectedRetail?: emptyList())
+                        //coverageViewModel.getChains(selectedChannel?: emptyList(),selectedRetail?: emptyList())
                     }
-                    else
-                        coverageViewModel.getChains(emptyList(),selectedRetail?: emptyList())
+                    else coverageViewModel.getChains(emptyList(),selectedRetail?: emptyList())
                 }
             }
             retails?.let { r ->
@@ -123,22 +121,32 @@ class CoverageBoardFragment : BaseFragment() {
                                 it == c.description
                             }
                         }.map { it.id?:"" }
-                        coverageViewModel.getChains(selectedChannel?: emptyList(),selectedRetail?: emptyList())
+                        //coverageViewModel.getChains(selectedChannel?: emptyList(),selectedRetail?: emptyList())
                     }
-                    else
-                        coverageViewModel.getChains(selectedChannel?: emptyList(),emptyList())
+                    else coverageViewModel.getChains(selectedChannel?: emptyList(),emptyList())
                 }
             }
             chains?.let { c ->
-//                Log.d("chains",c[0].toString())
-                ExpandableCard(
-                    title = "Cadena",
-                    content = c.map { it.description?:"" }
-                ){ list ->
-                    selectedChain = c.map{
-                        it.description
-                    }.flatMap { e ->
-                        list.filter { e == it }
+                Log.d("chainRecived", c.toString())
+                if (c.isNotEmpty()) {
+                    ExpandableCard(
+                        title = "Cadena",
+                        content = c.map { it.description ?: "" }
+                    ) { list ->
+                        Log.d("chainRecived", c.toString())
+                        Log.d("chainsSelected", list.toString())
+
+                         selectedChain = c.filter{chain->
+                            chain.description == list.find { desc ->
+                                desc == chain.description
+                            }
+                        }.map {
+                            it.id ?: ""
+                         }
+                        Log.d("filt",selectedChain.toString())
+
+                        Log.d("selectedChain",selectedChain.toString())
+
                     }
                 }
             }
@@ -167,7 +175,8 @@ class CoverageBoardFragment : BaseFragment() {
             }
             Filters()
             Button(
-                colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.colorLayoutTop)),
+                colors = ButtonDefaults
+                    .buttonColors(backgroundColor = colorResource(id = R.color.colorLayoutTop)),
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(80.dp)

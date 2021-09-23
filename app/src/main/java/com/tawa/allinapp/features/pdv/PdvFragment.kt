@@ -1,35 +1,29 @@
 package com.tawa.allinapp.features.pdv
 
-import android.content.ClipDescription
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
+import android.util.Base64
+import android.util.Base64OutputStream
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import com.facebook.drawee.drawable.ScalingUtils
+import com.tawa.allinapp.R
 import com.tawa.allinapp.core.extensions.observe
 import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.FragmentPdvBinding
-import java.io.File
-import android.graphics.Bitmap
-
-import android.graphics.BitmapFactory
-import android.util.Base64
-import android.util.Base64OutputStream
-import android.util.Log
-import android.widget.Toast
+import com.tawa.allinapp.features.init.InitViewModel
+import com.tawa.allinapp.features.init.ui.SelectPdvDialogFragment
 import java.io.ByteArrayOutputStream
+import java.io.File
 import java.io.FileInputStream
 import java.io.FileNotFoundException
-import android.provider.MediaStore
-import androidx.core.graphics.scale
-import androidx.navigation.fragment.findNavController
-import com.tawa.allinapp.R
-import com.tawa.allinapp.features.init.InitViewModel
-import com.tawa.allinapp.features.init.ui.InitFragmentDirections
-import com.tawa.allinapp.features.init.ui.SelectPdvDialogFragment
 
 
 class PdvFragment : BaseFragment() {

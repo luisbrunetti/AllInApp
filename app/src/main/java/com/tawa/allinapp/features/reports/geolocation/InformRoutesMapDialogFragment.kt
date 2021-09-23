@@ -69,7 +69,7 @@ class InformRoutesMapDialogFragment : DialogFragment(), GoogleMap.OnInfoWindowCl
                         when (visit?.comment) {
                             "INGRESO" -> {
                                 val userPosition = LatLng(visit.latitude.toDouble(), visit.longitude.toDouble())
-                                Log.d("pos",userPosition.toString())
+//                                Log.d("pos",userPosition.toString())
                                 val iconD = resources.getDrawable(R.drawable.ic_marker_checkin)
                                 val marker = googleMap.addMarker(MarkerOptions()
                                     .position(userPosition).title("Check in "+ tracking.Pv+ " - "+tracking.zoneName)

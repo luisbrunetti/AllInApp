@@ -10,6 +10,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -44,7 +45,9 @@ class CoverageBoardGraphFragment: BaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         appComponent.inject(this)
-        coverageViewModel = viewModel(viewModelFactory) {}
+        coverageViewModel = viewModel(viewModelFactory) {
+
+        }
     }
 
     private fun initArgs(){
@@ -90,11 +93,17 @@ class CoverageBoardGraphFragment: BaseFragment() {
                 Text(modifier = Modifier.padding(12.dp), text = "Cobertura por cadena", fontWeight = FontWeight.Bold, fontSize = 24.sp)
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Spacer(Modifier.width(10.dp))
-                    Surface(Modifier.height(15.dp).width(15.dp), shape = RoundedCornerShape(100.dp), color = colorResource(id = R.color.green)) {}
+                    Surface(
+                        Modifier
+                            .height(15.dp)
+                            .width(15.dp), shape = RoundedCornerShape(100.dp), color = colorResource(id = R.color.green)) {}
                     Spacer(Modifier.width(8.dp))
                     Text(text = "Mayor 75%", fontSize = 14.sp)
                     Spacer(Modifier.width(10.dp))
-                    Surface(Modifier.height(15.dp).width(15.dp), shape = RoundedCornerShape(100.dp), color = colorResource(id = R.color.red)) {}
+                    Surface(
+                        Modifier
+                            .height(15.dp)
+                            .width(15.dp), shape = RoundedCornerShape(100.dp), color = colorResource(id = R.color.red)) {}
                     Spacer(Modifier.width(8.dp))
                     Text(text = "Menor 75%", fontSize = 14.sp)
                 }

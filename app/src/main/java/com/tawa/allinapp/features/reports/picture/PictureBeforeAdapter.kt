@@ -15,8 +15,10 @@ class PictureBeforeAdapter
 
     var collection = ArrayList<String>()
 
+
     internal var clickListener: (String) -> Unit = { _ -> }
     internal var deleteListener: (String) -> Unit = { _ -> }
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         PictureBeforeViewHolder.from(parent)

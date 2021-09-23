@@ -80,7 +80,7 @@ interface DashboardRepository {
                 true ->{
                     try {
                         Log.d("Params_getchain", "idCompanny -> ${prefs.companyId} channel -> $channel  retail --> $retail" )
-                        val response = service.getChains("Bearer ${prefs.token!!}", prefs.companyId!!,channel,retail).execute()
+                        val response = service.getChains("Bearer ${prefs.token!!}", prefs.companyId!!,channel, retail).execute()
                         when (response.isSuccessful) {
                             true -> {
                                 response.body()?.let { body ->

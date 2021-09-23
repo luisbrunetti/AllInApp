@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -32,8 +33,10 @@ import com.tawa.allinapp.databinding.FragmentPictureBinding
 import com.tawa.allinapp.features.reports.sku.ConfirmDialogFragment
 import com.tawa.allinapp.models.PhotoReport
 import java.io.ByteArrayOutputStream
+import java.io.File
 import java.util.*
 import javax.inject.Inject
+import kotlin.collections.HashMap
 
 class PictureFragment : BaseFragment() {
 
@@ -54,6 +57,9 @@ class PictureFragment : BaseFragment() {
     private var balloon: Balloon? = null
 
     private var idUser: String? = null
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         appComponent.inject(this)
@@ -204,14 +210,18 @@ class PictureFragment : BaseFragment() {
             when (requestCode) {
                 before -> if (resultCode == Activity.RESULT_OK) {
                     val bitmap = data!!.extras?.get("data") as Bitmap
-                    //val uri = getImageUri(activity?.applicationContext!!, bitmap)
-                    pictureBeforeAdapter.collection.add(convertBase64(bitmap)!!)
+                    val uri = getImageUri(activity?.applicationContext!!, bitmap).toString()
+                    val base64 = convertBase64(bitmap)!!
+                    Log.d("uri", uri.toString())
+                    pictureBeforeAdapter.collection.add(base64)
                     pictureBeforeAdapter.notifyDataSetChanged()
                 }
                 after -> if (resultCode == Activity.RESULT_OK) {
                     val bitmap = data!!.extras?.get("data") as Bitmap
-                    //val uri = getImageUri(activity?.applicationContext!!, bitmap)
-                    pictureAfterAdapter.collection.add(convertBase64(bitmap)!!)
+                    val uri = getImageUri(activity?.applicationContext!!, bitmap).toString()
+                    val base64 = convertBase64(bitmap)!!
+                    Log.d("uri", uri.toString())
+                    pictureAfterAdapter.collection.add(base64)
                     pictureAfterAdapter.notifyDataSetChanged()
                 }
             }
@@ -222,9 +232,10 @@ class PictureFragment : BaseFragment() {
     }
 
     private fun openImage(image: String) {
+        val uri = getImageUriFromBase64(requireContext(), decodeBase64(image))
         val intent = Intent()
         intent.action = Intent.ACTION_VIEW
-        intent.setDataAndType(image.toUri(), "image/*")
+        intent.setDataAndType(uri, "image/*")
         activity?.startActivity(intent)
     }
 
@@ -258,8 +269,25 @@ class PictureFragment : BaseFragment() {
 
     private fun getImageUri(inContext: Context, inImage: Bitmap?): Uri? {
         val image = Bitmap.createScaledBitmap(inImage!!, 300, 300, true)
-        val path =
-            MediaStore.Images.Media.insertImage(inContext.contentResolver, image, "documents", null)
+        val path = MediaStore.Images.Media.insertImage(inContext.contentResolver, image, "documents", null)
+        return Uri.parse(path)
+    }
+
+    private fun decodeBase64(base64:String):Bitmap{
+        val encodedString = "data:image/jpg;base64, $base64"
+        val pureBase64Encoded: String = encodedString.substring(encodedString.indexOf(",") + 1)
+        val decodedString: ByteArray = Base64.decode(pureBase64Encoded, Base64.DEFAULT)
+        return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
+    }
+    private fun getImageUriFromBase64(context: Context, inImage: Bitmap): Uri? {
+        val bytes = ByteArrayOutputStream()
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
+        val path = MediaStore.Images.Media.insertImage(
+            context.contentResolver,
+            inImage,
+            "IMG_" + System.currentTimeMillis(),
+            null
+        )
         return Uri.parse(path)
     }
 

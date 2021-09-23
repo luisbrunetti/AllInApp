@@ -29,6 +29,7 @@
     <color name="bg_views">#EFF8FF</color>
     <color name="colorIndicator1">#CCE7FF</color>
     <color name="colorIndicator2">#CCEFFF</color>
+    <color name="labelNames">#FFF000</color>
 
     <color name="green">#24BE82</color>
     <color name="red">#EA5757</color>

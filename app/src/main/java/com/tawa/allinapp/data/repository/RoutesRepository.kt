@@ -83,7 +83,7 @@ interface RoutesRepository {
                             true -> {
                                 response.body()?.let { body ->
                                     if(body.success) {
-                                        Log.d("Tracking",body.message.toString())
+                                        //Log.d("Tracking",body.message.toString())
                                         Either.Right(body.data.map { it.toView() })
                                     }
                                     else {
@@ -133,7 +133,7 @@ interface RoutesRepository {
             try{
                 for(user in mutableListUser){
                     //val response = getTracking(user.id,"2021-08-26")
-                        Log.d("request", user.id + "  "+ dateStart.toString())
+                        Log.d("request", user.id + "  "+ dateStart.toString()+ "  "+ prefs.companyId.toString())
                     val response = getTracking(user.id,dateStart)
                     response.either({
                         arrayResponse.add(TrackingInform(user.id,user.name, emptyList()))

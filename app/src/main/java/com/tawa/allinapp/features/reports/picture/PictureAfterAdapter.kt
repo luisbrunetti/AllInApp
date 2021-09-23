@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.tawa.allinapp.core.extensions.loadBitmap
-import com.tawa.allinapp.core.extensions.loadFromUrl
 import com.tawa.allinapp.databinding.RowPictureBinding
 import javax.inject.Inject
 
@@ -15,9 +14,13 @@ class PictureAfterAdapter
 @Inject constructor(val context: Context) : RecyclerView.Adapter<PictureAfterAdapter.PictureAfterViewHolder>() {
 
     var collection = ArrayList<String>()
+    var hashPictureAfter = mutableMapOf<String,String>()
+
 
     internal var clickListener: (String) -> Unit = { _ -> }
     internal var deleteListener: (String) -> Unit = { _ -> }
+
+    companion object val PICTURE_AFTER = "PICTURE_AFTER"
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         PictureAfterViewHolder.from(parent)
@@ -38,6 +41,7 @@ class PictureAfterAdapter
         fun bind(context: Context, picture: String, clickListener: (String) -> Unit, deleteListener: (String) -> Unit) {
             val image = Base64.decode(picture, 0)
             binding.ivPicture.loadBitmap(BitmapFactory.decodeByteArray(image, 0, image.size))
+            //binding.ivPicture.setImageBitmap(BitmapFactory.decodeFile(File(picture).absolutePath))
             binding.ivPicture.setOnClickListener {
                 clickListener(picture)
             }
