@@ -8,14 +8,14 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
 import android.util.Base64
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.core.net.toUri
+import androidx.core.content.FileProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
@@ -31,14 +31,12 @@ import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.functional.Failure
 import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.FragmentPictureBinding
-import com.tawa.allinapp.features.reports.sku.ConfirmDialogFragment
 import com.tawa.allinapp.features.reports.standard.ConfirmSyncDialogFragment
 import com.tawa.allinapp.models.PhotoReport
-import java.io.ByteArrayOutputStream
-import java.io.File
+import java.io.*
+import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
-import kotlin.collections.HashMap
 
 class PictureFragment : BaseFragment() {
 
@@ -61,7 +59,9 @@ class PictureFragment : BaseFragment() {
 
     private var idUser: String? = null
 
-
+    var photoFile: File? = null
+    var mCurrentPhotoPath: String? = null
+    val CAPTURE_IMAGE_REQUEST = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -239,20 +239,16 @@ class PictureFragment : BaseFragment() {
         try {
             when (requestCode) {
                 before -> if (resultCode == Activity.RESULT_OK) {
-                    val bitmap = data!!.extras?.get("data") as Bitmap
-                    val uri = getImageUri(activity?.applicationContext!!, bitmap).toString()
-                    val base64 = convertBase64(bitmap)!!
-                    Log.d("uri", uri.toString())
-                    pictureBeforeAdapter.collection.add(base64)
-                    pictureBeforeAdapter.notifyDataSetChanged()
+                    convertBase64(photoFile!!.absolutePath)?.let {
+                        pictureBeforeAdapter.collection.add(it)
+                        pictureBeforeAdapter.notifyDataSetChanged()
+                    }
                 }
                 after -> if (resultCode == Activity.RESULT_OK) {
-                    val bitmap = data!!.extras?.get("data") as Bitmap
-                    val uri = getImageUri(activity?.applicationContext!!, bitmap).toString()
-                    val base64 = convertBase64(bitmap)!!
-                    Log.d("uri", uri.toString())
-                    pictureAfterAdapter.collection.add(base64)
-                    pictureAfterAdapter.notifyDataSetChanged()
+                    convertBase64(photoFile!!.absolutePath)?.let {
+                        pictureAfterAdapter.collection.add(it)
+                        pictureAfterAdapter.notifyDataSetChanged()
+                    }
                 }
             }
         } catch (e : Exception){
@@ -261,8 +257,42 @@ class PictureFragment : BaseFragment() {
         }
     }
 
+
+    private fun launchCamera2(origin: Int) {
+        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        try {
+            photoFile = createImageFile()
+            if (photoFile != null) {
+                val photoURI = FileProvider.getUriForFile(
+                    requireContext(),
+                    "com.tawa.captureimage.fileprovider",
+                    photoFile!!
+                )
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+                startActivityForResult(takePictureIntent, origin)
+            }
+        } catch (ex: Exception) {
+            Log.d("Error", ex.toString())
+        }
+    }
+
+    @Throws(IOException::class)
+    private fun createImageFile(): File {
+        val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+        val imageFileName = "JPEG_" + timeStamp + "_"
+        val storageDir = requireActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        val image = File.createTempFile(
+            imageFileName, /* prefix */
+            ".jpg", /* suffix */
+            storageDir      /* directory */
+        )
+        mCurrentPhotoPath = image.absolutePath
+        return image
+    }
+
+
     private fun openImage(image: String) {
-        val uri = getImageUriFromBase64(requireContext(), decodeBase64(image))
+        val uri = getUriImage(requireContext(), decodeBase64(image))
         val intent = Intent()
         intent.action = Intent.ACTION_VIEW
         intent.setDataAndType(uri, "image/*")
@@ -274,7 +304,7 @@ class PictureFragment : BaseFragment() {
             .withPermissions(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
             .withListener(object : MultiplePermissionsListener {
                 override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
-                    launchCamera(origin)
+                    launchCamera2(origin)
                 }
 
                 override fun onPermissionRationaleShouldBeShown(
@@ -286,32 +316,29 @@ class PictureFragment : BaseFragment() {
             }).check()
     }
 
-    private fun convertBase64(bitmap: Bitmap): String? {
-        val outputStream = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
-        return Base64.encodeToString(outputStream.toByteArray(), Base64.DEFAULT)
-    }
-
-    private fun launchCamera(origin: Int) {
-        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        startActivityForResult(intent, origin)
-    }
-
-    private fun getImageUri(inContext: Context, inImage: Bitmap?): Uri? {
-        val image = Bitmap.createScaledBitmap(inImage!!, 300, 300, true)
-        val path = MediaStore.Images.Media.insertImage(inContext.contentResolver, image, "documents", null)
-        return Uri.parse(path)
-    }
-
     private fun decodeBase64(base64:String):Bitmap{
         val encodedString = "data:image/jpg;base64, $base64"
         val pureBase64Encoded: String = encodedString.substring(encodedString.indexOf(",") + 1)
         val decodedString: ByteArray = Base64.decode(pureBase64Encoded, Base64.DEFAULT)
         return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
     }
-    private fun getImageUriFromBase64(context: Context, inImage: Bitmap): Uri? {
-        val bytes = ByteArrayOutputStream()
-        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
+
+    private fun convertBase64(path: String): String? {
+        val imageFile = File(path)
+        var fis: FileInputStream? = null
+        try {
+            fis = FileInputStream(imageFile)
+        } catch (e: FileNotFoundException) {
+            e.printStackTrace()
+        }
+        val bm = BitmapFactory.decodeStream(fis)
+        val bb =Bitmap.createScaledBitmap(bm, 400, 600, false)
+        val outputStream = ByteArrayOutputStream()
+        bb.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+        return Base64.encodeToString(outputStream.toByteArray(), Base64.DEFAULT)
+    }
+
+    private fun getUriImage(context: Context, inImage: Bitmap): Uri? {
         val path = MediaStore.Images.Media.insertImage(
             context.contentResolver,
             inImage,
