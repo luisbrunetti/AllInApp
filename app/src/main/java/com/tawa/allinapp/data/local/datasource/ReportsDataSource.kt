@@ -23,8 +23,8 @@ class ReportsDataSource @Inject constructor(private val reportsDao: ReportsDao){
         return reportsDao.getReportsPv(idCompany,idPV,idUser)
     }
 
-    fun getReportsPvReady(idCompany: String,idPV: String,idUser: String):List<ReportModel> {
-        return reportsDao.getReportsPvReady(idCompany,idPV,idUser)
+    fun getReportsPvReady(idUser: String):List<ReportModel> {
+        return reportsDao.getReportsPvReady(idUser)
     }
 
 
@@ -67,8 +67,8 @@ class ReportsDataSource @Inject constructor(private val reportsDao: ReportsDao){
         return reportsDao.getPhotoReports(pv,company,idUser)
     }
 
-    fun getAllPhotoReports():List<PhotoReportModel> {
-        return reportsDao.getAllPhotoReports()
+    fun getAllPhotoReports(idUser: String):List<PhotoReportModel> {
+        return reportsDao.getAllPhotoReports(idUser)
     }
 
     fun updatePhotoReports(state: String,type: String) {
@@ -100,8 +100,8 @@ class ReportsDataSource @Inject constructor(private val reportsDao: ReportsDao){
         return reportsDao.getSku(idPV,idCompany,idUser)
     }
 
-    fun getSkuReady(idPV: String,idCompany: String,idUser: String):List<SkuModel>{
-        return reportsDao.getSkuReady(idPV,idCompany,idUser)
+    fun getSkuReady(idUser: String):List<SkuModel>{
+        return reportsDao.getSkuReady(idUser)
     }
 
     fun getStateSku(idPV: String,idCompany: String,idUser: String):String{
