@@ -11,7 +11,6 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
-import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,7 +24,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.tawa.allinapp.R
 import java.util.*
-import kotlin.collections.ArrayList
 
 @Composable
 fun ExpandableCard(
@@ -63,7 +61,8 @@ fun ExpandableCard(
                     fontSize = 16.sp,
                 )
                 Icon(
-                    modifier = Modifier.padding(12.dp)
+                    modifier = Modifier
+                        .padding(12.dp)
                         .clickable { expandedState = !expandedState },
                     painter = if(expandedState) painterResource(id = R.drawable.ic_less) else painterResource(id = R.drawable.ic_add),
                     contentDescription = "ArrowDropDown"
@@ -73,10 +72,9 @@ fun ExpandableCard(
                 Column(Modifier.padding(start = 12.dp, end = 12.dp, bottom = 12.dp)) {
                     val textState = remember{ mutableStateOf(TextFieldValue(""))}
                     SearchView(textState)
-                    val list = checkedList as ArrayList<String>
                     LazyRow(){
-                        items(list, itemContent = {item: String ->
-                            nameCard(text = item) {
+                        items(checkedList as ArrayList<String>, itemContent = {item: String ->
+                            NameCard(text = item) {
                                 hashCheckedItem[item] = false
                                 checkedList.remove(item)
                                 onSelected(checkedList)
@@ -94,11 +92,18 @@ fun ExpandableCard(
                             {
                                 mainCheckState = it
                                 if (mainCheckState) {
-                                    for (key in hashCheckedItem.keys) { hashCheckedItem[key] = it }
+                                    checkedList.clear()
+                                    for (key in hashCheckedItem.keys) {
+                                        checkedList.add(key)
+                                        hashCheckedItem[key] = it
+                                    }
                                     onSelected(content)
                                 }
                                 else{
-                                    for (key in hashCheckedItem.keys) { hashCheckedItem[key] = it }
+                                    checkedList.clear()
+                                    for (key in hashCheckedItem.keys) {
+                                        hashCheckedItem[key] = it
+                                    }
                                     onSelected(checkedList)
                                 }
                             },
@@ -116,15 +121,12 @@ fun ExpandableCard(
                         Row(
                             Modifier.padding(start = 20.dp)
                         ){
-                            var checkState by remember { mutableStateOf(false) }
-                            //Log.d("listChecked", listCheckedItem[0].toString())
                             Checkbox(
                                 modifier = Modifier.padding(bottom = 10.dp),
                                 //checked = if(!mainCheckState) hashCheckedItem[element]!! else mainCheckState,
                                 checked = hashCheckedItem[element]!!,
                                 onCheckedChange =
                                 {
-                                    checkState = it
                                     if(mainCheckState && it){
                                         onSelected(content)
                                     } else {
@@ -157,18 +159,19 @@ fun ExpandableCard(
     }
 }
 @Composable
-fun nameCard(text: String,onClick: () -> Unit){
+fun NameCard(text: String,onClick: () -> Unit){
+    val colorGray = colorResource(id = R.color.labelNames)
     Card(
         modifier = Modifier
             .padding(start = 4.dp, top = 5.dp, bottom = 4.dp, end = 5.dp)
             .wrapContentWidth(Alignment.Start)
-            .background(Color.LightGray,RoundedCornerShape(12.dp))
-            .border(width = 1.dp, color = Color.Gray, shape = RoundedCornerShape(12.dp)),
+            .background(color = colorGray, shape = RoundedCornerShape(25.dp)),
+            //.border(width = 1.dp, color = Color.Gray),
         elevation = 2.dp
     ) {
         Row(
-            horizontalArrangement = Arrangement.Center//,
-            //modifier = Modifier.background(Color.LightGray)
+            horizontalArrangement = Arrangement.Center,
+            modifier = Modifier.background(color = colorGray)
         ){
             Text(
                 text = text,
@@ -176,13 +179,13 @@ fun nameCard(text: String,onClick: () -> Unit){
                 modifier = Modifier
                     .wrapContentWidth(Alignment.Start)
                     //.background(Color.Transparent)
-                    .padding(start = 10.dp, end = 5.dp,bottom = 6.dp,top = 6.dp)
+                    .padding(start = 10.dp, end = 5.dp, bottom = 6.dp, top = 5.dp)
             )
             Icon(
                 painter = painterResource(id = R.drawable.ic_close),
                 contentDescription = "close",
                 modifier = Modifier
-                    .padding(2.dp)
+                    .padding(top= 5.dp, bottom = 3.dp, end = 3.dp,start = 3.dp)
                     //.wrapContentSize(Alignment.CenterEnd)
                     .clickable(onClick = onClick),
             )
@@ -228,12 +231,7 @@ fun SearchView(textState: MutableState<TextFieldValue>){
 @Composable
 @Preview
 fun DefaultPreview(){
-    /*ExpandableCard(
-        title = "Canal",
-        content = listOf("Lorem","ipsum","dolor","sit amet"),
-    ){}*/
-    //
-//
-// LazyRowChecked(mutableListOf("Lorem","ipsum","dolor","sit amet"), hashCheckedItem)
-    //SearchView(content = listOf("Lorem","ipsum","dolor","sit amet"))
+    NameCard(text = "hola") {
+
+    }
 }

@@ -129,7 +129,7 @@ interface DashboardRepository {
             return when (networkHandler.isConnected) {
                 true ->{
                     try {
-                        Log.d("getGraph", "dateStart -> $dateStart \ndataEmd -> $dateEnd\nuser -> $user\nchains -> $chains")
+                        Log.d("getGraph", "companyId -> ${prefs.companyId} \ndateStart -> $dateStart \ndataEmd -> $dateEnd\nuser -> $user\nchains -> $chains")
                         val response = service.getGraph(
                             "Bearer ${prefs.token!!}",
                             prefs.companyId!!,

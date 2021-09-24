@@ -107,10 +107,10 @@ class InitFragment : BaseFragment() {
                     }
             } })
             observe(logoCompany,{it?.let{
-                if(it.isNotEmpty()){
-                    Log.d("logoCompoany",it.toString())
-                    setLogoCompany(it)}
-                else binding.ivCompanyLogo.setActualImageResource(R.drawable.ic_img)
+                if(it.isNotEmpty())
+                    setLogoCompany(it)
+                else
+                    binding.ivCompanyLogo.setActualImageResource(R.drawable.ic_img)
             }})
             observe(successCheckOut, { it?.let {
                 if(it)

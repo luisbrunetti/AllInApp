@@ -182,6 +182,11 @@ class CoverageBoardFragment : BaseFragment() {
                     .height(80.dp)
                     .padding(12.dp),
                 onClick = {
+                    Log.d("CoverageBoard",
+                        "startdate -> $startDate" +
+                                " \nendData -> $endDate" +
+                                " \nselectedUser -> $selectedUser" +
+                                " \nselectedChain -> $selectedChain")
                     if(startDate == null || endDate == null) notify(requireActivity(), R.string.select_dates)
                     else coverageViewModel.getGraph(startDate,endDate,selectedUser,selectedChain)
                 }

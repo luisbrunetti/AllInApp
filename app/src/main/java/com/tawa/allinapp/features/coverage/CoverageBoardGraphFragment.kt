@@ -77,11 +77,12 @@ class CoverageBoardGraphFragment: BaseFragment() {
                 .fillMaxWidth()
                 .wrapContentHeight()
         ) {
+            //Log.d("data", )
             val visits = if (graph?.visits?.total==0.0) 0.0f
             else (graph?.visits?.concluded?.div(graph?.visits?.total?:0.0))?.toFloat()?:0.0f
             val reports =
                 if (graph?.reports?.total==0.0) 0.0f
-            else (graph?.reports?.concluded?.div(graph?.reports?.total?:0.0))?.toFloat()?:0.0f
+                else (graph?.reports?.concluded?.div(graph?.reports?.total?:0.0))?.toFloat()?:0.0f
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -91,6 +92,7 @@ class CoverageBoardGraphFragment: BaseFragment() {
             ) {
                 Users()
                 Text(modifier = Modifier.padding(12.dp), text = "Cobertura por cadena", fontWeight = FontWeight.Bold, fontSize = 24.sp)
+
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Spacer(Modifier.width(10.dp))
                     Surface(
@@ -107,10 +109,15 @@ class CoverageBoardGraphFragment: BaseFragment() {
                     Spacer(Modifier.width(8.dp))
                     Text(text = "Menor 75%", fontSize = 14.sp)
                 }
+
                 Spacer(Modifier.height(10.dp))
+
                 Status()
+
                 Text(modifier = Modifier.padding(12.dp), text = "Status de Cumplimiento", fontWeight = FontWeight.Bold, fontSize = 24.sp)
+
                 StatusCard("Visitas",visits,graph?.visits?.total?.toInt()?:0,graph?.visits?.concluded?.toInt()?:0,graph?.visits?.pending?.toInt()?:0, R.color.colorIndicator1)
+
                 StatusCard("Tareas por hacer",reports,graph?.reports?.total?.toInt()?:0,graph?.reports?.concluded?.toInt()?:0,graph?.reports?.pending?.toInt()?:0, R.color.colorIndicator2)
             }
         }
@@ -172,6 +179,7 @@ class CoverageBoardGraphFragment: BaseFragment() {
             }
             val cover = graph?.coverage?.infoChain
             for (a in 0 until (cover?.size ?: 1)){
+                Log.d("task", " Tareas por realizar ${cover?.get(a)?.tasksToDo.toString()} \nTareas terminadas -> ${cover?.get(a)?.tasksFinished.toString()}" )
                 val size = if(cover?.get(a)?.tasksFinished == 0.0) 0.0
                 else (cover?.get(a)?.tasksToDo?.plus(cover[a].tasksFinished)?.div(cover[a].tasksFinished))?:0.0
                 Log.d("sizeBar",size.toString())
