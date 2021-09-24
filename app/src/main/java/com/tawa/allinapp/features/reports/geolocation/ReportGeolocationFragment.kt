@@ -3,36 +3,23 @@ package com.tawa.allinapp.features.reports.geolocation
 import android.app.DatePickerDialog
 import android.content.Context
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import androidx.compose.ui.text.toLowerCase
-import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.tawa.allinapp.R
 import com.tawa.allinapp.core.dialog.MessageDialogFragment
-import com.tawa.allinapp.core.extensions.invisible
 import com.tawa.allinapp.core.extensions.observe
 import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.FragmentReportGeolocationBinding
-import com.tawa.allinapp.features.reports.geolocation.ui.CheckableSpinnerAdapter
-import com.tawa.allinapp.features.reports.geolocation.ui.CheckableSpinnerAdapter.SpinnerItem
 import com.tawa.allinapp.features.reports.geolocation.ui.RecyclerUser
 import com.tawa.allinapp.models.RoutesUser
 import com.tawa.allinapp.models.TrackingInform
-import okhttp3.Route
-import okhttp3.internal.notify
 import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import java.util.*
-import java.util.stream.Collectors
 import kotlin.collections.ArrayList
 
 
@@ -48,7 +35,6 @@ class ReportGeolocationFragment : BaseFragment(), RecyclerUser.onClickButton{
     private var mMonth: Int ? = null
     private var mYear: Int? = null
     companion object{
-        val ALL_SELECTED = "Selecionar todos"
     }
 
     override fun onAttach(context: Context) {
@@ -95,23 +81,23 @@ class ReportGeolocationFragment : BaseFragment(), RecyclerUser.onClickButton{
             })
         }
 
-        binding.edUserRoutes.setOnClickListener {
+        binding.edUserGeoLocation.setOnClickListener {
             if(binding.cvUsersReportLocation.visibility == View.VISIBLE) binding.cvUsersReportLocation.visibility = View.GONE
             else binding.cvUsersReportLocation.visibility = View.VISIBLE
         }
         //Binding
-        binding.edDateUserRoutes.setOnClickListener {
-            getCurrentDay(binding.edDateUserRoutes)
+        binding.edDateGeoLocation.setOnClickListener {
+            getCurrentDay(binding.edDateGeoLocation)
         }
-        binding.btnSearchGeolocation.setOnClickListener {
-            val date = binding.edDateUserRoutes.text.toString()
+        binding.btnSearchGeoLocation.setOnClickListener {
+            val date = binding.btnSearchGeoLocation.text.toString()
             recyclerAdapter?.listChecked?.let {
                 if (date != "" && it.size > 0) {
                     //val mutableListUser: MutableList<RoutesUser> = it.stream().collect(Collectors.toList()) as MutableList<RoutesUser>
                     //Log.d("mutableList", mutableListUser.toString()) // Modificar tipo a arraylist
                     showProgressDialog()
                     reportGeoViewModel.getRoutesFromListUsers(
-                        it, reportGeoViewModel.convertDate(binding.edDateUserRoutes.text.toString())
+                        it, reportGeoViewModel.convertDate(binding.edDateGeoLocation.text.toString())
                     )
                 } else {
                     notify(requireActivity(), R.string.warningReportGeolocation)
@@ -127,7 +113,7 @@ class ReportGeolocationFragment : BaseFragment(), RecyclerUser.onClickButton{
             if (binding.cvUsersReportLocation.visibility == View.VISIBLE) binding.cvUsersReportLocation.visibility = View.GONE
             //binding.edUserRoutes.setText("")
         }
-        binding.edDateUserRoutes.setText(currentDate)
+        binding.edDateGeoLocation.setText(currentDate)
         /*binding.edUserRoutes.addTextChangedListener( object: TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 binding.cvUsersReportLocation.visibility = View.VISIBLE
@@ -233,6 +219,6 @@ class ReportGeolocationFragment : BaseFragment(), RecyclerUser.onClickButton{
                 }
             }
         }
-        binding.edUserRoutes.setText(namesConcant)
+        binding.edUserGeoLocation.setText(namesConcant)
     }
 }

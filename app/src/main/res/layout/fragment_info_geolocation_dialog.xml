@@ -30,7 +30,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tvInfoGeolocationTitle"
+            android:id="@+id/tvTitleInfoGeolocation"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -44,7 +44,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/appCompatTextView4"
+            android:id="@+id/tvTypeTitleInfoGeolocation"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="36dp"
@@ -56,25 +56,23 @@
 
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvInfoGeolocationTitle" />
+            app:layout_constraintTop_toBottomOf="@+id/tvTitleInfoGeolocation" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tvTypeGeolocation"
+            android:id="@+id/tvTypeInfoGeolocation"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="36dp"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="36dp"
             android:text="Reporte"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/appCompatTextView4"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintTop_toBottomOf="@id/tvTypeTitleInfoGeolocation" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/appCompatTextView5"
+            android:id="@+id/tvTitleDateInfoGeolocation"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="36dp"
@@ -85,10 +83,10 @@
             android:textColor="@color/black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvTypeGeolocation" />
+            app:layout_constraintTop_toBottomOf="@+id/tvTypeInfoGeolocation" />
 
         <TextView
-            android:id="@+id/tvTime"
+            android:id="@+id/tvDateInfoGeolocation"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="36dp"
@@ -98,10 +96,10 @@
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/appCompatTextView5" />
+            app:layout_constraintTop_toBottomOf="@+id/tvTitleDateInfoGeolocation" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/appCompatTextView6"
+            android:id="@+id/tvTitleUserInfoGeolocation"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="36dp"
@@ -112,10 +110,10 @@
             android:textColor="@color/black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvTime" />
+            app:layout_constraintTop_toBottomOf="@+id/tvDateInfoGeolocation" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tvUser"
+            android:id="@+id/tvUserInfoGeolocation"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="36dp"
@@ -125,10 +123,10 @@
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/appCompatTextView6" />
+            app:layout_constraintTop_toBottomOf="@+id/tvTitleUserInfoGeolocation" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/appCompatTextView8"
+            android:id="@+id/tvTitlePointInfoGeolocation"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="36dp"
@@ -139,10 +137,10 @@
             android:textColor="@color/black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvUser" />
+            app:layout_constraintTop_toBottomOf="@+id/tvUserInfoGeolocation" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tvPuntoDeVenta"
+            android:id="@+id/tvPointInfoGeolocation"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="36dp"
@@ -154,7 +152,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/appCompatTextView8" />
+            app:layout_constraintTop_toBottomOf="@+id/tvTitlePointInfoGeolocation" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.appcompat.widget.LinearLayoutCompat>
 

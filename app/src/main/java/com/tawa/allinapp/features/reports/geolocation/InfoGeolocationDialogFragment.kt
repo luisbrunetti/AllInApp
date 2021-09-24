@@ -12,7 +12,6 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.DialogFragment
 import com.google.gson.Gson
 import com.tawa.allinapp.databinding.FragmentInfoGeolocationDialogBinding
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -54,10 +53,10 @@ class InfoGeolocationDialogFragment : DialogFragment() {
         }
         infoGeolocation?.let {
             val (date, time ) = parseTime(it.time)
-            binding.tvUser.text = it.user
-            binding.tvTypeGeolocation.text = it.type
-            binding.tvPuntoDeVenta.text = it.pv
-            binding.tvTime.text = "$date - $time"
+            binding.tvUserInfoGeolocation.text = it.user
+            binding.tvTypeInfoGeolocation.text = it.type
+            binding.tvPointInfoGeolocation.text = it.pv
+            binding.tvDateInfoGeolocation.text = "$date - $time"
         }
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         binding.btnCloseMapRoutes.setOnClickListener {
@@ -73,7 +72,7 @@ class InfoGeolocationDialogFragment : DialogFragment() {
     }
 
     private fun parseTime(time:String): Pair<String,String>{
-        Log.d("parse", time.toString())
+        Log.d("parse", time)
         val inputFormatter = DateTimeFormatter.ofPattern(GENERIC_FORMAT, Locale.ENGLISH)
         val outputFormatter = DateTimeFormatter.ofPattern(FORMAT_VIEW, Locale.ENGLISH)
         val dateTime = LocalDateTime.parse(time,inputFormatter)

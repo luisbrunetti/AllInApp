@@ -326,13 +326,13 @@
                         android:textColor="@color/colorLayoutTop"
                         android:textSize="18sp"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/btSavePictures"
+                        app:layout_constraintEnd_toStartOf="@+id/btnSavePictures"
                         app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/rvAudioRecord" />
 
                     <androidx.appcompat.widget.AppCompatButton
-                        android:id="@+id/btSavePictures"
+                        android:id="@+id/btnSavePictures"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="16dp"

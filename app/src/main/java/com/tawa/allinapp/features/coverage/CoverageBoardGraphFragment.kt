@@ -91,7 +91,10 @@ class CoverageBoardGraphFragment: BaseFragment() {
                     .verticalScroll(rememberScrollState()),
             ) {
                 Users()
-                Text(modifier = Modifier.padding(12.dp), text = "Cobertura por cadena", fontWeight = FontWeight.Bold, fontSize = 24.sp)
+
+                Text(modifier = Modifier.padding(12.dp), text = "Cobertura por cadena",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 24.sp)
 
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Spacer(Modifier.width(10.dp))

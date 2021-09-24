@@ -98,7 +98,7 @@
                             app:layout_constraintTop_toBottomOf="@+id/edUserRoutes" />
 
                         <EditText
-                            android:id="@+id/edDateUserRoutes"
+                            android:id="@+id/edDateGeoLocation"
                             android:layout_width="0dp"
                             android:layout_height="56dp"
                             android:layout_marginStart="36dp"
@@ -165,7 +165,7 @@
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toEndOf="@id/btnRoutes"
-                            app:layout_constraintTop_toBottomOf="@+id/edDateUserRoutes"
+                            app:layout_constraintTop_toBottomOf="@+id/edDateGeoLocation"
                             app:layout_constraintVertical_bias="0.0" />
 
                         <Button
@@ -185,7 +185,7 @@
                             app:layout_constraintEnd_toStartOf="@+id/btnTracking"
                             app:layout_constraintHorizontal_bias="0.0"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/edDateUserRoutes"
+                            app:layout_constraintTop_toBottomOf="@+id/edDateGeoLocation"
                             app:layout_constraintVertical_bias="0.0" />
 
                         <LinearLayout

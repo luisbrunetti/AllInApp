@@ -16,7 +16,7 @@
             app:sub="@{`Informe:`}"/>
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/appCompatTextView2"
+            android:id="@+id/tvUserGeoLocation"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="36dp"
@@ -28,25 +28,9 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/iHeader" />
 
-        <androidx.appcompat.widget.AppCompatSpinner
-            android:id="@+id/spinner"
-            android:layout_width="0dp"
-            android:layout_height="56dp"
-            android:layout_marginStart="36dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="36dp"
-            android:paddingTop="10dp"
-            android:visibility="gone"
-            android:text="asdsasdadsadsads"
-            android:textSize="18sp"
-
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/appCompatTextView2" />
 
         <EditText
-            android:id="@+id/edUserRoutes"
+            android:id="@+id/edUserGeoLocation"
             android:layout_width="0dp"
             android:layout_height="56dp"
             android:layout_marginStart="36dp"
@@ -65,10 +49,10 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/appCompatTextView2" />
+            app:layout_constraintTop_toBottomOf="@+id/tvUserGeoLocation" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/appCompatTextView3"
+            android:id="@+id/tvDateGeoLocation"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="36dp"
@@ -79,7 +63,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edUserRoutes" />
+            app:layout_constraintTop_toBottomOf="@+id/edUserGeoLocation" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cvUsersReportLocation"
@@ -87,7 +71,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/edUserRoutes"
+            app:layout_constraintTop_toBottomOf="@id/edUserGeoLocation"
             android:background="@drawable/rounded"
             android:visibility="gone"
             app:cardCornerRadius="5dp"
@@ -104,7 +88,7 @@
         </androidx.cardview.widget.CardView>
 
         <EditText
-            android:id="@+id/edDateUserRoutes"
+            android:id="@+id/edDateGeoLocation"
             android:layout_width="0dp"
             android:layout_height="56dp"
             android:layout_marginStart="36dp"
@@ -120,10 +104,10 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/appCompatTextView3" />
+            app:layout_constraintTop_toBottomOf="@+id/tvDateGeoLocation" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btnSearchGeolocation"
+            android:id="@+id/btnSearchGeoLocation"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
 
@@ -140,7 +124,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edDateUserRoutes" />
+            app:layout_constraintTop_toBottomOf="@+id/edDateGeoLocation" />
 
 
 

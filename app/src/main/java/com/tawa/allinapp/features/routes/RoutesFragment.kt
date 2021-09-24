@@ -84,8 +84,8 @@ class RoutesFragment : BaseFragment() {
         binding.btnBackRoutes.setOnClickListener {
             activity?.onBackPressed()
         }
-        binding.edDateUserRoutes.setOnClickListener{
-            getDay(binding.edDateUserRoutes)
+        binding.edDateGeoLocation.setOnClickListener{
+            getDay(binding.edDateGeoLocation)
         }
         binding.btnShowMapRoutes.setOnClickListener {
             if(binding.tvType.text=="Rutas")
@@ -131,7 +131,7 @@ class RoutesFragment : BaseFragment() {
                 routesViewModel.getTracking(newList[0].id, dateFormat)
             }
         }
-        binding.edDateUserRoutes.setText(formatter.format(timestamp))
+        binding.edDateGeoLocation.setText(formatter.format(timestamp))
         dateFormat = formatter1.format(timestamp)
         return binding.root
     }

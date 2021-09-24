@@ -59,7 +59,7 @@ class InformRoutesMapDialogFragment : DialogFragment(), GoogleMap.OnInfoWindowCl
 
         hashMapMarkerRoute = mutableMapOf()
         listMarkers = ArrayList()
-        var firstTime: Boolean = true
+        var firstTime = true
         var lat : Double? = null
         var long: Double? = null
         listRoutes?.let { listInformTracking ->
