@@ -165,7 +165,7 @@ class PictureFragment : BaseFragment() {
         }
         pictureViewModel.getTypePicture()
         binding.iHeader.ivHeader.setOnClickListener { activity?.onBackPressed() }
-        binding.btTakePhotoBefore.setOnClickListener {
+        binding.btnPhotoBeforePicture.setOnClickListener {
             if (pictureBeforeAdapter.collection.size < 5) {
                 checkCameraPermissions(before)
             } else {
@@ -173,7 +173,7 @@ class PictureFragment : BaseFragment() {
                     .show(childFragmentManager, "dialog")
             }
         }
-        binding.btTakePhotoAfter.setOnClickListener {
+        binding.btnPhotoAfterPicture.setOnClickListener {
             if (pictureAfterAdapter.collection.size < 5) {
                 checkCameraPermissions(after)
             } else {
@@ -181,7 +181,7 @@ class PictureFragment : BaseFragment() {
                     .show(childFragmentManager, "dialog")
             }
         }
-        binding.btSavePictures.setOnClickListener {
+        binding.btnSavePictures.setOnClickListener {
             if(type!="terminado")
             {
                 showProgressDialog()
@@ -199,7 +199,7 @@ class PictureFragment : BaseFragment() {
             else
                 notify(activity,R.string.register_ready)
         }
-        binding.btSendPictures.setOnClickListener {
+        binding.btnSendPictures.setOnClickListener {
             if(type!="terminado")
             {
                 showProgressDialog()
@@ -355,19 +355,19 @@ class PictureFragment : BaseFragment() {
     }
 
     private fun disableComponents() {
-        binding.btTakePhotoBefore.apply {
+        binding.btnPhotoBeforePicture.apply {
             isEnabled = false
             alpha = 0.5F
         }
-        binding.btTakePhotoAfter.apply {
+        binding.btnPhotoAfterPicture.apply {
             isEnabled = false
             alpha = 0.5F
         }
-        binding.btSendPictures.apply {
+        binding.btnSendPictures.apply {
             isEnabled = false
             alpha = 0.5F
         }
-        binding.btSavePictures.apply {
+        binding.btnSavePictures.apply {
             isEnabled = false
             alpha = 0.5F
         }

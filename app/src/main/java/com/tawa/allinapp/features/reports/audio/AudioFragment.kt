@@ -1,11 +1,9 @@
 package com.tawa.allinapp.features.reports.audio
 
-import android.annotation.SuppressLint
 import android.content.ContentUris
 import android.content.Context
 import android.database.Cursor
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.os.SystemClock
@@ -17,7 +15,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.loader.content.CursorLoader
 import com.tawa.allinapp.R
 import com.tawa.allinapp.core.dialog.ConditionalDialogFragment
 import com.tawa.allinapp.core.dialog.MessageDialogFragment
@@ -338,7 +335,7 @@ class AudioFragment : BaseFragment() {
                 activity?.onBackPressed()
             }
         }
-        binding.btSavePictures.setOnClickListener {
+        binding.btnSavePictures.setOnClickListener {
             if (audio64 != "" && audioSelected64 != "") {
                 //notify(activity, R.string.only_one_audio)
             } else {
@@ -407,7 +404,7 @@ class AudioFragment : BaseFragment() {
             isEnabled = false
             alpha = 0.5F
         }
-        binding.btSavePictures.apply {
+        binding.btnSavePictures.apply {
             isEnabled = false
             alpha = 0.5f
         }
