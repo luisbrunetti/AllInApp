@@ -2,7 +2,6 @@ package com.tawa.allinapp.features
 
 import android.os.Bundle
 import android.provider.Settings
-import android.view.Menu
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity

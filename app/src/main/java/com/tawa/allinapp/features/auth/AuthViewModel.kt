@@ -1,6 +1,5 @@
 package com.tawa.allinapp.features.auth
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.tawa.allinapp.core.interactor.UseCase
@@ -8,14 +7,12 @@ import com.tawa.allinapp.core.platform.BaseViewModel
 import com.tawa.allinapp.data.local.Prefs
 import com.tawa.allinapp.features.auth.usecase.DoLogin
 import com.tawa.allinapp.features.auth.usecase.GetCompaniesRemote
-import com.tawa.allinapp.features.auth.usecase.GetPVRemote
 import javax.inject.Inject
 
 class AuthViewModel
 @Inject constructor(
     private val doLogin: DoLogin,
     private val getCompaniesRemote: GetCompaniesRemote,
-    private val getPVRemote: GetPVRemote,
     private val pref: Prefs
 ): BaseViewModel(){
 
@@ -79,9 +76,7 @@ class AuthViewModel
         this._successGetCompanies.value = success
     }
 
-    fun getPVRemote() = getPVRemote(UseCase.None()) {
-        it.either(::handleFailure, ::handlePVRemote)
-    }
+
     private fun handlePVRemote(success: Boolean) {
         this._successGetPV.value = success
     }

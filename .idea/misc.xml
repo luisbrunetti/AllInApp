@@ -109,7 +109,7 @@
         <entry key="..\:/Users/luisb/OneDrive/Documents/AndroidStudio/tawa-android/app/src/main/res/drawable/rounded.xml" value="0.25625" />
         <entry key="..\:/Users/luisb/OneDrive/Documents/AndroidStudio/tawa-android/app/src/main/res/drawable/roundedlinear.xml" value="0.22135416666666666" />
         <entry key="..\:/Users/luisb/OneDrive/Documents/AndroidStudio/tawa-android/app/src/main/res/drawable/spinner_emp.xml" value="0.22135416666666666" />
-        <entry key="..\:/Users/luisb/OneDrive/Documents/AndroidStudio/tawa-android/app/src/main/res/layout/activity_home.xml" value="0.67" />
+        <entry key="..\:/Users/luisb/OneDrive/Documents/AndroidStudio/tawa-android/app/src/main/res/layout/activity_home.xml" value="0.33" />
         <entry key="..\:/Users/luisb/OneDrive/Documents/AndroidStudio/tawa-android/app/src/main/res/layout/activity_login.xml" value="0.2546875" />
         <entry key="..\:/Users/luisb/OneDrive/Documents/AndroidStudio/tawa-android/app/src/main/res/layout/dialog__map_pdv.xml" value="0.3776041666666667" />
         <entry key="..\:/Users/luisb/OneDrive/Documents/AndroidStudio/tawa-android/app/src/main/res/layout/dialog__map_routes.xml" value="0.2078125" />
@@ -118,6 +118,7 @@
         <entry key="..\:/Users/luisb/OneDrive/Documents/AndroidStudio/tawa-android/app/src/main/res/layout/dialog_home.xml" value="0.24895833333333334" />
         <entry key="..\:/Users/luisb/OneDrive/Documents/AndroidStudio/tawa-android/app/src/main/res/layout/dialog_message.xml" value="0.20520833333333333" />
         <entry key="..\:/Users/luisb/OneDrive/Documents/AndroidStudio/tawa-android/app/src/main/res/layout/dialog_progress.xml" value="0.20520833333333333" />
+        <entry key="..\:/Users/luisb/OneDrive/Documents/AndroidStudio/tawa-android/app/src/main/res/layout/dialog_user_menu.xml" value="0.25677083333333334" />
         <entry key="..\:/Users/luisb/OneDrive/Documents/AndroidStudio/tawa-android/app/src/main/res/layout/fragment_audio.xml" value="0.31354166666666666" />
         <entry key="..\:/Users/luisb/OneDrive/Documents/AndroidStudio/tawa-android/app/src/main/res/layout/fragment_checklist.xml" value="0.23125" />
         <entry key="..\:/Users/luisb/OneDrive/Documents/AndroidStudio/tawa-android/app/src/main/res/layout/fragment_conditional_dialog.xml" value="0.33" />

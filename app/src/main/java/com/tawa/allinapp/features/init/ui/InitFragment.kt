@@ -15,7 +15,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
@@ -59,9 +58,8 @@ class InitFragment : BaseFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentInitBinding.inflate(inflater)
         showProgressDialog()
-        selector = activity?.intent?.getBooleanExtra("selector",false)?:false
-        //Seleccionando empresa
-        if(selector) showSelector()
+        //Log.d("asd", activity?.intent?.getBooleanExtra("selector",false).toString())
+        //selector = activity?.intent?.getBooleanExtra("selector",false)?:false
         initViewModel = viewModel(viewModelFactory) {
             observe(dayState, { it?.let { if(it) {
                 val currentDay = getString(R.string.current_day, getDayWeek(),getDayMonth(),getMonth(),getYear())
@@ -190,8 +188,18 @@ class InitFragment : BaseFragment() {
                     }
                 }
             })
+            observe(successGetCompanyId, {
+                it?.let {
+                    if(it.isEmpty()) {
+                        showSelector()
+                    }
+                }
+            })
             failure(failure, ::handleFailure)
         }
+        //Seleccionando empresa
+        //if(selector) showSelector()
+        initViewModel.getIdCompany()
         initViewModel.getPVDesc()
         initViewModel.getLogoCompany()
         initViewModel.getIdUser()
@@ -206,6 +214,7 @@ class InitFragment : BaseFragment() {
             frag.listener = object : UserMenuDialogFragment.Callback {
                 override fun onAccept() {
                     initViewModel.setSession(false)
+                    initViewModel.setIdCompany("","")
                     showLogin(context)
                 }
                 override fun onSendPassword() {

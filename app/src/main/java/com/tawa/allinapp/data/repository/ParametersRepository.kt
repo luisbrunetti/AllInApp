@@ -1,5 +1,6 @@
 package com.tawa.allinapp.data.repository
 
+import android.util.Log
 import com.tawa.allinapp.core.functional.Either
 import com.tawa.allinapp.core.functional.Failure
 import com.tawa.allinapp.core.functional.NetworkHandler
@@ -13,7 +14,7 @@ import javax.inject.Inject
 interface ParametersRepository {
     fun setCompanies(): Either<Failure, Boolean>
     fun getCompanies(): Either<Failure,List<Company>>
-    fun setPV(): Either<Failure, Boolean>
+    fun setPV(idCompany: String): Either<Failure, Boolean>
     fun getPV(company:String): Either<Failure, List<Schedule>>
 
     class Network
@@ -31,10 +32,13 @@ interface ParametersRepository {
                             true -> {
                                 response.body()?.let { body ->
                                     if(body.success) {
+                                        Log.d("setCompanies",body.data.toString())
                                         body.data.map {
                                             parametersDataSource.insertCompanies(it.toModel(prefs.idUser?:""))
+                                            // Insertar los puntos de venta
+                                            setPV(it.id)
                                         }
-                                        prefs.companyId = body.data[0].id
+                                        //prefs.companyId = body.data[0].id
                                         Either.Right(true)
                                     }
                                     else Either.Left(Failure.DefaultError(body.message))
@@ -58,11 +62,11 @@ interface ParametersRepository {
             }
         }
 
-        override fun setPV(): Either<Failure, Boolean> {
+        override fun setPV(idCompany: String): Either<Failure, Boolean> {
             return when (networkHandler.isConnected) {
                 true ->{
                     try {
-                        val response = service.getSchedule("Bearer ${prefs.token!!}", "${prefs.companyId}").execute()
+                        val response = service.getSchedule("Bearer ${prefs.token!!}", idCompany).execute()
                         when (response.isSuccessful) {
                             true -> {
                                 response.body()?.let { body ->

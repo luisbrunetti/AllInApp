@@ -67,7 +67,6 @@ interface AuthRepository {
                             true -> {
                                 response.body()?.let { body ->
                                     if(body.success) {
-                                        Log.d("estado",body.message.toString())
                                         Either.Right(true)
                                     }
                                     else

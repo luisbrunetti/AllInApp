@@ -12,7 +12,6 @@ import android.widget.ArrayAdapter
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.DialogFragment
-import com.tawa.allinapp.core.dialog.MessageDialogFragment
 import com.tawa.allinapp.core.extensions.observe
 import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.platform.BaseFragment
@@ -56,7 +55,7 @@ class SelectorDialogFragment
                 getCompanies()
             } })
             observe(setIdCompanySuccess, { it?.let { if (it) {
-                authViewModel.getPVRemote()
+                //authViewModel.getPVRemote()
                 baseFragment.hideProgressDialog()
             }
             } })
@@ -76,7 +75,7 @@ class SelectorDialogFragment
             } })
             observe(failure, {
                 it?.let {
-                    //Log.d("failure", it.toString())
+                    Log.d("failure", it.toString())
                     //val message = MessageDialogFragment.newInstance("Ha ocurrido al contectarse con el servidor \n ERROR : ${it.toString()}")
                     //message.show(parentFragmentManager, "")
                     //activity?.onBackPressed()

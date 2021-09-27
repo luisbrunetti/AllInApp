@@ -8,7 +8,6 @@ import com.tawa.allinapp.data.local.Prefs
 import com.tawa.allinapp.data.local.datasource.CheckDataSource
 import com.tawa.allinapp.data.remote.entities.CheckRemote
 import com.tawa.allinapp.data.remote.service.CheckService
-import com.tawa.allinapp.data.remote.service.ParametersService
 import com.tawa.allinapp.models.Check
 import java.util.*
 import javax.inject.Inject
@@ -29,7 +28,6 @@ interface CheckRepository {
     fun getStateCheck(idPv: String): Either<Failure, Boolean>
     fun syncChecks(latitude: String,longitude: String): Either<Failure, Boolean>
     fun sendCheck(latitude: String,longitude: String,type:Int): Either<Failure, String>
-
     class Network
     @Inject constructor(private val networkHandler: NetworkHandler,
                         private val checkDataSource: CheckDataSource,
@@ -119,6 +117,7 @@ interface CheckRepository {
 
         override fun getIdCompany(): Either<Failure, String> {
             return try {
+                Log.d("IdComapny",prefs.companyId!!.toString())
                 Either.Right(prefs.companyId!!)
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))

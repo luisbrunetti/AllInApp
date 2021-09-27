@@ -121,7 +121,7 @@ class InformRoutesMapDialogFragment : DialogFragment(), GoogleMap.OnInfoWindowCl
                 }
             }
             if (lat != null && long != null) {
-                //Log.d("camara","entre")
+                Log.d("camara","entre")
                 googleMap.moveCamera(CameraUpdateFactory.newLatLng(LatLng(lat!!, long!!)))
                 googleMap.setMinZoomPreference(10f)
             }
@@ -183,7 +183,6 @@ class InformRoutesMapDialogFragment : DialogFragment(), GoogleMap.OnInfoWindowCl
         fun onAccept()
     }
     override fun onInfoWindowClick(p0: Marker) {
-        Log.d("asd","infoWindow")
         val infoGeolocation = hashMapMarkerRoute?.get(p0.id)
         infoGeolocation?.let {
             val dialog = InfoGeolocationDialogFragment.newInstance(it)

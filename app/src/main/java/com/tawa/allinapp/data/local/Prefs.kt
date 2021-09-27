@@ -88,4 +88,7 @@ class Prefs
         get() = prefs.getString(DATA_SKU,"")
         set(value) = prefs.edit().putString(DATA_SKU,value).apply()
 
+    fun removeCompanyId(){
+        prefs.edit().remove(COMPANY_ID).apply()
+    }
 }

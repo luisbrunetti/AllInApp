@@ -1,5 +1,6 @@
 package com.tawa.allinapp.features.init
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.tawa.allinapp.core.interactor.UseCase
@@ -94,7 +95,7 @@ class InitViewModel
     val setIdCompanySuccess: LiveData<Boolean>
         get()= _setIdCompanySuccess
 
-    private val _successGetCompanyId= MutableLiveData<String>("")
+    private val _successGetCompanyId= MutableLiveData<String>()
     val successGetCompanyId: LiveData<String>
         get()= _successGetCompanyId
 
@@ -288,13 +289,9 @@ class InitViewModel
 
     fun syncPhotoReportMassive(latitude: String,longitude: String) = syncPhotoReports(SyncPhotoReports.Params(latitude,longitude)) { it.either(::handleFailure, ::handleSyncPhotoReport) }
 
-    private fun handleSyncPhotoReport(success:Boolean) {
-        this._successSyncPhotoReports.value = success
-    }
+    private fun handleSyncPhotoReport(success:Boolean) { this._successSyncPhotoReports.value = success }
 
-    private fun handleSyncCheck(success:Boolean) {
-        this._successSyncChecks.value = success
-    }
+    private fun handleSyncCheck(success:Boolean) { this._successSyncChecks.value = success }
 
     private fun handlePVDesc(checkIn:String) {
         this._pvDesc.value = checkIn
@@ -333,6 +330,7 @@ class InitViewModel
         _idPv.value = success
     }
     private fun handleGetIdCompany(idCompany: String) {
+        Log.d("id_Company",idCompany.toString())
         _successGetCompanyId.value = idCompany
     }
     private fun handleGetIdUser(idCompany: String) {
@@ -417,5 +415,6 @@ class InitViewModel
     }
 
     fun setSession(value : Boolean){ pref.session =value}
+
 
 }
