@@ -15,8 +15,8 @@ interface CheckDao {
     @Query("SELECT COUNT(id) FROM `check`WHERE pv=:idPv and idUser=:idUser")
     fun getStateCheck(idPv:String,idUser:String): Int
 
-    @Query("SELECT * FROM `check` WHERE state='no enviado'")
-    fun getChecks(): List<CheckModel>
+    @Query("SELECT * FROM `check` WHERE state='no enviado' and idUser=:idUser")
+    fun getChecks(idUser: String): List<CheckModel>
 
     @Query("UPDATE `check` set state =:state where schedule=:schedule and pv=:pv and company=:idCompany and idUser=:idUser and comment=:type")
     fun updateCheck(schedule:String,pv:String,idCompany: String,idUser: String,type:String,state:String)

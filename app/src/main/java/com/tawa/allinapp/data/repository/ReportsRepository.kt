@@ -135,7 +135,7 @@ interface ReportsRepository {
             return when (networkHandler.isConnected) {
                 true ->{
                     try {
-                        val request = reportsDataSource.getAllPhotoReports().map { it.toRemote(longitude.toDouble(),latitude.toDouble(),Calendar.getInstance().toInstant().toString()) }
+                        val request = reportsDataSource.getAllPhotoReports(prefs.idUser?:"").map { it.toRemote(longitude.toDouble(),latitude.toDouble(),Calendar.getInstance().toInstant().toString()) }
                         val response = service.syncPhotoReports("Bearer ${prefs.token!!}", request).execute()
                         when (response.isSuccessful) {
                             true -> {
@@ -510,7 +510,7 @@ interface ReportsRepository {
                         val listIdSku = arrayListOf<String>()
                         val listSku = mutableListOf<ReportsSkuRemote.RequestMassive>()
                         val linesAnswer = mutableListOf<Lines>()
-                        val skus = reportsDataSource.getSkuReady(prefs.pvId?:"",prefs.companyId?:"",prefs.idUser?:"").map { it.toView() }
+                        val skus = reportsDataSource.getSkuReady(prefs.idUser?:"").map { it.toView() }
                         for (sku in skus)
                         {
                             val skuDetails = reportsDataSource.getSkuDetail(sku.id).map { it.toView() }
@@ -641,7 +641,7 @@ interface ReportsRepository {
                     try {
                         val reportData = mutableListOf<ReportStandard>()
                         var image =""
-                        val report = reportsDataSource.getReportsPvReady(prefs.companyId ?: "", prefs.pvId ?: "", prefs.idUser ?: "")
+                        val report = reportsDataSource.getReportsPvReady(prefs.idUser ?: "")
 
                         val audio = reportsDataSource.getAudioReports(prefs.pvId ?: "", prefs.idUser ?: "")
                         //Log.d("syncReportAudio", report.toString())
@@ -764,10 +764,10 @@ interface ReportsRepository {
                         val reportMassive = mutableListOf<ReportStandardMassive>()
                         val reportData = mutableListOf<ReportStandard>()
                         val listIdStandard = arrayListOf<String>()
-                        val reports = reportsDataSource.getReportsPvReady(prefs.companyId?:"",prefs.pvId?:"",prefs.idUser?:"")
+                        val reports = reportsDataSource.getReportsPvReady(prefs.idUser?:"")
                         for (report in reports)
                         {
-                            val stateReport = reportsDataSource.getReportsPvState(report.id,prefs.pvId?:"",prefs.idUser?:"")
+                            val stateReport = reportsDataSource.getReportsPvState(report.id,report.idPv,prefs.idUser?:"")
                             val questions  = questionsDataSource.getQuestionsByIdReport(report.id).map { it.toView() }
                             for(question in questions)
                             {

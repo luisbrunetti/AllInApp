@@ -146,7 +146,7 @@ class TrackingMapDialogFragment: DialogFragment() {
                                 }
                             }
                             googleMap.moveCamera(CameraUpdateFactory.newLatLng(LatLng(lat[0].toDouble(), lon[0].toDouble())))
-                            googleMap.setMinZoomPreference(1f)
+                            googleMap.setMinZoomPreference(10f)
                         }
                     }
                 }

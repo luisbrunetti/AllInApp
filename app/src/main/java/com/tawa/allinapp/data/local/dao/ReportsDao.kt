@@ -25,8 +25,8 @@ interface ReportsDao {
     @Query("SELECT reports.id,reports.reportName,reports.idCompany,reports.nameCompany,reports.idUser,reports.idUserMod,reports.feMod,reports.feCreate,report_pv.state,report_pv.type,report_pv.idPv FROM reports,report_pv WHERE reports.id=report_pv.idReport and reports.idUser=report_pv.idUser and  reports.idCompany=:idCompany and report_pv.idPv=:idPv and report_pv.idUser=:idUser order by reports.id asc")
     fun getReportsPv(idCompany: String,idPv: String,idUser: String): List<ReportModel>
 
-    @Query("SELECT reports.id,reports.reportName,reports.idCompany,reports.nameCompany,reports.idUser,reports.idUserMod,reports.feMod,reports.feCreate,report_pv.state,report_pv.type,report_pv.idPv FROM reports,report_pv WHERE reports.id=report_pv.idReport and reports.idUser=report_pv.idUser and  reports.idCompany=:idCompany and report_pv.idPv=:idPv and report_pv.idUser=:idUser and report_pv.type='Terminado'")
-    fun getReportsPvReady(idCompany: String,idPv: String,idUser: String): List<ReportModel>
+    @Query("SELECT reports.id,reports.reportName,reports.idCompany,reports.nameCompany,reports.idUser,reports.idUserMod,reports.feMod,reports.feCreate,report_pv.state,report_pv.type,report_pv.idPv FROM reports,report_pv WHERE reports.id=report_pv.idReport and reports.idUser=report_pv.idUser and  report_pv.idUser=:idUser and report_pv.type='Terminado'")
+    fun getReportsPvReady(idUser: String): List<ReportModel>
 
     @Query("SELECT reports.id,reports.reportName,reports.idCompany,reports.nameCompany,reports.idUser,reports.idUserMod,reports.feMod,reports.feCreate,report_pv.state,report_pv.type,report_pv.idPv FROM reports,report_pv WHERE reports.id=report_pv.idReport and reports.idUser=report_pv.idUser and  reports.idCompany=:idCompany and report_pv.idPv=:idPv and report_pv.idUser=:idUser and reports.id=:idReport")
     fun getReportPv(idCompany: String,idPv: String,idUser: String,idReport: String): ReportModel
@@ -52,8 +52,8 @@ interface ReportsDao {
     @Query("SELECT * FROM reports_photo WHERE pv=:pv AND company=:company AND idUser = :idUser")
     fun getPhotoReports(pv:String, company:String, idUser:String): List<PhotoReportModel>
 
-    @Query("SELECT * FROM reports_photo where type='terminado'")
-    fun getAllPhotoReports(): List<PhotoReportModel>
+    @Query("SELECT * FROM reports_photo where type='terminado' and idUser=:idUser")
+    fun getAllPhotoReports(idUser: String): List<PhotoReportModel>
 
     @Query("UPDATE reports_photo set state=:state, type=:type where type='terminado'")
     fun updatePhotoReport(state:String,type: String)
@@ -79,8 +79,8 @@ interface ReportsDao {
     @Query("SELECT * FROM sku WHERE idPv=:idPv and idCompany=:idCompany and idUser=:idUser")
     fun getSku(idPv:String,idCompany: String,idUser: String): List<SkuModel>
 
-    @Query("SELECT * FROM sku WHERE idPv=:idPv and idCompany=:idCompany and idUser=:idUser and type='Terminado'")
-    fun getSkuReady(idPv:String,idCompany: String,idUser: String): List<SkuModel>
+    @Query("SELECT * FROM sku WHERE idUser=:idUser and type='Terminado'")
+    fun getSkuReady(idUser: String): List<SkuModel>
 
     @Query("SELECT state FROM sku WHERE idPv=:idPv and idCompany=:idCompany and idUser=:idUser")
     fun getStateSku(idPv:String,idCompany: String,idUser: String): String

@@ -62,7 +62,7 @@ interface CheckRepository {
             return when (networkHandler.isConnected) {
                 true ->{
                     try {
-                        val request = checkDataSource.getChecks().map { it.toRemote(latitude.toDouble(),longitude.toDouble(),Calendar.getInstance().toInstant().toString()) }
+                        val request = checkDataSource.getChecks(prefs.idUser?:"").map { it.toRemote(latitude.toDouble(),longitude.toDouble(),Calendar.getInstance().toInstant().toString()) }
                         Log.d("requestSyncChecks ->> ",request.toString())
                         val response = service.syncChecks("Bearer ${prefs.token!!}", request).execute()
                         Log.d("responseSyncChecks ->> ",response.toString())
