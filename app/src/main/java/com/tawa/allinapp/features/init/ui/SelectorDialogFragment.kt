@@ -57,6 +57,7 @@ class SelectorDialogFragment
             observe(setIdCompanySuccess, { it?.let { if (it) {
                 //authViewModel.getPVRemote()
                 baseFragment.hideProgressDialog()
+                dismiss()
             }
             } })
             observe(successGetReports, { it?.let { if (it)
