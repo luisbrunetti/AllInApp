@@ -255,7 +255,7 @@ class InitViewModel
 
     fun getIdPV() = getIdPV(UseCase.None()) { it.either(::handleFailure, ::handlePVId) }
 
-    fun getPVId() = getIdPV(UseCase.None()) { it.either(::handleFailure, ::handleIdPV) }
+    fun getPVSaved() = getIdPV(UseCase.None()) { it.either(::handleFailure, ::handleIdPV) }
 
     fun getCompanies() = getCompanies(UseCase.None()) { it.either(::handleFailure, ::handleCompanyList) }
 
@@ -426,6 +426,9 @@ class InitViewModel
 
     fun changeCheckState(value:String){
         this._successSendCheck.value = value
+    }
+    fun changeStatePv(value: String){
+        this._pvId.value = value
     }
 
 }

@@ -98,7 +98,7 @@ class CheckInDialogFragment
         requestPermission()
         getLastLocation()
 
-        binding.pdvSpinner?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+        binding.pdvSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
             override fun onNothingSelected(parent: AdapterView<*>?) {  }
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 list?.get(position)?.let { initViewModel.getStateCheck(it.pv) }

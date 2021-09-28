@@ -78,8 +78,12 @@ class InitFragment : BaseFragment() {
                 initViewModel.getIdPV()
             }})
             observe(pvId, { it?.let {
-                _pvId = it
-                showCheckOut()
+                ///bug
+                //if(it.isNotEmpty()){
+                    _pvId = it
+                    //initViewModel.changeStatePv("")
+                    showCheckOut()
+                //}
             }})
             observe(successCheckIn, { it?.let {
                     if(it)
@@ -231,7 +235,6 @@ class InitFragment : BaseFragment() {
             }
             frag.show(childFragmentManager, "participant")
         }
-
         binding.btSync.setOnClickListener {
             showProgressDialog()
             getActualLocation()
@@ -270,7 +273,7 @@ class InitFragment : BaseFragment() {
         dialog.listener = object : SelectorDialogFragment.Callback{
             override fun onAccept() {
                 initViewModel.getLogoCompany()
-                initViewModel.getPVId()
+                initViewModel.getPVSaved()
             }
         }
         dialog.show(childFragmentManager, "dialog")
