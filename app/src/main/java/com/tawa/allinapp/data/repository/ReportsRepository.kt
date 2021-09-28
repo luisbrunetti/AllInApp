@@ -71,6 +71,7 @@ interface ReportsRepository {
             return when (networkHandler.isConnected) {
                 true ->{
                     try {
+                        Log.d("setReports", "token -> ${prefs.token!!} company -> ${company}")
                         val response = service.getReports("Bearer ${prefs.token!!}",company).execute()
                         when (response.isSuccessful) {
                             true -> {
@@ -384,7 +385,7 @@ interface ReportsRepository {
         override fun getReports(): Either<Failure, List<Report>> {
             return try {
                 val idPv = prefs.pvId!!
-
+                Log.d("idPv", idPv)
                 if(idPv.isEmpty())
                     Either.Right(reportsDataSource.getReports(prefs.companyId?:"",prefs.idUser?:"").map { it.toView() })
                 else{

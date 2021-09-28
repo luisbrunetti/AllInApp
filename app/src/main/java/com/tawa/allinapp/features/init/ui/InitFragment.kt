@@ -79,11 +79,11 @@ class InitFragment : BaseFragment() {
             }})
             observe(pvId, { it?.let {
                 ///bug
-                //if(it.isNotEmpty()){
+                if(it.isNotEmpty()){
                     _pvId = it
-                    //initViewModel.changeStatePv("")
+                    initViewModel.changeStatePv("")
                     showCheckOut()
-                //}
+                }
             }})
             observe(successCheckIn, { it?.let {
                     if(it)

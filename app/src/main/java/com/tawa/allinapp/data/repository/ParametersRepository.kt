@@ -33,13 +33,11 @@ interface ParametersRepository {
                                 response.body()?.let { body ->
                                     if(body.success) {
                                         body.data.map {
-                                            Log.d("Companies", it.id.toString())
+                                            Log.d("setCompanies",it.id+ "\n token -> "+ prefs.token.toString())
                                             parametersDataSource.insertCompanies(it.toModel(prefs.idUser?:""))
-                                            // Insertar los puntos de venta
                                             setPV(it.id)
                                         }
                                         prefs.companyId = ""
-                                        //prefs.companyId = body.data[0].id
                                         Either.Right(true)
                                     }
                                     else Either.Left(Failure.DefaultError(body.message))

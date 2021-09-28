@@ -206,8 +206,12 @@ class InitViewModel
     val type: LiveData<Int>
         get()= _type
 
-    private val _getPvIdf = MutableLiveData<String>()
-    val getPvIdf: LiveData<String> get() = _getPvIdf
+    private val _getPvIdf= MutableLiveData<String>()
+    val getPvIdf: LiveData<String>
+        get()= _getPvIdf
+
+    //private val _getPvIdf = MutableLiveData<String>()
+    //val getPvIdf: LiveData<String> get() = _getPvIdf
 
     init {
         startHome()
@@ -409,8 +413,10 @@ class InitViewModel
         this._logoCompany.value = image
     }
 
-    fun sendCheck(latitude: String,longitude: String,type:Int) =sendCheck(SendCheck.Params(latitude,longitude,type)) {
-        it.either(::handleFailure, ::handleSendCheck) }
+    fun sendCheck(latitude: String,longitude: String,type:Int) = sendCheck(SendCheck.Params(latitude,longitude,type)) {
+        this._successUpdate.value = false
+        it.either(::handleFailure, ::handleSendCheck)
+    }
 
     private fun handleSendCheck(success: String) {
         this._successSendCheck.value = success
