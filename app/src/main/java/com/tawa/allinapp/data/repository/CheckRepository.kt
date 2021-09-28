@@ -117,7 +117,6 @@ interface CheckRepository {
 
         override fun getIdCompany(): Either<Failure, String> {
             return try {
-                Log.d("IdComapny",prefs.companyId!!.toString())
                 Either.Right(prefs.companyId!!)
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))

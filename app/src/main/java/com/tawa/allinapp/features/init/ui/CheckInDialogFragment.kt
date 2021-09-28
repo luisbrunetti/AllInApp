@@ -21,6 +21,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.DialogFragment
 import com.google.android.gms.location.*
+import com.tawa.allinapp.core.extensions.failure
 import com.tawa.allinapp.core.extensions.observe
 import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.platform.BaseFragment
@@ -45,7 +46,7 @@ class CheckInDialogFragment
     var longitude :String= ""
     var idUsers = ""
     var checkState =false
-    lateinit var list: List<Schedule>
+    var list: List<Schedule>? = null
     private var _pv: String = ""
     private var _pvId: String = ""
     private var _description: String = ""
@@ -61,10 +62,11 @@ class CheckInDialogFragment
         val aaPv = ArrayAdapter(requireActivity(), android.R.layout.simple_spinner_dropdown_item, arrayListPv)
 
         initViewModel = viewModel(baseFragment.viewModelFactory){
-            observe(schedule, { it?.let {
-                arrayListPv.addAll(toArrayPv(it))
-                binding.pdvSpinner.adapter = aaPv
-                list= it
+            observe(schedule, {
+                it?.let {
+                    list= it
+                    arrayListPv.addAll(toArrayPv(it))
+                    binding.pdvSpinner.adapter = aaPv
             } })
             /*observe(successCheckIn, { it?.let {
                 listener?.onAccept("",_pvId,_pv, latitude,longitude,_description)
@@ -78,6 +80,9 @@ class CheckInDialogFragment
             observe(stateCheck, { it?.let {
                 checkState = it
             } })
+            failure(failure,{
+                Log.d("failure",it.toString())
+            })
         }
         initViewModel.getIdCompany()
         initViewModel.getIdUser()
@@ -89,8 +94,6 @@ class CheckInDialogFragment
         super.onViewCreated(view, savedInstanceState)
         setUpBinding()
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
-        Log.d("Debug:",checkPermission().toString())
-        Log.d("Debug:",isLocationEnabled().toString())
         newLocationData()
         requestPermission()
         getLastLocation()
@@ -98,7 +101,7 @@ class CheckInDialogFragment
         binding.pdvSpinner?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
             override fun onNothingSelected(parent: AdapterView<*>?) {  }
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                initViewModel.getStateCheck(list[position].pv)
+                list?.get(position)?.let { initViewModel.getStateCheck(it.pv) }
             }
         }
 
@@ -111,15 +114,17 @@ class CheckInDialogFragment
             {
                 //if(getDistance("${list[_positionPv].lat}","${list[_positionPv].long}",latitude,longitude)<=250)
                // {
-                    _pv = list[_positionPv].nameCorp
-                    _pvId = list[_positionPv].id
-                    _description = list[_positionPv].nameCorp
-                    initViewModel.setPv(list[_positionPv].id,list[_positionPv].pv,list[_positionPv].nameCorp)
-                   // initViewModel.setCheckIn(idUsers,list[_positionPv].pv,latitude,longitude)
-                    //initViewModel.updateStatus(latitude,longitude,getBatteryPercentage(requireContext()).toString())
-                    //initViewModel.sendCheck(latitude,longitude,0)
-                    listener?.onAccept(idUsers,_pvId,_pv, latitude,longitude,_description,getBatteryPercentage(requireContext()).toString())
-                    dismiss()
+                   list?.let { list->
+                       _pv = list[_positionPv].nameCorp
+                       _pvId = list[_positionPv].id
+                       _description = list[_positionPv].nameCorp
+                       initViewModel.setPv(list[_positionPv].id,list[_positionPv].pv,list[_positionPv].nameCorp)
+                       // initViewModel.setCheckIn(idUsers,list[_positionPv].pv,latitude,longitude)
+                       //initViewModel.updateStatus(latitude,longitude,getBatteryPercentage(requireContext()).toString())
+                       //initViewModel.sendCheck(latitude,longitude,0)
+                       listener?.onAccept(idUsers,_pvId,_pv, latitude,longitude,_description,getBatteryPercentage(requireContext()).toString())
+                       dismiss()
+                   }
                // }
                 //else
                 //   showErrorSelector()

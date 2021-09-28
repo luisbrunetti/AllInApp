@@ -198,7 +198,7 @@ class InitViewModel
     val successGetPdvRemote: LiveData<Boolean>
         get() = _successGetPdvRemote
 
-    private val _successSendCheck = MutableLiveData<String>("")
+    private val _successSendCheck = MutableLiveData<String>()
     val successSendCheck: LiveData<String>
         get() = _successSendCheck
 
@@ -206,6 +206,8 @@ class InitViewModel
     val type: LiveData<Int>
         get()= _type
 
+    private val _getPvIdf = MutableLiveData<String>()
+    val getPvIdf: LiveData<String> get() = _getPvIdf
 
     init {
         startHome()
@@ -321,6 +323,7 @@ class InitViewModel
         this._companies.value = company.map { Company(it.id,it.ruc,it.name,it.description,it.idUser,it.image) }
     }
     private fun handlePvList(schedule: List<Schedule>) {
+        Log.d("handlePvList",schedule.map { Schedule(it.id,it.pv,it.description,it.zone,it.codGeo,it.idCompany, it.lat,it.long,it.idUser,it.nameCorp) }.toString() )
         this._schedule.value = schedule.map { Schedule(it.id,it.pv,it.description,it.zone,it.codGeo,it.idCompany, it.lat,it.long,it.idUser,it.nameCorp) }
     }
     private fun handleSetIdCompany(success: Boolean) {
@@ -330,11 +333,10 @@ class InitViewModel
         _idPv.value = success
     }
     private fun handleGetIdCompany(idCompany: String) {
-        Log.d("id_Company",idCompany.toString())
         _successGetCompanyId.value = idCompany
     }
-    private fun handleGetIdUser(idCompany: String) {
-        _idUser.value = idCompany
+    private fun handleGetIdUser(getIdUser: String) {
+        _idUser.value = getIdUser
     }
     private fun handleGetUserName(user: String) {
         _userName.value = user
@@ -416,5 +418,14 @@ class InitViewModel
 
     fun setSession(value : Boolean){ pref.session =value}
 
+    fun getPvIdFirstTime() = getIdPV(UseCase.None()) { it.either(::handleFailure, ::getPvId) }
+
+    private fun getPvId(value : String){
+        _getPvIdf.value = value
+    }
+
+    fun changeCheckState(value:String){
+        this._successSendCheck.value = value
+    }
 
 }

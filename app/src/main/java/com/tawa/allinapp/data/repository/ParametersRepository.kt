@@ -32,12 +32,13 @@ interface ParametersRepository {
                             true -> {
                                 response.body()?.let { body ->
                                     if(body.success) {
-                                        Log.d("setCompanies",body.data.toString())
                                         body.data.map {
+                                            Log.d("Companies", it.toString())
                                             parametersDataSource.insertCompanies(it.toModel(prefs.idUser?:""))
                                             // Insertar los puntos de venta
                                             setPV(it.id)
                                         }
+                                        prefs.companyId = ""
                                         //prefs.companyId = body.data[0].id
                                         Either.Right(true)
                                     }
@@ -92,6 +93,7 @@ interface ParametersRepository {
         }
 
         override fun getPV(company:String): Either<Failure, List<Schedule>> {
+            Log.d("getPv",company.toString())
             return try {
                 if (parametersDataSource.getPV(company,prefs.idUser?:"").isNotEmpty())
                     Either.Right(parametersDataSource.getPV(company,prefs.idUser?:"").map { it.toView() })

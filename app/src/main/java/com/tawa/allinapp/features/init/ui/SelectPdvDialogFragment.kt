@@ -75,9 +75,11 @@ class SelectPdvDialogFragment
         super.onViewCreated(view, savedInstanceState)
         setUpBinding()
         binding.btnSelectPdv.setOnClickListener {
-            val positionPv  = binding.selectPdvSpinner.selectedItemPosition
-            listener?.onAccept(list[positionPv].id,list[positionPv].pv,list[positionPv].nameCorp)
-            dismiss()
+            list.let { list ->
+                val positionPv  = binding.selectPdvSpinner.selectedItemPosition
+                listener?.onAccept(list[positionPv].id,list[positionPv].pv,list[positionPv].nameCorp)
+                dismiss()
+            }
         }
         binding.closeCheckInModal.setOnClickListener{
             dismiss()

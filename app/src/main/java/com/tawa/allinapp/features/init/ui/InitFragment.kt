@@ -90,13 +90,15 @@ class InitFragment : BaseFragment() {
                     }
             } })
             observe(successSendCheck, { it?.let {
-                if(it == "CREADO SATISFACTORIAMENTE")
-                    notify(activity,R.string.notify_sended)
-                if(it=="YA REALIZO UN INGRESO EN ESTE PUNTO DE VENTA EL DIA DE HOY")
-                    notify(activity,R.string.notify_sended_error)
-                if(it=="YA REALIZO UN SALIDA EN ESTE PUNTO DE VENTA EL DIA DE HOY")
-                    notify(activity,R.string.notify_sended_error)
-
+                if(it.isNotEmpty()){
+                    if(it == "CREADO SATISFACTORIAMENTE")
+                        notify(activity,R.string.notify_sended)
+                    if(it=="YA REALIZO UN INGRESO EN ESTE PUNTO DE VENTA EL DIA DE HOY")
+                        notify(activity,R.string.notify_sended_error)
+                    if(it=="YA REALIZO UN SALIDA EN ESTE PUNTO DE VENTA EL DIA DE HOY")
+                        notify(activity,R.string.notify_sended_error)
+                    initViewModel.changeCheckState("")
+                }
             } })
             observe(successUpdate, { it?.let {
                 if(it){
@@ -118,8 +120,6 @@ class InitFragment : BaseFragment() {
                     initViewModel.updateStatus(_lat,_long,_battery,1)
                     notify(activity,R.string.checkoout_successful)
                 }
-
-
             } })
             observe(successSyncChecks, { it?.let {
                 if (it)
@@ -150,10 +150,11 @@ class InitFragment : BaseFragment() {
                     }
             }})
             observe(idPV, { it?.let {
-                if(it.isNotEmpty())
-                    findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationReports())
-                else
-                    MessageDialogFragment.newInstance("Debes seleccionar o hacer chekIn en un punto de venta").show(childFragmentManager, "errorDialog")
+                it.let {
+                    _pvId = it
+                }
+                //if(it.isNotEmpty()) findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationReports())
+                //else MessageDialogFragment.newInstance("Debes seleccionar o hacer chekIn en un punto de venta").show(childFragmentManager, "errorDialog")
             }})
             observe(successSyncAudio, { it?.let {
                 if(it){
@@ -161,20 +162,19 @@ class InitFragment : BaseFragment() {
                     hideProgressDialog()
                     MessageDialogFragment.newInstance(message = "", title = R.string.end_sync,icon = R.drawable.ic_checkin).show(childFragmentManager, "dialog")
                 }
-            } })
+            }})
             observe(userName, { it?.let {
                 binding.tvHeaderName.text = it
                 binding.btUser.text = if(it.isNotEmpty()) it.first().toString() else ""
             } })
-            observe(idPv,{it?.let{
+            /*observe(idPv,{it?.let{
               /*  if(it)
                     findNavController().navigate(InitFragmentDirections.actionNavigationInitToPdvFragment())*/
 
-            }})
+            }})*/
             observe(successGetRole,{
                 it?.let {
-                    if(it.isNotEmpty())
-                    {
+                    if(it.isNotEmpty()) {
                         if(it=="SUPERVISOR") {
                             (activity as HomeActivity).showInforms()
                             (activity as HomeActivity).showRoutes()
@@ -189,10 +189,16 @@ class InitFragment : BaseFragment() {
                 }
             })
             observe(successGetCompanyId, {
+                Log.d("SucessCompanyId",it.toString())
                 it?.let {
                     if(it.isEmpty()) {
                         showSelector()
                     }
+                }
+            })
+            observe(getPvIdf,{
+                it?.let {
+                    _pvId = it
                 }
             })
             failure(failure, ::handleFailure)
@@ -205,6 +211,8 @@ class InitFragment : BaseFragment() {
         initViewModel.getIdUser()
         initViewModel.getUserName()
         initViewModel.getCheckMode()
+        initViewModel.getPvIdFirstTime()
+
         binding.btCheckIn.setOnClickListener{
             if(checkIn) showSelectorCheckIn()
             else initViewModel.getDescPV()
@@ -239,7 +247,11 @@ class InitFragment : BaseFragment() {
         binding.viewBtnCalendar.setOnClickListener {
             findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationCalendar())
         }
-        binding.viewBtnReports.setOnClickListener { initViewModel.getPVId() }
+        binding.viewBtnReports.setOnClickListener {
+            //initViewModel.getPVId()
+            if(_pvId.isNotEmpty()) findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationReports())
+            else MessageDialogFragment.newInstance("Debes seleccionar o hacer chekIn en un punto de venta").show(childFragmentManager, "errorDialog")
+        }
         binding.viewBtnInforms.setOnClickListener{
             findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationInforms())
         }
@@ -258,6 +270,7 @@ class InitFragment : BaseFragment() {
         dialog.listener = object : SelectorDialogFragment.Callback{
             override fun onAccept() {
                 initViewModel.getLogoCompany()
+                initViewModel.getPVId()
             }
         }
         dialog.show(childFragmentManager, "dialog")
