@@ -62,6 +62,8 @@ class AudioFragment : BaseFragment() {
             val realPath = getRealPathFromURI(requireContext(), uri)
             realPath.let { realPath->
                 audioSelectedPath = realPath.toString()
+
+
                 audioSelected64 = audioViewModel.convertAudioSelectedTo64Format(audioSelectedPath).toString()
 
                 audioSelectedName = getFilename(uri)

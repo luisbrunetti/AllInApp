@@ -56,8 +56,8 @@ class SelectorDialogFragment
             } })
             observe(setIdCompanySuccess, { it?.let { if (it) {
                 //authViewModel.getPVRemote()
-                baseFragment.hideProgressDialog()
-                dismiss()
+                initViewModel.getReportsRemote(selectedCompany)
+                //dismiss()
             }
             } })
             observe(successGetReports, { it?.let { if (it)
@@ -71,6 +71,7 @@ class SelectorDialogFragment
                 {
                     initViewModel.getQuestionsRemote(report.id)
                 }
+                baseFragment.hideProgressDialog()
                 dismiss()
 
             } })

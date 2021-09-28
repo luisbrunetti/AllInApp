@@ -18,6 +18,7 @@ import android.provider.MediaStore
 import android.provider.OpenableColumns
 import android.text.InputType
 import android.util.Base64
+import android.util.Base64OutputStream
 import android.util.Log
 import android.util.TypedValue
 import android.view.Gravity
@@ -728,6 +729,7 @@ class CheckListFragment: BaseFragment() {
                         checkListViewModel.setAnswerPv(tag[0],tag[1],input.text.toString(),urlImage)
                         //checkListViewModel.updateAnswers(tag[0], input.text.toString())
                     }
+
                     for(i in mutableHashMapTag.values){
                         Log.d("i", "hashTagRecord -> ${i.answerRecorded.toString()}  hashSelected -> ${i.answerSelected.toString()}" )
                         if(i.answerRecorded != "" && i.answerSelected != ""){
@@ -1217,7 +1219,6 @@ class CheckListFragment: BaseFragment() {
                         checkListViewModel.setAnswerPv(tag[0],tag[1],input.text.toString(),urlImage)
                         //checkListViewModel.updateAnswers(tag[0], input.text.toString())
                     }
-
                     for(i in mutableHashMapTag.values){
                         Log.d("i", "hashTagRecord -> ${i.answerRecorded.toString()}  hashSelected -> ${i.answerSelected.toString()}" )
                         if(i.answerRecorded != "" && i.answerSelected != ""){
@@ -1346,7 +1347,20 @@ class CheckListFragment: BaseFragment() {
             checkListViewModel.setReadyAnswers(tag[1],tag[2],tag[0],input.text.toString(),urlImage)
             //checkListViewModel.updateAnswers(tag[0], input.text.toString())
         }
-        for(i in mutableHashMapTag.values){
+
+        for(tag in mutableHashMapTag.values){
+            Log.d("setReadyAnswer9764", "hashTagRecord -> ${tag.answerRecorded.toString()}  hashSelected -> ${tag.answerSelected.toString()}" )
+            val answerbyQuestion = if(tag.answerSelected == ""){
+                if(tag.answerRecorded != "") tag.answerRecorded
+                else ""
+            } else{
+                if(tag.answerSelected != "") tag.answerSelected
+                else ""
+            }
+            val answerBase64 = convertImageFileToBase64(File(answerbyQuestion!!))
+            checkListViewModel.setReadyAnswers(tag.idQuestion,tag.nameQuestion,tag.idAnswer,answerBase64 ?: "","")
+        }
+        /*for(i in mutableHashMapTag.values){
             Log.d("i", "hashTagRecord -> ${i.answerRecorded.toString()}  hashSelected -> ${i.answerSelected.toString()}" )
             if(i.answerRecorded != "" && i.answerSelected != ""){
                 val dialog = MessageDialogFragment.newInstance("Solo se puede guardar un audio por pregunta")
@@ -1364,7 +1378,7 @@ class CheckListFragment: BaseFragment() {
                 }
                 checkListViewModel.setReadyAnswers(i.idQuestion,i.nameQuestion,i.idAnswer,answerbyQuestion ?: "","")
             }
-        }
+        }*/
     }
 
     private fun findRadioButton(){
@@ -3110,6 +3124,17 @@ class CheckListFragment: BaseFragment() {
             val type = substring(0,indexOf("&",0,true))
             val path = substring(indexOf("&",0,true)+1, data.length)
             return Pair(type,path)
+        }
+    }
+
+    private fun convertImageFileToBase64(file: File): String {
+        return ByteArrayOutputStream().use { outputStream ->
+            Base64OutputStream(outputStream, Base64.DEFAULT).use { base64FilterStream ->
+                file.inputStream().use { inputStream ->
+                    inputStream.copyTo(base64FilterStream)
+                }
+            }
+            return@use outputStream.toString()
         }
     }
     private fun getNameInSelectedFile(data:String): String{
