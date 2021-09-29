@@ -266,6 +266,8 @@ class InitViewModel
     fun setIdCompany(idCompany:String,image:String) = setIdCompany(SetIdCompany.Params(idCompany,image)) {
         it.either(::handleFailure, ::handleSetIdCompany) }
 
+    //fun setIdPvName() =
+
     fun setPv(schedule:String,pv:String,descPv:String) = setIdPv(SetIdPv.Params(schedule,pv,descPv)) { it.either(::handleFailure, ::handleSetIdPv) }
 
     fun getDescPV() = getDescPV(UseCase.None()) { it.either(::handleFailure, ::handlePVDesc) }

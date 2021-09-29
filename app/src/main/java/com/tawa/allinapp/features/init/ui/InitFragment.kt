@@ -249,6 +249,7 @@ class InitFragment : BaseFragment() {
                 override fun onAccept() {
                     initViewModel.setSession(false)
                     initViewModel.setIdCompany("","")
+                    initViewModel.setPv("","","")
                     showLogin(context)
                 }
                 override fun onSendPassword() {
