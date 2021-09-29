@@ -39,7 +39,7 @@ class ReportGeolocationViewModel @Inject constructor(
     }
 
     private fun handleRoutesFromListUser(list: List<TrackingInform>){
-        Log.d("list->",list.toString())
+        //Log.d("list->",list.toString())
         this._getRouteUsers.value = list
     }
 

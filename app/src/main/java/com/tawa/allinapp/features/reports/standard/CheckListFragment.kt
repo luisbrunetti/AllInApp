@@ -1349,7 +1349,7 @@ class CheckListFragment: BaseFragment() {
         }
 
         for(tag in mutableHashMapTag.values){
-            Log.d("setReadyAnswer9764", "hashTagRecord -> ${tag.answerRecorded.toString()}  hashSelected -> ${tag.answerSelected.toString()}" )
+            //Log.d("setReadyAnswer9764", "hashTagRecord -> ${tag.answerRecorded.toString()}  hashSelected -> ${tag.answerSelected.toString()}" )
             val answerbyQuestion = if(tag.answerSelected == ""){
                 if(tag.answerRecorded != "") tag.answerRecorded
                 else ""

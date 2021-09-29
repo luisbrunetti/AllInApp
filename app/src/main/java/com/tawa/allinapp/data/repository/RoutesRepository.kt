@@ -27,6 +27,7 @@ interface RoutesRepository {
             return when (networkHandler.isConnected) {
                 true ->{
                     try {
+                        Log.d("token", prefs.token.toString())
                         val response = service.getListUser("Bearer ${prefs.token!!}").execute()
                         when (response.isSuccessful) {
                             true -> {
@@ -129,22 +130,20 @@ interface RoutesRepository {
             mutableListUser: ArrayList<RoutesUser>,
             dateStart: String
         ): Either<Failure, List<TrackingInform>> {
-            val arrayResponse : ArrayList<TrackingInform> = ArrayList()
-            try{
-                for(user in mutableListUser){
+            val arrayResponse: ArrayList<TrackingInform> = ArrayList()
+            try {
+                for (user in mutableListUser) {
                     //val response = getTracking(user.id,"2021-08-26")
-                        Log.d("request", user.id + "  "+ dateStart.toString()+ "  "+ prefs.companyId.toString())
-                    val response = getTracking(user.id,dateStart)
-                    response.either({
-                        arrayResponse.add(TrackingInform(user.id,user.name, emptyList()))
-                    },{
-                        val routeInform = TrackingInform(user.id,user.name,it)
-                        arrayResponse.add(routeInform)
+                    Log.d("request", user.id + "  " + dateStart.toString() + "  " + prefs.companyId.toString())
+                    getTracking(user.id, dateStart).either({
+                        arrayResponse.add(TrackingInform(user.id, user.name, emptyList()))
+                    }, {
+                        arrayResponse.add(TrackingInform(user.id, user.name, it))
                     })
                 }
                 Log.d("arrayResponse", arrayResponse.toString())
                 return Either.Right(arrayResponse)
-            }catch (e : Exception){
+            } catch (e: Exception) {
                 return Either.Left(Failure.DefaultError(e.message!!))
             }
         }

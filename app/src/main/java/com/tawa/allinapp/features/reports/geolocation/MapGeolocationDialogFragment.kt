@@ -42,7 +42,7 @@ class InformRoutesMapDialogFragment : DialogFragment(), GoogleMap.OnInfoWindowCl
             val bundle = Bundle()
            // val listType: Type = object : TypeToken<List<String?>?>() {}.type
             val jsonParsed = Gson().toJson(listRoutes)
-            Log.d("list",listRoutes.toString())
+            //Log.d("list",listRoutes.toString())
             bundle.putString(LIST_ROUTES_INFORM,jsonParsed)
             frag.arguments = bundle
             return frag
@@ -64,6 +64,7 @@ class InformRoutesMapDialogFragment : DialogFragment(), GoogleMap.OnInfoWindowCl
         var long: Double? = null
         listRoutes?.let { listInformTracking ->
             for (userTracking in listInformTracking) {
+                Log.d("UserTracking", "UserTracking -> ${userTracking.nameUser} List -> ${userTracking.listTracking}")
                 for (tracking in userTracking.listTracking) {
                     for(visit in tracking.visits){
                         when (visit?.comment) {
@@ -110,6 +111,21 @@ class InformRoutesMapDialogFragment : DialogFragment(), GoogleMap.OnInfoWindowCl
                                     .icon(getMarkerIconFromDrawable(iconD))
                                 )
                                 hashMapMarkerRoute!![marker.id] = InfoGeolocation(visit.comment,visit.creation, userTracking.nameUser,tracking.dirCorpPv)
+                            }
+                        }
+                    }
+                    for(task in tracking.tasks){
+                        when(task?.reportState){
+                            "COMPLETADO" -> {
+                                val userPosition = LatLng(task.latitude.toDouble(), task.longitude.toDouble())
+                                Log.d("pos",userPosition.toString())
+                                val iconD = resources.getDrawable(R.drawable.ic_marker_reports)
+                                val marker = googleMap.addMarker(MarkerOptions()
+                                    .position(userPosition).title("Reporte"+ tracking.Pv+ " - "+tracking.zoneName)
+                                    .snippet( " ("+task.latitude+","+task.longitude+")")
+                                    .icon(getMarkerIconFromDrawable(iconD))
+                                )
+                                hashMapMarkerRoute!![marker.id] = InfoGeolocation(task.reportState,task.creation, userTracking.nameUser,tracking.dirCorpPv)
                             }
                         }
                     }

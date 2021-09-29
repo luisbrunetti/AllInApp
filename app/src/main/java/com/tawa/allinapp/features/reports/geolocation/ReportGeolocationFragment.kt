@@ -50,7 +50,7 @@ class ReportGeolocationFragment : BaseFragment(), RecyclerUser.onClickButton{
         reportGeoViewModel = viewModel(viewModelFactory) {
             observe(getUserList, {
                 it?.let {
-                    //Log.d("asd", it[0].toString())
+                    Log.d("asd", it.toString())
                     //userAdapter.collection = it
                     showUser(it)
                 }
@@ -141,7 +141,8 @@ class ReportGeolocationFragment : BaseFragment(), RecyclerUser.onClickButton{
                 if(count < 1 ){
                     val route = RoutesUser("1","Selecionar todos")
                     it.add(route)
-                    backupRecycleView?.add(route)
+                    it.add(user)
+                    backupRecycleView?.add(user)
                 }
                 else{
                     it.add(user)

@@ -85,9 +85,7 @@ class CoverageBoardFragment : BaseFragment() {
         val retails by coverageViewModel.retails.observeAsState()//
         val userList by coverageViewModel.userList.observeAsState()
 
-        Column(
-
-        ) {
+        Column{
             DateFilter(
                 { startDate = it },{ endDate = it }
             )
@@ -101,7 +99,7 @@ class CoverageBoardFragment : BaseFragment() {
                             c.description == list.find {
                                 it == c.description
                             }
-                        }.map { it.id?:"" }
+                        }.map { it.id?:""}
                         //coverageViewModel.getChains(selectedChannel?: emptyList(),selectedRetail?: emptyList())
                     }
                     else coverageViewModel.getChains(emptyList(),selectedRetail?: emptyList())
@@ -135,23 +133,16 @@ class CoverageBoardFragment : BaseFragment() {
                     ) { list ->
                         Log.d("chainRecived", c.toString())
                         Log.d("chainsSelected", list.toString())
-
                          selectedChain = c.filter{chain->
-                            chain.description == list.find { desc ->
-                                desc == chain.description
-                            }
-                        }.map {
-                            it.id ?: ""
-                         }
-                        Log.d("filt",selectedChain.toString())
-
+                            chain.description == list.find { desc -> desc == chain.description }
+                        }.map { it.id ?: "" }
+                        //Log.d("filt",selectedChain.toString())
                         Log.d("selectedChain",selectedChain.toString())
-
                     }
                 }
             }
             userList?.let { u ->
-      //          Log.d("userList",u[0].toString())
+                //Log.d("userList",u[0].toString())
                 ExpandableCard(
                     title = "Usuarios",
                     content = u.map { it.fullName?:"" }

@@ -6,7 +6,7 @@ plugins {
     id 'androidx.navigation.safeargs.kotlin'
 }
 
-def dev = 10000
+def dev = 1
 
 android {
     compileSdkVersion 30
