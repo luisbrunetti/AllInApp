@@ -30,10 +30,11 @@
 
     <View
         android:id="@+id/view10"
-        android:layout_width="140dp"
+        android:layout_width="0dp"
         android:layout_height="40dp"
         android:layout_marginStart="18dp"
         app:layout_constraintBottom_toBottomOf="@+id/view4"
+        app:layout_constraintEnd_toStartOf="@id/view11"
         app:layout_constraintStart_toEndOf="@+id/btnBackMessages"
         app:layout_constraintTop_toTopOf="@+id/view4"
         app:layout_constraintVertical_bias="1.0" />
@@ -64,9 +65,10 @@
 
     <View
         android:id="@+id/view11"
-        android:layout_width="140dp"
+        android:layout_width="0dp"
         android:layout_height="40dp"
         app:layout_constraintBottom_toBottomOf="@+id/view4"
+        app:layout_constraintEnd_toEndOf="@+id/view4"
         app:layout_constraintStart_toEndOf="@+id/view10"
         app:layout_constraintTop_toTopOf="@+id/view4"
         app:layout_constraintVertical_bias="1.0" />
@@ -115,15 +117,6 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/view16"
         app:layout_constraintTop_toTopOf="@+id/view16" />
-
-    <Button
-        android:id="@+id/btnNotfication"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="N"
-        app:layout_constraintEnd_toEndOf="@+id/view4"
-        app:layout_constraintStart_toEndOf="@+id/view11"
-        app:layout_constraintTop_toTopOf="@+id/view4" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvNotify"

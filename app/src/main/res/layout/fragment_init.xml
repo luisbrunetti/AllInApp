@@ -529,7 +529,7 @@
                         app:layout_constraintVertical_bias="0.0" />
 
                     <androidx.appcompat.widget.AppCompatButton
-                        android:id="@+id/btUser2"
+                        android:id="@+id/vNotifyCount"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_marginTop="-5dp"
@@ -539,6 +539,7 @@
                         android:textColor="@color/colorPrimary"
                         android:textSize="18sp"
                         android:textStyle="bold"
+                        android:visibility="gone"
                         app:layout_constraintEnd_toEndOf="@+id/viewBtnMessages"
                         app:layout_constraintTop_toTopOf="@+id/viewBtnMessages" />
 
@@ -615,7 +616,7 @@
                         app:layout_constraintVertical_bias="0.0" />
 
                     <TextView
-                        android:id="@+id/textView6"
+                        android:id="@+id/edCountNotify"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:elevation="11dp"
@@ -623,10 +624,11 @@
                         android:textColor="@color/white"
                         android:textSize="18sp"
                         android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="@+id/btUser2"
-                        app:layout_constraintEnd_toEndOf="@+id/btUser2"
-                        app:layout_constraintStart_toStartOf="@+id/btUser2"
-                        app:layout_constraintTop_toTopOf="@+id/btUser2" />
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="@+id/vNotifyCount"
+                        app:layout_constraintEnd_toEndOf="@+id/vNotifyCount"
+                        app:layout_constraintStart_toStartOf="@+id/vNotifyCount"
+                        app:layout_constraintTop_toTopOf="@+id/vNotifyCount" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

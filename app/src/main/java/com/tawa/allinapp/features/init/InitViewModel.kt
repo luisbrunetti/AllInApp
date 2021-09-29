@@ -46,7 +46,10 @@ class InitViewModel
     private val sendPassword: SendPassword,
     private val getPdvRemote: GetPdvRemote,
     private val sendCheck: SendCheck,
-    private val pref:Prefs
+    private val pref:Prefs,
+    private val updateCountNotify: UpdateCountNotify,
+    private val getCountNotify: GetCountNotify,
+    private val clearNotify: ClearNotify
 
 ) : BaseViewModel()  {
     private  val formatter: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
@@ -122,6 +125,18 @@ class InitViewModel
     private val _positionPv = MutableLiveData<Int>(-1)
     val positionPv: LiveData<Int>
         get()= _positionPv
+
+    private val _countNotify = MutableLiveData<Int>(0)
+    val countNotify: LiveData<Int>
+        get()= _countNotify
+
+    private val _clearCountNotify = MutableLiveData<Boolean>(false)
+    val clearCountNotify: LiveData<Boolean>
+        get()= _clearCountNotify
+
+    private val _updateNotify = MutableLiveData<Boolean>(false)
+    val updateNotify: LiveData<Boolean>
+        get()= _updateNotify
 
     private val _schedule = MutableLiveData<List<Schedule>>()
     val schedule: LiveData<List<Schedule>>
@@ -287,7 +302,9 @@ class InitViewModel
         _type.value  = type
         it.either(::handleFailure, ::handleUpdateStatus) }
 
-    fun getReportsSku(company: String) = getReportsSku(GetReportsSku.Params(company)) { it.either(::handleFailure, ::handleReportsSku) }
+    fun getReportsSku(company: String) = getReportsSku(GetReportsSku.Params(company)) {
+        it.either(::handleFailure, ::handleReportsSku)
+    }
 
     fun syncCheck(latitude: String,longitude: String) = syncCheck(SyncCheck.Params(latitude,longitude)) {
         it.either(::handleFailure, ::handleSyncCheck)
@@ -412,6 +429,28 @@ class InitViewModel
     private fun handleGetLogoCompany(image  : String) {
         this._logoCompany.value = image
     }
+
+    fun updateCountNotify() =updateCountNotify(UseCase.None()) {
+        it.either(::handleFailure, ::handleUpdateCountNotify) }
+
+    private fun handleUpdateCountNotify(success: Boolean) {
+        this._updateNotify.value = success
+    }
+
+    fun getCountNotify() =getCountNotify(UseCase.None()) {
+        it.either(::handleFailure, ::handleGetCountNotify) }
+
+    private fun handleGetCountNotify(count:Int) {
+        this._countNotify.value = count
+    }
+
+    fun clearCountNotify() =clearNotify(UseCase.None()) {
+        it.either(::handleFailure, ::handleClearCountNotify) }
+
+    private fun handleClearCountNotify(success: Boolean) {
+        this._clearCountNotify.value = success
+    }
+
 
     fun sendCheck(latitude: String,longitude: String,type:Int) = sendCheck(SendCheck.Params(latitude,longitude,type)) {
         this._successUpdate.value = false

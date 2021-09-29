@@ -23,6 +23,7 @@ class Prefs
         const val STATE_CHECKLIST = "stateChecklist"
         const val VERIFY_CHECKLIST = "verifyChecklist"
         const val LOGO_COMPANY = "logoCompany"
+        const val COUNT_NOTIFY = "countNotify"
 
 
     }
@@ -91,4 +92,8 @@ class Prefs
     fun removeCompanyId(){
         prefs.edit().remove(COMPANY_ID).apply()
     }
+
+    var countNotify:Int
+        get() = prefs.getInt(COUNT_NOTIFY,0)
+        set(value) = prefs.edit().putInt(COUNT_NOTIFY,value).apply()
 }

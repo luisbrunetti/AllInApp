@@ -71,5 +71,6 @@ class ApplicationModule(private val application: Application){
     @Provides @Singleton fun provideRoutesRepository(dataSource: RoutesRepository.Network): RoutesRepository = dataSource
     @Provides @Singleton fun provideDashboardRepository(dataSource: DashboardRepository.Network): DashboardRepository = dataSource
     @Provides @Singleton fun providePdvRepository(dataSource:PdvRepository.Network): PdvRepository = dataSource
+    @Provides @Singleton fun provideNotifyRepository(dataSource:NotifyRepository.Network): NotifyRepository = dataSource
 
 }

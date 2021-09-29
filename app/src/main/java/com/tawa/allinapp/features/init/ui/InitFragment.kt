@@ -15,6 +15,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
@@ -24,9 +25,11 @@ import com.tawa.allinapp.core.extensions.failure
 import com.tawa.allinapp.core.extensions.observe
 import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.platform.BaseFragment
+import com.tawa.allinapp.data.local.Prefs
 import com.tawa.allinapp.databinding.FragmentInitBinding
 import com.tawa.allinapp.features.HomeActivity
 import com.tawa.allinapp.features.init.InitViewModel
+import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 
 
@@ -205,6 +208,25 @@ class InitFragment : BaseFragment() {
                     _pvId = it
                 }
             })
+            observe(updateNotify,{it?.let{
+                if(it)
+                    initViewModel.getCountNotify()
+            }})
+            observe(countNotify,{it?.let{
+                if(it>0)
+                {
+                    binding.edCountNotify.isVisible = true
+                    binding.vNotifyCount.isVisible = true
+                    binding.edCountNotify.text = it.toString()
+                }
+            }})
+            observe(clearCountNotify,{it?.let{
+                if(it)
+                {
+                    binding.edCountNotify.isVisible = false
+                    binding.vNotifyCount.isVisible = false
+                }
+            }})
             failure(failure, ::handleFailure)
         }
         //Seleccionando empresa
@@ -259,9 +281,26 @@ class InitFragment : BaseFragment() {
             findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationInforms())
         }
         binding.viewBtnMessages.setOnClickListener {
+            initViewModel.clearCountNotify()
             showMessagesDialog()
         }
+        initNotify()
+        initViewModel.getCountNotify()
         return binding.root
+    }
+
+    private fun initNotify(){
+        val socketHandler = SocketHandler(Prefs(requireContext()))
+        socketHandler.setSock()
+        val socket  = socketHandler.getSock()
+        socket.connect()
+        socket.on("notify"){args->
+            activity?.runOnUiThread {
+                val message = JSONObject(args[0].toString()).getString("message")
+                showNotification(message, "ch1")
+                initViewModel.updateCountNotify()
+            }
+        }
     }
 
     private fun showMessagesDialog(){

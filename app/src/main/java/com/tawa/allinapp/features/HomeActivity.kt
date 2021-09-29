@@ -17,10 +17,10 @@ import com.tawa.allinapp.R
 import com.tawa.allinapp.core.di.ApplicationComponent
 import com.tawa.allinapp.databinding.ActivityHomeBinding
 
+
 class HomeActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityHomeBinding
-
     private val appComponent: ApplicationComponent by lazy(mode = LazyThreadSafetyMode.NONE) {
         (application as AndroidApplication).appComponent
     }
@@ -29,7 +29,6 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         appComponent.inject(this)
         val dev = devMod()
-
         if(dev == BuildConfig.DEV) {
             Toast.makeText(applicationContext, "Error", Toast.LENGTH_LONG).show()
             return
@@ -55,6 +54,7 @@ class HomeActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
         binding.navView.menu.findItem(R.id.navigation_informs).isVisible = false
         binding.navView.menu.findItem(R.id.navigation_routes).isVisible = false
+
     }
 
     private fun devMod():Int{
