@@ -1,11 +1,15 @@
 package com.tawa.allinapp.core.platform
 
 import android.Manifest
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.BitmapFactory
 import android.location.Location
 import android.location.LocationManager
+import android.os.Build
 import android.os.Bundle
 import android.os.Looper
 import android.util.Log
@@ -13,6 +17,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -35,6 +40,7 @@ import com.tawa.allinapp.core.functional.Failure
 import com.tawa.allinapp.features.HomeActivity
 import com.tawa.allinapp.features.auth.ui.LoginActivity
 import kotlinx.android.synthetic.main.toolbar.*
+import org.json.JSONObject
 import java.util.*
 import javax.inject.Inject
 
@@ -73,6 +79,31 @@ abstract class BaseFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
+    }
+
+    internal fun showNotification(message:String,channelS: String){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = "ch2"
+            val descriptionText = "descrip"
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel(channelS, name, importance).apply {
+                description = descriptionText
+            }
+            val nm = requireContext().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            nm.createNotificationChannel(channel)
+            nm.sendNotification(message,requireContext(),channelS)
+        }
+    }
+
+    private fun NotificationManager.sendNotification(messageBody: String, applicationContext: Context,channel:String) {
+        val builder = NotificationCompat.Builder(
+            applicationContext,
+            channel
+        )
+            .setLargeIcon(BitmapFactory.decodeResource(requireContext().resources, R.mipmap.ic_launcher))
+            .setSmallIcon(R.mipmap.ic_launcher)
+            .setContentText(messageBody)
+        notify(0, builder.build())
     }
 
     internal fun getLastLocation(){

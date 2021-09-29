@@ -764,486 +764,156 @@ class CheckListFragment: BaseFragment() {
 
         binding.btnBr.setOnClickListener {
             if(typeReport!="Terminado") {
-                listFlag.clear()
-                hideTextError()
-                for(question in listFilter)
-                {
-                    if(question.objectType=="Caja de texto")
+                checkListViewModel.updateReportPv(idReport,"En proceso","Borrador","","","")
+                for (radio in listRadioButton) {
+                    val tag = radio.tag as ArrayList<String>
+                    checkListViewModel.setAnswerPv(tag[0],tag[1],radio.isChecked.toString(),urlImage)
+                    // checkListViewModel.updateAnswers(tag[0], radio.isChecked.toString())
+                }
+                for (radio in listRadioButtonBd) {
+                    val tag = radio.tag as ArrayList<String>
+                    checkListViewModel.setAnswerPv(tag[0],tag[1],radio.isChecked.toString(),urlImage)
+                    // checkListViewModel.updateAnswers(tag[0], radio.isChecked.toString())
+                }
+                for (check in listCheckBox) {
+                    val tag = check.tag as ArrayList<String>
+                    checkListViewModel.setAnswerPv(tag[0],tag[1],check.isChecked.toString(),urlImage)
+                    // checkListViewModel.updateAnswers(tag[0], check.isChecked.toString())
+                }
+                for (check in listCheckBoxBd) {
+                    val tag = check.tag as ArrayList<String>
+                    checkListViewModel.setAnswerPv(tag[0],tag[1],check.isChecked.toString(),urlImage)
+                    // checkListViewModel.updateAnswers(tag[0], check.isChecked.toString())
+                }
+
+                for (input in listInput) {
+                    val tag = input.tag as ArrayList<String>
+                    checkListViewModel.setAnswerPv(tag[0],tag[1],input.text.toString(),urlImage)
+                    //checkListViewModel.updateAnswers(tag[0], input.text.toString())
+                }
+
+                for (input in listInputNumber) {
+                    val tag = input.tag as ArrayList<String>
+                    checkListViewModel.setAnswerPv(tag[0],tag[1],input.text.toString(),urlImage)
+                    //checkListViewModel.updateAnswers(tag[0], input.text.toString())
+                }
+
+                for (input in listInputTime) {
+                    val tag = input.tag as ArrayList<String>
+                    checkListViewModel.setAnswerPv(tag[0],tag[1],input.text.toString(),urlImage)
+                    //checkListViewModel.updateAnswers(tag[0], input.text.toString())
+                }
+
+                for (input in listInputDate) {
+                    val tag = input.tag as ArrayList<String>
+                    checkListViewModel.setAnswerPv(tag[0],tag[1],input.text.toString(),urlImage)
+                    //checkListViewModel.updateAnswers(tag[0], input.text.toString())
+                }
+
+                for (input in listSpinner) {
+                    val index = input.selectedItemPosition
+                    if(index>0)
                     {
-                        if(question.required)
-                        {
-                            val c = listInput.filter {
-                                val tag = it.tag as ArrayList<String>
-                                it.text.toString().isNotEmpty()  && tag[1]==question.idQuestion
-                            }.count()
-                            if(c>0)
-                                listFlag.add(1)
-                            else {
-                                val textError = listErrorText.find { it.tag==question.idQuestion }
-                                textError?.isVisible = true
-                                listFlag.add(0)
-                            }
-                        }
-                        else
-                            listFlag.add(1)
+                        val tag = input.tag
+                        val data = arrayId[tag]
+                        val dataName = arrayNameQ[tag]
+                        checkListViewModel.setAnswerPv(data?.get(index)!!,tag.toString(),input.selectedItem.toString(),urlImage)
                     }
 
-                    if(question.objectType=="Check")
+                    //checkListViewModel.updateAnswers(tag[0], input.text.toString())
+                }
+                for (input in listSpinnerBd) {
+                    val index = input.selectedItemPosition
+                    if(index>0)
                     {
-                        if(question.required)
-                        {
-                            val c = listCheckBox.filter {
-                                val tag = it.tag as ArrayList<String>
-                                it.isChecked  && tag[1]==question.idQuestion
-                            }.count()
-                            if(c>0)
-                                listFlag.add(1)
-                            else {
-                                val textError = listErrorCheck.find { it.tag==question.idQuestion }
-                                textError?.isVisible = true
-                                listFlag.add(0)
-                            }
-                        }
-                        else
-                            listFlag.add(1)
-                    }
-
-                    if(question.objectType=="Option")
-                    {
-                        if(question.required)
-                        {
-                            val c = listRadioButton.filter {
-                               val tag = it.tag as ArrayList<String>
-                                it.isChecked  && tag[1]==question.idQuestion
-                            }.count()
-                            if(c>0)
-                                listFlag.add(1)
-                            else {
-                                val textError = listErrorRadio.find { it.tag==question.idQuestion }
-                                textError?.isVisible = true
-                                listFlag.add(0)
-                            }
-                        }
-                        else
-                            listFlag.add(1)
-                    }
-
-                    if(question.objectType=="BD - Check")
-                    {
-                        if(question.required)
-                        {
-                            val c = listCheckBoxBd.filter {
-                                val tag = it.tag as ArrayList<String>
-                                it.isChecked  && tag[1]==question.idQuestion
-                            }.count()
-                            if(c>0)
-                                listFlag.add(1)
-                            else {
-                                val textError = listErrorCheckBd.find { it.tag==question.idQuestion }
-                                textError?.isVisible = true
-                                listFlag.add(0)
-                            }
-                        }
-                        else
-                            listFlag.add(1)
-                    }
-
-                    if(question.objectType=="BD - Option")
-                    {
-                        if(question.required)
-                        {
-                            val c = listRadioButtonBd.filter {
-                                val tag = it.tag as ArrayList<String>
-                                it.isChecked  && tag[1]==question.idQuestion
-                            }.count()
-                            if(c>0)
-                                listFlag.add(1)
-                            else {
-                                val textError = listErrorRadioBd.find { it.tag==question.idQuestion }
-                                textError?.isVisible = true
-                                listFlag.add(0)
-                            }
-                        }
-                        else
-                            listFlag.add(1)
-                    }
-
-                    if(question.objectType=="Numérico")
-                    {
-                        if(question.required)
-                        {
-                            val c = listInputNumber.filter {
-                                val tag = it.tag as ArrayList<String>
-                                it.text.toString().isNotEmpty()  && tag[1]==question.idQuestion
-                            }.count()
-                            if(c>0)
-                                listFlag.add(1)
-                            else {
-                                val textError = listErrorNumber.find { it.tag==question.idQuestion }
-                                textError?.isVisible = true
-                                listFlag.add(0)
-                            }
-                        }
-                        else
-                            listFlag.add(1)
-                    }
-
-                    if(question.objectType=="Fecha")
-                    {
-                        if(question.required)
-                        {
-                            val c = listInputDate.filter {
-                                val tag = it.tag as ArrayList<String>
-                                it.text.toString().isNotEmpty()  && tag[1]==question.idQuestion
-                            }.count()
-                            if(c>0)
-                                listFlag.add(1)
-                            else {
-                                val textError = listErrorDate.find { it.tag==question.idQuestion }
-                                textError?.isVisible = true
-                                listFlag.add(0)
-                            }
-                        }
-                        else
-                            listFlag.add(1)
-                    }
-
-                    if(question.objectType=="Hora")
-                    {
-                        if(question.required)
-                        {
-                            val c = listInputTime.filter {
-                                val tag = it.tag as ArrayList<String>
-                                it.text.toString().isNotEmpty()  && tag[1]==question.idQuestion
-                            }.count()
-                            if(c>0)
-                                listFlag.add(1)
-                            else {
-                                val textError = listErrorTime.find { it.tag==question.idQuestion }
-                                textError?.isVisible = true
-                                listFlag.add(0)
-                            }
-                        }
-                        else
-                            listFlag.add(1)
-                    }
-
-                    if(question.objectType=="Lista desplegable")
-                    {
-                        if(question.required)
-                        {
-                            val c = listSpinner.filter {
-                                it.selectedItemPosition>0  && it.tag==question.idQuestion
-                            }.count()
-                            if(c>0)
-                                listFlag.add(1)
-                            else {
-                                val textError = listErrorList.find { it.tag==question.idQuestion }
-                                textError?.isVisible = true
-                                listFlag.add(0)
-                            }
-                        }
-                        else
-                            listFlag.add(1)
-                    }
-
-                    if(question.objectType=="BD - Lista desplegable")
-                    {
-                        if(question.required)
-                        {
-                            val c = listSpinnerBd.filter {
-                                it.selectedItemPosition>0  && it.tag ==question.idQuestion
-                            }.count()
-                            if(c>0)
-                                listFlag.add(1)
-                            else {
-                                val textError = listErrorListBd.find { it.tag==question.idQuestion }
-                                textError?.isVisible = true
-                                listFlag.add(0)
-                            }
-                        }
-                        else
-                            listFlag.add(1)
-                    }
-
-                    if(question.objectType=="Imagen de cámara")
-                    {
-                        if(question.required)
-                        {
-                            val c = listImages.filter {
-                                val tag = it.tag as ArrayList<String>
-                                tag[2].count()>5  && tag[1]==question.idQuestion
-                            }.count()
-                            if(c>0)
-                                listFlag.add(1)
-                            else {
-                                val textError = listErrorPhoto.find { it.tag==question.idQuestion }
-                                textError?.isVisible = true
-                                listFlag.add(0)
-                            }
-                        }
-                        else
-                            listFlag.add(1)
-                    }
-
-                    if(question.objectType=="Imagen de biblioteca")
-                    {
-                        if(question.required)
-                        {
-                            val c = listImagesSelect.filter {
-                                val tag = it.tag as ArrayList<String>
-                                tag[2].count()>5  && tag[1]==question.idQuestion
-                            }.count()
-                            if(c>0)
-                                listFlag.add(1)
-                            else {
-                                val textError = listErrorImageSelect.find { it.tag==question.idQuestion }
-                                textError?.isVisible = true
-                                listFlag.add(0)
-                            }
-                        }
-                        else
-                            listFlag.add(1)
-                    }
-
-                    if(question.objectType=="Cuadrícula de varias opciones")
-                    {
-                        if(question.required)
-                        {
-                            val c = listMultiRadio.filter {
-                                val tag = it.tag as ArrayList<String>
-                                it.isChecked  && tag[1]==question.idQuestion
-                            }.count()
-                            if(c>0)
-                                listFlag.add(1)
-                            else {
-                                val textError = listErrorMultiRadio.find { it.tag==question.idQuestion }
-                                textError?.isVisible = true
-                                listFlag.add(0)
-                            }
-                        }
-                        else
-                            listFlag.add(1)
-                    }
-
-                    if(question.objectType=="Cuadrícula de varias opciones-check")
-                    {
-                        if(question.required)
-                        {
-                            val c = listMultiCheck.filter {
-                                val tag = it.tag as ArrayList<String>
-                                it.isChecked  && tag[1]==question.idQuestion
-                            }.count()
-                            if(c>0)
-                                listFlag.add(1)
-                            else {
-                                val textError = listErrorMultiCheck.find { it.tag==question.idQuestion }
-                                textError?.isVisible = true
-                                listFlag.add(0)
-                            }
-                        }
-                        else
-                            listFlag.add(1)
-                    }
-
-                    if(question.objectType=="Cuadrícula de varias opciones - numérico")
-                    {
-                        if(question.required)
-                        {
-                            val c = listMultiText.filter {
-                                val tag = it.tag as ArrayList<String>
-                                it.text.toString().isNotEmpty()  && tag[1]==question.idQuestion
-                            }.count()
-                            if(c>0)
-                                listFlag.add(1)
-                            else {
-                                val textError = listErrorMultiInput.find { it.tag==question.idQuestion }
-                                textError?.isVisible = true
-                                listFlag.add(0)
-                            }
-                        }
-                        else
-                            listFlag.add(1)
-                    }
-                    if(question.objectType=="Audio")
-                    {
-                        if(question.required)
-                        {
-                            var count = 0
-                            for(element in mutableHashMapTag.values){
-                                if((element.answerSelected != "" ||
-                                    element.answerRecorded != "") && element.idQuestion == question.idQuestion){
-                                    count++
-                                }
-                            }
-                            if(count > 0){
-                                listFlag.add(1)
-                            }else{
-                                val textError = listErrorAudio.find { it.tag==question.idQuestion }
-                                textError?.isVisible = true
-                                listFlag.add(0)
-                            }
-                        }
-                        else
-                            listFlag.add(1)
+                        val tag = input.tag
+                        val data = arrayIdBd[tag]
+                        val dataName = arrayNameQBd[tag]
+                        checkListViewModel.setAnswerPv(data?.get(index)!!,tag.toString(),input.selectedItem.toString(),urlImage)
+                        //checkListViewModel.updateAnswers(tag[0], input.text.toString())
                     }
 
                 }
-                val countRequired = listFlag.filter { it == 0 }.count()
-                if(countRequired==0)
-                {
-                    checkListViewModel.updateReportPv(idReport,"En proceso","Borrador","","","")
-                    for (radio in listRadioButton) {
-                        val tag = radio.tag as ArrayList<String>
-                        checkListViewModel.setAnswerPv(tag[0],tag[1],radio.isChecked.toString(),urlImage)
-                        // checkListViewModel.updateAnswers(tag[0], radio.isChecked.toString())
-                    }
-                    for (radio in listRadioButtonBd) {
-                        val tag = radio.tag as ArrayList<String>
-                        checkListViewModel.setAnswerPv(tag[0],tag[1],radio.isChecked.toString(),urlImage)
-                        // checkListViewModel.updateAnswers(tag[0], radio.isChecked.toString())
-                    }
-                    for (check in listCheckBox) {
-                        val tag = check.tag as ArrayList<String>
-                        checkListViewModel.setAnswerPv(tag[0],tag[1],check.isChecked.toString(),urlImage)
-                        // checkListViewModel.updateAnswers(tag[0], check.isChecked.toString())
-                    }
-                    for (check in listCheckBoxBd) {
-                        val tag = check.tag as ArrayList<String>
-                        checkListViewModel.setAnswerPv(tag[0],tag[1],check.isChecked.toString(),urlImage)
-                        // checkListViewModel.updateAnswers(tag[0], check.isChecked.toString())
-                    }
+                for (input in listImages) {
+                    val tag = input.tag as ArrayList<String>
+                    if(tag[2]!="VACIO") {
 
-                    for (input in listInput) {
-                        val tag = input.tag as ArrayList<String>
-                        checkListViewModel.setAnswerPv(tag[0],tag[1],input.text.toString(),urlImage)
-                        //checkListViewModel.updateAnswers(tag[0], input.text.toString())
+                        checkListViewModel.setAnswerPv(tag[0], tag[1], tag[2], urlImage)
                     }
-
-                    for (input in listInputNumber) {
-                        val tag = input.tag as ArrayList<String>
-                        checkListViewModel.setAnswerPv(tag[0],tag[1],input.text.toString(),urlImage)
-                        //checkListViewModel.updateAnswers(tag[0], input.text.toString())
-                    }
-
-                    for (input in listInputTime) {
-                        val tag = input.tag as ArrayList<String>
-                        checkListViewModel.setAnswerPv(tag[0],tag[1],input.text.toString(),urlImage)
-                        //checkListViewModel.updateAnswers(tag[0], input.text.toString())
-                    }
-
-                    for (input in listInputDate) {
-                        val tag = input.tag as ArrayList<String>
-                        checkListViewModel.setAnswerPv(tag[0],tag[1],input.text.toString(),urlImage)
-                        //checkListViewModel.updateAnswers(tag[0], input.text.toString())
-                    }
-
-                    for (input in listSpinner) {
-                        val index = input.selectedItemPosition
-                        if(index>0)
-                        {
-                            val tag = input.tag
-                            val data = arrayId[tag]
-                            val dataName = arrayNameQ[tag]
-                            checkListViewModel.setAnswerPv(data?.get(index)!!,tag.toString(),input.selectedItem.toString(),urlImage)
-                        }
-
-                        //checkListViewModel.updateAnswers(tag[0], input.text.toString())
-                    }
-                    for (input in listSpinnerBd) {
-                        val index = input.selectedItemPosition
-                        if(index>0)
-                        {
-                            val tag = input.tag
-                            val data = arrayIdBd[tag]
-                            val dataName = arrayNameQBd[tag]
-                            checkListViewModel.setAnswerPv(data?.get(index)!!,tag.toString(),input.selectedItem.toString(),urlImage)
-                            //checkListViewModel.updateAnswers(tag[0], input.text.toString())
-                        }
-
-                    }
-                    for (input in listImages) {
-                        val tag = input.tag as ArrayList<String>
-                        if(tag[2]!="VACIO")
-                            checkListViewModel.setAnswerPv(tag[0],tag[1],tag[2],urlImage)
-                        //checkListViewModel.updateAnswers(tag[0], input.text.toString())
-                    }
-                    for (input in listImagesSelect) {
-                        val tag = input.tag as ArrayList<String>
-                        if(tag[2]!="VACIO")
-                            checkListViewModel.setAnswerPv(tag[0],tag[1],tag[2],urlImage)
-                        //checkListViewModel.updateAnswers(tag[0], input.text.toString())
-                    }
-                    for (input in listMultiRadio) {
-                        val tag = input.tag as ArrayList<String>
-                        checkListViewModel.setAnswerPv(tag[0],tag[1],input.isChecked.toString(),urlImage)
-                        //checkListViewModel.updateAnswers(tag[0], input.text.toString())
-                    }
-                    for (input in listMultiCheck) {
-                        val tag = input.tag as ArrayList<String>
-                        checkListViewModel.setAnswerPv(tag[0],tag[1],input.isChecked.toString(),urlImage)
-                        //checkListViewModel.updateAnswers(tag[0], input.text.toString())
-                    }
-                    for (input in listMultiText) {
-                        val tag = input.tag as ArrayList<String>
-                        checkListViewModel.setAnswerPv(tag[0],tag[1],input.text.toString(),urlImage)
-                        //checkListViewModel.updateAnswers(tag[0], input.text.toString())
-                    }
-                    for (input in listColumnsRadio) {
-                        val tag = input.tag as ArrayList<String>
-                        checkListViewModel.setAnswerPv(tag[0],tag[1],input.text.toString(),urlImage)
-                        //checkListViewModel.updateAnswers(tag[0], input.text.toString())
-                    }
-                    for (input in listRowsRadio) {
-                        val tag = input.tag as ArrayList<String>
-                        checkListViewModel.setAnswerPv(tag[0],tag[1],input.text.toString(),urlImage)
-                        //checkListViewModel.updateAnswers(tag[0], input.text.toString())
-                    }
-                    for (input in listColumnsCheck) {
-                        val tag = input.tag as ArrayList<String>
-                        checkListViewModel.setAnswerPv(tag[0],tag[1],input.text.toString(),urlImage)
-                        //checkListViewModel.updateAnswers(tag[0], input.text.toString())
-                    }
-                    for (input in listRowsCheck) {
-                        val tag = input.tag as ArrayList<String>
-                        checkListViewModel.setAnswerPv(tag[0],tag[1],input.text.toString(),urlImage)
-                        //checkListViewModel.updateAnswers(tag[0], input.text.toString())
-                    }
-                    for (input in listColumnsInput) {
-                        val tag = input.tag as ArrayList<String>
-                        checkListViewModel.setAnswerPv(tag[0],tag[1],input.text.toString(),urlImage)
-                        //checkListViewModel.updateAnswers(tag[0], input.text.toString())
-                    }
-                    for (input in listRowsInput) {
-                        val tag = input.tag as ArrayList<String>
-                        checkListViewModel.setAnswerPv(tag[0],tag[1],input.text.toString(),urlImage)
-                        //checkListViewModel.updateAnswers(tag[0], input.text.toString())
-                    }
-                    for(i in mutableHashMapTag.values){
-                        Log.d("i", "hashTagRecord -> ${i.answerRecorded.toString()}  hashSelected -> ${i.answerSelected.toString()}" )
-                        if(i.answerRecorded != "" && i.answerSelected != ""){
-                            val dialog = MessageDialogFragment.newInstance("Solo se puede guardar un audio por pregunta")
-                            dialog.show(childFragmentManager, "")
-                            break
-                        }else{
-                            //Log.d("list",listAnswers.toString())
-                            Log.d("answers", "selected ->" + i.answerSelected + "\nnrecorded ->"+i.answerRecorded)
-                            val answerbyQuestion = if(i.answerSelected == ""){
-                                if(i.answerRecorded != "") "${TYPE_RECCORDED}&${i.answerRecorded}"
-                                else ""
-                            } else{
-                                if(i.answerSelected != "") "${TYPE_SELECTED}&${i.answerSelected}"
-                                else ""
-                            }
-
-                            checkListViewModel.setAnswerPv(i.idAnswer,i.idQuestion,answerbyQuestion ?: "","")
-                        }
-                    }
-                    activity?.onBackPressed()
+                    //checkListViewModel.updateAnswers(tag[0], input.text.toString())
                 }
-                else
-                    notify(activity, R.string.notify_error_register)
+                for (input in listImagesSelect) {
+                    val tag = input.tag as ArrayList<String>
+                    if(tag[2]!="VACIO")
+                        checkListViewModel.setAnswerPv(tag[0],tag[1],tag[2],urlImage)
+                    //checkListViewModel.updateAnswers(tag[0], input.text.toString())
+                }
+                for (input in listMultiRadio) {
+                    val tag = input.tag as ArrayList<String>
+                    checkListViewModel.setAnswerPv(tag[0],tag[1],input.isChecked.toString(),urlImage)
+                    //checkListViewModel.updateAnswers(tag[0], input.text.toString())
+                }
+                for (input in listMultiCheck) {
+                    val tag = input.tag as ArrayList<String>
+                    checkListViewModel.setAnswerPv(tag[0],tag[1],input.isChecked.toString(),urlImage)
+                    //checkListViewModel.updateAnswers(tag[0], input.text.toString())
+                }
+                for (input in listMultiText) {
+                    val tag = input.tag as ArrayList<String>
+                    checkListViewModel.setAnswerPv(tag[0],tag[1],input.text.toString(),urlImage)
+                    //checkListViewModel.updateAnswers(tag[0], input.text.toString())
+                }
+                for (input in listColumnsRadio) {
+                    val tag = input.tag as ArrayList<String>
+                    checkListViewModel.setAnswerPv(tag[0],tag[1],input.text.toString(),urlImage)
+                    //checkListViewModel.updateAnswers(tag[0], input.text.toString())
+                }
+                for (input in listRowsRadio) {
+                    val tag = input.tag as ArrayList<String>
+                    checkListViewModel.setAnswerPv(tag[0],tag[1],input.text.toString(),urlImage)
+                    //checkListViewModel.updateAnswers(tag[0], input.text.toString())
+                }
+                for (input in listColumnsCheck) {
+                    val tag = input.tag as ArrayList<String>
+                    checkListViewModel.setAnswerPv(tag[0],tag[1],input.text.toString(),urlImage)
+                    //checkListViewModel.updateAnswers(tag[0], input.text.toString())
+                }
+                for (input in listRowsCheck) {
+                    val tag = input.tag as ArrayList<String>
+                    checkListViewModel.setAnswerPv(tag[0],tag[1],input.text.toString(),urlImage)
+                    //checkListViewModel.updateAnswers(tag[0], input.text.toString())
+                }
+                for (input in listColumnsInput) {
+                    val tag = input.tag as ArrayList<String>
+                    checkListViewModel.setAnswerPv(tag[0],tag[1],input.text.toString(),urlImage)
+                    //checkListViewModel.updateAnswers(tag[0], input.text.toString())
+                }
+                for (input in listRowsInput) {
+                    val tag = input.tag as ArrayList<String>
+                    checkListViewModel.setAnswerPv(tag[0],tag[1],input.text.toString(),urlImage)
+                    //checkListViewModel.updateAnswers(tag[0], input.text.toString())
+                }
+                for(i in mutableHashMapTag.values){
+                    Log.d("i", "hashTagRecord -> ${i.answerRecorded.toString()}  hashSelected -> ${i.answerSelected.toString()}" )
+                    if(i.answerRecorded != "" && i.answerSelected != ""){
+                        val dialog = MessageDialogFragment.newInstance("Solo se puede guardar un audio por pregunta")
+                        dialog.show(childFragmentManager, "")
+                        break
+                    }else{
+                        //Log.d("list",listAnswers.toString())
+                        Log.d("answers", "selected ->" + i.answerSelected + "\nnrecorded ->"+i.answerRecorded)
+                        val answerbyQuestion = if(i.answerSelected == ""){
+                            if(i.answerRecorded != "") "${TYPE_RECCORDED}&${i.answerRecorded}"
+                            else ""
+                        } else{
+                            if(i.answerSelected != "") "${TYPE_SELECTED}&${i.answerSelected}"
+                            else ""
+                        }
 
+                        checkListViewModel.setAnswerPv(i.idAnswer,i.idQuestion,answerbyQuestion ?: "","")
+                    }
+                }
+                activity?.onBackPressed()
             }
             else
                 notify(activity, R.string.register_ready)
@@ -2400,7 +2070,7 @@ class CheckListFragment: BaseFragment() {
                 {
                     view.isVisible = true
                     val uriImage = Uri.fromFile(File(list.data))
-                    image.setImageURI(uriImage)
+                    image.setImageURI(getImageUri(requireContext(),decodeBase64(list.data)))
                     val tag = image.tag as ArrayList<String>
                     tag[2]=list.data
                 }
@@ -2484,7 +2154,7 @@ class CheckListFragment: BaseFragment() {
                 {
                     view.isVisible = true
                     val uriImage = Uri.fromFile(File(list.data))
-                    image.setImageURI(uriImage)
+                    image.setImageURI(getImageUri(requireContext(),decodeBase64(list.data)))
                     val tag = image.tag as ArrayList<String>
                     tag[2]=list.data
                 }
@@ -3199,6 +2869,25 @@ class CheckListFragment: BaseFragment() {
         TimePickerDialog(context, timeSetListener, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), false).show()
     }
 
+    private fun getImageUri(context: Context, inImage: Bitmap): Uri? {
+        val bytes = ByteArrayOutputStream()
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
+        val path = MediaStore.Images.Media.insertImage(
+            context.contentResolver,
+            inImage,
+            "IMG_" + System.currentTimeMillis(),
+            null
+        )
+        return Uri.parse(path)
+    }
+
+    private fun decodeBase64(base64:String):Bitmap{
+        val encodedString = "data:image/jpg;base64, $base64"
+        val pureBase64Encoded: String = encodedString.substring(encodedString.indexOf(",") + 1)
+        val decodedString: ByteArray = Base64.decode(pureBase64Encoded, Base64.DEFAULT)
+        return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
+    }
+
     private fun convertBase64(path: String): String? {
         val imageFile = File(path)
         var fis: FileInputStream? = null
@@ -3208,8 +2897,9 @@ class CheckListFragment: BaseFragment() {
             e.printStackTrace()
         }
         val bm = BitmapFactory.decodeStream(fis)
+        val bb =Bitmap.createScaledBitmap(bm, 400, 800, false)
         val outputStream = ByteArrayOutputStream()
-        bm.compress(Bitmap.CompressFormat.JPEG, 50, outputStream)
+        bb.compress(Bitmap.CompressFormat.JPEG, 50, outputStream)
         return Base64.encodeToString(outputStream.toByteArray(), Base64.DEFAULT)
     }
 
@@ -3339,7 +3029,7 @@ class CheckListFragment: BaseFragment() {
                 val tag = image.tag as ArrayList<String>
                 if(tag[0]==idAnswerGen)
                 {
-                    tag[2] = urlImage
+                    tag[2] = convertBase64(urlImage)?:""
                     image.isVisible  = true
                     listViews[index].isVisible = true
                     val imageUri = Uri.fromFile(File(urlImage))
@@ -3355,7 +3045,7 @@ class CheckListFragment: BaseFragment() {
                 val tag = image.tag as ArrayList<String>
                 if(tag[0]==idAnswerGen)
                 {
-                    tag[2] = realPath.toString()
+                    tag[2] = convertBase64(realPath.toString())?:""
                     image.isVisible  = true
                     listViewsSelect[index].isVisible = true
                     val imageUri = Uri.fromFile(File(realPath))

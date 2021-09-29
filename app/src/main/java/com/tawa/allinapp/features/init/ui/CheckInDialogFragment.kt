@@ -112,8 +112,8 @@ class CheckInDialogFragment
             //Toast.makeText(context,getBatteryPercentage(requireContext()).toString()+" - "+getHour() + " - "+latitude+","+longitude,Toast.LENGTH_LONG).show()
             if(checkState)
             {
-                //if(getDistance("${list[_positionPv].lat}","${list[_positionPv].long}",latitude,longitude)<=250)
-               // {
+               // if(getDistance("${list[_positionPv].lat}","${list[_positionPv].long}",latitude,longitude)<=250)
+              //   {
                    list?.let { list->
                        _pv = list[_positionPv].nameCorp
                        _pvId = list[_positionPv].id
@@ -125,8 +125,8 @@ class CheckInDialogFragment
                        listener?.onAccept(idUsers,_pvId,_pv, latitude,longitude,_description,getBatteryPercentage(requireContext()).toString())
                        dismiss()
                    }
-               // }
-                //else
+                //}
+              //  else
                 //   showErrorSelector()
             }
             else{

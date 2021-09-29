@@ -130,7 +130,7 @@ class ReportsFragment : BaseFragment() {
 
         binding.etDate.setOnClickListener{  getDay(binding.etDate) }
 
-        binding.btnBackReports.setOnClickListener{ activity?.onBackPressed() }
+      //  binding.btnBackReports.setOnClickListener{ activity?.onBackPressed() }
 
         binding.btnSku.setOnClickListener { findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToSkuFragment()) }
 
