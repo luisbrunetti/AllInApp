@@ -15,14 +15,19 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.NotificationCompat
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.tawa.allinapp.R
+import com.tawa.allinapp.core.extensions.observe
+import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.DialogMessagesBinding
+import com.tawa.allinapp.features.init.InitViewModel
 import com.tawa.allinapp.models.Notify
 import io.socket.client.Socket
 import org.json.JSONObject
+import java.util.*
 
 import javax.inject.Inject
 
@@ -33,7 +38,9 @@ class MessagesDialogFragment
     )
     : BottomSheetDialogFragment() {
     private lateinit var binding: DialogMessagesBinding
+    private  lateinit var initViewModel: InitViewModel
     @Inject lateinit var notifyAdapter: NotifyAdapter
+    @Inject lateinit var notifyAdapterYesterday: NotifyAdapterYesterday
     var listener: Callback? = null
     val notify = mutableListOf<Notify>()
 
@@ -53,29 +60,43 @@ class MessagesDialogFragment
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.rvNotify.layoutManager = LinearLayoutManager(context)
+        binding.rvNotifyToday.layoutManager = LinearLayoutManager(context)
+        binding.rvNotifyYesterday.layoutManager = LinearLayoutManager(context)
         arguments?.let { bundle ->
             //bundle.getInt(TITLE).let { binding.tvItem.text = context?.getString(it) }
         }
+        binding.rvNotifyToday.adapter = notifyAdapter
+        binding.rvNotifyYesterday.adapter = notifyAdapterYesterday
+        initViewModel = viewModel(baseFragment.viewModelFactory){
+            observe(successGetNotify,{it?.let{
+                val cal = Calendar.getInstance()
+                val today  = cal.toInstant()
+                val comp = today.toString().substring(0,10)
+                cal.add(Calendar.DATE, -1)
+                val yesterday = cal.toInstant()
+                val compYesterday = yesterday.toString().substring(0,10)
+                notifyAdapter.setData(it.filter {date-> date.dateCreation?.substring(0,10)==comp }.sortedByDescending { it.dateCreation })
+                notifyAdapterYesterday.setData(it.filter {date-> date.dateCreation?.substring(0,10)==compYesterday }.sortedByDescending { it.dateCreation })
+               // notifyAdapterYesterday.setData(it)
+            }})
+        }
+        initViewModel.getNotify()
         notifyAdapter.clickListener = {
             Toast.makeText(context,it.id,Toast.LENGTH_SHORT).show()
         }
-        notify.add(Notify("1","Prueba1","AB"))
-        notify.add(Notify("2","Prueba2","FC"))
-        notify.add(Notify("3","Prueba3","GV"))
-        notify.add(Notify("4","Prueba4","RT"))
-        notify.add(Notify("5","Prueba5","OW"))
-        notify.add(Notify("6","Prueba6","HF"))
-        notifyAdapter.setData(notify.sortedByDescending { it.id })
-        binding.rvNotify.adapter = notifyAdapter
-
         binding.btnBackMessages.setOnClickListener {
             dismiss()
         }
-        notify.add(Notify("111","SDSDSDS","RFF"))
-        notifyAdapter.setData(notify)
-    }
+        binding.view16.setOnClickListener {
+            binding.rvNotifyYesterday.isVisible = false
+            binding.rvNotifyToday.isVisible = true
+        }
+        binding.view18.setOnClickListener {
+            binding.rvNotifyToday.isVisible = false
+            binding.rvNotifyYesterday.isVisible = true
 
+        }
+    }
     private fun NotificationManager.sendNotification(messageBody: String, applicationContext: Context,channel:String) {
         val builder = NotificationCompat.Builder(
             applicationContext,

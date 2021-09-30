@@ -1,7 +1,11 @@
 package com.tawa.allinapp.models
 
+
+
 data class Notify(
-    val id: String,
-    val text: String,
-    val init: String,
+    val id: String?,
+    val idUser: String?,
+    val message: String?,
+    val dateCreation: String?,
+    val user:String
 )

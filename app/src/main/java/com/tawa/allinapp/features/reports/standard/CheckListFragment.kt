@@ -1311,20 +1311,24 @@ class CheckListFragment: BaseFragment() {
                 linearRow.orientation = LinearLayout.HORIZONTAL
                 var countC = 0
                 val textColumn = TextView(context)
-                textColumn.width = 50f.toDips().toInt()
+                val params5 = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                textColumn.width = 80f.toDips().toInt()
                 textColumn.textSize = 16f
                 textColumn.setTextColor(resources.getColor(R.color.colorTextAll))
-                textColumn.height = 30f.toDips().toInt()
+                textColumn.height = 80f.toDips().toInt()
                 textColumn.gravity = Gravity.END or Gravity.CENTER_VERTICAL
+                textColumn.layoutParams = params5
                 textColumn.text = ""
                 linearRow.addView(textColumn)
                 listColumns.forEach {
                     val textColumn = TextView(context)
-                    textColumn.width = 80f.toDips().toInt()
+                    textColumn.width = 100f.toDips().toInt()
                     textColumn.textSize = 16f
                     textColumn.setTextColor(resources.getColor(R.color.colorTextAll))
-                    textColumn.height = 30f.toDips().toInt()
+                    textColumn.height = 80f.toDips().toInt()
                     textColumn.gravity = Gravity.END or Gravity.CENTER_VERTICAL
+                    textColumn.setPadding(0,0,5f.toDips().toInt(),0)
+                    textColumn.layoutParams = params5
                     textColumn.text = it
                     val listTag =ArrayList<String>(2)
                     listTag.add(listCId[countC])
@@ -1348,10 +1352,10 @@ class CheckListFragment: BaseFragment() {
                 {
 
                     val radioButton  = RadioButton(context)
-                    radioButton.width= 80f.toDips().toInt()
+                    radioButton.width= 100f.toDips().toInt()
                     radioButton.height = 50f.toDips().toInt()
                     radioButton.textSize = 16f
-                    radioButton.gravity = Gravity.END or Gravity.CENTER_VERTICAL
+                    radioButton.gravity = Gravity.START or Gravity.CENTER_VERTICAL
                     if(typeReport!="0")
                         radioButton.isChecked =  listEData[countRadio]
                     if(j==0)
@@ -1360,9 +1364,9 @@ class CheckListFragment: BaseFragment() {
                         val text = TextView(context)
                         text.setTextColor(resources.getColor(R.color.colorTextAll))
                         text.textSize = 16f
-                        params4.rightMargin = 5f.toDips().toInt()
+                        params4.rightMargin = 1f.toDips().toInt()
                         params4.topMargin = 10f.toDips().toInt()
-                        // params4.width = 20f.toDips().toInt()
+                        params4.width = 80f.toDips().toInt()
                         //params4.height = 20f.toDips().toInt()
                         text.layoutParams = params4
                         // text.setPadding(0,(30f).toDips().toInt(),(10f).toDips().toInt(),0)
@@ -1472,21 +1476,26 @@ class CheckListFragment: BaseFragment() {
                 val linearRow = LinearLayout(context)
                 linearRow.orientation = LinearLayout.HORIZONTAL
                 var countC = 0
+                val params5 = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
                 val textColumn = TextView(context)
-                textColumn.width = 50f.toDips().toInt()
+                params5.rightMargin = 1f.toDips().toInt()
+                textColumn.width = 80f.toDips().toInt()
                 textColumn.textSize = 16f
                 textColumn.setTextColor(resources.getColor(R.color.colorTextAll))
-                textColumn.height = 30f.toDips().toInt()
+                textColumn.height = 80f.toDips().toInt()
                 textColumn.gravity = Gravity.END or Gravity.CENTER_VERTICAL
+                textColumn.layoutParams = params5
                 textColumn.text = ""
                 linearRow.addView(textColumn)
                 listColumns.forEach {
                     val textColumn = TextView(context)
-                    textColumn.width = 80f.toDips().toInt()
+                    textColumn.width = 100f.toDips().toInt()
                     textColumn.textSize = 16f
                     textColumn.setTextColor(resources.getColor(R.color.colorTextAll))
-                    textColumn.height = 30f.toDips().toInt()
-                    textColumn.gravity = Gravity.CENTER_HORIZONTAL or Gravity.CENTER_VERTICAL
+                    textColumn.height = 80f.toDips().toInt()
+                    textColumn.setPadding(0,0,5f.toDips().toInt(),0)
+                    textColumn.gravity = Gravity.END or Gravity.CENTER_VERTICAL
+                    val params4 = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
                     textColumn.text = it
                     val listTag =ArrayList<String>(2)
                     listTag.add(listCId[countC])
@@ -1506,10 +1515,10 @@ class CheckListFragment: BaseFragment() {
                 for(j in 0 until countColumn)
                 {
                     val checkBox  = CheckBox(context)
-                    checkBox.width= 80f.toDips().toInt()
+                    checkBox.width= 100f.toDips().toInt()
                     checkBox.height = 50f.toDips().toInt()
                     checkBox.textSize = 16f
-                    checkBox.gravity = Gravity.CENTER_HORIZONTAL or Gravity.CENTER_VERTICAL
+                    checkBox.gravity = Gravity.END or Gravity.CENTER_VERTICAL
                     if(typeReport!="0")
                         checkBox.isChecked = listEData[countCheck]
                     if(j==0){
@@ -1517,9 +1526,9 @@ class CheckListFragment: BaseFragment() {
                         val text = TextView(context)
                         text.setTextColor(resources.getColor(R.color.colorTextAll))
                         text.textSize = 16f
-                        params4.rightMargin = 5f.toDips().toInt()
+                        params4.rightMargin = 1f.toDips().toInt()
                         params4.topMargin = 0f.toDips().toInt()
-                        // params4.width = 20f.toDips().toInt()
+                        params4.width = 80f.toDips().toInt()
                         //params4.height = 20f.toDips().toInt()
                         text.layoutParams = params4
                         // text.setPadding(0,(30f).toDips().toInt(),(10f).toDips().toInt(),0)
@@ -1627,24 +1636,26 @@ class CheckListFragment: BaseFragment() {
                 val linearRow = LinearLayout(context)
                 linearRow.orientation = LinearLayout.HORIZONTAL
                 var countC = 0
+                val params5 = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                params5.rightMargin = 1f.toDips().toInt()
                 val textColumn = TextView(context)
-                textColumn.width = 70f.toDips().toInt()
+                textColumn.width = 120f.toDips().toInt()
                 textColumn.textSize = 16f
-                params2.rightMargin = 10f.toDips().toInt()
+                params2.rightMargin = 5f.toDips().toInt()
                 textColumn.layoutParams = params2
                 textColumn.setTextColor(resources.getColor(R.color.colorTextAll))
-                textColumn.height = 30f.toDips().toInt()
+                textColumn.height = 80f.toDips().toInt()
                 textColumn.gravity = Gravity.CENTER_HORIZONTAL or Gravity.CENTER_VERTICAL
                 textColumn.text = ""
                 linearRow.addView(textColumn)
                 listColumns.forEach {
                     val textColumn = TextView(context)
-                    textColumn.width = 80f.toDips().toInt()
+                    textColumn.width = 100f.toDips().toInt()
                     textColumn.textSize = 16f
                     params2.rightMargin = 10f.toDips().toInt()
                     textColumn.layoutParams = params2
                     textColumn.setTextColor(resources.getColor(R.color.colorTextAll))
-                    textColumn.height = 30f.toDips().toInt()
+                    textColumn.height = 80f.toDips().toInt()
                     textColumn.gravity = Gravity.CENTER_HORIZONTAL or Gravity.CENTER_VERTICAL
                     textColumn.text = it
                     val listTag =ArrayList<String>(2)
@@ -1667,7 +1678,7 @@ class CheckListFragment: BaseFragment() {
                     val editText  = EditText(context)
                     params2.rightMargin = 10f.toDips().toInt()
                     params2.height = 50f.toDips().toInt()
-                    params2.width = 80f.toDips().toInt()
+                    params2.width = 100f.toDips().toInt()
                     //editText.width= 80f.toDips().toInt()
                    // editText.height = 50f.toDips().toInt()
                     editText.setBackgroundResource(R.drawable.rounded)
@@ -1684,13 +1695,12 @@ class CheckListFragment: BaseFragment() {
                         val text = TextView(context)
                         text.setTextColor(resources.getColor(R.color.colorTextAll))
                         text.textSize = 16f
-                        params4.rightMargin = 10f.toDips().toInt()
-                        params4.topMargin = 0f.toDips().toInt()
-                        params4.width = 70f.toDips().toInt()
+                        params4.rightMargin = 5f.toDips().toInt()
+                        text.gravity = TextView.TEXT_ALIGNMENT_CENTER
+                        params4.width = 120f.toDips().toInt()
                         //params4.height = 20f.toDips().toInt()
                         text.layoutParams = params4
                        // text.setPadding(0,(30f).toDips().toInt(),(10f).toDips().toInt(),0)
-                        text.gravity = Gravity.CENTER_VERTICAL
                         text.text = listRows[count]
                         val listTag =ArrayList<String>(2)
                         listTag.add(listId[count])
@@ -2837,7 +2847,7 @@ class CheckListFragment: BaseFragment() {
         val timeSetListener = TimePickerDialog.OnTimeSetListener { _, hour, minute ->
             cal.set(Calendar.HOUR_OF_DAY, hour)
             cal.set(Calendar.MINUTE, minute)
-            et.setText( SimpleDateFormat("HH:mm aa").format(cal.time))
+            et.setText( SimpleDateFormat("HH:mm").format(cal.time))
         }
         TimePickerDialog(context, timeSetListener, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), false).show()
     }

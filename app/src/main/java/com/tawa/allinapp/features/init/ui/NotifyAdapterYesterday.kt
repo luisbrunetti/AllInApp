@@ -14,8 +14,8 @@ import com.tawa.allinapp.models.Notify
 import com.tawa.allinapp.models.Report
 import javax.inject.Inject
 
-class NotifyAdapter
-@Inject constructor(val context: Context) : RecyclerView.Adapter<NotifyAdapter.NotifyViewHolder>() {
+class NotifyAdapterYesterday
+@Inject constructor(val context: Context) : RecyclerView.Adapter<NotifyAdapterYesterday.NotifyViewHolder>() {
 
     var collection = ArrayList<Notify>()
 

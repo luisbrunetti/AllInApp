@@ -9,6 +9,7 @@ import com.tawa.allinapp.data.local.Prefs
 import com.tawa.allinapp.features.init.usecase.*
 import com.tawa.allinapp.features.reports.GetReportsRemote
 import com.tawa.allinapp.models.Company
+import com.tawa.allinapp.models.Notify
 import com.tawa.allinapp.models.Report
 import com.tawa.allinapp.models.Schedule
 import java.sql.Timestamp
@@ -49,7 +50,8 @@ class InitViewModel
     private val pref:Prefs,
     private val updateCountNotify: UpdateCountNotify,
     private val getCountNotify: GetCountNotify,
-    private val clearNotify: ClearNotify
+    private val clearNotify: ClearNotify,
+    private val getNotify: GetNotify
 
 ) : BaseViewModel()  {
     private  val formatter: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
@@ -137,6 +139,10 @@ class InitViewModel
     private val _updateNotify = MutableLiveData<Boolean>(false)
     val updateNotify: LiveData<Boolean>
         get()= _updateNotify
+
+    private val _successGetNotify = MutableLiveData<List<Notify>>()
+    val successGetNotify: LiveData<List<Notify>>
+        get()= _successGetNotify
 
     private val _schedule = MutableLiveData<List<Schedule>>()
     val schedule: LiveData<List<Schedule>>
@@ -452,6 +458,13 @@ class InitViewModel
 
     private fun handleClearCountNotify(success: Boolean) {
         this._clearCountNotify.value = success
+    }
+
+    fun getNotify() =getNotify(UseCase.None()) {
+        it.either(::handleFailure, ::handleGetNotify) }
+
+    private fun handleGetNotify(notify: List<Notify>) {
+        this._successGetNotify.value = notify
     }
 
 

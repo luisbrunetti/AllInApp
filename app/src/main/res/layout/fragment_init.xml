@@ -26,6 +26,15 @@
             app:layout_constraintEnd_toEndOf="@+id/view8"
             app:layout_constraintTop_toTopOf="@+id/view8">
 
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/imageView16"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:adjustViewBounds="true"
+                android:padding="4dp"
+                android:scaleType="centerCrop"
+                tools:src="@tools:sample/avatars" />
+
             <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/ivCompanyLogo"
                 android:layout_width="match_parent"
@@ -33,6 +42,7 @@
                 android:background="@color/white"
                 android:elevation="20dp"
                 android:padding="5dp"
+                android:visibility="gone"
                 app:placeholderImage="@drawable/ic_img"
                 app:placeholderImageScaleType="fitCenter">
 

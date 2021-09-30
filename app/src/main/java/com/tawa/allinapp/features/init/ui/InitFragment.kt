@@ -2,6 +2,7 @@ package com.tawa.allinapp.features.init.ui
 
 
 import android.Manifest
+import android.R.attr
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -31,6 +32,12 @@ import com.tawa.allinapp.features.HomeActivity
 import com.tawa.allinapp.features.init.InitViewModel
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
+import android.R.attr.bitmap
+
+import android.graphics.drawable.BitmapDrawable
+
+import android.graphics.drawable.Drawable
+import androidx.compose.ui.text.toUpperCase
 
 
 class InitFragment : BaseFragment() {
@@ -119,7 +126,7 @@ class InitFragment : BaseFragment() {
                 if(it.isNotEmpty())
                     setLogoCompany(it)
                 else
-                    binding.ivCompanyLogo.setActualImageResource(R.drawable.ic_img)
+                    binding.imageView16.isVisible= false
             }})
             observe(successCheckOut, { it?.let {
                 if(it)
@@ -174,7 +181,7 @@ class InitFragment : BaseFragment() {
             }})
             observe(userName, { it?.let {
                 binding.tvHeaderName.text = it
-                binding.btUser.text = if(it.isNotEmpty()) it.first().toString() else ""
+                binding.btUser.text = if(it.isNotEmpty()) getFirstLetters(it.toUpperCase()) else ""
             } })
             /*observe(idPv,{it?.let{
               /*  if(it)
@@ -184,7 +191,7 @@ class InitFragment : BaseFragment() {
             observe(successGetRole,{
                 it?.let {
                     if(it.isNotEmpty()) {
-                        if(it=="SUPERVISOR") {
+                        if(it=="supervisor".toUpperCase()) {
                             (activity as HomeActivity).showInforms()
                             (activity as HomeActivity).showRoutes()
                             binding.viewBtnInforms.isVisible = true
@@ -299,6 +306,16 @@ class InitFragment : BaseFragment() {
         return binding.root
     }
 
+    private fun getFirstLetters(text: String): String? {
+        var text = text
+        var firstLetters = ""
+        text = text.replace("[.,]".toRegex(), "") // Replace dots, etc (optional)
+        for (s in text.split(" ").toTypedArray()) {
+            firstLetters += s[0]
+        }
+        return firstLetters
+    }
+
     private fun initNotify(){
         val socketHandler = SocketHandler(Prefs(requireContext()))
         socketHandler.setSock()
@@ -361,13 +378,8 @@ class InitFragment : BaseFragment() {
     }
 
     private fun setLogoCompany(image:String){
-        binding.ivCompanyLogo.isVisible = true
-        binding.ivCompanyLogo.setImageURI(
-            getImageUri(
-                requireContext(),
-                decodeBase64(image)
-            ), ""
-        )
+        binding.imageView16.isVisible = true
+        binding.imageView16.setImageBitmap(decodeBase64(image))
     }
 
     private fun decodeBase64(base64:String): Bitmap {
@@ -383,7 +395,7 @@ class InitFragment : BaseFragment() {
         val path = MediaStore.Images.Media.insertImage(
             context.contentResolver,
             inImage,
-            "IMG_" + System.currentTimeMillis(),
+            "LOGO_COMPANY",
             null
         )
         return Uri.parse(path)
