@@ -268,6 +268,7 @@ class CheckListFragment: BaseFragment() {
 
         arguments?.getString("id").toString().also {idRep->
             idReport=idRep
+            Log.d("idReport",idRep.toString())
             checkListViewModel.getStateReport(idReport,1)
         }
 
@@ -729,25 +730,17 @@ class CheckListFragment: BaseFragment() {
                         checkListViewModel.setAnswerPv(tag[0],tag[1],input.text.toString(),urlImage)
                         //checkListViewModel.updateAnswers(tag[0], input.text.toString())
                     }
-
-                    for(i in mutableHashMapTag.values){
-                        Log.d("i", "hashTagRecord -> ${i.answerRecorded.toString()}  hashSelected -> ${i.answerSelected.toString()}" )
-                        if(i.answerRecorded != "" && i.answerSelected != ""){
-                            val dialog = MessageDialogFragment.newInstance("Solo se puede guardar un audio por pregunta")
-                            dialog.show(childFragmentManager, "")
-                            break
-                        }else{
-                            //Log.d("list",listAnswers.toString())
-                            Log.d("answers", "selected ->" + i.answerSelected + "\nnrecorded ->"+i.answerRecorded)
-                            val answerbyQuestion = if(i.answerSelected == ""){
-                                if(i.answerRecorded != "") "${TYPE_RECCORDED}&${i.answerRecorded}"
-                                else ""
-                            } else{
-                                if(i.answerSelected != "") "${TYPE_SELECTED}&${i.answerSelected}"
-                                else ""
-                            }
-                            checkListViewModel.setAnswerPv(i.idAnswer,i.idQuestion,answerbyQuestion ?: "","")
+                    for(tag in mutableHashMapTag.values){
+                        //Log.d("setReadyAnswer9764", "hashTagRecord -> ${tag.answerRecorded.toString()}  hashSelected -> ${tag.answerSelected.toString()}" )
+                        val answerbyQuestion = if(tag.answerSelected == ""){
+                            if(tag.answerRecorded != "") tag.answerRecorded
+                            else ""
+                        } else{
+                            if(tag.answerSelected != "") tag.answerSelected
+                            else ""
                         }
+                        val answerBase64 = convertImageFileToBase64(File(answerbyQuestion!!))
+                        checkListViewModel.setAnswerPv(tag.idAnswer,tag.idQuestion,answerBase64 ?: "","")
                     }
                     findElements()
                     showConfirmSync()
@@ -899,9 +892,6 @@ class CheckListFragment: BaseFragment() {
                         val dialog = MessageDialogFragment.newInstance("Solo se puede guardar un audio por pregunta")
                         dialog.show(childFragmentManager, "")
                         break
-                    }else{
-                        //Log.d("list",listAnswers.toString())
-                        Log.d("answers", "selected ->" + i.answerSelected + "\nnrecorded ->"+i.answerRecorded)
                         val answerbyQuestion = if(i.answerSelected == ""){
                             if(i.answerRecorded != "") "${TYPE_RECCORDED}&${i.answerRecorded}"
                             else ""
@@ -1030,25 +1020,6 @@ class CheckListFragment: BaseFragment() {
             val answerBase64 = convertImageFileToBase64(File(answerbyQuestion!!))
             checkListViewModel.setReadyAnswers(tag.idQuestion,tag.nameQuestion,tag.idAnswer,answerBase64 ?: "","")
         }
-        /*for(i in mutableHashMapTag.values){
-            Log.d("i", "hashTagRecord -> ${i.answerRecorded.toString()}  hashSelected -> ${i.answerSelected.toString()}" )
-            if(i.answerRecorded != "" && i.answerSelected != ""){
-                val dialog = MessageDialogFragment.newInstance("Solo se puede guardar un audio por pregunta")
-                dialog.show(childFragmentManager, "")
-                break
-            }else{
-                //Log.d("list",listAnswers.toString())
-                Log.d("answers", "selected ->" + i.answerSelected + "\nnrecorded ->"+i.answerRecorded)
-                val answerbyQuestion = if(i.answerSelected == ""){
-                    if(i.answerRecorded != "") "${TYPE_RECCORDED}&${i.answerRecorded}"
-                    else ""
-                } else{
-                    if(i.answerSelected != "") "${TYPE_SELECTED}&${i.answerSelected}"
-                    else ""
-                }
-                checkListViewModel.setReadyAnswers(i.idQuestion,i.nameQuestion,i.idAnswer,answerbyQuestion ?: "","")
-            }
-        }*/
     }
 
     private fun findRadioButton(){
@@ -2683,6 +2654,7 @@ class CheckListFragment: BaseFragment() {
                                 base = SystemClock.elapsedRealtime()
                                 stop()
                             }
+                            playerRecorded = null
                             recordAudio.textViewShowRecord?.visible()
                             recordAudio.layoutShowRecord?.visible()
                             recordAudio.textViewRecording?.visible()
@@ -2720,6 +2692,7 @@ class CheckListFragment: BaseFragment() {
                             base = SystemClock.elapsedRealtime()
                             stop()
                         }
+                        playerSelected= null
                         recordAudio.textViewAudioSelected?.visibility = View.VISIBLE
                         recordAudio.layoutShowSelectedAudio?.visibility = View.VISIBLE
                     }

@@ -8,13 +8,13 @@ import retrofit2.http.Header
 import retrofit2.http.Query
 
 interface DashboardApi {
-    @GET("/api/canal/1/")
+    @GET("/api/canal/")
     fun getChannels(@Header("Authorization") token: String, @Query("id_empresa") company:String): Call<BaseResponse<List<ChannelRemote.Response>>>
 
-    @GET("/api/retail/1/")
+    @GET("/api/retail/")
     fun getRetails(@Header("Authorization") token: String, @Query("id_empresa") company:String): Call<BaseResponse<List<RetailRemote.Response>>>
 
-    @GET("/api/cadena/1/")
+    @GET("/api/cadena/")
     fun getChains(@Header("Authorization") token: String,
                   @Query("id_empresa") company:String,
                   @Query("id_canal") channel:List<String>,

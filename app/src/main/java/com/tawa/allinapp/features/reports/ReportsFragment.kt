@@ -18,7 +18,6 @@ import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
 import com.tawa.allinapp.R
 import com.tawa.allinapp.core.dialog.MessageDialogFragment
 import com.tawa.allinapp.core.extensions.failure
-import com.tawa.allinapp.core.extensions.loadFromResource
 import com.tawa.allinapp.core.extensions.observe
 import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.functional.Failure
@@ -130,7 +129,10 @@ class ReportsFragment : BaseFragment() {
 
         binding.etDate.setOnClickListener{  getDay(binding.etDate) }
 
-      //  binding.btnBackReports.setOnClickListener{ activity?.onBackPressed() }
+        binding.btnBackReports.setOnClickListener{
+            //activity?.onBackPressed()
+            findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToNavigationInit())
+        }
 
         binding.btnSku.setOnClickListener { findNavController().navigate(ReportsFragmentDirections.actionNavigationReportsToSkuFragment()) }
 

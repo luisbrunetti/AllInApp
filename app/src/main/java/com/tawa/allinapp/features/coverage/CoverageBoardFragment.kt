@@ -15,11 +15,9 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateMapOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
@@ -34,7 +32,9 @@ import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.features.coverage.composables.DateFilter
 import com.tawa.allinapp.features.coverage.composables.ExpandableCard
+import com.tawa.allinapp.features.coverage.composables.ExpandableCardChain
 import com.tawa.allinapp.features.coverage.composables.HeaderPage
+import com.tawa.allinapp.models.Chain
 
 class CoverageBoardFragment : BaseFragment() {
 
@@ -43,6 +43,10 @@ class CoverageBoardFragment : BaseFragment() {
     private var selectedChain:List<String>? = null
     private var selectedRetail:List<String>? = null
     private var selectedUser:List<String>? = null
+    private var mutableListChain = mutableStateListOf<String>()
+    private var listAllChains = ArrayList<Chain>()
+
+
     private var startDate:String? = null
     private var endDate:String? = null
 
@@ -55,7 +59,7 @@ class CoverageBoardFragment : BaseFragment() {
         coverageViewModel.getChannels()
         coverageViewModel.getRetails()
         coverageViewModel.getUserList()
-        coverageViewModel.getChains(emptyList(),emptyList())
+        coverageViewModel.getAllChains(emptyList(),emptyList())
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -66,6 +70,20 @@ class CoverageBoardFragment : BaseFragment() {
             observe(failure,{
                 it?.let {
                     Log.d("failure",failure.value.toString())
+                }
+            })
+            observe(chains,{
+                it?.let {
+                    mutableListChain.clear()
+                    for(element in it){
+                        mutableListChain.add(element.description!!)
+                    }
+                }
+            })
+            observe(allChains,{
+                it?.let {
+                    listAllChains.clear()
+                    listAllChains.addAll(it)
                 }
             })
 
@@ -81,7 +99,7 @@ class CoverageBoardFragment : BaseFragment() {
     @Composable
     fun Filters(){
         val channels by coverageViewModel.channels.observeAsState()
-        val chains by coverageViewModel.chains.observeAsState()//
+        //val chains by coverageViewModel.chains.observeAsState()//
         val retails by coverageViewModel.retails.observeAsState()//
         val userList by coverageViewModel.userList.observeAsState()
 
@@ -90,6 +108,7 @@ class CoverageBoardFragment : BaseFragment() {
                 { startDate = it },{ endDate = it }
             )
             channels?.let { ch ->
+                Log.d("Channels -> ",channels.toString())
                 ExpandableCard(
                     title = "Canal",
                     content = ch.map { it.description?:"" }
@@ -100,7 +119,7 @@ class CoverageBoardFragment : BaseFragment() {
                                 it == c.description
                             }
                         }.map { it.id?:""}
-                        //coverageViewModel.getChains(selectedChannel?: emptyList(),selectedRetail?: emptyList())
+                        coverageViewModel.getChains(selectedChannel?: emptyList(),selectedRetail?: emptyList())
                     }
                     else coverageViewModel.getChains(emptyList(),selectedRetail?: emptyList())
                 }
@@ -119,28 +138,24 @@ class CoverageBoardFragment : BaseFragment() {
                                 it == c.description
                             }
                         }.map { it.id?:"" }
-                        //coverageViewModel.getChains(selectedChannel?: emptyList(),selectedRetail?: emptyList())
+                        coverageViewModel.getChains(selectedChannel?: emptyList(),selectedRetail?: emptyList())
                     }
                     else coverageViewModel.getChains(selectedChannel?: emptyList(),emptyList())
                 }
             }
-            chains?.let { c ->
-                Log.d("chainRecived", c.toString())
-                if (c.isNotEmpty()) {
-                    ExpandableCard(
-                        title = "Cadena",
-                        content = c.map { it.description ?: "" }
-                    ) { list ->
-                        Log.d("chainRecived", c.toString())
-                        Log.d("chainsSelected", list.toString())
-                         selectedChain = c.filter{chain->
-                            chain.description == list.find { desc -> desc == chain.description }
-                        }.map { it.id ?: "" }
-                        //Log.d("filt",selectedChain.toString())
-                        Log.d("selectedChain",selectedChain.toString())
-                    }
+            ExpandableCardChain(
+                title = "Cadena",
+                content = mutableListChain
+            ) { list ->
+                Log.d("chainsSelected", list.toString())
+                selectedChain = listAllChains.filter { chain ->
+                    chain.description == list.find { desc -> desc == chain.description }
+                }.map {
+                    it.id ?: ""
                 }
+                Log.d("selectedChain", selectedChain.toString())
             }
+
             userList?.let { u ->
                 //Log.d("userList",u[0].toString())
                 ExpandableCard(

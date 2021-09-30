@@ -90,8 +90,10 @@ class InitFragment : BaseFragment() {
             }})
             observe(successCheckIn, { it?.let {
                     if(it)
-                    { getActualLocation()
+                    {
+                        getActualLocation()
                         initViewModel.getCheckMode()
+                        Log.d("successCheckin", "last -> $_lat  long -> $_long")
                         initViewModel.updateStatus(_lat,_long,_battery,0)
                         notify(activity,R.string.checkoout_successful)
                     }
@@ -240,7 +242,13 @@ class InitFragment : BaseFragment() {
         initViewModel.getPvIdFirstTime()
 
         binding.btCheckIn.setOnClickListener{
-            if(checkIn) showSelectorCheckIn()
+            if(checkIn){
+                if(isLocationEnabled()) showSelectorCheckIn()
+                else{
+                    val dialog = MessageDialogFragment.newInstance("Se tiene que activar el GPS para usar esta funcionalidad")
+                    dialog.show(childFragmentManager,"")
+                }
+            }
             else initViewModel.getDescPV()
         }
         binding.btUser.setOnClickListener {
@@ -249,7 +257,8 @@ class InitFragment : BaseFragment() {
                 override fun onAccept() {
                     initViewModel.setSession(false)
                     initViewModel.setIdCompany("","")
-                    initViewModel.setPv("","","")
+                    initViewModel.deletePvId("")
+                    //initViewModel.setPv("","","")
                     showLogin(context)
                 }
                 override fun onSendPassword() {
@@ -308,12 +317,13 @@ class InitFragment : BaseFragment() {
         val dialog = MessagesDialogFragment(this)
         dialog.show(childFragmentManager,"dialogMessages")
     }
+
     private fun showSelector(){
         val dialog = SelectorDialogFragment(this)
         dialog.listener = object : SelectorDialogFragment.Callback{
             override fun onAccept() {
                 initViewModel.getLogoCompany()
-                initViewModel.getPVSaved()
+                //initViewModel.getPVSaved()
             }
         }
         dialog.show(childFragmentManager, "dialog")
@@ -334,10 +344,10 @@ class InitFragment : BaseFragment() {
         val dialog = CheckInDialogFragment(this)
         dialog.listener = object : CheckInDialogFragment.Callback {
             override fun onAccept(idUser:String,pvId:String, pv:String,lat:String, long:String,description: String,battery:String) {
-                getActualLocation()
-                _pv = pv;_pvId = pvId;_battery = battery
-                initViewModel.setCheckIn(idUser,pvId,_lat,_long)
-                binding.tvCheckIn.text = description
+                    getActualLocation()
+                    _pv = pv;_pvId = pvId;_battery = battery
+                    initViewModel.setCheckIn(idUser,pvId,_lat,_long)
+                    binding.tvCheckIn.text = description
             }
             override fun onSnack(snack: Boolean) {
                 if (snack) notify(activity,R.string.notify_already)
@@ -385,7 +395,9 @@ class InitFragment : BaseFragment() {
             override fun onAccept() {
                 showProgressDialog()
                 getActualLocation()
+                //initViewModel.setPv("","","")
                 initViewModel.setCheckOut(_user,_pvId,_lat,_long)
+                //_pvId = ""
                 //initViewModel.sendCheck(_lat,_long,1)
                // notify(requireActivity(), R.string.checkoout_successful)
             }

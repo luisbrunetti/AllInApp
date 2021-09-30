@@ -31,7 +31,6 @@ import com.tawa.allinapp.models.Schedule
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
 import javax.inject.Inject
-import kotlin.collections.ArrayList
 
 
 class CheckInDialogFragment
@@ -106,33 +105,38 @@ class CheckInDialogFragment
         }
 
         binding.btnDoCheckin.setOnClickListener {
-            newLocationData()
-            getLastLocation()
-             _positionPv  = binding.pdvSpinner.selectedItemPosition
-            //Toast.makeText(context,getBatteryPercentage(requireContext()).toString()+" - "+getHour() + " - "+latitude+","+longitude,Toast.LENGTH_LONG).show()
-            if(checkState)
-            {
-               // if(getDistance("${list[_positionPv].lat}","${list[_positionPv].long}",latitude,longitude)<=250)
-              //   {
-                   list?.let { list->
-                       _pv = list[_positionPv].nameCorp
-                       _pvId = list[_positionPv].id
-                       _description = list[_positionPv].nameCorp
-                       initViewModel.setPv(list[_positionPv].id,list[_positionPv].pv,list[_positionPv].nameCorp)
-                       // initViewModel.setCheckIn(idUsers,list[_positionPv].pv,latitude,longitude)
-                       //initViewModel.updateStatus(latitude,longitude,getBatteryPercentage(requireContext()).toString())
-                       //initViewModel.sendCheck(latitude,longitude,0)
-                       listener?.onAccept(idUsers,_pvId,_pv, latitude,longitude,_description,getBatteryPercentage(requireContext()).toString())
-                       dismiss()
-                   }
-                //}
-              //  else
-                //   showErrorSelector()
-            }
-            else{
-                listener?.onSnack(true)
-                dismiss()
-            }
+            //if(baseFragment.isLocationEnabled()){
+                newLocationData()
+                getLastLocation()
+                _positionPv  = binding.pdvSpinner.selectedItemPosition
+                //Toast.makeText(context,getBatteryPercentage(requireContext()).toString()+" - "+getHour() + " - "+latitude+","+longitude,Toast.LENGTH_LONG).show()
+                if(checkState)
+                {
+                    // if(getDistance("${list[_positionPv].lat}","${list[_positionPv].long}",latitude,longitude)<=250)
+                    //   {
+                    list?.let { list->
+                        _pv = list[_positionPv].nameCorp
+                        _pvId = list[_positionPv].id
+                        _description = list[_positionPv].nameCorp
+                        initViewModel.setPv(list[_positionPv].id,list[_positionPv].pv,list[_positionPv].nameCorp)
+                        // initViewModel.setCheckIn(idUsers,list[_positionPv].pv,latitude,longitude)
+                        //initViewModel.updateStatus(latitude,longitude,getBatteryPercentage(requireContext()).toString())
+                        //initViewModel.sendCheck(latitude,longitude,0)
+                        listener?.onAccept(idUsers,_pvId,_pv, latitude,longitude,_description,getBatteryPercentage(requireContext()).toString())
+                        dismiss()
+                    }
+                    //}
+                    //  else
+                    //   showErrorSelector()
+                }
+                else{
+                    listener?.onSnack(true)
+                    dismiss()
+                }
+            //}else{
+            //    val dialog = MessageDialogFragment.newInstance("Se tiene que activar el GPS para usar esta funcionalidad")
+            //    dialog.show(childFragmentManager,"")
+            //}
         }
         binding.closeCheckInModal.setOnClickListener{
             listener?.onClose()

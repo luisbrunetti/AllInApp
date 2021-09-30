@@ -225,8 +225,6 @@ class InitViewModel
     val getPvIdf: LiveData<String>
         get()= _getPvIdf
 
-    //private val _getPvIdf = MutableLiveData<String>()
-    //val getPvIdf: LiveData<String> get() = _getPvIdf
 
     init {
         startHome()
@@ -266,7 +264,10 @@ class InitViewModel
     fun setIdCompany(idCompany:String,image:String) = setIdCompany(SetIdCompany.Params(idCompany,image)) {
         it.either(::handleFailure, ::handleSetIdCompany) }
 
-    //fun setIdPvName() =
+    fun deletePvId(value:String) {
+        pref.pvId = ""
+        pref.pvName = ""
+    }
 
     fun setPv(schedule:String,pv:String,descPv:String) = setIdPv(SetIdPv.Params(schedule,pv,descPv)) { it.either(::handleFailure, ::handleSetIdPv) }
 
@@ -346,7 +347,7 @@ class InitViewModel
         this._companies.value = company.map { Company(it.id,it.ruc,it.name,it.description,it.idUser,it.image) }
     }
     private fun handlePvList(schedule: List<Schedule>) {
-        Log.d("handlePvList",schedule.map { Schedule(it.id,it.pv,it.description,it.zone,it.codGeo,it.idCompany, it.lat,it.long,it.idUser,it.nameCorp) }.toString() )
+        //Log.d("handlePvList",schedule.map { Schedule(it.id,it.pv,it.description,it.zone,it.codGeo,it.idCompany, it.lat,it.long,it.idUser,it.nameCorp) }.toString() )
         this._schedule.value = schedule.map { Schedule(it.id,it.pv,it.description,it.zone,it.codGeo,it.idCompany, it.lat,it.long,it.idUser,it.nameCorp) }
     }
     private fun handleSetIdCompany(success: Boolean) {

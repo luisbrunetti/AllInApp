@@ -92,8 +92,9 @@
                 app:argType="string"/>
 
         </action>
+
         <action
-            android:id="@+id/action_navigation_reports_to_navigation_init2"
+            android:id="@+id/action_navigation_reports_to_navigation_init"
             app:destination="@id/navigation_init" />
 
     </fragment>

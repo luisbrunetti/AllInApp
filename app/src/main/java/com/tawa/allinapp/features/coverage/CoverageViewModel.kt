@@ -31,6 +31,9 @@ class CoverageViewModel
     private val _chains = MutableLiveData<List<Chain>>()
     val chains: LiveData<List<Chain>>
         get()= _chains
+    private val _allChains = MutableLiveData<List<Chain>>()
+    val allChains: LiveData<List<Chain>>
+        get()= _allChains
 
     private val _userList = MutableLiveData<List<User>>()
     val userList: LiveData<List<User>>
@@ -45,7 +48,9 @@ class CoverageViewModel
     fun getChains(channel: List<String>, retail: List<String>) = getChains(GetChains.Params(channel,retail)){ it.either(::handleFailure, ::handleChains) }
     fun getUserList() = getUserList(UseCase.None()){ it.either(::handleFailure, ::handleUserList) }
     fun getGraph(start:String?,end:String?, users: List<String>?, chains: List<String>?) = getGraph(GetGraph.Params(start,end,users,chains)){ it.either(::handleFailure, ::handleGraph) }
-
+    fun getAllChains(channel: List<String>, retail: List<String>) = getChains(GetChains.Params(channel, retail)){
+        it.either(::handleFailure, ::handleAllChain)
+    }
     fun onTextChanged(text:String){
         _text.value = text
     }
@@ -60,6 +65,9 @@ class CoverageViewModel
 
     private fun handleChains(chains:List<Chain>){
         _chains.value = chains
+    }
+    private fun handleAllChain(chains:List<Chain>){
+        _allChains.value = chains
     }
 
     private fun handleUserList(userList:List<User>){

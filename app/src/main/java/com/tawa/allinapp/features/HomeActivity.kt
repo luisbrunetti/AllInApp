@@ -77,4 +77,7 @@ class HomeActivity : AppCompatActivity() {
     fun showInforms(){ binding.navView.menu.findItem(R.id.navigation_informs).isVisible = true}
     fun showRoutes(){ binding.navView.menu.findItem(R.id.navigation_routes).isVisible = true}
 
+    /*override fun onBackPressed() {
+        //super.onBackPressed()
+    }*/
 }

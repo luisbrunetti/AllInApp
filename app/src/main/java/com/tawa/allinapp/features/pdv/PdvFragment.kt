@@ -97,6 +97,7 @@ class PdvFragment : BaseFragment() {
         }
         initViewModel = viewModel(viewModelFactory){
             observe(idPv,{it?.let{
+                //Cambiar nombre del punto de venta ?
               /*  if(it)
                     findNavController().navigate(PdvFragmentDirections.actionNavigationPdvSelf())*/
             }})
