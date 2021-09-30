@@ -28,14 +28,15 @@ import java.util.*
 @Composable
 fun ExpandableCard(
     title: String,
-    content:List<String>,
+    listElementsPrincipal:List<String>,
     onSelected: (List<String>) -> Unit
 ){
-    val hashCheckedItem = remember{ mutableStateMapOf<String,Boolean>()}
+    val hashItemChecked = remember{ mutableStateMapOf<String,Boolean>()}
+    hashItemChecked.clear()
     var expandedState by remember { mutableStateOf(false) }
     var mainCheckState by remember { mutableStateOf(false) }
-    val checkedList = remember { mutableListOf<String>() }
-    content.map { hashCheckedItem[it] = false }
+    val listElementsChecked = remember { mutableListOf<String>() }
+    listElementsPrincipal.map { hashItemChecked[it] = false }
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -73,11 +74,11 @@ fun ExpandableCard(
                     val textState = remember{ mutableStateOf(TextFieldValue(""))}
                     SearchView(textState)
                     LazyRow(){
-                        items(checkedList as ArrayList<String>, itemContent = {item: String ->
+                        items(listElementsChecked as ArrayList<String>, itemContent = { item: String ->
                             NameCard(text = item) {
-                                hashCheckedItem[item] = false
-                                checkedList.remove(item)
-                                onSelected(checkedList)
+                                hashItemChecked[item] = false
+                                listElementsChecked.remove(item)
+                                onSelected(listElementsChecked)
                                 mainCheckState = false
                             }
                             Spacer(modifier = Modifier.padding(1.dp))
@@ -92,54 +93,52 @@ fun ExpandableCard(
                             {
                                 mainCheckState = it
                                 if (mainCheckState) {
-                                    checkedList.clear()
-                                    for (key in hashCheckedItem.keys) {
-                                        checkedList.add(key)
-                                        hashCheckedItem[key] = it
+                                    listElementsChecked.clear()
+                                    for (key in hashItemChecked.keys) {
+                                        listElementsChecked.add(key)
+                                        hashItemChecked[key] = it
                                     }
-                                    onSelected(content)
+                                    onSelected(listElementsPrincipal)
                                 }
                                 else{
-                                    checkedList.clear()
-                                    for (key in hashCheckedItem.keys) {
-                                        hashCheckedItem[key] = it
+                                    listElementsChecked.clear()
+                                    for (key in hashItemChecked.keys) {
+                                        hashItemChecked[key] = it
                                     }
-                                    onSelected(checkedList)
+                                    onSelected(listElementsChecked)
                                 }
                             },
                         )
                         Text(text = " Seleccionar todos", fontSize = 16.sp)
                     }
-                    var listFiltered = content
+                    var listFiltered = listElementsPrincipal
                     if(textState.value.text != ""){
                         listFiltered = listFiltered.filter {
                             it.lowercase(Locale.ROOT).contains(textState.value.text.lowercase(Locale.ROOT))
                         }
                     }
                     for (element in listFiltered){
-
                         Row(
                             Modifier.padding(start = 20.dp)
                         ){
                             Checkbox(
                                 modifier = Modifier.padding(bottom = 10.dp),
-                                //checked = if(!mainCheckState) hashCheckedItem[element]!! else mainCheckState,
-                                checked = hashCheckedItem[element]!!,
+                                checked = hashItemChecked[element]!!,
                                 onCheckedChange =
                                 {
                                     if(mainCheckState && it){
-                                        onSelected(content)
+                                        onSelected(listElementsPrincipal)
                                     } else {
                                         if(it){
-                                            checkedList.add(element)
-                                            hashCheckedItem[element] = it
+                                            listElementsChecked.add(element)
+                                            hashItemChecked[element] = it
                                         }
                                         else {
                                             mainCheckState=false
-                                            checkedList.remove(element)
-                                            hashCheckedItem[element] = it
+                                            listElementsChecked.remove(element)
+                                            hashItemChecked[element] = it
                                         }
-                                        onSelected(checkedList)
+                                        onSelected(listElementsChecked)
                                     }
                                 },
                                 colors = CheckboxDefaults.colors(colorResource(id = R.color.colorPrimary) )

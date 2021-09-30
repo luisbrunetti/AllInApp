@@ -32,11 +32,11 @@ fun ExpandableCardChain(
     onSelected: (List<String>) -> Unit
 ){
     val hashCheckedItem = remember{ mutableStateMapOf<String,Boolean>()}
-    var expandedState by remember { mutableStateOf(false) }
-    var mainCheckState by remember { mutableStateOf(false) }
+    content.map { hashCheckedItem[it] = false }
     val checkedList = remember { mutableListOf<String>() }
     checkedList.clear()
-    content.map { hashCheckedItem[it] = false }
+    var expandedState by remember { mutableStateOf(false) }
+    var mainCheckState by remember { mutableStateOf(false) }
     Surface(
         modifier = Modifier
             .fillMaxWidth()

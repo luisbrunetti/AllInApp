@@ -5,7 +5,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -17,7 +16,6 @@ import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
@@ -75,15 +73,15 @@ class CoverageBoardFragment : BaseFragment() {
             observe(chains,{
                 it?.let {
                     mutableListChain.clear()
-                    for(element in it){
-                        mutableListChain.add(element.description!!)
-                    }
+                    for(element in it){ mutableListChain.add(element.description!!) }
                 }
             })
             observe(allChains,{
                 it?.let {
                     listAllChains.clear()
+                    mutableListChain.clear()
                     listAllChains.addAll(it)
+                    mutableListChain.addAll(it.map { chain -> chain.description!! })
                 }
             })
 
@@ -104,14 +102,13 @@ class CoverageBoardFragment : BaseFragment() {
         val userList by coverageViewModel.userList.observeAsState()
 
         Column{
-            DateFilter(
-                { startDate = it },{ endDate = it }
-            )
+            DateFilter({ startDate = it },{ endDate = it })
+
             channels?.let { ch ->
                 Log.d("Channels -> ",channels.toString())
                 ExpandableCard(
                     title = "Canal",
-                    content = ch.map { it.description?:"" }
+                    listElementsPrincipal = ch.map { it.description?:"" }
                 ){ list ->
                     if(list.isNotEmpty()){
                         selectedChannel = ch.filter { c ->
@@ -127,7 +124,7 @@ class CoverageBoardFragment : BaseFragment() {
             retails?.let { r ->
                 ExpandableCard(
                     title = "Tipo Retail",
-                    content = r.map {
+                    listElementsPrincipal = r.map {
                         it.description?:""
                     }
                 ){ list ->
@@ -143,11 +140,11 @@ class CoverageBoardFragment : BaseFragment() {
                     else coverageViewModel.getChains(selectedChannel?: emptyList(),emptyList())
                 }
             }
-            ExpandableCardChain(
+            ExpandableCard(
                 title = "Cadena",
-                content = mutableListChain
+                listElementsPrincipal = mutableListChain
             ) { list ->
-                Log.d("chainsSelected", list.toString())
+                //Log.d("chainsSelected", list.toString())
                 selectedChain = listAllChains.filter { chain ->
                     chain.description == list.find { desc -> desc == chain.description }
                 }.map {
@@ -160,7 +157,7 @@ class CoverageBoardFragment : BaseFragment() {
                 //Log.d("userList",u[0].toString())
                 ExpandableCard(
                     title = "Usuarios",
-                    content = u.map { it.fullName?:"" }
+                    listElementsPrincipal = u.map { it.fullName?:"" }
                 ){ list ->
                     if(list.isNotEmpty())
                         selectedUser = u.filter { c ->
