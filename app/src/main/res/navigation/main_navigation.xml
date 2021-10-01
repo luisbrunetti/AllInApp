@@ -95,7 +95,9 @@
 
         <action
             android:id="@+id/action_navigation_reports_to_navigation_init"
-            app:destination="@id/navigation_init" />
+            app:destination="@id/navigation_init"
+            app:popUpTo="@id/navigation_reports"
+            app:popUpToInclusive="true"/>
 
     </fragment>
 

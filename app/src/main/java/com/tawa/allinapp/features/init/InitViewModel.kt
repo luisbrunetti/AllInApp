@@ -231,6 +231,8 @@ class InitViewModel
     val getPvIdf: LiveData<String>
         get()= _getPvIdf
 
+    private val _selector = MutableLiveData<Boolean>()
+    val selector:  LiveData<Boolean> get() = _selector
 
     init {
         startHome()
@@ -261,7 +263,13 @@ class InitViewModel
 
     private fun startCheckIn(){ _startCheckIn.value = true }
 
-    fun getIdCompany() = getIdCompany(UseCase.None()) { it.either(::handleFailure, ::handleGetIdCompany) }
+    fun getIdCompany() = getIdCompany(UseCase.None()) {
+        it.either(::handleFailure, ::handleGetIdCompany)
+    }
+
+    fun getIdCompanyPreferences(): String{
+        return pref.companyId!!
+    }
 
     fun getIdUser() = getIdUser(UseCase.None()) { it.either(::handleFailure, ::handleGetIdUser) }
 

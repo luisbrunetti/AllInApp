@@ -44,7 +44,6 @@ class CoverageBoardFragment : BaseFragment() {
     private var mutableListChain = mutableStateListOf<String>()
     private var listAllChains = ArrayList<Chain>()
 
-
     private var startDate:String? = null
     private var endDate:String? = null
 
@@ -190,8 +189,7 @@ class CoverageBoardFragment : BaseFragment() {
                                 " \nendData -> $endDate" +
                                 " \nselectedUser -> $selectedUser" +
                                 " \nselectedChain -> $selectedChain")
-                    if(startDate == null || endDate == null) notify(requireActivity(), R.string.select_dates)
-                    else coverageViewModel.getGraph(startDate,endDate,selectedUser,selectedChain)
+                    coverageViewModel.getGraph(startDate,endDate,selectedUser,selectedChain)
                 }
             ) {
                 Text("Buscar", color = Color.White, fontSize = 18.sp)

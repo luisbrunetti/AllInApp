@@ -10,7 +10,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -55,13 +54,14 @@ class CoverageBoardGraphFragment: BaseFragment() {
         Log.d("graph",graph.toString())
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         initArgs()
         return ComposeView(requireContext()).apply {
             setContent {
                 Column {
                     HeaderPage("Dashboard","Cobertura") {
-                        findNavController().popBackStack()
+                        findNavController().popBackStack(R.id.coverageBoardFragment,true)
+                        //findNavController().popBackStack(R.id.coverageBoardGraphFragment,true)
                     }
                     CoverageBoardGraphPage()
                 }
@@ -77,7 +77,6 @@ class CoverageBoardGraphFragment: BaseFragment() {
                 .fillMaxWidth()
                 .wrapContentHeight()
         ) {
-            //Log.d("data", )
             val visits = if (graph?.visits?.total==0.0) 0.0f
             else (graph?.visits?.concluded?.div(graph?.visits?.total?:0.0))?.toFloat()?:0.0f
             val reports =
@@ -129,9 +128,9 @@ class CoverageBoardGraphFragment: BaseFragment() {
 
     @Composable
     fun DrawBar(size:Float){
-        var animationPlayed by remember {
-            mutableStateOf(false)
-        }
+
+        var animationPlayed by remember { mutableStateOf(false) }
+
         val percentage = animateFloatAsState(
             targetValue = if (animationPlayed) size else 0f,
             animationSpec = tween(
@@ -145,14 +144,17 @@ class CoverageBoardGraphFragment: BaseFragment() {
         val red = colorResource(id = R.color.red)
         val yellow = colorResource(id = R.color.yellow)
         val green = colorResource(id = R.color.green)
+        Log.d("Size Drawbar -> ", size.toString())
+        //Log.d("Porcentage Drawbar -> ", percentage.value.toString())
         Canvas(modifier = Modifier.fillMaxSize()){
             drawLine(
                 start = Offset(x = 0f, y = -0f),
                 end = Offset(x = 0f,y = -percentage.value),
+                //end = Offset(x = 0f,y = -270f),
                 color = when {
-                    percentage.value <= (540 * 50.0)/100 -> red
-                    (540 * 50.0)/100 < percentage.value  && percentage.value < (540 * 75.0)/100 -> yellow
-                    percentage.value >= (540 * 75.0)/100 -> green
+                    percentage.value <= (540 * 50.0) -> red
+                    //(540 * 50.0)/100 < percentage.value  && percentage.value < (540 * 75.0)/100 -> yellow
+                    percentage.value >= (540 * 75.0) -> green
                     else -> green
                 },
                 strokeWidth = 15f,
@@ -183,20 +185,24 @@ class CoverageBoardGraphFragment: BaseFragment() {
             val cover = graph?.coverage?.infoChain
             for (a in 0 until (cover?.size ?: 1)){
                 Log.d("task", " Tareas por realizar ${cover?.get(a)?.tasksToDo.toString()} \nTareas terminadas -> ${cover?.get(a)?.tasksFinished.toString()}" )
+                val taskToDo = cover?.get(a)?.tasksToDo
+                val taskFinished = cover?.get(a)?.tasksFinished
+
                 val size = if(cover?.get(a)?.tasksFinished == 0.0) 0.0
-                else (cover?.get(a)?.tasksToDo?.plus(cover[a].tasksFinished)?.div(cover[a].tasksFinished))?:0.0
+                else taskFinished?.div((taskToDo!! + taskFinished))
+                //else (cover?.get(a)?.tasksToDo?.plus(cover[a].tasksFinished)?.div(cover[a].tasksFinished))?:0.0
                 Log.d("sizeBar",size.toString())
                 Column(
                     modifier = Modifier.padding(10.dp),
                     verticalArrangement = Arrangement.Bottom,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    DrawBar(size = ((size*540)/100).toFloat())
+                    DrawBar(size = (size!!*540).toFloat())
                     Spacer(modifier = Modifier.height(10.dp))
                     Text("${cover?.get(a)?.chainName}",
                         modifier = Modifier.height(20.dp),
                         fontSize = 10.sp,
-                        style = TextStyle(textAlign = TextAlign.Center,),
+                        style = TextStyle(textAlign = TextAlign.Center),
                     )
                 }
             }

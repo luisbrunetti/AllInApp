@@ -2,7 +2,6 @@ package com.tawa.allinapp.features.init.ui
 
 
 import android.Manifest
-import android.R.attr
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -16,7 +15,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
@@ -32,12 +30,6 @@ import com.tawa.allinapp.features.HomeActivity
 import com.tawa.allinapp.features.init.InitViewModel
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
-import android.R.attr.bitmap
-
-import android.graphics.drawable.BitmapDrawable
-
-import android.graphics.drawable.Drawable
-import androidx.compose.ui.text.toUpperCase
 
 
 class InitFragment : BaseFragment() {
@@ -55,7 +47,8 @@ class InitFragment : BaseFragment() {
     private lateinit var _lat: String
     private lateinit var _long: String
     private var title  = "Check In"
-    private var selector = false
+    private var companySelected = false
+    private var checkSelector: Boolean = false
 
     companion object {
         val TAG = "Init_Fragment"
@@ -70,6 +63,7 @@ class InitFragment : BaseFragment() {
         showProgressDialog()
         //Log.d("asd", activity?.intent?.getBooleanExtra("selector",false).toString())
         //selector = activity?.intent?.getBooleanExtra("selector",false)?:false
+        Log.d("checkSelector",checkSelector.toString())
         initViewModel = viewModel(viewModelFactory) {
             observe(dayState, { it?.let { if(it) {
                 val currentDay = getString(R.string.current_day, getDayWeek(),getDayMonth(),getMonth(),getYear())
@@ -208,13 +202,18 @@ class InitFragment : BaseFragment() {
                 Log.d("SucessCompanyId",it.toString())
                 it?.let {
                     if(it.isEmpty()) {
-                        showSelector()
+                       showSelector()
                     }
                 }
             })
             observe(getPvIdf,{
                 it?.let {
                     _pvId = it
+                }
+            })
+            observe(selector,{
+                it?.let {
+                    companySelected = it
                 }
             })
             observe(updateNotify,{it?.let{
@@ -240,13 +239,18 @@ class InitFragment : BaseFragment() {
         }
         //Seleccionando empresa
         //if(selector) showSelector()
-        initViewModel.getIdCompany()
         initViewModel.getPVDesc()
         initViewModel.getLogoCompany()
         initViewModel.getIdUser()
         initViewModel.getUserName()
         initViewModel.getCheckMode()
         initViewModel.getPvIdFirstTime()
+        //initViewModel.getIdCompany()
+        initViewModel.getIdCompanyPreferences().let {
+            if(it.isEmpty()) {
+                showSelector()
+            }
+        }
 
         binding.btCheckIn.setOnClickListener{
             if(checkIn){
