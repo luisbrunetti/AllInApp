@@ -125,7 +125,7 @@ class InformRoutesMapDialogFragment : DialogFragment(), GoogleMap.OnInfoWindowCl
                                     .snippet( " ("+task.latitude+","+task.longitude+")")
                                     .icon(getMarkerIconFromDrawable(iconD))
                                 )
-                                hashMapMarkerRoute!![marker.id] = InfoGeolocation(task.reportState,task.creation, userTracking.nameUser,tracking.dirCorpPv)
+                                hashMapMarkerRoute!![marker.id] = InfoGeolocation("Reporte",task.creation, userTracking.nameUser,tracking.dirCorpPv)
                             }
                         }
                     }

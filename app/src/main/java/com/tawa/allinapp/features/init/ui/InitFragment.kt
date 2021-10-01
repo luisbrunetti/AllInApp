@@ -37,7 +37,6 @@ class InitFragment : BaseFragment() {
     private lateinit var initViewModel: InitViewModel
     private lateinit var binding: FragmentInitBinding
     private lateinit var locationManager:LocationManager
-
     private var checkOutDialog: CheckOutDialogFragment? = null
     private var checkIn:Boolean = true
     private var _user = ""
@@ -61,8 +60,6 @@ class InitFragment : BaseFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentInitBinding.inflate(inflater)
         showProgressDialog()
-        //Log.d("asd", activity?.intent?.getBooleanExtra("selector",false).toString())
-        //selector = activity?.intent?.getBooleanExtra("selector",false)?:false
         Log.d("checkSelector",checkSelector.toString())
         initViewModel = viewModel(viewModelFactory) {
             observe(dayState, { it?.let { if(it) {

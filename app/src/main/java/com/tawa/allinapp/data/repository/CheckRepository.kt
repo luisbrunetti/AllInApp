@@ -99,14 +99,6 @@ interface CheckRepository {
             }
         }
 
-        /*fun setIdPvName(value:String): Either<Failure, Boolean>{
-            try{
-
-            }catch (e : Exception){
-                Either.Left(Failure.DefaultError(e.message!!))
-            }
-        }*/
-
         override fun getDescPv(): Either<Failure, String> {
             return try {
                 Either.Right(prefs.pvName?:"")
