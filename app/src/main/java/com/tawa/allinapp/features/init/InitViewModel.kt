@@ -32,15 +32,17 @@ class InitViewModel
     private val setIdCompany: SetIdCompany,
     private val setCheckIn: SetCheckIn,
     private val setIdPv: SetIdPv,
+    private val setSession: SetSession,
+    private val deletePv: DeletePv,
     private val getIdUser: GetIdUser,
     private val getRoleUser: GetRoleUser,
     private val getUserName: GetUserName,
     private val syncCheck: SyncCheck,
     private val syncPhotoReports: SyncPhotoReports,
     private val updateStatus: UpdateStatus,
-    private  val getReportsSku: GetReportsSku,
+    private val getReportsSku: GetReportsSku,
     private val syncStandardReportsMassive: SyncStandardReportsMassive,
-    private  val syncSkuMassive: SyncSkuMassive,
+    private val syncSkuMassive: SyncSkuMassive,
     private val syncAudio: SyncAudio,
     private val getAudioRemote: GetAudioRemote,
     private val listReports: ListReports,
@@ -234,6 +236,12 @@ class InitViewModel
     private val _selector = MutableLiveData<Boolean>()
     val selector:  LiveData<Boolean> get() = _selector
 
+    private val _deletePvId = MutableLiveData<Boolean>()
+    val deletePvId : LiveData<Boolean> get() = _deletePvId
+
+    private val _setSession = MutableLiveData<Boolean>()
+    val setSessionLiveData : LiveData<Boolean> get() = _setSession
+
     init {
         startHome()
         startCheckIn()
@@ -263,13 +271,9 @@ class InitViewModel
 
     private fun startCheckIn(){ _startCheckIn.value = true }
 
-    fun getIdCompany() = getIdCompany(UseCase.None()) {
-        it.either(::handleFailure, ::handleGetIdCompany)
-    }
+    fun getIdCompany() = getIdCompany(UseCase.None()) { it.either(::handleFailure, ::handleGetIdCompany) }
 
-    fun getIdCompanyPreferences(): String{
-        return pref.companyId!!
-    }
+    fun getIdCompanyPreferences(): String{ return pref.companyId!! }
 
     fun getIdUser() = getIdUser(UseCase.None()) { it.either(::handleFailure, ::handleGetIdUser) }
 
@@ -278,10 +282,10 @@ class InitViewModel
     fun setIdCompany(idCompany:String,image:String) = setIdCompany(SetIdCompany.Params(idCompany,image)) {
         it.either(::handleFailure, ::handleSetIdCompany) }
 
-    fun deletePvId(value:String) {
-        pref.pvId = ""
-        pref.pvName = ""
-    }
+
+    fun deletePvId() = deletePv(UseCase.None()){ it.either(::handleFailure, ::handleDeletePvId) }
+
+    private fun handleDeletePvId(value : Boolean){ this._deletePvId.value = value }
 
     fun setPv(schedule:String,pv:String,descPv:String) = setIdPv(SetIdPv.Params(schedule,pv,descPv)) { it.either(::handleFailure, ::handleSetIdPv) }
 
@@ -291,23 +295,18 @@ class InitViewModel
 
     fun getIdPV() = getIdPV(UseCase.None()) { it.either(::handleFailure, ::handlePVId) }
 
-    fun getPVSaved() = getIdPV(UseCase.None()) { it.either(::handleFailure, ::handleIdPV) }
 
     fun getCompanies() = getCompanies(UseCase.None()) { it.either(::handleFailure, ::handleCompanyList) }
 
     fun getReportsRemote(company: String) = getReportsRemote(GetReportsRemote.Params(company)) {
         it.either(::handleFailure, ::handleReportsRemote)
     }
-    private fun handleReportsRemote(success: Boolean) {
-        this._successGetReports.value = success
-    }
+    private fun handleReportsRemote(success: Boolean) { this._successGetReports.value = success }
 
     fun getQuestionsRemote(idReport: String) = getQuestionsRemote(GetQuestionsRemote.Params(idReport)) {
         it.either(::handleFailure, ::handleQuestionsRemote)
     }
-    private fun handleQuestionsRemote(success: Boolean) {
-        this._successGetQuestions.value = success
-    }
+    private fun handleQuestionsRemote(success: Boolean) { this._successGetQuestions.value = success }
 
     fun getPv(company:String) = getPV(GetPV.Params(company)) { it.either(::handleFailure, ::handlePvList) }
 
@@ -345,135 +344,82 @@ class InitViewModel
     private fun handleIdPV(checkIn:String) {
         this._idPV.value = checkIn
     }
-    private fun handleCheckIn(success: Boolean) {
-        this._successCheckIn.value = success
-    }
-    private fun handleCheckOut(success: Boolean) {
-        this._successCheckOut.value = success
-    }
-    private fun handleCheckMode(checkIn:Boolean) {
-        this._checkInMode.value = checkIn
-    }
-    private fun handleGetStateCheck(stateCheck:Boolean) {
-        this._stateCheck.value = stateCheck
-    }
-    private fun handleCompanyList(company: List<Company>) {
-        this._companies.value = company.map { Company(it.id,it.ruc,it.name,it.description,it.idUser,it.image) }
-    }
-    private fun handlePvList(schedule: List<Schedule>) {
-        //Log.d("handlePvList",schedule.map { Schedule(it.id,it.pv,it.description,it.zone,it.codGeo,it.idCompany, it.lat,it.long,it.idUser,it.nameCorp) }.toString() )
-        this._schedule.value = schedule.map { Schedule(it.id,it.pv,it.description,it.zone,it.codGeo,it.idCompany, it.lat,it.long,it.idUser,it.nameCorp) }
-    }
-    private fun handleSetIdCompany(success: Boolean) {
-        _setIdCompanySuccess.value = success
-    }
-    private fun handleSetIdPv(success: Boolean) {
-        _idPv.value = success
-    }
-    private fun handleGetIdCompany(idCompany: String) {
-        _successGetCompanyId.value = idCompany
-    }
-    private fun handleGetIdUser(getIdUser: String) {
-        _idUser.value = getIdUser
-    }
-    private fun handleGetUserName(user: String) {
-        _userName.value = user
-    }
+    private fun handleCheckIn(success: Boolean) { this._successCheckIn.value = success }
 
-    private fun handleUpdateStatus(success: Boolean) {
-        this._successUpdate.value = success
-    }
+    private fun handleCheckOut(success: Boolean) { this._successCheckOut.value = success }
 
-    private fun handleReportsSku(success: Boolean) {
-        this._successReportsSku.value = success
-    }
+    private fun handleCheckMode(checkIn:Boolean) { this._checkInMode.value = checkIn }
 
-    fun syncStandardReportsMassive(latitude: String,longitude: String) = syncStandardReportsMassive(SyncStandardReportsMassive.Params(latitude,longitude)) {
-        it.either(::handleFailure, ::handleSyncStandardReport) }
+    private fun handleGetStateCheck(stateCheck:Boolean) { this._stateCheck.value = stateCheck }
 
-    private fun handleSyncStandardReport(success:Boolean) {
-        this._successSyncReportStandard.value = success
-    }
+    private fun handleCompanyList(company: List<Company>) { this._companies.value = company.map { Company(it.id,it.ruc,it.name,it.description,it.idUser,it.image) } }
+
+    private fun handlePvList(schedule: List<Schedule>) { this._schedule.value = schedule.map { Schedule(it.id,it.pv,it.description,it.zone,it.codGeo,it.idCompany, it.lat,it.long,it.idUser,it.nameCorp) } }
+
+    private fun handleSetIdCompany(success: Boolean) { _setIdCompanySuccess.value = success }
+
+    private fun handleSetIdPv(success: Boolean) { _idPv.value = success }
+
+    private fun handleGetIdCompany(idCompany: String) { _successGetCompanyId.value = idCompany }
+
+    private fun handleGetIdUser(getIdUser: String) { _idUser.value = getIdUser }
+
+    private fun handleGetUserName(user: String) { _userName.value = user }
+
+    private fun handleUpdateStatus(success: Boolean) { this._successUpdate.value = success }
+
+    private fun handleReportsSku(success: Boolean) { this._successReportsSku.value = success }
+
+    fun syncStandardReportsMassive(latitude: String,longitude: String) = syncStandardReportsMassive(SyncStandardReportsMassive.Params(latitude,longitude)) { it.either(::handleFailure, ::handleSyncStandardReport) }
+
+    private fun handleSyncStandardReport(success:Boolean) { this._successSyncReportStandard.value = success }
 
     fun syncSkuMassive(latitude: String,longitude: String) = syncSkuMassive(SyncSkuMassive.Params(latitude,longitude)) { it.either(::handleFailure, ::handleSyncSku) }
 
-    private fun handleSyncSku(success:Boolean) {
-        this._successSyncSku.value = success
-    }
+    private fun handleSyncSku(success:Boolean) { this._successSyncSku.value = success }
 
-    fun getAudioRemote() = getAudioRemote(UseCase.None()) {
-        it.either(::handleFailure, ::handleGetAudioRemote) }
 
-    private fun handleGetAudioRemote(success:Boolean) {
-        this._successGetAudioRemote.value = success
-    }
+    private fun handleGetAudioRemote(success:Boolean) { this._successGetAudioRemote.value = success }
 
     fun syncAudio() = syncAudio(UseCase.None()) { it.either(::handleFailure, ::handleSyncAudio) }
 
-    private fun handleSyncAudio(success:Boolean) {
-        this._successSyncAudio.value = success
-    }
+    private fun handleSyncAudio(success:Boolean) { this._successSyncAudio.value = success }
 
     fun getRoleUser() = getRoleUser(UseCase.None()) { it.either(::handleFailure, ::handleGetRole) }
 
-    private fun handleGetRole(role:String) {
-        this._successGetRole.value = role
-    }
+    private fun handleGetRole(role:String) { this._successGetRole.value = role }
 
     fun listReports(idCompany: String) = listReports(ListReports.Params(idCompany)) { it.either(::handleFailure, ::handleListReports) }
 
-    private fun handleListReports(reports:List<Report>) {
-        this._successListReport.value = reports
-    }
+    private fun handleListReports(reports:List<Report>) { this._successListReport.value = reports }
 
-    fun sendPassword(password: String) =sendPassword(SendPassword.Params(password)) {
-        it.either(::handleFailure, ::handleSendPassword) }
+    fun sendPassword(password: String) =sendPassword(SendPassword.Params(password)) { it.either(::handleFailure, ::handleSendPassword) }
 
-    private fun handleSendPassword(success: Boolean) {
-        this._successSendPassword.value = success
-    }
+    private fun handleSendPassword(success: Boolean) { this._successSendPassword.value = success }
 
-    fun getPdvRemote(idCompany: String) =getPdvRemote(GetPdvRemote.Params(idCompany)) {
-        it.either(::handleFailure, ::handleGetPdvRemote) }
+    fun getPdvRemote(idCompany: String) =getPdvRemote(GetPdvRemote.Params(idCompany)) { it.either(::handleFailure, ::handleGetPdvRemote) }
 
-    private fun handleGetPdvRemote(success: Boolean) {
-        this._successGetPdvRemote.value = success
-    }
+    private fun handleGetPdvRemote(success: Boolean) { this._successGetPdvRemote.value = success }
 
-    fun getLogoCompany() =getLogoCompany(UseCase.None()) {
-        it.either(::handleFailure, ::handleGetLogoCompany) }
+    fun getLogoCompany() =getLogoCompany(UseCase.None()) { it.either(::handleFailure, ::handleGetLogoCompany) }
 
-    private fun handleGetLogoCompany(image  : String) {
-        this._logoCompany.value = image
-    }
+    private fun handleGetLogoCompany(image  : String) { this._logoCompany.value = image }
 
-    fun updateCountNotify() =updateCountNotify(UseCase.None()) {
-        it.either(::handleFailure, ::handleUpdateCountNotify) }
+    fun updateCountNotify() =updateCountNotify(UseCase.None()) { it.either(::handleFailure, ::handleUpdateCountNotify) }
 
-    private fun handleUpdateCountNotify(success: Boolean) {
-        this._updateNotify.value = success
-    }
+    private fun handleUpdateCountNotify(success: Boolean) { this._updateNotify.value = success }
 
-    fun getCountNotify() =getCountNotify(UseCase.None()) {
-        it.either(::handleFailure, ::handleGetCountNotify) }
+    fun getCountNotify() =getCountNotify(UseCase.None()) { it.either(::handleFailure, ::handleGetCountNotify) }
 
-    private fun handleGetCountNotify(count:Int) {
-        this._countNotify.value = count
-    }
+    private fun handleGetCountNotify(count:Int) { this._countNotify.value = count }
 
-    fun clearCountNotify() =clearNotify(UseCase.None()) {
-        it.either(::handleFailure, ::handleClearCountNotify) }
+    fun clearCountNotify() =clearNotify(UseCase.None()) { it.either(::handleFailure, ::handleClearCountNotify) }
 
-    private fun handleClearCountNotify(success: Boolean) {
-        this._clearCountNotify.value = success
-    }
+    private fun handleClearCountNotify(success: Boolean) { this._clearCountNotify.value = success }
 
-    fun getNotify() =getNotify(UseCase.None()) {
-        it.either(::handleFailure, ::handleGetNotify) }
+    fun getNotify() =getNotify(UseCase.None()) { it.either(::handleFailure, ::handleGetNotify) }
 
-    private fun handleGetNotify(notify: List<Notify>) {
-        this._successGetNotify.value = notify
-    }
+    private fun handleGetNotify(notify: List<Notify>) { this._successGetNotify.value = notify }
 
 
     fun sendCheck(latitude: String,longitude: String,type:Int) = sendCheck(SendCheck.Params(latitude,longitude,type)) {
@@ -481,23 +427,18 @@ class InitViewModel
         it.either(::handleFailure, ::handleSendCheck)
     }
 
-    private fun handleSendCheck(success: String) {
-        this._successSendCheck.value = success
-    }
+    private fun handleSendCheck(success: String) { this._successSendCheck.value = success }
 
-    fun setSession(value : Boolean){ pref.session =value}
+    fun setSession(value : Boolean)= setSession(SetSession.Params(value)){ it.either(::handleFailure, ::handleSetSession) }
+
+    private fun handleSetSession(value:Boolean){ _setSession.value = value }
 
     fun getPvIdFirstTime() = getIdPV(UseCase.None()) { it.either(::handleFailure, ::getPvId) }
 
-    private fun getPvId(value : String){
-        _getPvIdf.value = value
-    }
+    private fun getPvId(value : String){ _getPvIdf.value = value }
 
-    fun changeCheckState(value:String){
-        this._successSendCheck.value = value
-    }
-    fun changeStatePv(value: String){
-        this._pvId.value = value
-    }
+    fun changeCheckState(value:String){ this._successSendCheck.value = value }
+
+    fun changeStatePv(value: String){ this._pvId.value = value }
 
 }

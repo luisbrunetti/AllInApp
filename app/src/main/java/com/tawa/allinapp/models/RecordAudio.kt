@@ -25,6 +25,7 @@ data class RecordAudioViews(
     var imageViewClipClose: ImageView?,
     //Records
     var answerSelected:String?,
-    var answerRecorded: String?
+    var answerRecorded: String?,
+    var path: String
     )
 

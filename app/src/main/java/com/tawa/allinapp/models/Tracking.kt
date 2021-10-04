@@ -12,6 +12,7 @@ data class Tracking(
     val nameCorpPv: String,
     val latitude: Double?,
     val longitude: Double?,
+    val codPvCop: String,
     val visits: List<RoutesRemote.Visits?>,
     val tasks: List<RoutesRemote.Tasks?>
 )

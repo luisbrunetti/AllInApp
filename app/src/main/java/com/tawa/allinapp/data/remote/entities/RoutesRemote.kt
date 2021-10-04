@@ -21,8 +21,8 @@ class RoutesRemote {
         @SerializedName("visitas") val visits: List<Visits?>,
         @SerializedName("tareas") val tasks: List<Tasks?>,
     ){
-        fun toView() = Tracking(pv.id,pv.Pv,pv.zone.zoneName?:"",pv.zone.zoneDistrict?:"",pv.corp.dirCorpPv,pv.corp.nameCorpPv,pv.corp.latitude,pv.corp.longitude,
-            visits,tasks)
+        fun toView() = Tracking(pv.id, pv.Pv, pv.zone.zoneName?:"", pv.zone.zoneDistrict?:"", pv.corp.dirCorpPv, pv.corp.nameCorpPv, pv.corp.latitude, pv.corp.longitude, pv.corp.codPvCrop ?: "", visits, tasks)
+
     }
 
     data class Pv(
@@ -52,6 +52,7 @@ class RoutesRemote {
         @SerializedName("nombre_ptv_corp") val nameCorpPv: String,
         @SerializedName("latitud") val latitude: Double?,
         @SerializedName("longitud") val longitude: Double?,
+        @SerializedName("codigo_ptv_corp") val codPvCrop: String
     )
 
     data class Visits(

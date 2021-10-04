@@ -18,5 +18,6 @@ data class Answer(
     val row : Boolean,
     val column : Boolean,
     val orderQ:String,
-    val required:Boolean
+    val required:Boolean,
+    val path : String,
 )

@@ -730,17 +730,16 @@ class CheckListFragment: BaseFragment() {
                         checkListViewModel.setAnswerPv(tag[0],tag[1],input.text.toString(),urlImage)
                         //checkListViewModel.updateAnswers(tag[0], input.text.toString())
                     }
+
                     for(tag in mutableHashMapTag.values){
                         //Log.d("setReadyAnswer9764", "hashTagRecord -> ${tag.answerRecorded.toString()}  hashSelected -> ${tag.answerSelected.toString()}" )
-                        val answerbyQuestion = if(tag.answerSelected == ""){
-                            if(tag.answerRecorded != "") tag.answerRecorded
-                            else ""
-                        } else{
-                            if(tag.answerSelected != "") tag.answerSelected
-                            else ""
+                        if (tag.answerSelected == "") {
+                            val answerBase64 = convertImageFileToBase64(File(tag.answerRecorded!!))
+                            checkListViewModel.setAnswerPv(tag.idAnswer,tag.idQuestion,answerBase64 ?: "", "${TYPE_RECCORDED}&${tag.answerRecorded}")
+                        } else {
+                            val answerBase64 = convertImageFileToBase64(File(tag.answerSelected!!))
+                            checkListViewModel.setAnswerPv(tag.idAnswer,tag.idQuestion,answerBase64 ?: "", "${TYPE_SELECTED}&${tag.answerSelected}")
                         }
-                        val answerBase64 = convertImageFileToBase64(File(answerbyQuestion!!))
-                        checkListViewModel.setAnswerPv(tag.idAnswer,tag.idQuestion,answerBase64 ?: "","")
                     }
                     findElements()
                     showConfirmSync()
@@ -886,22 +885,19 @@ class CheckListFragment: BaseFragment() {
                     checkListViewModel.setAnswerPv(tag[0],tag[1],input.text.toString(),urlImage)
                     //checkListViewModel.updateAnswers(tag[0], input.text.toString())
                 }
-                for(i in mutableHashMapTag.values){
-                    Log.d("i", "hashTagRecord -> ${i.answerRecorded.toString()}  hashSelected -> ${i.answerSelected.toString()}" )
-                    if(i.answerRecorded != "" && i.answerSelected != ""){
-                        val dialog = MessageDialogFragment.newInstance("Solo se puede guardar un audio por pregunta")
-                        dialog.show(childFragmentManager, "")
-                        break
-                        val answerbyQuestion = if(i.answerSelected == ""){
-                            if(i.answerRecorded != "") "${TYPE_RECCORDED}&${i.answerRecorded}"
-                            else ""
-                        } else{
-                            if(i.answerSelected != "") "${TYPE_SELECTED}&${i.answerSelected}"
-                            else ""
-                        }
-
-                        checkListViewModel.setAnswerPv(i.idAnswer,i.idQuestion,answerbyQuestion ?: "","")
+                for (i in mutableHashMapTag.values) {
+                    Log.d("i", "hashTagRecord -> ${i.answerRecorded.toString()}  hashSelected -> ${i.answerSelected.toString()}")
+                    val answerbyQuestion = if (i.answerSelected == "") {
+                        "${TYPE_RECCORDED}&${i.answerRecorded}"
+                    } else {
+                        "${TYPE_SELECTED}&${i.answerSelected}"
                     }
+                    checkListViewModel.setAnswerPv(
+                        i.idAnswer,
+                        i.idQuestion,
+                        answerbyQuestion,
+                        answerbyQuestion
+                    )
                 }
                 activity?.onBackPressed()
             }
@@ -1008,17 +1004,15 @@ class CheckListFragment: BaseFragment() {
             //checkListViewModel.updateAnswers(tag[0], input.text.toString())
         }
 
-        for(tag in mutableHashMapTag.values){
+        for (tag in mutableHashMapTag.values) {
             //Log.d("setReadyAnswer9764", "hashTagRecord -> ${tag.answerRecorded.toString()}  hashSelected -> ${tag.answerSelected.toString()}" )
-            val answerbyQuestion = if(tag.answerSelected == ""){
-                if(tag.answerRecorded != "") tag.answerRecorded
-                else ""
-            } else{
-                if(tag.answerSelected != "") tag.answerSelected
-                else ""
+            if (tag.answerSelected == "") {
+                val answerBase64 = convertImageFileToBase64(File(tag.answerRecorded!!))
+                checkListViewModel.setReadyAnswers(tag.idQuestion,tag.nameQuestion,tag.idAnswer,answerBase64 ?: "", "${TYPE_RECCORDED}&${tag.answerRecorded}")
+            } else {
+                val answerBase64 = convertImageFileToBase64(File(tag.answerSelected!!))
+                checkListViewModel.setReadyAnswers(tag.idQuestion,tag.nameQuestion,tag.idAnswer,answerBase64 ?: "", "${TYPE_SELECTED}&${tag.answerSelected}")
             }
-            val answerBase64 = convertImageFileToBase64(File(answerbyQuestion!!))
-            checkListViewModel.setReadyAnswers(tag.idQuestion,tag.nameQuestion,tag.idAnswer,answerBase64 ?: "","")
         }
     }
 
@@ -2185,7 +2179,7 @@ class CheckListFragment: BaseFragment() {
         for(answer in listAnswer){
 
             val recordAudioViews = RecordAudioViews(answer.idQuestion,answer.id, answer.nameQuestion,null,null,null,null,null,null,
-                null,null,null,null,null,null,null,"","")
+                null,null,null,null,null,null,null,"","","")
 
             val layoutTwoButtons = LinearLayout(requireContext())
             val paramsTV = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT)
@@ -2321,13 +2315,23 @@ class CheckListFragment: BaseFragment() {
         layoutShowAudioRecorded.gravity = Gravity.CENTER
         if(answer.data == ""){
             layoutShowAudioRecorded.visibility = View.GONE
-        }else{
-            val (type,path) = getTypeAndPathRecord(answer.data)
-            if(type == TYPE_RECCORDED){
-                recordAudioViews.answerRecorded = path
-                hashPathAudioRecorded[parent.tag.toString()] = path
-            }else{
-                layoutShowAudioRecorded.visibility = View.GONE
+        } else {
+            Log.d("img",answer.path)
+            if (typeReport == "Terminado") {
+                val (type, path) = getTypeAndPathRecord(answer.path)
+                if(type == TYPE_RECCORDED){
+                    recordAudioViews.answerRecorded = path
+                    hashPathAudioRecorded[parent.tag.toString()] = path
+                }
+                else layoutShowAudioRecorded.visibility = View.GONE
+            } else {
+                val (type, path) = getTypeAndPathRecord(answer.data)
+                if (type == TYPE_RECCORDED) {
+                    recordAudioViews.answerRecorded = path
+                    hashPathAudioRecorded[parent.tag.toString()] = path
+                } else {
+                    layoutShowAudioRecorded.visibility = View.GONE
+                }
             }
         }
         recordAudioViews.layoutShowRecord = layoutShowAudioRecorded
@@ -2411,8 +2415,7 @@ class CheckListFragment: BaseFragment() {
         val tagRecordingtv = "tv$questions"
         tvSelectedAudio.text = "Selecciona un audio"
         tvSelectedAudio.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
-        tvSelectedAudio.tag = tag
-        //hashTextView[tagRecordingtv] = tvRecording
+        tvSelectedAudio.tag = tagRecordingtv
         recordAudioViews.textViewAudioSelected = tvSelectedAudio
         layoutSelectedAudio.addView(tvSelectedAudio)
 
@@ -2427,7 +2430,7 @@ class CheckListFragment: BaseFragment() {
         chronometerSelectedAudio.setTextColor(ContextCompat.getColor(requireContext(),R.color.white))
         chronometerSelectedAudio.layoutParams = paramsChronometer
         val tagChronometer = "ch$questions}"
-        chronometerSelectedAudio.tag = tag
+        chronometerSelectedAudio.tag = chronometerSelectedAudio
         recordAudioViews.chrometerSeleceted = chronometerSelectedAudio
         layoutSelectedAudio.addView(chronometerSelectedAudio)
 
@@ -2447,12 +2450,22 @@ class CheckListFragment: BaseFragment() {
         if(answer.data == ""){
             layoutAudioSelectedClip.visibility = View.GONE
         }else{
-            val (type,path) = getTypeAndPathRecord(answer.data)
-            if(type == TYPE_SELECTED){
-                recordAudioViews.answerSelected = path
-                hashPathAudioSelected[parent.tag.toString()] = path
+
+            if (typeReport == "Terminado") {
+                val (type,path) = getTypeAndPathRecord(answer.path)
+                if(type == TYPE_SELECTED){
+                    recordAudioViews.answerSelected = path
+                    hashPathAudioSelected[parent.tag.toString()] = path
+                }
+                else layoutAudioSelectedClip.visibility = View.GONE
+            }else{
+                val (type,path) = getTypeAndPathRecord(answer.data)
+                if(type == TYPE_SELECTED){
+                    recordAudioViews.answerSelected = path
+                    hashPathAudioSelected[parent.tag.toString()] = path
+                }
+                else layoutAudioSelectedClip.visibility = View.GONE
             }
-            else layoutAudioSelectedClip.visibility = View.GONE
         }
         recordAudioViews.layoutShowSelectedAudio =  layoutAudioSelectedClip
 
@@ -2471,7 +2484,7 @@ class CheckListFragment: BaseFragment() {
         paramsSelectedText.setMargins(20f.toDips().toInt(), 0, 15f.toDips().toInt(), 0)
         val tagSelectedText = "tvClip${questions}"
         val tvSelectedTxt = TextView(requireContext())
-        if(answer.data != "") tvSelectedTxt.text = getNameInSelectedFile(answer.data)
+        if(answer.data != "") tvSelectedTxt.text = getNameInSelectedFile(answer.path)
         else tvSelectedTxt.text = "Audio Seleccionado"
         tvSelectedTxt.layoutParams = paramsSelectedText
         tvSelectedTxt.tag = tagSelectedText
@@ -2641,7 +2654,6 @@ class CheckListFragment: BaseFragment() {
         mutableHashMapTag[tag]?.let { recordAudio ->
             hashPathAudioRecorded[tag]?.let { path ->
                 try {
-                    Log.d("path", path.toString())
                     playerRecorded = MediaPlayer().apply {
                         /*if (isPlaying) {
                             recordAudio.layoutShowRecord?.visibility = View.VISIBLE
@@ -2691,9 +2703,6 @@ class CheckListFragment: BaseFragment() {
             try {
                 playerSelected = MediaPlayer().apply {
                     val path = hashPathAudioSelected[tag]?.toLowerCase(Locale.ROOT)
-                    //val fakePath = "storage/emulated/0/download/alloy.mp3"
-                    ///storage/emulated/0/Download/Alloy
-                    //Log.d("recordSelected",fakePath)
                     setDataSource(path)
                     prepare()
                     setOnCompletionListener {

@@ -26,8 +26,8 @@ data class AnswerModel(
     val row:Boolean,
     val column:Boolean,
     val orderQ:String,
-    val required:Boolean
-
+    val required:Boolean,
+    val img:String
 ){
-    fun toView() = Answer(id,status,answerName,order,idQuestion,idUserCreator,idUserModifier,dateModify,dateCreation,data,nameQuestion,objectType,row,column,orderQ,required)
+    fun toView() = Answer(id,status,answerName,order,idQuestion,idUserCreator,idUserModifier,dateModify,dateCreation,data,nameQuestion,objectType,row,column,orderQ,required,img)
 }

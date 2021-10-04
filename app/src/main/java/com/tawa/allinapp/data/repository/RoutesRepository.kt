@@ -85,7 +85,9 @@ interface RoutesRepository {
                                 response.body()?.let { body ->
                                     if(body.success) {
                                         //Log.d("Tracking",body.message.toString())
-                                        Either.Right(body.data.map { it.toView() })
+                                        Either.Right(body.data.map {
+                                            it.toView()
+                                        })
                                     }
                                     else {
                                         Log.d("Error",body.message.toString())

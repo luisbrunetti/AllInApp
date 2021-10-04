@@ -20,6 +20,7 @@ interface CheckRepository {
     fun getDescPv(): Either<Failure, String>
     fun getLogoCompany(): Either<Failure, String>
     fun getIdPv(): Either<Failure, String>
+    fun deleteIdPvNPvName(): Either<Failure, Boolean>
     fun getIdCompany(): Either<Failure, String>
     fun getIdUser(): Either<Failure, String>
     fun getRoleUser(): Either<Failure, String>
@@ -110,6 +111,16 @@ interface CheckRepository {
         override fun getIdPv(): Either<Failure, String> {
             return try {
                 Either.Right(prefs.pvId?:"")
+            }catch (e:Exception){
+                Either.Left(Failure.DefaultError(e.message!!))
+            }
+        }
+
+        override fun deleteIdPvNPvName(): Either<Failure, Boolean> {
+            return try{
+                prefs.pvId = ""
+                prefs.pvName = ""
+                Either.Right(true)
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))
             }

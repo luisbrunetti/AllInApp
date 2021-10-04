@@ -3,9 +3,6 @@ package com.tawa.allinapp.data.remote.entities
 import com.google.gson.annotations.SerializedName
 import com.tawa.allinapp.data.local.models.PdvModel
 import com.tawa.allinapp.models.Pdv
-import com.tawa.allinapp.models.Routes
-import com.tawa.allinapp.models.RoutesUser
-import com.tawa.allinapp.models.Tracking
 
 
 class PdvRemote {

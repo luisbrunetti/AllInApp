@@ -77,7 +77,7 @@ class InformRoutesMapDialogFragment : DialogFragment(), GoogleMap.OnInfoWindowCl
                                     .snippet( " ("+visit.latitude+","+visit.longitude+")")
                                     .icon(getMarkerIconFromDrawable(iconD))
                                 )
-                                hashMapMarkerRoute!![marker.id] = InfoGeolocation(visit.comment, visit.creation, userTracking.nameUser,tracking.dirCorpPv)
+                                hashMapMarkerRoute!![marker.id] = InfoGeolocation(visit.comment, visit.creation, userTracking.nameUser, tracking.codPvCop,tracking.dirCorpPv,tracking.Pv)
                             }
                             "SALIDA" -> {
                                 val userPosition = LatLng(visit.latitude.toDouble(), visit.longitude.toDouble())
@@ -88,7 +88,7 @@ class InformRoutesMapDialogFragment : DialogFragment(), GoogleMap.OnInfoWindowCl
                                     .snippet( " ("+visit.latitude+","+visit.longitude+")")
                                     .icon(getMarkerIconFromDrawable(iconD))
                                 )
-                                hashMapMarkerRoute!![marker.id] = InfoGeolocation(visit.comment,visit.creation, userTracking.nameUser,tracking.dirCorpPv)
+                                hashMapMarkerRoute!![marker.id] = InfoGeolocation(visit.comment,visit.creation, userTracking.nameUser, tracking.codPvCop,tracking.dirCorpPv,tracking.Pv)
                             }
                             "COMPLETADO" -> {
                                 val userPosition = LatLng(visit.latitude.toDouble(), visit.longitude.toDouble())
@@ -99,7 +99,7 @@ class InformRoutesMapDialogFragment : DialogFragment(), GoogleMap.OnInfoWindowCl
                                     .snippet( " ("+visit.latitude+","+visit.longitude+")")
                                     .icon(getMarkerIconFromDrawable(iconD))
                                 )
-                                hashMapMarkerRoute!![marker.id] = InfoGeolocation(visit.comment,visit.creation, userTracking.nameUser,tracking.dirCorpPv)
+                                hashMapMarkerRoute!![marker.id] = InfoGeolocation(visit.comment,visit.creation, userTracking.nameUser,tracking.codPvCop,tracking.dirCorpPv,tracking.Pv)
                             }
                             "none" -> {
                                 val userPosition = LatLng(visit.latitude.toDouble(), visit.longitude.toDouble())
@@ -110,7 +110,7 @@ class InformRoutesMapDialogFragment : DialogFragment(), GoogleMap.OnInfoWindowCl
                                     .snippet( " ("+visit.latitude+","+visit.longitude+")")
                                     .icon(getMarkerIconFromDrawable(iconD))
                                 )
-                                hashMapMarkerRoute!![marker.id] = InfoGeolocation(visit.comment,visit.creation, userTracking.nameUser,tracking.dirCorpPv)
+                                hashMapMarkerRoute!![marker.id] = InfoGeolocation(visit.comment,visit.creation, userTracking.nameUser,tracking.codPvCop,tracking.dirCorpPv,tracking.Pv)
                             }
                         }
                     }
@@ -125,7 +125,7 @@ class InformRoutesMapDialogFragment : DialogFragment(), GoogleMap.OnInfoWindowCl
                                     .snippet( " ("+task.latitude+","+task.longitude+")")
                                     .icon(getMarkerIconFromDrawable(iconD))
                                 )
-                                hashMapMarkerRoute!![marker.id] = InfoGeolocation("Reporte",task.creation, userTracking.nameUser,tracking.dirCorpPv)
+                                hashMapMarkerRoute!![marker.id] = InfoGeolocation("Reporte",task.creation, userTracking.nameUser,tracking.codPvCop,tracking.dirCorpPv,tracking.Pv)
                             }
                         }
                     }
@@ -211,5 +211,7 @@ data class InfoGeolocation(
     val type:String,
     val time:String,
     val user:String,
-    val pv:String
+    val pv_cod:String,
+    val pv_dir:String,
+    val pv_desc:String
 )

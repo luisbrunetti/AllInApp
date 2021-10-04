@@ -814,7 +814,13 @@ interface ReportsRepository {
         }
 
         override fun setSession(value: Boolean): Either<Failure, Boolean> {
-            prefs.session = true
+            return try{
+                prefs.session = value
+                Either.Right(true)
+            }catch (e: Exception){
+                Either.Left(Failure.DefaultError(e.message!!))
+            }
+
             return Either.Right(true)
         }
         override fun getAudioReport(idPv: String, idUser:String): Either<Failure,AudioReport> {

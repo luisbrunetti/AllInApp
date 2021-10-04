@@ -1,5 +1,6 @@
 package com.tawa.allinapp.features.reports.geolocation
 
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -41,6 +42,7 @@ class InfoGeolocationDialogFragment : DialogFragment() {
 
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -55,13 +57,12 @@ class InfoGeolocationDialogFragment : DialogFragment() {
             val (date, time ) = parseTime(it.time)
             binding.tvUserInfoGeolocation.text = it.user
             binding.tvTypeInfoGeolocation.text = it.type
-            binding.tvPointInfoGeolocation.text = it.pv
+            binding.tvPointInfoGeolocation.text = "${it.pv_desc} - ${it.pv_cod}"
+            binding.tvPointDirInfoGeolocation.text = it.pv_dir
             binding.tvDateInfoGeolocation.text = "$date - $time"
         }
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        binding.btnCloseMapRoutes.setOnClickListener {
-            dismiss()
-        }
+        binding.btnCloseMapRoutes.setOnClickListener { dismiss() }
         return binding.root
     }
     override fun onResume() {
@@ -81,6 +82,5 @@ class InfoGeolocationDialogFragment : DialogFragment() {
         val date = formattedDate.substring(0,indexHour)
         val time = formattedDate.substring(indexHour+1,formattedDate.length)
         return Pair(date,time)
-
     }
 }

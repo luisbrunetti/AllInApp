@@ -159,7 +159,6 @@ class SkuFragment : BaseFragment() {
                 if(it)
                     activity?.onBackPressed()
             }})
-
         }
         skuViewModel.getSku(1)
         binding.btnFilterCat.setOnClickListener {
@@ -263,8 +262,8 @@ class SkuFragment : BaseFragment() {
             textView.textSize =12f
             textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.colorTextAll))
             textView.setTypeface(textView.typeface, Typeface.BOLD)
-            textView.height=60f.toDips().toInt()
-            textView.width = 150f.toDips().toInt()
+            textView.height = 60f.toDips().toInt()
+            textView.width  = 150f.toDips().toInt()
             textView.setPadding(5)
             textView.gravity = Gravity.CENTER
             row.addView(textView)
