@@ -20,6 +20,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.tawa.allinapp.databinding.DialogMapRoutesBinding
+import com.tawa.allinapp.models.InfoWindowRoutesData
+import com.tawa.allinapp.models.InfoWindowTrackingData
 import com.tawa.allinapp.models.Tracking
 
 
@@ -38,6 +40,7 @@ class TrackingMapDialogFragment: DialogFragment() {
             val arrayLatitude = ArrayList<String>()
             val arrayLongitude = ArrayList<String>()
             val arrayDirections = ArrayList<String>()
+            val arrayNamePdv = ArrayList<String>()
             val arrayType = ArrayList<String>()
             for(track in listTracking)
             {
@@ -45,6 +48,12 @@ class TrackingMapDialogFragment: DialogFragment() {
                 val visits = track.visits
                 val tasks = track.tasks
                 Log.d("tarea",tasks.toString())
+                arrayLatitude.add(track.latitude.toString())
+                arrayLongitude.add(track.longitude.toString())
+                arrayDirections.add(track.dirCorpPv)
+                arrayNamePdv.add(track.nameCorpPv)
+                arrayType.add("none")
+
                 if(!visits.isNullOrEmpty())
                 {
                     for(visit in visits)
@@ -52,6 +61,7 @@ class TrackingMapDialogFragment: DialogFragment() {
                         arrayLatitude.add(visit?.latitude.toString())
                         arrayLongitude.add(visit?.longitude.toString())
                         arrayDirections.add(track.dirCorpPv)
+                        arrayNamePdv.add(track.nameCorpPv)
                         arrayType.add(visit?.comment.toString())
                     }
                    // Log.d("visitasDato",track.visits.toString())
@@ -63,22 +73,18 @@ class TrackingMapDialogFragment: DialogFragment() {
                             arrayLatitude.add(task?.latitude.toString())
                             arrayLongitude.add(task?.longitude.toString())
                             arrayDirections.add(track.dirCorpPv)
+                            arrayNamePdv.add(track.nameCorpPv)
                             arrayType.add(task?.reportState.toString())
                         }
                     }
                 }
-                else
-                {
-                    arrayLatitude.add(track.latitude.toString())
-                    arrayLongitude.add(track.longitude.toString())
-                    arrayDirections.add(track.dirCorpPv)
-                    arrayType.add("none")
-                }
+
             }
             bundle.putStringArrayList("latitude", arrayLatitude)
             bundle.putStringArrayList("longitude", arrayLongitude)
             bundle.putStringArrayList("directions", arrayDirections)
             bundle.putStringArrayList("type", arrayType)
+            bundle.putStringArrayList("namePdv", arrayNamePdv)
             frag.arguments = bundle
             return frag
         }
@@ -99,50 +105,67 @@ class TrackingMapDialogFragment: DialogFragment() {
                 bundle.getStringArrayList("longitude")?.let { lon->
                     bundle.getStringArrayList("directions")?.let {dir->
                         bundle.getStringArrayList("type")?.let { type->
+                            val namePdv = bundle.getStringArrayList("namePdv")!!
                             for((index,data ) in lat.withIndex())
                             {
                                 if(type[index]=="INGRESO")
                                 {
+                                    val info = InfoWindowTrackingData(namePdv.get(index),"${data}, ${lon[index]}","Check in")
+                                    val customInfoWindow = InfoWindowTracking(requireContext())
+                                    googleMap.setInfoWindowAdapter(customInfoWindow)
                                     val userPosition = LatLng(data.toDouble(), lon[index].toDouble())
                                     Log.d("pos",userPosition.toString())
                                     val iconD = resources.getDrawable(com.tawa.allinapp.R.drawable.ic_marker_checkin)
-                                    googleMap.addMarker(MarkerOptions()
+                                    val marker = googleMap.addMarker(MarkerOptions()
                                         .position(userPosition).title("Check in "+dir[index])
                                         .snippet( " ("+data+","+lon[index]+")")
                                         .icon(getMarkerIconFromDrawable(iconD))
                                     )
+                                    marker!!.tag = info
                                 }
                                 if(type[index]=="SALIDA")
                                 {
+                                    val info = InfoWindowTrackingData(namePdv.get(index),"${data}, ${lon[index]}","Check out")
+                                    val customInfoWindow = InfoWindowTracking(requireContext())
+                                    googleMap.setInfoWindowAdapter(customInfoWindow)
                                     val userPosition = LatLng(data.toDouble(), lon[index].toDouble())
                                     Log.d("pos",userPosition.toString())
                                     val iconD = resources.getDrawable(com.tawa.allinapp.R.drawable.ic_marker_checkout)
-                                    googleMap.addMarker(MarkerOptions()
+                                    val marker =  googleMap.addMarker(MarkerOptions()
                                         .position(userPosition).title("Check out "+dir[index])
                                         .snippet( " ("+data+","+lon[index]+")")
                                         .icon(getMarkerIconFromDrawable(iconD))
                                     )
+                                    marker!!.tag = info
                                 }
                                 if(type[index]=="COMPLETADO")
                                 {
+                                    val info = InfoWindowTrackingData(namePdv.get(index),"${data}, ${lon[index]}","Reporte")
+                                    val customInfoWindow = InfoWindowTracking(requireContext())
+                                    googleMap.setInfoWindowAdapter(customInfoWindow)
                                     val userPosition = LatLng(data.toDouble(), lon[index].toDouble())
                                     Log.d("pos",userPosition.toString())
                                     val iconD = resources.getDrawable(com.tawa.allinapp.R.drawable.ic_marker_reports)
-                                    googleMap.addMarker(MarkerOptions()
+                                    val marker =  googleMap.addMarker(MarkerOptions()
                                         .position(userPosition).title("Reporte "+dir[index])
                                         .snippet( " ("+data+","+lon[index]+")")
                                         .icon(getMarkerIconFromDrawable(iconD))
                                     )
+                                    marker!!.tag = info
                                 }
                                 if(type[index]=="none")
                                 {
+                                    val info = InfoWindowTrackingData(namePdv.get(index),dir[index],"")
+                                    val customInfoWindow = InfoWindowTracking(requireContext())
+                                    googleMap.setInfoWindowAdapter(customInfoWindow)
                                     val userPosition = LatLng(data.toDouble(), lon[index].toDouble())
                                     Log.d("pos",userPosition.toString())
                                     val iconD = resources.getDrawable(com.tawa.allinapp.R.drawable.ic_marker_routes)
-                                    googleMap.addMarker(MarkerOptions()
+                                    val marker = googleMap.addMarker(MarkerOptions()
                                         .position(userPosition).title(dir[index])
                                         .icon(getMarkerIconFromDrawable(iconD))
                                     )
+                                    marker!!.tag = info
                                 }
                             }
                             googleMap.moveCamera(CameraUpdateFactory.newLatLng(LatLng(lat[0].toDouble(), lon[0].toDouble())))

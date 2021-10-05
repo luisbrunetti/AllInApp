@@ -1,8 +1,10 @@
 package com.tawa.allinapp.features.routes
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
@@ -13,14 +15,19 @@ import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.DialogFragment
 import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.BitmapDescriptor
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
 import com.tawa.allinapp.databinding.DialogMapRoutesBinding
 import com.tawa.allinapp.models.Routes
+import android.widget.TextView
+
+import android.view.Gravity
+
+import android.widget.LinearLayout
+import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter
+import com.google.android.gms.maps.model.*
+import com.tawa.allinapp.models.InfoWindowRoutesData
 
 
 class RoutesMapDialogFragment: DialogFragment() {
@@ -38,15 +45,18 @@ class RoutesMapDialogFragment: DialogFragment() {
             val arrayLatitude = ArrayList<String>()
             val arrayLongitude = ArrayList<String>()
             val arrayDirections = ArrayList<String>()
+            val arrayNamePdv = ArrayList<String>()
             for(route in listRoutes)
             {
                 arrayLatitude.add(route.latitude.toString())
                 arrayLongitude.add(route.longitude.toString())
                 arrayDirections.add(route.dirCorpPv.toString())
+                arrayNamePdv.add(route.nameCorpPv.toString())
             }
             bundle.putStringArrayList("latitude", arrayLatitude)
             bundle.putStringArrayList("longitude", arrayLongitude)
             bundle.putStringArrayList("directions", arrayDirections)
+            bundle.putStringArrayList("namePdv", arrayNamePdv)
             frag.arguments = bundle
             return frag
         }
@@ -66,15 +76,23 @@ class RoutesMapDialogFragment: DialogFragment() {
             bundle.getStringArrayList("latitude")?.let { lat->
                 bundle.getStringArrayList("longitude")?.let { lon->
                     bundle.getStringArrayList("directions")?.let {dir->
+                        val name = bundle.getStringArrayList("namePdv")
                         for((index,data ) in lat.withIndex())
                         {
+
+                            val info = InfoWindowRoutesData(name!![index], dir[index])
+                            val customInfoWindow = InfoWindowRoutes(requireContext())
+                            googleMap.setInfoWindowAdapter(customInfoWindow)
                             val userPosition = LatLng(data.toDouble(), lon[index].toDouble())
                             Log.d("pos",userPosition.toString())
                             val iconD = resources.getDrawable(com.tawa.allinapp.R.drawable.ic_marker_routes)
-                            googleMap.addMarker(MarkerOptions()
-                                .position(userPosition).title(dir[index])
+                            val marker = googleMap.addMarker(MarkerOptions()
+                                .position(userPosition).title(name?.get(index))
+                                .snippet(dir[index])
                                 .icon(getMarkerIconFromDrawable(iconD))
                             )
+                            marker!!.tag = info
+                           // marker.showInfoWindow()
                         }
                         googleMap.moveCamera(CameraUpdateFactory.newLatLng(LatLng(lat[0].toDouble(), lon[0].toDouble())))
                         googleMap.setMinZoomPreference(10f)

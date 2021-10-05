@@ -103,6 +103,7 @@ abstract class BaseFragment : Fragment() {
             .setLargeIcon(BitmapFactory.decodeResource(requireContext().resources, R.mipmap.ic_launcher))
             .setSmallIcon(R.mipmap.ic_launcher)
             .setContentText(messageBody)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(messageBody))
         notify(0, builder.build())
     }
 

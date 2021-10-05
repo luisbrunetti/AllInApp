@@ -7,10 +7,9 @@ import retrofit2.http.*
 
 interface PdvApi{
 
-    @GET("/api/puntoventa/1")
+    @GET("/api/puntoventa/")
     fun getPdvCompany(@Header("Authorization") token:String, @Query("id_empresa") idCompany:String): Call<BaseResponse<List<PdvRemote.Response>>>
 
     @POST("/api/puntoventa/edit/solicitud/{id}")
     fun updatePdvRemote(@Header("Authorization") token:String, @Path("id",) idPdv:String,@Body request: PdvRemote.Request): Call<BaseResponse<String>>
-
 }
