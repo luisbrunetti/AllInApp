@@ -109,20 +109,19 @@ abstract class BaseFragment : Fragment() {
     internal fun getLastLocation(){
         if(checkPermission()){
             if(isLocationEnabled()){
-                if (ActivityCompat.checkSelfPermission(
-                        requireContext(),
-                        Manifest.permission.ACCESS_FINE_LOCATION
-                    ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                if (ActivityCompat.checkSelfPermission(requireContext(),
+                        Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
                         requireContext(),
                         Manifest.permission.ACCESS_COARSE_LOCATION
                     ) != PackageManager.PERMISSION_GRANTED
                 ) return
+
                 fusedLocationProviderClient.lastLocation.addOnCompleteListener { task->
                     val location:Location? = task.result
                     if(location == null){
                         newLocationData()
                     }else{
-                        Log.d("Debug:" ,"Your Location:"+ location.longitude)
+                        Log.d("Debug:" ,"Your Location:"+ location.latitude + " , "+ location.longitude)
                         longitude = location.longitude.toString()
                         latitude = location.latitude.toString()
                     }

@@ -11,6 +11,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.DialogFragment
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -24,6 +25,8 @@ import com.tawa.allinapp.databinding.FragmentInformRoutesMapDialogBinding
 import com.tawa.allinapp.models.RoutesInform
 import com.tawa.allinapp.models.TrackingInform
 import java.lang.Exception
+import kotlin.math.cos
+import kotlin.math.sin
 
 
 class InformRoutesMapDialogFragment : DialogFragment(), GoogleMap.OnInfoWindowClickListener {
@@ -34,9 +37,16 @@ class InformRoutesMapDialogFragment : DialogFragment(), GoogleMap.OnInfoWindowCl
     private var listMarkers : ArrayList<Marker?>? = null
     private var hashMapMarkerRoute : MutableMap<String, InfoGeolocation>? = null
 
+    private var currentPv:String = ""
+    private var currentCodPv : String = ""
+
+
     companion object {
         const val LIST_ROUTES_INFORM = "list_routes_inform"
-        
+        const val CHECK_IN = "Check in"
+        const val CHECK_OUT = "Check out"
+        const val REPORTED = "Reporte"
+        const val POINT_SALE= "Punto de venta"
         fun newInstance(listRoutes : List<TrackingInform>): InformRoutesMapDialogFragment {
             val frag = InformRoutesMapDialogFragment()
             val bundle = Bundle()
@@ -55,6 +65,24 @@ class InformRoutesMapDialogFragment : DialogFragment(), GoogleMap.OnInfoWindowCl
             setOnInfoWindowClickListener(this@InformRoutesMapDialogFragment)
             mapType = GoogleMap.MAP_TYPE_NORMAL
             uiSettings.isZoomControlsEnabled = true
+            setInfoWindowAdapter(object : GoogleMap.InfoWindowAdapter {
+                override fun getInfoWindow(p0: Marker): View? {
+                    val v = layoutInflater.inflate(R.layout.info_adapter_geolocation,null)
+                    val tvLatLng = v.findViewById<TextView>(R.id.tvDescInfoAdapter)
+                    val tvSalesPoint= v.findViewById<TextView>(R.id.tvSalesPointInfoAdapter)
+                    val tvType = v.findViewById<TextView>(R.id.tvTypeInfoAdapter)
+                    tvType.text = p0.title
+                    tvSalesPoint.text = p0.snippet
+                    tvLatLng.text =  "("+p0.position.latitude.toString().substring(0,9)+","+p0.position.longitude.toString().substring(0,9)+")"
+                    return v
+                }
+
+                @SuppressLint("SetTextI18n")
+                override fun getInfoContents(p0: Marker): View? {
+                    return null
+                }
+
+            })
         }
 
         hashMapMarkerRoute = mutableMapOf()
@@ -70,11 +98,13 @@ class InformRoutesMapDialogFragment : DialogFragment(), GoogleMap.OnInfoWindowCl
                         when (visit?.comment) {
                             "INGRESO" -> {
                                 val userPosition = LatLng(visit.latitude.toDouble(), visit.longitude.toDouble())
-//                                Log.d("pos",userPosition.toString())
                                 val iconD = resources.getDrawable(R.drawable.ic_marker_checkin)
+
                                 val marker = googleMap.addMarker(MarkerOptions()
-                                    .position(userPosition).title("Check in "+ tracking.Pv+ " - "+tracking.zoneName)
-                                    .snippet( " ("+visit.latitude+","+visit.longitude+")")
+                                    .position(userPosition)
+                                    .title(CHECK_IN)
+                                    .snippet("${tracking.Pv} - ${tracking.codPvCop}")
+                                    .infoWindowAnchor(0f,-0.1f)
                                     .icon(getMarkerIconFromDrawable(iconD))
                                 )
                                 hashMapMarkerRoute!![marker.id] = InfoGeolocation(visit.comment, visit.creation, userTracking.nameUser, tracking.codPvCop,tracking.dirCorpPv,tracking.Pv)
@@ -84,30 +114,21 @@ class InformRoutesMapDialogFragment : DialogFragment(), GoogleMap.OnInfoWindowCl
                                 Log.d("pos",userPosition.toString())
                                 val iconD = resources.getDrawable(R.drawable.ic_marker_checkout)
                                 val marker = googleMap.addMarker(MarkerOptions()
-                                    .position(userPosition).title("Check Out "+ tracking.Pv+ " - "+tracking.zoneName)
-                                    .snippet( " ("+visit.latitude+","+visit.longitude+")")
+                                    .position(userPosition)
+                                    .title(CHECK_OUT)
+                                    .snippet("${tracking.Pv} - ${tracking.codPvCop}")
                                     .icon(getMarkerIconFromDrawable(iconD))
                                 )
                                 hashMapMarkerRoute!![marker.id] = InfoGeolocation(visit.comment,visit.creation, userTracking.nameUser, tracking.codPvCop,tracking.dirCorpPv,tracking.Pv)
-                            }
-                            "COMPLETADO" -> {
-                                val userPosition = LatLng(visit.latitude.toDouble(), visit.longitude.toDouble())
-                                Log.d("pos",userPosition.toString())
-                                val iconD = resources.getDrawable(R.drawable.ic_marker_reports)
-                                val marker = googleMap.addMarker(MarkerOptions()
-                                    .position(userPosition).title("Reporte"+ tracking.Pv+ " - "+tracking.zoneName)
-                                    .snippet( " ("+visit.latitude+","+visit.longitude+")")
-                                    .icon(getMarkerIconFromDrawable(iconD))
-                                )
-                                hashMapMarkerRoute!![marker.id] = InfoGeolocation(visit.comment,visit.creation, userTracking.nameUser,tracking.codPvCop,tracking.dirCorpPv,tracking.Pv)
                             }
                             "none" -> {
                                 val userPosition = LatLng(visit.latitude.toDouble(), visit.longitude.toDouble())
                                 Log.d("pos",userPosition.toString())
                                 val iconD = resources.getDrawable(R.drawable.ic_marker_routes)
                                 val marker = googleMap.addMarker(MarkerOptions()
-                                    .position(userPosition).title(""+ tracking.Pv+ " - "+tracking.zoneName)
-                                    .snippet( " ("+visit.latitude+","+visit.longitude+")")
+                                    .position(userPosition)
+                                    .title(POINT_SALE)
+                                    .snippet("${tracking.Pv} - ${tracking.codPvCop}")
                                     .icon(getMarkerIconFromDrawable(iconD))
                                 )
                                 hashMapMarkerRoute!![marker.id] = InfoGeolocation(visit.comment,visit.creation, userTracking.nameUser,tracking.codPvCop,tracking.dirCorpPv,tracking.Pv)
@@ -121,8 +142,9 @@ class InformRoutesMapDialogFragment : DialogFragment(), GoogleMap.OnInfoWindowCl
                                 Log.d("pos",userPosition.toString())
                                 val iconD = resources.getDrawable(R.drawable.ic_marker_reports)
                                 val marker = googleMap.addMarker(MarkerOptions()
-                                    .position(userPosition).title("Reporte"+ tracking.Pv+ " - "+tracking.zoneName)
-                                    .snippet( " ("+task.latitude+","+task.longitude+")")
+                                    .position(userPosition)
+                                    .title(REPORTED)
+                                    .snippet("${tracking.Pv} - ${tracking.codPvCop}")
                                     .icon(getMarkerIconFromDrawable(iconD))
                                 )
                                 hashMapMarkerRoute!![marker.id] = InfoGeolocation("Reporte",task.creation, userTracking.nameUser,tracking.codPvCop,tracking.dirCorpPv,tracking.Pv)

@@ -360,8 +360,8 @@ class InitFragment : BaseFragment() {
                     //getActualLocation()
                     getLastLocation()
                     _pv = pv;_pvId = pvId;_battery = battery
-                    if(latitude.isNullOrEmpty() && longitude.isNullOrEmpty()){
-                        initViewModel.setCheckIn(idUser,pvId,latitude,longitude)
+                    if(lat != "" && long != ""){
+                        initViewModel.setCheckIn(idUser,pvId,lat,long)
                         binding.tvCheckIn.text = description
                     }else{
                         val dialog = MessageDialogFragment.newInstance("Ha ocurrido un error al capturar tu ubiación. Vuelvo a intentar por favor.")
@@ -412,6 +412,7 @@ class InitFragment : BaseFragment() {
                 //getActualLocation()
                 getLastLocation()
                 //initViewModel.setPv("","","")
+                Log.d("data ", latitude.toString() + longitude.toString())
                 initViewModel.setCheckOut(_user,_pvId,latitude,longitude)
                 //_pvId = ""
                 //initViewModel.sendCheck(_lat,_long,1)
@@ -438,9 +439,13 @@ class InitFragment : BaseFragment() {
             ) != PackageManager.PERMISSION_GRANTED
         ) return
         val location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-        _lat = location?.latitude.toString()
-        _long = location?.longitude.toString()
+        location?.let { location ->
+            _lat = location?.latitude.toString()
+            _long = location?.longitude.toString()
+        }
     }
+
+
 
     override fun onResume() {
         super.onResume()

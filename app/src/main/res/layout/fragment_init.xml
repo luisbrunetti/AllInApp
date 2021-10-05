@@ -89,7 +89,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="2dp"
-            android:text="Wendy Leydy Rivas Martinez"
+            android:text=""
             android:textColor="@color/colorTextPrimary"
             android:textSize="23sp"
             android:textStyle="bold"
