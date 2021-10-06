@@ -1,14 +1,11 @@
 package com.tawa.allinapp.features.init.ui
 
-import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,10 +22,7 @@ import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.DialogMessagesBinding
 import com.tawa.allinapp.features.init.InitViewModel
 import com.tawa.allinapp.models.Notify
-import io.socket.client.Socket
-import org.json.JSONObject
 import java.util.*
-
 import javax.inject.Inject
 
 

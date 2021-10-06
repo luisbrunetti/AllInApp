@@ -41,7 +41,7 @@ fun ExpandableCard(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight(align = Alignment.Top),
-            //clickable { expandedState = !expandedState },
+        //clickable { expandedState = !expandedState },
         color = Color.White,
         elevation = 5.dp
     ) {
@@ -165,7 +165,7 @@ fun NameCard(text: String,onClick: () -> Unit){
             .padding(start = 4.dp, top = 5.dp, bottom = 4.dp, end = 5.dp)
             .wrapContentWidth(Alignment.Start)
             .background(color = colorGray, shape = RoundedCornerShape(25.dp)),
-            //.border(width = 1.dp, color = Color.Gray),
+        //.border(width = 1.dp, color = Color.Gray),
         elevation = 2.dp
     ) {
         Row(

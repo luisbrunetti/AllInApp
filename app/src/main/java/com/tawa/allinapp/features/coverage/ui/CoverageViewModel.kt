@@ -1,9 +1,10 @@
-package com.tawa.allinapp.features.coverage
+package com.tawa.allinapp.features.coverage.ui
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.tawa.allinapp.core.interactor.UseCase
 import com.tawa.allinapp.core.platform.BaseViewModel
+import com.tawa.allinapp.features.coverage.usecase.*
 import com.tawa.allinapp.models.*
 import javax.inject.Inject
 
@@ -47,7 +48,8 @@ class CoverageViewModel
     fun getRetails() = getRetails(UseCase.None()){ it.either(::handleFailure, ::handleRetails) }
     fun getChains(channel: List<String>, retail: List<String>) = getChains(GetChains.Params(channel,retail)){ it.either(::handleFailure, ::handleChains) }
     fun getUserList() = getUserList(UseCase.None()){ it.either(::handleFailure, ::handleUserList) }
-    fun getGraph(start:String?,end:String?, users: List<String>?, chains: List<String>?) = getGraph(GetGraph.Params(start,end,users,chains)){ it.either(::handleFailure, ::handleGraph) }
+    fun getGraph(start:String?,end:String?, users: List<String>?, chains: List<String>?) = getGraph(
+        GetGraph.Params(start,end,users,chains)){ it.either(::handleFailure, ::handleGraph) }
     fun getAllChains(channel: List<String>, retail: List<String>) = getChains(GetChains.Params(channel, retail)){
         it.either(::handleFailure, ::handleAllChain)
     }

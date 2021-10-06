@@ -135,7 +135,6 @@ interface RoutesRepository {
             val arrayResponse: ArrayList<TrackingInform> = ArrayList()
             try {
                 for (user in mutableListUser) {
-                    //val response = getTracking(user.id,"2021-08-26")
                     Log.d("request", user.id + "  " + dateStart.toString() + "  " + prefs.companyId.toString())
                     getTracking(user.id, dateStart).either({
                         arrayResponse.add(TrackingInform(user.id, user.name, emptyList()))

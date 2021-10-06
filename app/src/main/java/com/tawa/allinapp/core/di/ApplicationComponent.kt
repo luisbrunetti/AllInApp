@@ -6,8 +6,8 @@ import com.tawa.allinapp.features.auth.ui.LoginFragment
 import com.tawa.allinapp.features.HomeActivity
 import com.tawa.allinapp.features.auth.ui.LoginActivity
 import com.tawa.allinapp.features.calendar.CalendarFragment
-import com.tawa.allinapp.features.coverage.CoverageBoardFragment
-import com.tawa.allinapp.features.coverage.CoverageBoardGraphFragment
+import com.tawa.allinapp.features.coverage.ui.CoverageBoardFragment
+import com.tawa.allinapp.features.coverage.ui.CoverageBoardGraphFragment
 import com.tawa.allinapp.features.informs.InformsFragment
 import com.tawa.allinapp.features.init.ui.*
 

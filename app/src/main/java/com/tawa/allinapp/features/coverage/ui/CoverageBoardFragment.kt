@@ -1,4 +1,4 @@
-package com.tawa.allinapp.features.coverage
+package com.tawa.allinapp.features.coverage.ui
 
 import android.os.Bundle
 import android.util.Log
@@ -41,7 +41,12 @@ class CoverageBoardFragment : BaseFragment() {
     private var selectedChain:List<String>? = null
     private var selectedRetail:List<String>? = null
     private var selectedUser:List<String>? = null
+
+    //ExpandableCardChain
     private var mutableListChain = mutableStateListOf<String>()
+    private val checkedListChain = mutableStateListOf<String>()
+    private var mainCheckState = mutableStateOf<Boolean>(false)
+    private val hashCheckedItem = mutableStateMapOf<String,Boolean>()
     private var listAllChains = ArrayList<Chain>()
 
     private var startDate:String? = null
@@ -72,7 +77,10 @@ class CoverageBoardFragment : BaseFragment() {
             observe(chains,{
                 it?.let {
                     mutableListChain.clear()
-                    for(element in it){ mutableListChain.add(element.description!!) }
+                    checkedListChain.clear()
+                    hashCheckedItem.clear()
+                    for(element in it){ mutableListChain.add(element.description!!)}
+                    for(keys in hashCheckedItem.keys) hashCheckedItem[keys] = false
                 }
             })
             observe(allChains,{
@@ -102,7 +110,6 @@ class CoverageBoardFragment : BaseFragment() {
 
         Column{
             DateFilter({ startDate = it },{ endDate = it })
-
             channels?.let { ch ->
                 Log.d("Channels -> ",channels.toString())
                 ExpandableCard(
@@ -139,9 +146,12 @@ class CoverageBoardFragment : BaseFragment() {
                     else coverageViewModel.getChains(selectedChannel?: emptyList(),emptyList())
                 }
             }
-            ExpandableCard(
+            ExpandableCardChain(
                 title = "Cadena",
-                listElementsPrincipal = mutableListChain
+                checkedListChain,
+                hashCheckedItem,
+                mainCheckState,
+                mutableListChain
             ) { list ->
                 //Log.d("chainsSelected", list.toString())
                 selectedChain = listAllChains.filter { chain ->

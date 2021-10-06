@@ -204,7 +204,7 @@
 
     <fragment
         android:id="@+id/coverageBoardFragment"
-        android:name="com.tawa.allinapp.features.coverage.CoverageBoardFragment"
+        android:name="com.tawa.allinapp.features.coverage.ui.CoverageBoardFragment"
         android:label="CoverageBoardFragment" >
         <action
             android:id="@+id/action_coverageBoardFragment_to_coverageBoardGraphFragment"
@@ -214,7 +214,7 @@
 
     <fragment
         android:id="@+id/coverageBoardGraphFragment"
-        android:name="com.tawa.allinapp.features.coverage.CoverageBoardGraphFragment"
+        android:name="com.tawa.allinapp.features.coverage.ui.CoverageBoardGraphFragment"
         android:label="CoverageBoardGraphFragment" >
         <argument
             android:name="graph"

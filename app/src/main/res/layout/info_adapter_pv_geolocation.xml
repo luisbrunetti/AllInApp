@@ -7,11 +7,10 @@
     android:background="@drawable/rounded">
 
     <TextView
-        android:id="@+id/tvTypeInfoAdapter"
+        android:id="@+id/tvSalesPointInfoAdapterPV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text="Check in"
+        android:text="Real Plaza Ate - 83"
         android:textAlignment="textStart"
         android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
@@ -20,53 +19,27 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/tvSalesPointInfoAdapter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text="Real Plaza Ate - 83"
-        android:textAlignment="textStart"
-        android:textColor="@color/black"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.027"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvTypeInfoAdapter" />
-
-    <TextView
-        android:id="@+id/textView55"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text="Punto"
-        android:textAlignment="textStart"
-        android:textColor="@color/black"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.027"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvSalesPointInfoAdapter" />
-
-    <TextView
-        android:id="@+id/tvDescInfoAdapter"
+        android:id="@+id/tvDirInfoAdapterPv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:text="(123123231,123123)"
         android:textAlignment="textStart"
+        android:lines="2"
         android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.027"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView55" />
+        app:layout_constraintTop_toBottomOf="@id/tvSalesPointInfoAdapterPV" />
 
     <ImageButton
-        android:id="@+id/ivCloseAdapterGeolocation"
         android:layout_width="10dp"
         android:layout_height="10dp"
         android:layout_marginStart="88dp"
         android:background="@null"
         android:src="@drawable/ic_closemodal"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tvSalesPointInfoAdapterPV"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.053" />
 </androidx.constraintlayout.widget.ConstraintLayout>

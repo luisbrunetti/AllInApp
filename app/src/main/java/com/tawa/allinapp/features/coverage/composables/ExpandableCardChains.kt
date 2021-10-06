@@ -11,6 +11,9 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
+import androidx.compose.runtime.snapshots.SnapshotMutableState
+import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,15 +31,14 @@ import java.util.*
 @Composable
 fun ExpandableCardChain(
     title: String,
+    checkedList: SnapshotStateList<String>,
+    hashCheckedItem: SnapshotStateMap<String,Boolean>,
+    mainCheckState: MutableState<Boolean>,
     content:List<String>,
     onSelected: (List<String>) -> Unit
 ){
-    val hashCheckedItem = remember{ mutableStateMapOf<String,Boolean>()}
     content.map { hashCheckedItem[it] = false }
-    val checkedList = remember { mutableListOf<String>() }
-    checkedList.clear()
     var expandedState by remember { mutableStateOf(false) }
-    var mainCheckState by remember { mutableStateOf(false) }
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -70,13 +72,14 @@ fun ExpandableCardChain(
                 Column(Modifier.padding(start = 12.dp, end = 12.dp, bottom = 12.dp)) {
                     val textState = remember{ mutableStateOf(TextFieldValue(""))}
                     SearchViewChain(textState)
+                    val itemList = checkedList.map { it }
                     LazyRow(){
-                        items(checkedList as ArrayList<String>, itemContent = {item: String ->
+                        items(itemList, itemContent = {item: String ->
                             NameCardChain(text = item) {
                                 hashCheckedItem[item] = false
                                 checkedList.remove(item)
                                 onSelected(checkedList)
-                                mainCheckState = false
+                                mainCheckState.value = false
                             }
                             Spacer(modifier = Modifier.padding(1.dp))
                         })
@@ -85,11 +88,11 @@ fun ExpandableCardChain(
                     Row{
                         Checkbox(
                             modifier = Modifier.padding(bottom = 10.dp),
-                            checked = mainCheckState,
+                            checked = mainCheckState.value,
                             onCheckedChange =
                             {
-                                mainCheckState = it
-                                if (mainCheckState) {
+                                mainCheckState.value = it
+                                if (mainCheckState.value) {
                                     checkedList.clear()
                                     for (key in hashCheckedItem.keys) {
                                         checkedList.add(key)
@@ -125,7 +128,7 @@ fun ExpandableCardChain(
                                 checked = hashCheckedItem[element]!!,
                                 onCheckedChange =
                                 {
-                                    if(mainCheckState && it){
+                                    if(mainCheckState.value && it){
                                         onSelected(content)
                                     } else {
                                         if(it){
@@ -133,7 +136,7 @@ fun ExpandableCardChain(
                                             hashCheckedItem[element] = it
                                         }
                                         else {
-                                            mainCheckState=false
+                                            mainCheckState.value=false
                                             checkedList.remove(element)
                                             hashCheckedItem[element] = it
                                         }

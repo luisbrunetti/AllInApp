@@ -1,4 +1,4 @@
-package com.tawa.allinapp.features.coverage
+package com.tawa.allinapp.features.coverage.ui
 
 import android.os.Bundle
 import android.util.Log

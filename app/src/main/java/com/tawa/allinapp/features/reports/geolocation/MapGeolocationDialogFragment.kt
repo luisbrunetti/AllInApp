@@ -11,6 +11,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.DialogFragment
@@ -23,24 +24,22 @@ import com.google.gson.Gson
 import com.tawa.allinapp.R
 import com.tawa.allinapp.databinding.FragmentInformRoutesMapDialogBinding
 import com.tawa.allinapp.models.RoutesInform
+import com.tawa.allinapp.models.Tracking
 import com.tawa.allinapp.models.TrackingInform
 import java.lang.Exception
-import kotlin.math.cos
-import kotlin.math.sin
+import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.SphericalUtil
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class InformRoutesMapDialogFragment : DialogFragment(), GoogleMap.OnInfoWindowClickListener {
 
     private lateinit var binding: FragmentInformRoutesMapDialogBinding
     private var listRoutes: List<TrackingInform>? = null
-    private var listener: Callback? = null
     private var listMarkers : ArrayList<Marker?>? = null
     private var hashMapMarkerRoute : MutableMap<String, InfoGeolocation>? = null
-
-    private var currentPv:String = ""
-    private var currentCodPv : String = ""
-
-
+    private var lastLatLng: LatLng? = null
     companion object {
         const val LIST_ROUTES_INFORM = "list_routes_inform"
         const val CHECK_IN = "Check in"
@@ -50,9 +49,7 @@ class InformRoutesMapDialogFragment : DialogFragment(), GoogleMap.OnInfoWindowCl
         fun newInstance(listRoutes : List<TrackingInform>): InformRoutesMapDialogFragment {
             val frag = InformRoutesMapDialogFragment()
             val bundle = Bundle()
-           // val listType: Type = object : TypeToken<List<String?>?>() {}.type
             val jsonParsed = Gson().toJson(listRoutes)
-            //Log.d("list",listRoutes.toString())
             bundle.putString(LIST_ROUTES_INFORM,jsonParsed)
             frag.arguments = bundle
             return frag
@@ -67,13 +64,28 @@ class InformRoutesMapDialogFragment : DialogFragment(), GoogleMap.OnInfoWindowCl
             uiSettings.isZoomControlsEnabled = true
             setInfoWindowAdapter(object : GoogleMap.InfoWindowAdapter {
                 override fun getInfoWindow(p0: Marker): View? {
-                    val v = layoutInflater.inflate(R.layout.info_adapter_geolocation,null)
-                    val tvLatLng = v.findViewById<TextView>(R.id.tvDescInfoAdapter)
-                    val tvSalesPoint= v.findViewById<TextView>(R.id.tvSalesPointInfoAdapter)
-                    val tvType = v.findViewById<TextView>(R.id.tvTypeInfoAdapter)
-                    tvType.text = p0.title
-                    tvSalesPoint.text = p0.snippet
-                    tvLatLng.text =  "("+p0.position.latitude.toString().substring(0,9)+","+p0.position.longitude.toString().substring(0,9)+")"
+                    var v : View? = null
+                    val iv= v?.findViewById<ImageView>(R.id.ivCloseAdapterGeolocation)
+                    if(p0.title == POINT_SALE){
+                        v = layoutInflater.inflate(R.layout.info_adapter_pv_geolocation,null)
+                        val tvSalesPoint= v.findViewById<TextView>(R.id.tvSalesPointInfoAdapterPV)
+                        val tvDirPv = v.findViewById<TextView>(R.id.tvDirInfoAdapterPv)
+                        val snippet = p0.snippet
+                        val index = snippet.indexOf("-",0,true)
+                        tvSalesPoint.text = snippet.substring(0,index)
+                        tvDirPv.text = snippet.substring(index+1, snippet.length)
+                    }else{
+                        v = layoutInflater.inflate(R.layout.info_adapter_geolocation,null)
+                        val tvLatLng = v.findViewById<TextView>(R.id.tvDescInfoAdapter)
+                        val tvSalesPoint= v.findViewById<TextView>(R.id.tvSalesPointInfoAdapter)
+                        val tvType = v.findViewById<TextView>(R.id.tvTypeInfoAdapter)
+                        tvType.text = p0.title
+                        tvSalesPoint.text = p0.snippet
+                        tvLatLng.text =  "("+p0.position.latitude.toString().substring(0,9)+","+p0.position.longitude.toString().substring(0,9)+")"
+                    }
+                    iv?.setOnClickListener {
+                        p0.hideInfoWindow()
+                    }
                     return v
                 }
 
@@ -94,12 +106,13 @@ class InformRoutesMapDialogFragment : DialogFragment(), GoogleMap.OnInfoWindowCl
             for (userTracking in listInformTracking) {
                 Log.d("UserTracking", "UserTracking -> ${userTracking.nameUser} List -> ${userTracking.listTracking}")
                 for (tracking in userTracking.listTracking) {
+                    var checkin= false
+                    var checkout= false
                     for(visit in tracking.visits){
                         when (visit?.comment) {
                             "INGRESO" -> {
                                 val userPosition = LatLng(visit.latitude.toDouble(), visit.longitude.toDouble())
                                 val iconD = resources.getDrawable(R.drawable.ic_marker_checkin)
-
                                 val marker = googleMap.addMarker(MarkerOptions()
                                     .position(userPosition)
                                     .title(CHECK_IN)
@@ -107,6 +120,7 @@ class InformRoutesMapDialogFragment : DialogFragment(), GoogleMap.OnInfoWindowCl
                                     .infoWindowAnchor(0f,-0.1f)
                                     .icon(getMarkerIconFromDrawable(iconD))
                                 )
+                                checkin = true
                                 hashMapMarkerRoute!![marker.id] = InfoGeolocation(visit.comment, visit.creation, userTracking.nameUser, tracking.codPvCop,tracking.dirCorpPv,tracking.Pv)
                             }
                             "SALIDA" -> {
@@ -119,6 +133,7 @@ class InformRoutesMapDialogFragment : DialogFragment(), GoogleMap.OnInfoWindowCl
                                     .snippet("${tracking.Pv} - ${tracking.codPvCop}")
                                     .icon(getMarkerIconFromDrawable(iconD))
                                 )
+                                checkout = true
                                 hashMapMarkerRoute!![marker.id] = InfoGeolocation(visit.comment,visit.creation, userTracking.nameUser, tracking.codPvCop,tracking.dirCorpPv,tracking.Pv)
                             }
                             "none" -> {
@@ -156,6 +171,7 @@ class InformRoutesMapDialogFragment : DialogFragment(), GoogleMap.OnInfoWindowCl
                         long = tracking.longitude
                         firstTime = false
                     }
+                    createMarkerPv(tracking,googleMap,checkin,checkout)
                 }
             }
             if (lat != null && long != null) {
@@ -166,6 +182,31 @@ class InformRoutesMapDialogFragment : DialogFragment(), GoogleMap.OnInfoWindowCl
         }
     }
 
+    private fun createMarkerPv(
+        tracking: Tracking,
+        googleMap: GoogleMap,
+        checkin: Boolean,
+        checkout: Boolean
+    ) {
+        val state = if(checkout) "Terminado" else if (checkin) "Check In" else "En proceso"
+        val pvPosition = LatLng(tracking.latitude!!,tracking.longitude!!)
+        val iconD = resources.getDrawable(R.drawable.ic_marker_routes)
+        lastLatLng = convertLatLngInMeter(pvPosition)
+        val marker = googleMap.addMarker(MarkerOptions()
+            .position(lastLatLng)
+            .title(POINT_SALE)
+            .snippet("$state- ${tracking.Pv}-${tracking.dirCorpPv}")
+            .infoWindowAnchor(0f,-0.1f)
+            .icon(getMarkerIconFromDrawable(iconD))
+        )
+        //hashMapMarkerRoute!![marker.id] = InfoGeolocation(POINT_SALE, "", tracking.nameUser, tracking.codPvCop,tracking.dirCorpPv,tracking.Pv)
+    }
+
+    private fun convertLatLngInMeter(oldLatLng: LatLng) : LatLng{
+        val r = Random()
+        val randomHeading: Double = r.nextInt(360).toDouble()
+        return SphericalUtil.computeOffset(oldLatLng, 5.0, randomHeading)
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -216,7 +257,6 @@ class InformRoutesMapDialogFragment : DialogFragment(), GoogleMap.OnInfoWindowCl
         drawable.draw(canvas)
         return BitmapDescriptorFactory.fromBitmap(bitmap)
     }
-
     interface Callback{
         fun onAccept()
     }

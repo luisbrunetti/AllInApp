@@ -1,4 +1,4 @@
-package com.tawa.allinapp.features.coverage
+package com.tawa.allinapp.features.coverage.usecase
 
 import com.tawa.allinapp.core.interactor.UseCase
 import com.tawa.allinapp.data.repository.DashboardRepository
