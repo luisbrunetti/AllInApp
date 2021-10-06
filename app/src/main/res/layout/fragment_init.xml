@@ -72,7 +72,7 @@
             app:layout_constraintVertical_bias="0.0" />
 
         <TextView
-            android:id="@+id/textView13"
+            android:id="@+id/tvWelcomeInitFragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -96,7 +96,7 @@
             app:layout_constraintBottom_toBottomOf="@+id/view5"
             app:layout_constraintEnd_toStartOf="@+id/btUser"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView13"
+            app:layout_constraintTop_toBottomOf="@+id/tvWelcomeInitFragment"
             app:layout_constraintVertical_bias="0.0" />
 
         <View
@@ -248,7 +248,7 @@
                     android:layout_height="wrap_content">
 
                     <TextView
-                        android:id="@+id/textView4"
+                        android:id="@+id/tvPvInitFragment"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="11dp"
@@ -264,7 +264,7 @@
                         app:layout_constraintVertical_bias="0.0" />
 
                     <TextView
-                        android:id="@+id/textView5"
+                        android:id="@+id/tvReportInitFragment"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="11dp"
@@ -281,7 +281,7 @@
 
 
                     <TextView
-                        android:id="@+id/textRoutes"
+                        android:id="@+id/tvRoutesInitFragment"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="11dp"
@@ -298,7 +298,7 @@
                         app:layout_constraintVertical_bias="0.0" />
 
                     <TextView
-                        android:id="@+id/textView7"
+                        android:id="@+id/tvCalendarInitFragment"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="11dp"
@@ -312,23 +312,24 @@
                         app:layout_constraintStart_toStartOf="@+id/viewBtnCalendar"
                         app:layout_constraintTop_toBottomOf="@+id/imageView9" />
 
+
                     <TextView
-                        android:id="@+id/textView8"
+                        android:id="@+id/tvDocumentsInitFragment"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="11dp"
+                        android:layout_marginBottom="20dp"
                         android:elevation="4dp"
                         android:text="Documentos"
                         android:textColor="@color/blue"
                         android:textSize="16sp"
                         android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="@+id/viewBtnDocs"
                         app:layout_constraintEnd_toEndOf="@+id/viewBtnDocs"
                         app:layout_constraintStart_toStartOf="@+id/viewBtnDocs"
-                        app:layout_constraintTop_toBottomOf="@+id/imageVie10" />
-
+                        app:layout_constraintTop_toBottomOf="@+id/imageView10" />
 
                     <TextView
-                        android:id="@+id/textView9"
+                        android:id="@+id/tvSyncInitFragment"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="11dp"
@@ -344,7 +345,7 @@
                         app:layout_constraintVertical_bias="0.0" />
 
                     <TextView
-                        android:id="@+id/textViewInforms"
+                        android:id="@+id/tvInformsInitFragment"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="11dp"
@@ -361,7 +362,7 @@
                         app:layout_constraintVertical_bias="0.0" />
 
                     <TextView
-                        android:id="@+id/textViewMessages"
+                        android:id="@+id/tvMessageInitFragment"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="11dp"
@@ -435,7 +436,7 @@
                         app:layout_constraintTop_toTopOf="@+id/viewBtnMessages" />
 
                     <ImageView
-                        android:id="@+id/imageVie10"
+                        android:id="@+id/imageView10"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="26dp"

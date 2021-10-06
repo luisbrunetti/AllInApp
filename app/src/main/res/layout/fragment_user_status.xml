@@ -47,7 +47,7 @@
             app:layout_constraintVertical_bias="0.0" />
 
         <TextView
-            android:id="@+id/textView30"
+            android:id="@+id/tvTitleStatusFragment"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="11dp"
@@ -63,7 +63,7 @@
             app:layout_constraintTop_toTopOf="@+id/headStatus" />
 
         <TextView
-            android:id="@+id/textView31"
+            android:id="@+id/tvUserStatus"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="11dp"
@@ -75,7 +75,7 @@
             app:layout_constraintEnd_toEndOf="@+id/headStatus"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/btnBackStatus"
-            app:layout_constraintTop_toBottomOf="@+id/textView30" />
+            app:layout_constraintTop_toBottomOf="@+id/tvTitleStatusFragment" />
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="0dp"
@@ -97,7 +97,7 @@
                     android:layout_height="match_parent">
 
                     <TextView
-                        android:id="@+id/textView36"
+                        android:id="@+id/tvSelectDateStatusFragment"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="36dp"
@@ -131,11 +131,11 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textView36"
+                        app:layout_constraintTop_toBottomOf="@+id/tvSelectDateStatusFragment"
                         app:layout_constraintVertical_bias="0.0" />
 
                     <TextView
-                        android:id="@+id/textView12"
+                        android:id="@+id/tvReporterStatusFragment"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="36dp"
@@ -165,7 +165,7 @@
                         android:paddingEnd="16dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textView12" />
+                        app:layout_constraintTop_toBottomOf="@+id/tvReporterStatusFragment" />
 
                     <Button
                         android:id="@+id/btnFilter"
@@ -210,7 +210,7 @@
                             android:gravity="center_vertical">
 
                             <TextView
-                                android:id="@+id/textView15"
+                                android:id="@+id/tvTableUser"
                                 android:layout_width="100dp"
                                 android:layout_height="wrap_content"
                                 android:layout_column="0"
@@ -315,7 +315,7 @@
                                         android:textSize="12sp" />
 
                                     <TextView
-                                        android:id="@+id/textView22"
+                                        android:id="@+id/tvLastUbication"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_column="4"
@@ -328,9 +328,6 @@
                                         android:textSize="12sp" />
 
                                 </TableRow>
-
-
-
 
 
                             </TableLayout>

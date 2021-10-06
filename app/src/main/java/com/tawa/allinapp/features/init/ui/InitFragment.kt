@@ -186,10 +186,10 @@ class InitFragment : BaseFragment() {
                             (activity as HomeActivity).showRoutes()
                             binding.viewBtnInforms.isVisible = true
                             binding.imageViewInforms.isVisible= true
-                            binding.textViewInforms.isVisible = true
+                            binding.tvInformsInitFragment.isVisible = true
                             binding.viewBtnRoutes.isVisible = true
                             binding.imageViewRoutes.isVisible= true
-                            binding.textRoutes.isVisible = true
+                            binding.tvRoutesInitFragment.isVisible = true
                         }
                     }
                 }
@@ -440,7 +440,7 @@ class InitFragment : BaseFragment() {
         ) return
         val location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
         location?.let { location ->
-            _lat = location?.latitude.toString()
+            _lat = location.latitude.toString()
             _long = location?.longitude.toString()
         }
     }

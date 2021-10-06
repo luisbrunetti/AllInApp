@@ -70,11 +70,11 @@
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="@+id/view9"
             app:layout_constraintStart_toEndOf="@+id/btnBackPdv"
-            app:layout_constraintTop_toBottomOf="@+id/tvTitleStandard2"
+            app:layout_constraintTop_toBottomOf="@+id/tvTitlePdvFragment"
             app:layout_constraintVertical_bias="0.0" />
 
         <TextView
-            android:id="@+id/tvTitleStandard2"
+            android:id="@+id/tvTitlePdvFragment"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="18dp"
@@ -158,7 +158,7 @@
                     app:layout_constraintVertical_bias="0.0" />
 
                 <TextView
-                    android:id="@+id/textView33"
+                    android:id="@+id/tvTitlteInformPdvFragment"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="36dp"
@@ -172,7 +172,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/textView35"
+                    android:id="@+id/tvGeolocationPdvFragment"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="36dp"
@@ -183,10 +183,10 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView33" />
+                    app:layout_constraintTop_toBottomOf="@+id/tvTitlteInformPdvFragment" />
 
                 <TextView
-                    android:id="@+id/textView37"
+                    android:id="@+id/tvNamePdvFragment"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="36dp"
@@ -200,7 +200,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/btnUpdateLocation" />
 
                 <TextView
-                    android:id="@+id/textView38"
+                    android:id="@+id/tvPhonePdvFragment"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="36dp"
@@ -403,7 +403,7 @@
                     app:layout_constraintVertical_bias="0.0" />
 
                 <TextView
-                    android:id="@+id/textView39"
+                    android:id="@+id/tvRucFragmentPdv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="36dp"
@@ -431,7 +431,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView35" />
+                    app:layout_constraintTop_toBottomOf="@+id/tvGeolocationPdvFragment" />
 
                 <Button
                     android:id="@+id/btnUpdateLocation"
@@ -487,7 +487,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView37" />
+                    app:layout_constraintTop_toBottomOf="@+id/tvNamePdvFragment" />
 
                 <EditText
                     android:id="@+id/edPhoneContact"
@@ -506,7 +506,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView38"
+                    app:layout_constraintTop_toBottomOf="@+id/tvPhonePdvFragment"
                     app:layout_constraintVertical_bias="0.0" />
 
                 <EditText
@@ -526,7 +526,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView39"
+                    app:layout_constraintTop_toBottomOf="@+id/tvRucFragmentPdv"
                     app:layout_constraintVertical_bias="0.0" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 

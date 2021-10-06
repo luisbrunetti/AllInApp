@@ -61,8 +61,8 @@ class LoginFragment : BaseFragment() {
             }})
         }
         //authViewModel.setSessionFirstTime()
-        binding.remember.setOnClickListener {
-            authViewModel.setSession(binding.remember.isChecked)
+        binding.cbRememberLoginFragment.setOnClickListener {
+            authViewModel.setSession(binding.cbRememberLoginFragment.isChecked)
         }
         return binding.root
     }
