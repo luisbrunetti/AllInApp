@@ -9,6 +9,15 @@
         android:id="@+id/loginFragment"
         android:name="com.tawa.allinapp.features.auth.ui.LoginFragment"
         android:label="login_fragment"
-        tools:layout="@layout/fragment_login" />
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_loginFragment_to_sendPasswordFragment2"
+            app:destination="@id/sendPasswordFragment2" />
+    </fragment>
+    <fragment
+        android:id="@+id/sendPasswordFragment2"
+        android:name="com.tawa.allinapp.features.init.ui.SendPasswordFragment"
+        android:label="fragment_send_password"
+        tools:layout="@layout/fragment_send_password" />
 
 </navigation>

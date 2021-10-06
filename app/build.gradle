@@ -6,7 +6,7 @@ plugins {
     id 'androidx.navigation.safeargs.kotlin'
 }
 
-def dev = 1000
+def dev = 1
 
 android {
     compileSdkVersion 30
@@ -43,19 +43,19 @@ android {
             minifyEnabled false
             signingConfig signingConfigs.debug
             //buildConfigField("String", "BASE_URL", "\"http://192.168.0.8:3000\"")
-            buildConfigField("String", "BASE_URL", "\"http://tismart-alb-prd-us-east-001-1633035529.us-east-1.elb.amazonaws.com\"")
+            buildConfigField("String", "BASE_URL", "\"http://alb-all-in-web-1372832709.us-east-1.elb.amazonaws.com/\"")
             buildConfigField('int', 'DEV', "$dev")
         }
         prod {
             minifyEnabled false
             signingConfig signingConfigs.debug
-            buildConfigField("String", "BASE_URL", "\"http://tismart-alb-prd-us-east-001-1633035529.us-east-1.elb.amazonaws.com\"")
+            buildConfigField("String", "BASE_URL", "\"http://alb-all-in-web-1372832709.us-east-1.elb.amazonaws.com/\"")
             buildConfigField('int', 'DEV', "$dev")
         }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            buildConfigField("String", "BASE_URL", "\"http://tismart-alb-prd-us-east-001-1633035529.us-east-1.elb.amazonaws.com\"")
+            buildConfigField("String", "BASE_URL", "\"http://alb-all-in-web-1372832709.us-east-1.elb.amazonaws.com/\"")
             buildConfigField('int', 'DEV', "$dev")
         }
     }
@@ -162,4 +162,5 @@ dependencies {
     implementation ('io.socket:socket.io-client:2.0.0') {
         exclude group: 'org.json', module: 'json'
     }
+
 }

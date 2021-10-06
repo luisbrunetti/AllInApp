@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.navigation.fragment.findNavController
 import com.tawa.allinapp.R
 import com.tawa.allinapp.core.dialog.MessageDialogFragment
 import com.tawa.allinapp.core.extensions.failure
@@ -13,6 +15,7 @@ import com.tawa.allinapp.core.functional.Failure
 import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.FragmentLoginBinding
 import com.tawa.allinapp.features.auth.AuthViewModel
+import com.tawa.allinapp.features.init.ui.InitFragmentDirections
 
 
 class LoginFragment : BaseFragment() {
@@ -63,6 +66,9 @@ class LoginFragment : BaseFragment() {
         //authViewModel.setSessionFirstTime()
         binding.cbRememberLoginFragment.setOnClickListener {
             authViewModel.setSession(binding.cbRememberLoginFragment.isChecked)
+        }
+        binding.edForgotPassword.setOnClickListener {
+            findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToSendPasswordFragment2())
         }
         return binding.root
     }

@@ -1,36 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/bg_rounded_top"
     android:gravity="center"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical">
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tvSendPass"
+        android:id="@+id/tvNotify"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:drawablePadding="8dp"
         android:padding="20dp"
-        android:text="@string/send_password"
+        android:text="Notificaciones"
         android:textColor="@color/blue"
-        app:drawableStartCompat="@drawable/ic_send_password"
-        app:drawableTint="@color/blue" />
+        android:visibility="visible"
+        app:drawableStartCompat="@drawable/ic_icon_notify"
+        app:drawableTint="@color/blue"
+        app:layout_constraintBottom_toTopOf="@+id/tvLogout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvLogout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:drawablePadding="8dp"
         android:padding="20dp"
         android:text="@string/logout"
         android:textColor="@color/blue"
         app:drawableStartCompat="@drawable/ic_logout"
-        app:drawableTint="@color/blue" />
+        app:drawableTint="@color/blue"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>
 

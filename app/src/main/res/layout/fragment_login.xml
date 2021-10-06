@@ -169,7 +169,7 @@
             android:layout_height="50dp"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:layout_marginBottom="24dp"
+            android:layout_marginBottom="18dp"
             android:background="@drawable/roundedbuttom"
             android:onClick="@{()->viewModel.doLogin()}"
             android:text="Ingresar"
@@ -177,11 +177,23 @@
             android:textColor="@color/colorTextPrimary"
             android:textSize="18sp"
             app:enableButton="@{viewModel.enableButton}"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/edForgotPassword"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1.0" />
+
+        <TextView
+            android:id="@+id/edForgotPassword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:text="¿Olvidaste tu contraseña?"
+            android:textColor="@color/colorMain"
+            android:textStyle="normal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
