@@ -65,7 +65,6 @@ class InformRoutesMapDialogFragment : DialogFragment(), GoogleMap.OnInfoWindowCl
             setInfoWindowAdapter(object : GoogleMap.InfoWindowAdapter {
                 override fun getInfoWindow(p0: Marker): View? {
                     var v : View? = null
-                    val iv= v?.findViewById<ImageView>(R.id.ivCloseAdapterGeolocation)
                     if(p0.title == POINT_SALE){
                         v = layoutInflater.inflate(R.layout.info_adapter_pv_geolocation,null)
                         val tvSalesPoint= v.findViewById<TextView>(R.id.tvSalesPointInfoAdapterPV)
@@ -83,9 +82,7 @@ class InformRoutesMapDialogFragment : DialogFragment(), GoogleMap.OnInfoWindowCl
                         tvSalesPoint.text = p0.snippet
                         tvLatLng.text =  "("+p0.position.latitude.toString().substring(0,9)+","+p0.position.longitude.toString().substring(0,9)+")"
                     }
-                    iv?.setOnClickListener {
-                        p0.hideInfoWindow()
-                    }
+
                     return v
                 }
 
@@ -205,7 +202,7 @@ class InformRoutesMapDialogFragment : DialogFragment(), GoogleMap.OnInfoWindowCl
     private fun convertLatLngInMeter(oldLatLng: LatLng) : LatLng{
         val r = Random()
         val randomHeading: Double = r.nextInt(360).toDouble()
-        return SphericalUtil.computeOffset(oldLatLng, 5.0, randomHeading)
+        return SphericalUtil.computeOffset(oldLatLng, 10.0, randomHeading)
     }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

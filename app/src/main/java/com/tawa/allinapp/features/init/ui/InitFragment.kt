@@ -75,22 +75,27 @@ class InitFragment : BaseFragment() {
                 _user = it
             }})
             observe(pvDesc, { it?.let {
-                _pv = it
-                initViewModel.getIdPV()
+                if(it != ""){
+                    initViewModel.changeStatePvDesc("")
+                    _pv = it
+                    initViewModel.getIdPV()
+                }
             }})
             observe(pvId, { it?.let {
                 ///bug
-                if(it.isNotEmpty()){
-                    _pvId = it
+                if(it != ""){
                     initViewModel.changeStatePv("")
+                    _pvId = it
                     showCheckOut()
                 }
             }})
             observe(successCheckIn, { it?.let {
-                    if(it)
-                    {
+                    if(it) {
                         //getActualLocation()
                         getLastLocation()
+
+                        changeStateSuccessCheckIn(false)
+
                         initViewModel.getCheckMode()
                         Log.d("successCheckin", "last -> $latitude  long -> $longitude")
                         //initViewModel.updateStatus(_lat,_long,_battery,0)
@@ -100,19 +105,22 @@ class InitFragment : BaseFragment() {
             } })
             observe(successSendCheck, { it?.let {
                 if(it.isNotEmpty()){
+                    initViewModel.changeCheckState("")
                     if(it == "CREADO SATISFACTORIAMENTE")
                         notify(activity,R.string.notify_sended)
                     if(it=="YA REALIZO UN INGRESO EN ESTE PUNTO DE VENTA EL DIA DE HOY")
                         notify(activity,R.string.notify_sended_error)
                     if(it=="YA REALIZO UN SALIDA EN ESTE PUNTO DE VENTA EL DIA DE HOY")
                         notify(activity,R.string.notify_sended_error)
-                    initViewModel.changeCheckState("")
                 }
             } })
             observe(successUpdate, { it?.let {
+                //bug
                 if(it){
+                    initViewModel.changeSuccessUpdate(false)
                     //initViewModel.sendCheck(_lat, _long, type.value!!)
                     initViewModel.sendCheck(latitude,longitude, type.value!!)
+                    //initViewModel.changeSuccessUpdate(false)
                    // Toast.makeText(context,"Se envío actualizacion",Toast.LENGTH_SHORT).show()
                     }
             } })
@@ -126,6 +134,7 @@ class InitFragment : BaseFragment() {
                 if(it) {
                     getLastLocation()
                     //getActualLocation()
+                    initViewModel.changeStateSuccessCheckout(false)
                     initViewModel.getCheckMode()
                     initViewModel.updateStatus(latitude,longitude,_battery,1)
                     notify(activity,R.string.checkoout_successful)
@@ -164,7 +173,7 @@ class InitFragment : BaseFragment() {
             }})
             observe(successSyncAudio, { it?.let {
                 if(it){
-                    Log.d(TAG,"SuccessSSyncAudio se realizado correctamente")
+                    Log.d(TAG,"// se realizado correctamente")
                     hideProgressDialog()
                     MessageDialogFragment.newInstance(message = "", title = R.string.end_sync,icon = R.drawable.ic_checkin).show(childFragmentManager, "dialog")
                 }
@@ -234,19 +243,18 @@ class InitFragment : BaseFragment() {
             failure(failure, ::handleFailure)
         }
         //Seleccionando empresa
-        //if(selector) showSelector()
         initViewModel.getPVDesc()
         initViewModel.getLogoCompany()
         initViewModel.getIdUser()
         initViewModel.getUserName()
         initViewModel.getCheckMode()
         initViewModel.getPvIdFirstTime()
-        //initViewModel.getIdCompany()
-        initViewModel.getIdCompanyPreferences().let {
+        initViewModel.getIdCompany()
+        /*initViewModel.getIdCompanyPreferences().let {
             if(it.isEmpty()) {
                 showSelector()
             }
-        }
+        }*/
 
         binding.btCheckIn.setOnClickListener{
             if(isLocationEnabled()){
@@ -297,6 +305,11 @@ class InitFragment : BaseFragment() {
             initViewModel.clearCountNotify()
             showMessagesDialog()
         }
+        binding.viewBtnTasks.setOnClickListener {
+            findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationTasks())
+        }
+
+
         initNotify()
         initViewModel.getCountNotify()
         return binding.root

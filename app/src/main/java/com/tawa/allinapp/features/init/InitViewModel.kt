@@ -255,7 +255,6 @@ class InitViewModel
         }
     }
     fun setCheckOut(idUser:String,pv:String,lat:String,long:String) {
-        _startSetCheckIn.value = false
         setCheckIn(SetCheckIn.Params(0,pv,idUser,Calendar.getInstance().toInstant().toString(),lat,long,"CHECKOUT","no enviado")) {
             it.either(::handleFailure, ::handleCheckOut)
         }
@@ -279,9 +278,7 @@ class InitViewModel
 
     fun getUserName() = getUserName(UseCase.None()) { it.either(::handleFailure, ::handleGetUserName) }
 
-    fun setIdCompany(idCompany:String,image:String) = setIdCompany(SetIdCompany.Params(idCompany,image)) {
-        it.either(::handleFailure, ::handleSetIdCompany) }
-
+    fun setIdCompany(idCompany:String,image:String) = setIdCompany(SetIdCompany.Params(idCompany,image)) { it.either(::handleFailure, ::handleSetIdCompany) }
 
     fun deletePvId() = deletePv(UseCase.None()){ it.either(::handleFailure, ::handleDeletePvId) }
 
@@ -295,17 +292,14 @@ class InitViewModel
 
     fun getIdPV() = getIdPV(UseCase.None()) { it.either(::handleFailure, ::handlePVId) }
 
-
     fun getCompanies() = getCompanies(UseCase.None()) { it.either(::handleFailure, ::handleCompanyList) }
 
-    fun getReportsRemote(company: String) = getReportsRemote(GetReportsRemote.Params(company)) {
-        it.either(::handleFailure, ::handleReportsRemote)
-    }
+    fun getReportsRemote(company: String) = getReportsRemote(GetReportsRemote.Params(company)) { it.either(::handleFailure, ::handleReportsRemote) }
+
     private fun handleReportsRemote(success: Boolean) { this._successGetReports.value = success }
 
-    fun getQuestionsRemote(idReport: String) = getQuestionsRemote(GetQuestionsRemote.Params(idReport)) {
-        it.either(::handleFailure, ::handleQuestionsRemote)
-    }
+    fun getQuestionsRemote(idReport: String) = getQuestionsRemote(GetQuestionsRemote.Params(idReport)) { it.either(::handleFailure, ::handleQuestionsRemote) }
+
     private fun handleQuestionsRemote(success: Boolean) { this._successGetQuestions.value = success }
 
     fun getPv(company:String) = getPV(GetPV.Params(company)) { it.either(::handleFailure, ::handlePvList) }
@@ -316,15 +310,13 @@ class InitViewModel
 
     fun updateStatus(latitude:String,longitude:String,battery:String,type:Int) = updateStatus(UpdateStatus.Params(latitude,longitude,battery)) {
         _type.value  = type
+        _successCheckIn.value = false
+        _successCheckOut.value = false
         it.either(::handleFailure, ::handleUpdateStatus) }
 
-    fun getReportsSku(company: String) = getReportsSku(GetReportsSku.Params(company)) {
-        it.either(::handleFailure, ::handleReportsSku)
-    }
+    fun getReportsSku(company: String) = getReportsSku(GetReportsSku.Params(company)) { it.either(::handleFailure, ::handleReportsSku) }
 
-    fun syncCheck(latitude: String,longitude: String) = syncCheck(SyncCheck.Params(latitude,longitude)) {
-        it.either(::handleFailure, ::handleSyncCheck)
-    }
+    fun syncCheck(latitude: String,longitude: String) = syncCheck(SyncCheck.Params(latitude,longitude)) { it.either(::handleFailure, ::handleSyncCheck) }
 
     fun syncPhotoReportMassive(latitude: String,longitude: String) = syncPhotoReports(SyncPhotoReports.Params(latitude,longitude)) { it.either(::handleFailure, ::handleSyncPhotoReport) }
 
@@ -332,18 +324,14 @@ class InitViewModel
 
     private fun handleSyncCheck(success:Boolean) { this._successSyncChecks.value = success }
 
-    private fun handlePVDesc(checkIn:String) {
-        this._pvDesc.value = checkIn
-    }
-    private fun handleDescPV(checkIn:String) {
-        this._descPV.value = checkIn
-    }
-    private fun handlePVId(checkIn:String) {
-        this._pvId.value = checkIn
-    }
-    private fun handleIdPV(checkIn:String) {
-        this._idPV.value = checkIn
-    }
+    private fun handlePVDesc(checkIn:String) { this._pvDesc.value = checkIn }
+
+    private fun handleDescPV(checkIn:String) { this._descPV.value = checkIn }
+
+    private fun handlePVId(checkIn:String) { this._pvId.value = checkIn }
+
+    private fun handleIdPV(checkIn:String) { this._idPV.value = checkIn }
+
     private fun handleCheckIn(success: Boolean) { this._successCheckIn.value = success }
 
     private fun handleCheckOut(success: Boolean) { this._successCheckOut.value = success }
@@ -377,7 +365,6 @@ class InitViewModel
     fun syncSkuMassive(latitude: String,longitude: String) = syncSkuMassive(SyncSkuMassive.Params(latitude,longitude)) { it.either(::handleFailure, ::handleSyncSku) }
 
     private fun handleSyncSku(success:Boolean) { this._successSyncSku.value = success }
-
 
     private fun handleGetAudioRemote(success:Boolean) { this._successGetAudioRemote.value = success }
 
@@ -441,4 +428,13 @@ class InitViewModel
 
     fun changeStatePv(value: String){ this._pvId.value = value }
 
+    fun changeStateSuccessCompanyId(value:String){ this._successGetCompanyId.value = value }
+
+    fun changeStateSuccessCheckIn(value: Boolean){ this._successCheckIn.value = value}
+
+    fun changeSuccessUpdate(value: Boolean) {this._successUpdate.value = value}
+
+    fun changeStateSuccessCheckout(value:Boolean) {this._successCheckOut.value = value}
+
+    fun changeStatePvDesc(value:String) {this._pvDesc.value = value}
 }

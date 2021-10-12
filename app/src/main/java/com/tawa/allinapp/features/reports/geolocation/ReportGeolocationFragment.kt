@@ -34,8 +34,6 @@ class ReportGeolocationFragment : BaseFragment(), RecyclerUser.onClickButton{
     private var mDay: Int? = null
     private var mMonth: Int ? = null
     private var mYear: Int? = null
-    companion object{
-    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -173,31 +171,15 @@ class ReportGeolocationFragment : BaseFragment(), RecyclerUser.onClickButton{
                     val dpd = DatePickerDialog(requireContext(),{ _, yearDP, monthDP, dayDP ->
                         if(dayDP < 10){
                             val zeroDay = "0$dayDP"
-                            et.setText(""+ zeroDay + "/" + getMonth(monthDP)+ "/"+ yearDP)
+                            et.setText(""+ zeroDay + "/" + getMonthByNumber(monthDP)+ "/"+ yearDP)
                         }else{
-                            et.setText(""+ dayDP + "/" + getMonth(monthDP)+ "/"+ yearDP)
+                            et.setText(""+ dayDP + "/" + getMonthByNumber(monthDP)+ "/"+ yearDP)
                         }
                     },year, month-1,day)
                     dpd.show()
                 }
             }
         }
-    }
-
-    private fun getMonth(monthYear: Int) = when(monthYear){
-        0 -> "01"
-        1 -> "02"
-        2 -> "03"
-        3 -> "04"
-        4 -> "05"
-        5 -> "06"
-        6 -> "07"
-        7 -> "08"
-        8 -> "09"
-        9 -> "10"
-        10 -> "11"
-        11 -> "12"
-        else  ->""
     }
 
     private fun showMapRoutesDialog(listRoutes:List<TrackingInform>){

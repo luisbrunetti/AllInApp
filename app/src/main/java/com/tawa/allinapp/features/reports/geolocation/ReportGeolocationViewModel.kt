@@ -16,7 +16,8 @@ import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
 
-class ReportGeolocationViewModel @Inject constructor(
+class ReportGeolocationViewModel
+@Inject constructor(
     private val getListUser: GetListUser,
     private val getRoutesFromListUsers: GetRoutesFromListUsers,
     private val getTrackingFromListUsers: GetTrackingFromListUsers

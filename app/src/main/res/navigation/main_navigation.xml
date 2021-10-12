@@ -33,6 +33,9 @@
             app:destination="@id/navigation_pdv" >
 
         </action>
+        <action
+            android:id="@+id/action_navigation_init_to_navigation_tasks"
+            app:destination="@id/navigation_tasks" />
     </fragment>
 
     <fragment
@@ -188,6 +191,14 @@
 
 
     </fragment>
+
+    <fragment
+        android:id="@+id/navigation_tasks"
+        android:name="com.tawa.allinapp.features.task.ui.TaskFragment"
+        android:label="task_fragment"
+        tools:layout="@layout/fragment_task">
+    </fragment>
+
     <fragment
         android:id="@+id/reportGeolocationFragment"
         android:name="com.tawa.allinapp.features.reports.geolocation.ReportGeolocationFragment"

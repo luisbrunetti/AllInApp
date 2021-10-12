@@ -1,0 +1,68 @@
+package com.tawa.allinapp.features.task.ui
+
+import android.annotation.SuppressLint
+import android.app.DatePickerDialog
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.EditText
+import com.tawa.allinapp.R
+import com.tawa.allinapp.core.platform.BaseFragment
+import com.tawa.allinapp.databinding.FragmentTaskBinding
+
+
+class TaskFragment : BaseFragment() {
+
+    private lateinit var binding: FragmentTaskBinding
+
+
+    private var mDay: Int? = null
+    private var mMonth: Int ? = null
+    private var mYear: Int? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        appComponent.inject(this)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        checkPermissions()
+
+
+        binding.edDateTask.setOnClickListener {
+            getCurrentDay(binding.edDateTask)
+        }
+
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = FragmentTaskBinding.inflate(inflater)
+
+        return binding.root
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun getCurrentDay(et: EditText){
+        mDay?.let { day->
+            mMonth?.let { month ->
+                mYear?.let { year ->
+                    val dpd = DatePickerDialog(requireContext(),{ _, yearDP, monthDP, dayDP ->
+                        if(dayDP < 10){
+                            val zeroDay = "0$dayDP"
+                            et.setText(""+ zeroDay + "/" + getMonthByNumber(monthDP)+ "/"+ yearDP)
+                        }else{
+                            et.setText(""+ dayDP + "/" + getMonthByNumber(monthDP)+ "/"+ yearDP)
+                        }
+                    },year, month-1,day)
+                    dpd.show()
+                }
+            }
+        }
+    }
+}

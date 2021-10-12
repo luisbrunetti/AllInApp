@@ -14,5 +14,4 @@ data class Report(
     val state:String = "No Iniciado",
     val type:String,
     val idPv: String
-
 )

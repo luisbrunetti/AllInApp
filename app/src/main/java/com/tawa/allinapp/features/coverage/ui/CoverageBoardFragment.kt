@@ -28,6 +28,7 @@ import com.tawa.allinapp.R
 import com.tawa.allinapp.core.extensions.observe
 import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.platform.BaseFragment
+import com.tawa.allinapp.features.coverage.CoverageViewModel
 import com.tawa.allinapp.features.coverage.composables.DateFilter
 import com.tawa.allinapp.features.coverage.composables.ExpandableCard
 import com.tawa.allinapp.features.coverage.composables.ExpandableCardChain
@@ -124,7 +125,10 @@ class CoverageBoardFragment : BaseFragment() {
                         }.map { it.id?:""}
                         coverageViewModel.getChains(selectedChannel?: emptyList(),selectedRetail?: emptyList())
                     }
-                    else coverageViewModel.getChains(emptyList(),selectedRetail?: emptyList())
+                    else {
+                        selectedChannel = listOf()
+                        coverageViewModel.getChains(emptyList(),selectedRetail?: emptyList())
+                    }
                 }
             }
             retails?.let { r ->
@@ -134,7 +138,6 @@ class CoverageBoardFragment : BaseFragment() {
                         it.description?:""
                     }
                 ){ list ->
-                    //Log.d("retails",list[0].toString())
                     if(list.isNotEmpty()){
                         selectedRetail = r.filter { c ->
                             c.description == list.find {
@@ -143,7 +146,10 @@ class CoverageBoardFragment : BaseFragment() {
                         }.map { it.id?:"" }
                         coverageViewModel.getChains(selectedChannel?: emptyList(),selectedRetail?: emptyList())
                     }
-                    else coverageViewModel.getChains(selectedChannel?: emptyList(),emptyList())
+                    else{
+                        selectedRetail = listOf()
+                        coverageViewModel.getChains(selectedChannel?: emptyList(),emptyList())
+                    }
                 }
             }
             ExpandableCardChain(
@@ -153,17 +159,13 @@ class CoverageBoardFragment : BaseFragment() {
                 mainCheckState,
                 mutableListChain
             ) { list ->
-                //Log.d("chainsSelected", list.toString())
                 selectedChain = listAllChains.filter { chain ->
                     chain.description == list.find { desc -> desc == chain.description }
-                }.map {
-                    it.id ?: ""
-                }
+                }.map { it.id ?: "" }
                 Log.d("selectedChain", selectedChain.toString())
             }
 
             userList?.let { u ->
-                //Log.d("userList",u[0].toString())
                 ExpandableCard(
                     title = "Usuarios",
                     listElementsPrincipal = u.map { it.fullName?:"" }

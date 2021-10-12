@@ -377,6 +377,20 @@
                         app:layout_constraintTop_toBottomOf="@+id/imageView20"
                         app:layout_constraintVertical_bias="0.0" />
 
+                    <TextView
+                        android:id="@+id/tvTaskInitFragment"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="11dp"
+                        android:elevation="4dp"
+                        android:text="Tareas"
+                        android:textColor="@color/blue"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="@+id/viewBtnTasks"
+                        app:layout_constraintStart_toStartOf="@+id/viewBtnTasks"
+                        app:layout_constraintTop_toBottomOf="@+id/imageViewTasks" />
+
                     <ImageView
                         android:id="@+id/imageView6"
                         android:layout_width="wrap_content"
@@ -469,7 +483,16 @@
                         app:layout_constraintStart_toStartOf="@+id/viewBtnInforms"
                         app:layout_constraintTop_toTopOf="@+id/viewBtnInforms" />
 
-
+                    <ImageView
+                        android:id="@+id/imageViewTasks"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="26dp"
+                        android:elevation="5dp"
+                        android:src="@drawable/ic_task"
+                        app:layout_constraintEnd_toEndOf="@+id/viewBtnTasks"
+                        app:layout_constraintStart_toStartOf="@+id/viewBtnTasks"
+                        app:layout_constraintTop_toTopOf="@+id/viewBtnTasks" />
 
                     <View
                         android:id="@+id/viewBtnPV"
@@ -506,18 +529,19 @@
                         android:id="@+id/viewBtnRoutes"
                         android:layout_width="0dp"
                         android:layout_height="120dp"
-                        android:layout_marginStart="18dp"
+                        android:layout_marginStart="36dp"
                         android:layout_marginTop="16dp"
-                        android:layout_marginEnd="36dp"
+                        android:layout_marginEnd="18dp"
                         android:layout_marginBottom="10dp"
                         android:layout_weight="1"
                         android:background="@drawable/bg_button_white"
                         android:elevation="2dp"
                         android:visibility="gone"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/viewBtnMessages"
-                        app:layout_constraintTop_toBottomOf="@+id/btSync"
+                        app:layout_constraintEnd_toStartOf="@+id/viewBtnTasks"
+                        app:layout_constraintHorizontal_bias="0.9"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/viewBtnDocs"
                         app:layout_constraintVertical_bias="0.0" />
 
                     <View
@@ -559,17 +583,17 @@
                         android:layout_width="0dp"
                         android:layout_height="120dp"
                         android:layout_marginStart="18dp"
-                        android:layout_marginTop="16dp"
                         android:layout_marginEnd="36dp"
+                        android:layout_marginTop="16dp"
                         android:layout_weight="1"
                         android:background="@drawable/bg_button_white"
                         android:elevation="2dp"
                         android:visibility="gone"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="1.0"
+                        app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toEndOf="@+id/viewBtnMessages"
-                        app:layout_constraintTop_toBottomOf="@+id/viewBtnRoutes"
+                        app:layout_constraintTop_toBottomOf="@+id/viewBtnTasks"
                         app:layout_constraintVertical_bias="0.0" />
 
                     <View
@@ -586,7 +610,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@+id/btSync"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/viewBtnInforms"
+                        app:layout_constraintTop_toBottomOf="@+id/viewBtnMessages"
                         app:layout_constraintVertical_bias="0.0" />
 
                     <View
@@ -607,6 +631,7 @@
                         app:layout_constraintTop_toBottomOf="@+id/viewBtnReports"
                         app:layout_constraintVertical_bias="0.0" />
 
+
                     <View
                         android:id="@+id/viewBtnInforms"
                         android:layout_width="0dp"
@@ -615,15 +640,31 @@
                         android:layout_marginTop="16dp"
                         android:layout_marginEnd="18dp"
                         android:layout_marginBottom="10dp"
-                        android:layout_weight="1"
                         android:background="@drawable/bg_button_white"
                         android:elevation="2dp"
                         android:visibility="gone"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/btSync"
-                        app:layout_constraintHorizontal_bias="1.0"
+                        app:layout_constraintEnd_toStartOf="@+id/viewBtnCalendar"
+                        app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/viewBtnMessages"
+                        app:layout_constraintTop_toBottomOf="@+id/viewBtnRoutes"
+                        app:layout_constraintVertical_bias="0.058" />
+
+                    <View
+                        android:id="@+id/viewBtnTasks"
+                        android:layout_width="166dp"
+                        android:layout_height="120dp"
+                        android:layout_marginStart="18dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="36dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_button_white"
+                        android:elevation="2dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/viewBtnDocs"
+                        app:layout_constraintTop_toBottomOf="@+id/btSync"
                         app:layout_constraintVertical_bias="0.0" />
 
                     <TextView

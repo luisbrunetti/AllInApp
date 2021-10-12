@@ -26,6 +26,7 @@ import com.tawa.allinapp.features.reports.userstatus.UserStatusFragment
 import com.tawa.allinapp.features.routes.RoutesFragment
 import com.tawa.allinapp.features.splash.SplashActivity
 import com.tawa.allinapp.features.splash.SplashFragment
+import com.tawa.allinapp.features.task.ui.TaskFragment
 import dagger.Component
 import javax.inject.Singleton
 
@@ -60,5 +61,6 @@ interface ApplicationComponent{
     fun inject(pdvFragment: PdvFragment)
     fun inject(reportGeolocationFragment: ReportGeolocationFragment)
     fun inject(messagesDialogFragment: MessagesDialogFragment)
+    fun inject(taskFragment: TaskFragment)
 
 }

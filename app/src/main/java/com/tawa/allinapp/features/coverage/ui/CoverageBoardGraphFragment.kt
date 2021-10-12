@@ -32,6 +32,7 @@ import androidx.navigation.fragment.findNavController
 import com.tawa.allinapp.R
 import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.platform.BaseFragment
+import com.tawa.allinapp.features.coverage.CoverageViewModel
 import com.tawa.allinapp.features.coverage.composables.HeaderPage
 import com.tawa.allinapp.features.coverage.composables.StatusCard
 import com.tawa.allinapp.features.coverage.composables.UserCount

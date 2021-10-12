@@ -83,7 +83,7 @@
         <entry key="..\:/Users/luisb/OneDrive/Documents/AndroidStudio/tawa-android/app/src/main/res/drawable/ic_information.xml" value="0.22135416666666666" />
         <entry key="..\:/Users/luisb/OneDrive/Documents/AndroidStudio/tawa-android/app/src/main/res/drawable/ic_informs.xml" value="0.22135416666666666" />
         <entry key="..\:/Users/luisb/OneDrive/Documents/AndroidStudio/tawa-android/app/src/main/res/drawable/ic_informs_home.xml" value="0.22135416666666666" />
-        <entry key="..\:/Users/luisb/OneDrive/Documents/AndroidStudio/tawa-android/app/src/main/res/drawable/ic_informsicon.xml" value="0.25" />
+        <entry key="..\:/Users/luisb/OneDrive/Documents/AndroidStudio/tawa-android/app/src/main/res/drawable/ic_informsicon.xml" value="0.33" />
         <entry key="..\:/Users/luisb/OneDrive/Documents/AndroidStudio/tawa-android/app/src/main/res/drawable/ic_informsicon_resize.xml" value="0.25" />
         <entry key="..\:/Users/luisb/OneDrive/Documents/AndroidStudio/tawa-android/app/src/main/res/drawable/ic_inprocess.xml" value="0.25" />
         <entry key="..\:/Users/luisb/OneDrive/Documents/AndroidStudio/tawa-android/app/src/main/res/drawable/ic_launcher_background.xml" value="0.25" />
@@ -109,7 +109,9 @@
         <entry key="..\:/Users/luisb/OneDrive/Documents/AndroidStudio/tawa-android/app/src/main/res/drawable/ic_send_password.xml" value="0.22135416666666666" />
         <entry key="..\:/Users/luisb/OneDrive/Documents/AndroidStudio/tawa-android/app/src/main/res/drawable/ic_sended.xml" value="0.22135416666666666" />
         <entry key="..\:/Users/luisb/OneDrive/Documents/AndroidStudio/tawa-android/app/src/main/res/drawable/ic_status.xml" value="0.22135416666666666" />
+        <entry key="..\:/Users/luisb/OneDrive/Documents/AndroidStudio/tawa-android/app/src/main/res/drawable/ic_task.xml" value="0.3151041666666667" />
         <entry key="..\:/Users/luisb/OneDrive/Documents/AndroidStudio/tawa-android/app/src/main/res/drawable/ic_warning.xml" value="0.22135416666666666" />
+        <entry key="..\:/Users/luisb/OneDrive/Documents/AndroidStudio/tawa-android/app/src/main/res/drawable/iv_task.xml" value="0.3828125" />
         <entry key="..\:/Users/luisb/OneDrive/Documents/AndroidStudio/tawa-android/app/src/main/res/drawable/rounded.xml" value="0.25625" />
         <entry key="..\:/Users/luisb/OneDrive/Documents/AndroidStudio/tawa-android/app/src/main/res/drawable/roundedlinear.xml" value="0.22135416666666666" />
         <entry key="..\:/Users/luisb/OneDrive/Documents/AndroidStudio/tawa-android/app/src/main/res/drawable/spinner_emp.xml" value="0.22135416666666666" />
@@ -129,7 +131,7 @@
         <entry key="..\:/Users/luisb/OneDrive/Documents/AndroidStudio/tawa-android/app/src/main/res/layout/fragment_info_geolocation_dialog.xml" value="0.33" />
         <entry key="..\:/Users/luisb/OneDrive/Documents/AndroidStudio/tawa-android/app/src/main/res/layout/fragment_inform_routes_map_dialog.xml" value="0.2390625" />
         <entry key="..\:/Users/luisb/OneDrive/Documents/AndroidStudio/tawa-android/app/src/main/res/layout/fragment_informs.xml" value="0.36666666666666664" />
-        <entry key="..\:/Users/luisb/OneDrive/Documents/AndroidStudio/tawa-android/app/src/main/res/layout/fragment_init.xml" value="0.33" />
+        <entry key="..\:/Users/luisb/OneDrive/Documents/AndroidStudio/tawa-android/app/src/main/res/layout/fragment_init.xml" value="0.25" />
         <entry key="..\:/Users/luisb/OneDrive/Documents/AndroidStudio/tawa-android/app/src/main/res/layout/fragment_login.xml" value="0.29010416666666666" />
         <entry key="..\:/Users/luisb/OneDrive/Documents/AndroidStudio/tawa-android/app/src/main/res/layout/fragment_movies.xml" value="0.24895833333333334" />
         <entry key="..\:/Users/luisb/OneDrive/Documents/AndroidStudio/tawa-android/app/src/main/res/layout/fragment_pdv.xml" value="0.33" />
@@ -139,9 +141,11 @@
         <entry key="..\:/Users/luisb/OneDrive/Documents/AndroidStudio/tawa-android/app/src/main/res/layout/fragment_routes.xml" value="0.24895833333333334" />
         <entry key="..\:/Users/luisb/OneDrive/Documents/AndroidStudio/tawa-android/app/src/main/res/layout/fragment_send_password.xml" value="0.15260416666666668" />
         <entry key="..\:/Users/luisb/OneDrive/Documents/AndroidStudio/tawa-android/app/src/main/res/layout/fragment_sku.xml" value="0.25" />
+        <entry key="..\:/Users/luisb/OneDrive/Documents/AndroidStudio/tawa-android/app/src/main/res/layout/fragment_task.xml" value="0.3374094202898551" />
         <entry key="..\:/Users/luisb/OneDrive/Documents/AndroidStudio/tawa-android/app/src/main/res/layout/fragment_user_status.xml" value="0.4023746701846966" />
         <entry key="..\:/Users/luisb/OneDrive/Documents/AndroidStudio/tawa-android/app/src/main/res/layout/header_report.xml" value="0.27239583333333334" />
         <entry key="..\:/Users/luisb/OneDrive/Documents/AndroidStudio/tawa-android/app/src/main/res/layout/info_adapter_geolocation.xml" value="0.33" />
+        <entry key="..\:/Users/luisb/OneDrive/Documents/AndroidStudio/tawa-android/app/src/main/res/layout/info_adapter_pv_geolocation.xml" value="0.20652173913043478" />
         <entry key="..\:/Users/luisb/OneDrive/Documents/AndroidStudio/tawa-android/app/src/main/res/layout/row_movie.xml" value="0.24895833333333334" />
         <entry key="..\:/Users/luisb/OneDrive/Documents/AndroidStudio/tawa-android/app/src/main/res/layout/row_picture.xml" value="0.246875" />
         <entry key="..\:/Users/luisb/OneDrive/Documents/AndroidStudio/tawa-android/app/src/main/res/layout/row_report.xml" value="0.67" />
