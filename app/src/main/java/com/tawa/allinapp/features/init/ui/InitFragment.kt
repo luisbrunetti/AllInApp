@@ -272,9 +272,7 @@ class InitFragment : BaseFragment() {
                     //initViewModel.setPv("","","")
                     showLogin(context)
                 }
-                override fun onSendPassword() {
-                    findNavController().navigate(InitFragmentDirections.actionNavigationInitToSendPasswordFragment())
-                }
+
             }
             frag.show(childFragmentManager, "participant")
         }
