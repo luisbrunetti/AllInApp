@@ -44,7 +44,6 @@ class LoginFragment : BaseFragment() {
             observe(successGetCompanies, { it?.let {
                 if(it) authViewModel.endLogin()
             }})
-
             observe(successEndLogin, { it?.let {
                 if (it) {
                     hideProgressDialog()
@@ -58,7 +57,6 @@ class LoginFragment : BaseFragment() {
                 authViewModel.validateFields()
             }})
             observe(successfulTranslate,{ it?.let {
-                Log.d("success", it.toString())
                 listLanguage = it
                 changeLanguage(binding.root)
                 hideProgressDialog()
@@ -74,7 +72,7 @@ class LoginFragment : BaseFragment() {
                 }
             }})
         }
-        //authViewModel.setSessionFirstTime()
+
         binding.cbRememberLoginFragment.setOnClickListener {
             authViewModel.setSession(binding.cbRememberLoginFragment.isChecked)
         }
@@ -85,10 +83,12 @@ class LoginFragment : BaseFragment() {
         binding.swLoginFragment.setOnCheckedChangeListener { compoundButton, b ->
             if (b) {
                 showProgressDialog()
+                CURRENT_LANGUAGE = ENGLISH
                 authViewModel.getTranslate(ENGLISH)
+                binding.swLoginFragment.text = "English"
             }else{
                 showProgressDialog()
-                //changeLanguage(Companion.SPANISH)
+                CURRENT_LANGUAGE = SPANISH
                 changeLanguage(binding.root)
                 authViewModel.setLanguage(SPANISH)
                 binding.swLoginFragment.text = "Español"
@@ -108,42 +108,4 @@ class LoginFragment : BaseFragment() {
         binding.lifecycleOwner = this
         binding.executePendingBindings()
     }
-
-    /*private fun changeLanguage(language:String){
-        for(element in listLanguage){
-            val resourceID = resources.getIdentifier(element.id,"id", requireContext().packageName)
-            when(element.view){
-                "TextView" -> {
-                    binding.root.findViewById<TextView>(resourceID)?.let {
-                        if(language == SPANISH) it.text = element.spanishText
-                        else if(language == ENGLISH) it.text = element.englishText
-                    }
-                }
-                "Button" -> {
-                    binding.root.findViewById<Button>(resourceID)?.let {
-                        if(language == SPANISH) it.text = element.spanishText
-                        else if(language == ENGLISH) it.text = element.englishText
-                    }
-                }
-                "TextInputLayout" ->{
-                    binding.root.findViewById<TextInputLayout>(resourceID)?.let {
-                        if(language == SPANISH){ it.hint = element.spanishText }
-                        else if(language == ENGLISH){ it.hint = element.englishText }
-                    }
-                }
-                "EditText" ->{
-                    binding.root.findViewById<EditText>(resourceID)?.let {
-                        if(language == SPANISH){ it.hint = element.spanishText }
-                        else if(language == ENGLISH){ it.hint = element.englishText }
-                    }
-                }
-                "CheckBox" -> {
-                    binding.root.findViewById<CheckBox>(resourceID)?.let {
-                        if(language == SPANISH) it.text = element.spanishText
-                        else if(language == ENGLISH) it.text = element.englishText
-                    }
-                }
-            }
-        }
-    }*/
 }

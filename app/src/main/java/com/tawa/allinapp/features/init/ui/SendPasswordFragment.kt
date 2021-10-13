@@ -1,6 +1,7 @@
 package com.tawa.allinapp.features.init.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -39,9 +40,11 @@ class SendPasswordFragment : BaseFragment() {
             observe(getLanguageSuccess,{
                 it?.let {
                     listLanguage = it
+                    changeLanguage(binding.root)
+                    Log.d("sendPasssword",it.toString())
                 }
             })
-            observe(getLanguagePref,{
+            observe(getLanguageSaved,{
                 it?.let {
                     if(it != SPANISH){
                         CURRENT_LANGUAGE = it
@@ -49,17 +52,12 @@ class SendPasswordFragment : BaseFragment() {
                     }
                 }
             })
-            observe(getLanguageSuccess,{
-                it?.let { list ->
-                    changeLanguage(binding.root)
-                }
-            })
             failure(failure,{
                 when(it)
                 {
                     is Failure.DefaultError -> {
                         binding.tvError.isVisible =true
-                        binding.contePassword.setBackgroundResource(R.drawable.error_border)
+                        binding.txtIptUserSendPassword.setBackgroundResource(R.drawable.error_border)
                     }
                     else -> ""
                 }
@@ -70,7 +68,7 @@ class SendPasswordFragment : BaseFragment() {
         }
         binding.btnSendPass.setOnClickListener {
             binding.tvError.isVisible =false
-            binding.contePassword.setBackgroundResource(R.drawable.selector)
+            binding.txtIptUserSendPassword.setBackgroundResource(R.drawable.selector)
             initViewModel.sendPassword(binding.edSendPass.text.toString())
         }
         binding.appbar.addOnOffsetChangedListener(object : AppBarLayout.OnOffsetChangedListener {

@@ -76,20 +76,13 @@ class AuthViewModel
             it.either(::handleFailure, ::handleLogin)
         }
     }
-    private fun handleLogin(success: Boolean) {
-        this._successLogin.value = success
-    }
+    private fun handleLogin(success: Boolean) { this._successLogin.value = success }
 
-    fun getCompaniesRemote() = getCompaniesRemote(UseCase.None()) {
-        it.either(::handleFailure, ::handleCompaniesRemote)
-    }
-    private fun handleCompaniesRemote(success: Boolean) {
-        this._successGetCompanies.value = success
-    }
+    fun getCompaniesRemote() = getCompaniesRemote(UseCase.None()) { it.either(::handleFailure, ::handleCompaniesRemote) }
 
-    private fun handlePVRemote(success: Boolean) {
-        this._successGetPV.value = success
-    }
+    private fun handleCompaniesRemote(success: Boolean) { this._successGetCompanies.value = success }
+
+    private fun handlePVRemote(success: Boolean) { this._successGetPV.value = success }
 
     fun getTranslate(language:String) { getTranslate(GetTranslate.Params(language)){ it.either(::handleFailure, ::handleGetTranslate) } }
 
@@ -103,8 +96,6 @@ class AuthViewModel
 
     fun endLogin(){ if(_successGetCompanies.value==true) _successEndLogin.value = true }
 
-    fun setSession(value: Boolean){
-        pref.session = value
-    }
+    fun setSession(value: Boolean){ pref.session = value }
 
 }

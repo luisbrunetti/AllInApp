@@ -315,50 +315,46 @@ abstract class BaseFragment : Fragment() {
     }
     var CURRENT_LANGUAGE: String = SPANISH
 
-    internal fun changeLanguage(view: View){
-        for(element in listLanguage){
-            val resourceID = resources.getIdentifier(element.id,"id", requireContext().packageName)
-            when(element.view){
+    internal fun changeLanguage(view: View) {
+        for (element in listLanguage) {
+            val resourceID = resources.getIdentifier(element.id, "id", requireContext().packageName)
+            when (element.view) {
                 "TextView" -> {
                     view.findViewById<TextView>(resourceID)?.let {
-                        if(CURRENT_LANGUAGE == SPANISH) it.text = element.spanishText
-                        else if(CURRENT_LANGUAGE == ENGLISH) it.text = element.englishText
+                        if (CURRENT_LANGUAGE == SPANISH) it.text = element.spanishText
+                        else if (CURRENT_LANGUAGE == ENGLISH) it.text = element.englishText
                     }
                 }
                 "Button" -> {
                     view.findViewById<Button>(resourceID)?.let {
-                        if(CURRENT_LANGUAGE == SPANISH) it.text = element.spanishText
-                        else if(CURRENT_LANGUAGE == ENGLISH) it.text = element.englishText
+                        if (CURRENT_LANGUAGE == SPANISH) it.text = element.spanishText
+                        else if (CURRENT_LANGUAGE == ENGLISH) it.text = element.englishText
                     }
                 }
-                "TextInputLayout" ->{
+                "TextInputLayout" -> {
                     view.findViewById<TextInputLayout>(resourceID)?.let {
-                        if(CURRENT_LANGUAGE == SPANISH){
-                            it.hint = element.spanishText
-                        }
-                        else if(CURRENT_LANGUAGE == ENGLISH){
-                            it.hint = element.englishText
-                        }
+                        if (CURRENT_LANGUAGE == SPANISH) it.hint = element.spanishText
+                        else if (CURRENT_LANGUAGE == ENGLISH) it.hint = element.englishText
                     }
                 }
-                "EditText" ->{
+                "EditText" -> {
                     view.findViewById<EditText>(resourceID)?.let {
-                        if(CURRENT_LANGUAGE == SPANISH){
-                            it.hint = element.spanishText
-                        }
-                        else if(CURRENT_LANGUAGE == ENGLISH){
-                            it.hint = element.englishText
+                        if (element.type == "Hint") {
+                            if (CURRENT_LANGUAGE == SPANISH) it.hint = element.spanishText
+                            else if (CURRENT_LANGUAGE == ENGLISH) it.hint = element.englishText
+                        } else if (element.type == "Text") {
+                            if (CURRENT_LANGUAGE == SPANISH) it.setText(element.spanishText)
+                            else if (CURRENT_LANGUAGE == ENGLISH) it.setText(element.englishText)
                         }
                     }
                 }
                 "CheckBox" -> {
                     view.findViewById<CheckBox>(resourceID)?.let {
-                        if(CURRENT_LANGUAGE == SPANISH) it.text = element.spanishText
-                        else if(CURRENT_LANGUAGE == ENGLISH) it.text = element.englishText
+                        if (CURRENT_LANGUAGE == SPANISH) it.text = element.spanishText
+                        else if (CURRENT_LANGUAGE == ENGLISH) it.text = element.englishText
                     }
                 }
             }
         }
     }
-
 }

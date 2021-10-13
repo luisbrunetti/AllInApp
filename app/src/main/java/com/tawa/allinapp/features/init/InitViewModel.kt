@@ -241,8 +241,8 @@ class InitViewModel
     private val _getLanguageSuccess = MutableLiveData<List<Language>>()
     val getLanguageSuccess : LiveData<List<Language>> get() = _getLanguageSuccess
 
-    private var _getLanguagePref = MutableLiveData<String>()
-    var getLanguagePref : LiveData<String> = _getLanguagePref
+    private var _getLanguageSaved = MutableLiveData<String>()
+    var getLanguageSaved : LiveData<String> = _getLanguageSaved
 
     init {
         startHome()
@@ -433,7 +433,7 @@ class InitViewModel
     fun getLanguage()= getLanguage(UseCase.None()){ it.either(::handleFailure, ::handleSuccessGetLanguage)}
 
     fun handleSuccessGetLanguage(value: String){
-        this._getLanguagePref.value = value
+        this._getLanguageSaved.value = value
     }
 
     fun changeCheckState(value:String){ this._successSendCheck.value = value }
