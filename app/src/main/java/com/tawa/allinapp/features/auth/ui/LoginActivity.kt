@@ -1,5 +1,6 @@
 package com.tawa.allinapp.features.auth.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
 import android.widget.Toast
@@ -10,6 +11,7 @@ import com.tawa.allinapp.BuildConfig
 import com.tawa.allinapp.R
 import com.tawa.allinapp.core.di.ApplicationComponent
 import com.tawa.allinapp.databinding.ActivityLoginBinding
+import com.tawa.allinapp.features.HomeActivity
 
 class LoginActivity : AppCompatActivity() {
 
@@ -35,6 +37,8 @@ class LoginActivity : AppCompatActivity() {
         supportActionBar?.hide()
         setContentView(binding.root)
         findNavController(R.id.nav_host_auth_home)
+        //val intent = Intent(this,HomeActivity::class.java)
+        //startActivity(intent)
     }
 
     private fun devMod():Int{

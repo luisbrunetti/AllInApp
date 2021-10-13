@@ -15,7 +15,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-
         <ScrollView
             android:id="@+id/scrollView3"
             android:layout_width="match_parent"
@@ -33,7 +32,15 @@
                 android:layout_height="match_parent"
 
                 android:orientation="vertical">
-
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/swLoginFragment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Español"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/imageView"
+                    app:layout_constraintHorizontal_bias="0.9"/>
                 <ImageView
                     android:id="@+id/imageView"
                     android:layout_width="0dp"
@@ -79,8 +86,9 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
                     android:background="@drawable/selector"
-                    android:paddingTop="3dp"
+
                     android:paddingBottom="3dp"
+                    android:hint="Usuario"
                     app:bgError="@{viewModel.errorEdits}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -95,7 +103,6 @@
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
                         android:background="@null"
-                        android:hint="Usuario"
                         android:text="@={viewModel.username}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -109,6 +116,7 @@
                     android:background="@drawable/selector"
                     android:paddingTop="3dp"
                     android:paddingBottom="3dp"
+                    android:hint="Contraseña"
                     app:bgError="@{viewModel.errorEdits}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -126,7 +134,6 @@
                         android:layout_marginEnd="16dp"
                         android:background="@null"
                         android:fontFamily="monospace"
-                        android:hint="Contraseña"
                         android:inputType="textPassword"
                         android:text="@={viewModel.password}"
                         android:textStyle="normal"

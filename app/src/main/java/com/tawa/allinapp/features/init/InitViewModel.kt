@@ -1,6 +1,5 @@
 package com.tawa.allinapp.features.init
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.tawa.allinapp.core.interactor.UseCase
@@ -8,10 +7,7 @@ import com.tawa.allinapp.core.platform.BaseViewModel
 import com.tawa.allinapp.data.local.Prefs
 import com.tawa.allinapp.features.init.usecase.*
 import com.tawa.allinapp.features.reports.GetReportsRemote
-import com.tawa.allinapp.models.Company
-import com.tawa.allinapp.models.Notify
-import com.tawa.allinapp.models.Report
-import com.tawa.allinapp.models.Schedule
+import com.tawa.allinapp.models.*
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
 import java.util.*
@@ -44,7 +40,6 @@ class InitViewModel
     private val syncStandardReportsMassive: SyncStandardReportsMassive,
     private val syncSkuMassive: SyncSkuMassive,
     private val syncAudio: SyncAudio,
-    private val getAudioRemote: GetAudioRemote,
     private val listReports: ListReports,
     private val sendPassword: SendPassword,
     private val getPdvRemote: GetPdvRemote,
@@ -53,8 +48,9 @@ class InitViewModel
     private val updateCountNotify: UpdateCountNotify,
     private val getCountNotify: GetCountNotify,
     private val clearNotify: ClearNotify,
-    private val getNotify: GetNotify
-
+    private val getNotify: GetNotify,
+    private val getLanguageByXml: GetLanguageByXml,
+    private val getLanguage: GetLanguage
 ) : BaseViewModel()  {
     private  val formatter: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
     var timestamp: Timestamp = Timestamp(System.currentTimeMillis())
@@ -242,6 +238,12 @@ class InitViewModel
     private val _setSession = MutableLiveData<Boolean>()
     val setSessionLiveData : LiveData<Boolean> get() = _setSession
 
+    private val _getLanguageSuccess = MutableLiveData<List<Language>>()
+    val getLanguageSuccess : LiveData<List<Language>> get() = _getLanguageSuccess
+
+    private var _getLanguagePref = MutableLiveData<String>()
+    var getLanguagePref : LiveData<String> = _getLanguagePref
+
     init {
         startHome()
         startCheckIn()
@@ -423,6 +425,16 @@ class InitViewModel
     fun getPvIdFirstTime() = getIdPV(UseCase.None()) { it.either(::handleFailure, ::getPvId) }
 
     private fun getPvId(value : String){ _getPvIdf.value = value }
+
+    fun getLanguageByXml(xmlName:String){ getLanguageByXml(GetLanguageByXml.Params(xmlName)){ it.either(::handleFailure,::handleGetLanguage)}}
+
+    private fun handleGetLanguage(list : List<Language>){ this._getLanguageSuccess.value = list }
+
+    fun getLanguage()= getLanguage(UseCase.None()){ it.either(::handleFailure, ::handleSuccessGetLanguage)}
+
+    fun handleSuccessGetLanguage(value: String){
+        this._getLanguagePref.value = value
+    }
 
     fun changeCheckState(value:String){ this._successSendCheck.value = value }
 

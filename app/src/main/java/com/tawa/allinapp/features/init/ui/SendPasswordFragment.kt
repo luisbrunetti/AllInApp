@@ -6,9 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-import android.widget.Toast
 import androidx.core.view.isVisible
-import androidx.navigation.fragment.findNavController
 import com.google.android.material.appbar.AppBarLayout
 import com.tawa.allinapp.R
 import com.tawa.allinapp.core.extensions.failure
@@ -16,12 +14,9 @@ import com.tawa.allinapp.core.extensions.observe
 import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.functional.Failure
 import com.tawa.allinapp.core.platform.BaseFragment
-import com.tawa.allinapp.databinding.FragmentInformsBinding
 
-import com.tawa.allinapp.databinding.FragmentPdvBinding
 import com.tawa.allinapp.databinding.FragmentSendPasswordBinding
 import com.tawa.allinapp.features.init.InitViewModel
-import com.tawa.allinapp.features.reports.ReportsFragmentDirections
 
 class SendPasswordFragment : BaseFragment() {
 
@@ -38,10 +33,25 @@ class SendPasswordFragment : BaseFragment() {
         initViewModel = viewModel(viewModelFactory) {
             observe(successSendPassword, {
                 it?.let {
-                    if(it)
-                    {
-                        showConfirmSendPassword()
+                    if(it) { showConfirmSendPassword() }
+                }
+            })
+            observe(getLanguageSuccess,{
+                it?.let {
+                    listLanguage = it
+                }
+            })
+            observe(getLanguagePref,{
+                it?.let {
+                    if(it != SPANISH){
+                        CURRENT_LANGUAGE = it
+                        initViewModel.getLanguageByXml("fragment_send_password.xml")
                     }
+                }
+            })
+            observe(getLanguageSuccess,{
+                it?.let { list ->
+                    changeLanguage(binding.root)
                 }
             })
             failure(failure,{
@@ -87,6 +97,7 @@ class SendPasswordFragment : BaseFragment() {
                 }
             }
         })
+        initViewModel.getLanguage()
         return binding.root
     }
 

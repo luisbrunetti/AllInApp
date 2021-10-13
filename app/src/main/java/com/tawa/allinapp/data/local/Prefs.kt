@@ -24,8 +24,7 @@ class Prefs
         const val VERIFY_CHECKLIST = "verifyChecklist"
         const val LOGO_COMPANY = "logoCompany"
         const val COUNT_NOTIFY = "countNotify"
-
-
+        const val LANGUAGE = "SPANISH"
     }
 
     private val prefs  = context.getSharedPreferences(FILENAME, Context.MODE_PRIVATE)
@@ -89,11 +88,11 @@ class Prefs
         get() = prefs.getString(DATA_SKU,"")
         set(value) = prefs.edit().putString(DATA_SKU,value).apply()
 
-    fun removeCompanyId(){
-        prefs.edit().remove(COMPANY_ID).apply()
-    }
-
     var countNotify:Int
         get() = prefs.getInt(COUNT_NOTIFY,0)
         set(value) = prefs.edit().putInt(COUNT_NOTIFY,value).apply()
+
+    var language: String?
+        get() = prefs.getString(LANGUAGE,"")
+        set(value) = prefs.edit().putString(LANGUAGE,value).apply()
 }

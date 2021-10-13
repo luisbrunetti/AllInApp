@@ -14,7 +14,7 @@ import android.os.Bundle
 import android.os.Looper
 import android.util.Log
 import android.view.View
-import android.widget.Toast
+import android.widget.*
 import androidx.annotation.StringRes
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
@@ -24,6 +24,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.location.*
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.textfield.TextInputLayout
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
@@ -37,9 +38,11 @@ import com.tawa.allinapp.core.dialog.ProgressDialogFragment
 import com.tawa.allinapp.core.extensions.appContext
 import com.tawa.allinapp.core.extensions.viewContainer
 import com.tawa.allinapp.core.functional.Failure
+import com.tawa.allinapp.data.remote.entities.LanguageRemote
 import com.tawa.allinapp.features.HomeActivity
 import com.tawa.allinapp.features.auth.ui.LoginActivity
 import kotlinx.android.synthetic.main.toolbar.*
+import org.intellij.lang.annotations.Language
 import org.json.JSONObject
 import java.util.*
 import javax.inject.Inject
@@ -50,6 +53,8 @@ abstract class BaseFragment : Fragment() {
     private var progressDialog: ProgressDialogFragment? = null
 
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+    lateinit var listLanguage: List<com.tawa.allinapp.models.Language>
+
     var latitude :String= ""
     var longitude :String= ""
 
@@ -301,6 +306,58 @@ abstract class BaseFragment : Fragment() {
             snackBar.setAction(actionText) { _ -> action.invoke() }
             snackBar.setActionTextColor(ContextCompat.getColor(appContext, R.color.colorTextPrimary))
             snackBar.show()
+        }
+    }
+
+    companion object {
+        const val SPANISH : String = "SPANISH"
+        const val ENGLISH : String = "ENGLISH"
+    }
+    var CURRENT_LANGUAGE: String = SPANISH
+
+    internal fun changeLanguage(view: View){
+        for(element in listLanguage){
+            val resourceID = resources.getIdentifier(element.id,"id", requireContext().packageName)
+            when(element.view){
+                "TextView" -> {
+                    view.findViewById<TextView>(resourceID)?.let {
+                        if(CURRENT_LANGUAGE == SPANISH) it.text = element.spanishText
+                        else if(CURRENT_LANGUAGE == ENGLISH) it.text = element.englishText
+                    }
+                }
+                "Button" -> {
+                    view.findViewById<Button>(resourceID)?.let {
+                        if(CURRENT_LANGUAGE == SPANISH) it.text = element.spanishText
+                        else if(CURRENT_LANGUAGE == ENGLISH) it.text = element.englishText
+                    }
+                }
+                "TextInputLayout" ->{
+                    view.findViewById<TextInputLayout>(resourceID)?.let {
+                        if(CURRENT_LANGUAGE == SPANISH){
+                            it.hint = element.spanishText
+                        }
+                        else if(CURRENT_LANGUAGE == ENGLISH){
+                            it.hint = element.englishText
+                        }
+                    }
+                }
+                "EditText" ->{
+                    view.findViewById<EditText>(resourceID)?.let {
+                        if(CURRENT_LANGUAGE == SPANISH){
+                            it.hint = element.spanishText
+                        }
+                        else if(CURRENT_LANGUAGE == ENGLISH){
+                            it.hint = element.englishText
+                        }
+                    }
+                }
+                "CheckBox" -> {
+                    view.findViewById<CheckBox>(resourceID)?.let {
+                        if(CURRENT_LANGUAGE == SPANISH) it.text = element.spanishText
+                        else if(CURRENT_LANGUAGE == ENGLISH) it.text = element.englishText
+                    }
+                }
+            }
         }
     }
 
