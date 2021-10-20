@@ -7,6 +7,7 @@ import com.tawa.allinapp.features.calendar.CalendarViewModel
 import com.tawa.allinapp.features.coverage.CoverageViewModel
 import com.tawa.allinapp.features.informs.InformsViewModel
 import com.tawa.allinapp.features.init.InitViewModel
+import com.tawa.allinapp.features.messages.MessagesViewModel
 import com.tawa.allinapp.features.movies.MoviesViewModel
 import com.tawa.allinapp.features.pdv.PdvViewModel
 import com.tawa.allinapp.features.reports.audio.AudioViewModel
@@ -113,5 +114,9 @@ abstract class ViewModelModule {
     @ViewModelKey(TaskViewModel::class)
     abstract fun bindsTaskViewModel(taskViewModel: TaskViewModel): ViewModel
 
+    @Binds
+    @IntoMap
+    @ViewModelKey(MessagesViewModel::class)
+    abstract fun bindsMessagesViewModel(messagesViewModel: MessagesViewModel): ViewModel
 
 }

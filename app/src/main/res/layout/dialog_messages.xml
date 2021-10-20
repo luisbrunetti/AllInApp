@@ -34,13 +34,13 @@
         android:layout_height="40dp"
         android:layout_marginStart="18dp"
         app:layout_constraintBottom_toBottomOf="@+id/view4"
-        app:layout_constraintEnd_toStartOf="@id/view11"
+        app:layout_constraintEnd_toStartOf="@id/view21"
         app:layout_constraintStart_toEndOf="@+id/btnBackMessages"
         app:layout_constraintTop_toTopOf="@+id/view4"
         app:layout_constraintVertical_bias="1.0" />
 
     <TextView
-        android:id="@+id/textView11"
+        android:id="@+id/tvTabNotifyMessageFragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Notificaciones"
@@ -52,19 +52,19 @@
         app:layout_constraintTop_toTopOf="@+id/view10" />
 
     <TextView
-        android:id="@+id/textView43"
+        android:id="@+id/tvTapMsgMessageFragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Mensajes"
         android:textColor="@color/colorTextAll"
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/view15"
-        app:layout_constraintEnd_toEndOf="@+id/view11"
-        app:layout_constraintStart_toStartOf="@+id/view11"
-        app:layout_constraintTop_toTopOf="@+id/view11" />
+        app:layout_constraintEnd_toEndOf="@+id/view21"
+        app:layout_constraintStart_toStartOf="@+id/view21"
+        app:layout_constraintTop_toTopOf="@+id/view21" />
 
     <View
-        android:id="@+id/view11"
+        android:id="@+id/view21"
         android:layout_width="0dp"
         android:layout_height="40dp"
         app:layout_constraintBottom_toBottomOf="@+id/view4"
@@ -89,7 +89,7 @@
         android:layout_height="4dp"
         android:background="@drawable/bg_blue_button"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/view11"
+        app:layout_constraintBottom_toBottomOf="@+id/view21"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/view10" />
@@ -118,7 +118,7 @@
         app:layout_constraintVertical_bias="0.0" />
 
     <TextView
-        android:id="@+id/textView54"
+        android:id="@+id/tvCurrentDateNotificationFragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -131,7 +131,7 @@
         app:layout_constraintTop_toTopOf="@+id/view16" />
 
     <TextView
-        android:id="@+id/textView6"
+        android:id="@+id/tvYesterdayMessageFragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"

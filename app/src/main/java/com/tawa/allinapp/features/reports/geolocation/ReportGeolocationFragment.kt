@@ -15,6 +15,7 @@ import com.tawa.allinapp.core.extensions.observe
 import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.FragmentReportGeolocationBinding
+import com.tawa.allinapp.features.init.InitViewModel
 import com.tawa.allinapp.features.reports.geolocation.ui.RecyclerUser
 import com.tawa.allinapp.models.RoutesUser
 import com.tawa.allinapp.models.TrackingInform
@@ -27,13 +28,10 @@ class ReportGeolocationFragment : BaseFragment(), RecyclerUser.onClickButton{
 
     private lateinit var binding: FragmentReportGeolocationBinding
     private lateinit var reportGeoViewModel: ReportGeolocationViewModel
+    private lateinit var initViewModel: InitViewModel
     private var recyclerAdapter : RecyclerUser? = null
     private var listRecycleView: ArrayList<RoutesUser>? = null
     private var backupRecycleView: ArrayList<RoutesUser> ? = ArrayList()
-    //private var listView: ArrayList<String> = ArrayList()
-    private var mDay: Int? = null
-    private var mMonth: Int ? = null
-    private var mYear: Int? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -79,13 +77,34 @@ class ReportGeolocationFragment : BaseFragment(), RecyclerUser.onClickButton{
             })
         }
 
+        initViewModel = viewModel(viewModelFactory){
+            observe(getLanguageSaved,{
+                it?.let {
+                    if(it != BaseFragment.SPANISH){
+                        BaseFragment.CURRENT_LANGUAGE = it
+                        initViewModel.getLanguageByXml("fragment_report_geolocation.xml")
+                    }
+                }
+            })
+            observe(getLanguageSuccess,{
+                it?.let { list ->
+                    if(list.isNotEmpty()){
+                        listLanguage = it
+                        changeLanguage(binding.root)
+                    }
+                }
+            })
+        }
+
+        initViewModel.getLanguage()
+
         binding.edUserGeoLocation.setOnClickListener {
             if(binding.cvUsersReportLocation.visibility == View.VISIBLE) binding.cvUsersReportLocation.visibility = View.GONE
             else binding.cvUsersReportLocation.visibility = View.VISIBLE
         }
         //Binding
         binding.edDateGeoLocation.setOnClickListener {
-            getCurrentDay(binding.edDateGeoLocation)
+            openDatePicker(binding.edDateGeoLocation)
         }
         binding.btnSearchGeoLocation.setOnClickListener {
             val date = binding.btnSearchGeoLocation.text.toString()
@@ -102,16 +121,17 @@ class ReportGeolocationFragment : BaseFragment(), RecyclerUser.onClickButton{
                 }
             }
         }
-        val (day,month,year) = reportGeoViewModel.getCurrentDay()
-        this.mDay = day
-        this.mMonth = month + 1
-        this.mYear = year
-        val currentDate = SimpleDateFormat("dd/MM/yyyy", Locale("es", "ES")).format(Date())
+
+        //Obteniendo el dia en hoy en formato lat
+        updateCurrentDate()
+
         binding.clReportGeolocation.setOnClickListener {
             if (binding.cvUsersReportLocation.visibility == View.VISIBLE) binding.cvUsersReportLocation.visibility = View.GONE
             //binding.edUserRoutes.setText("")
         }
-        binding.edDateGeoLocation.setText(currentDate)
+
+        //Seteando la fecha de hoy
+        binding.edDateGeoLocation.setText(SimpleDateFormat("dd/MM/yyyy", Locale("es", "ES")).format(Date()))
         /*binding.edUserRoutes.addTextChangedListener( object: TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 binding.cvUsersReportLocation.visibility = View.VISIBLE
@@ -163,7 +183,7 @@ class ReportGeolocationFragment : BaseFragment(), RecyclerUser.onClickButton{
         recyclerAdapter?.filteredList(newList)
     }
 
-    private fun getCurrentDay(et:EditText){
+    private fun openDatePicker(et:EditText){
         //Log.d("log",(mDay.toString()+mMonth.toString()+mYear.toString()).toString())
         mDay?.let { day->
             mMonth?.let { month ->

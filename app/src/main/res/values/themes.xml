@@ -35,6 +35,10 @@
     <style name="SpinnerTheme" parent="android:Widget.Spinner">
         <item name="android:background">@drawable/bg_spinner</item>
     </style>
+    <style name="SwitchTheme" parent="ThemeOverlay.AppCompat.Light">
+        <item name="colorControlActivated">@color/colorPrimary</item>
+
+    </style>
     <style name="AppTheme.Translucent" parent="AppTheme">
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>

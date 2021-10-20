@@ -19,6 +19,7 @@ import com.tawa.allinapp.core.extensions.observe
 import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.FragmentUserStatusBinding
+import com.tawa.allinapp.features.init.InitViewModel
 import com.tawa.allinapp.models.ReportStatus
 import java.text.SimpleDateFormat
 import java.time.Instant
@@ -29,6 +30,7 @@ import kotlin.collections.ArrayList
 class UserStatusFragment : BaseFragment() {
 
     private lateinit var userStatusViewModel: UserStatusViewModel
+    private lateinit var initViewModel: InitViewModel
     private lateinit var binding: FragmentUserStatusBinding
     private var count = 0
     private var countLast = 0
@@ -74,6 +76,24 @@ class UserStatusFragment : BaseFragment() {
 
             } })
         }
+        initViewModel = viewModel(viewModelFactory){
+            observe(getLanguageSaved,{
+                it?.let {
+                    if(it != SPANISH){
+                        CURRENT_LANGUAGE = it
+                        initViewModel.getLanguageByXml("fragment_user_status.xml")
+                    }
+                }
+            })
+            observe(getLanguageSuccess,{
+                it?.let { list ->
+                    if(list.isNotEmpty()){
+                        listLanguage = it
+                        changeLanguage(binding.root)
+                    }
+                }
+            })
+        }
         binding.etDateUserStatus.setOnClickListener{
             getDay(binding.etDateUserStatus)
         }
@@ -111,6 +131,8 @@ class UserStatusFragment : BaseFragment() {
                 }
             }
         }
+        initViewModel.getLanguage()
+
         return binding.root
     }
 

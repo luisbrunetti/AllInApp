@@ -190,7 +190,7 @@
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="@+id/view8"
             app:layout_constraintTop_toTopOf="@+id/view8"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintVertical_bias="0.09" />
 
         <TextView
             android:id="@+id/tvCheckIn"
@@ -289,7 +289,7 @@
                         android:textColor="@color/blue"
                         android:textSize="16sp"
                         android:textStyle="bold"
-                        android:visibility="gone"
+                        android:visibility="visible"
                         app:layout_constraintBottom_toBottomOf="@+id/viewBtnRoutes"
                         app:layout_constraintEnd_toEndOf="@+id/viewBtnRoutes"
                         app:layout_constraintStart_toStartOf="@+id/viewBtnRoutes"
@@ -306,7 +306,7 @@
                         android:textColor="@color/blue"
                         android:textSize="16sp"
                         android:textStyle="bold"
-                        android:visibility="gone"
+                        android:visibility="visible"
                         app:layout_constraintEnd_toEndOf="@+id/viewBtnCalendar"
                         app:layout_constraintStart_toStartOf="@+id/viewBtnCalendar"
                         app:layout_constraintTop_toBottomOf="@+id/imageView9" />
@@ -353,7 +353,7 @@
                         android:textColor="@color/blue"
                         android:textSize="16sp"
                         android:textStyle="bold"
-                        android:visibility="gone"
+                        android:visibility="visible"
                         app:layout_constraintBottom_toBottomOf="@+id/viewBtnInforms"
                         app:layout_constraintEnd_toEndOf="@+id/viewBtnInforms"
                         app:layout_constraintStart_toStartOf="@+id/viewBtnInforms"
@@ -419,7 +419,7 @@
                         android:layout_marginTop="26dp"
                         android:elevation="4dp"
                         android:src="@drawable/ic_routes_home"
-                        android:visibility="gone"
+                        android:visibility="visible"
                         app:layout_constraintEnd_toEndOf="@+id/viewBtnRoutes"
                         app:layout_constraintHorizontal_bias="0.496"
                         app:layout_constraintStart_toStartOf="@+id/viewBtnRoutes"
@@ -432,7 +432,7 @@
                         android:layout_marginTop="26dp"
                         android:elevation="4dp"
                         android:src="@drawable/ic_calendar_home"
-                        android:visibility="gone"
+                        android:visibility="visible"
                         app:layout_constraintEnd_toEndOf="@+id/viewBtnCalendar"
                         app:layout_constraintStart_toStartOf="@+id/viewBtnCalendar"
                         app:layout_constraintTop_toTopOf="@+id/viewBtnCalendar" />
@@ -477,7 +477,7 @@
                         android:layout_marginTop="26dp"
                         android:elevation="4dp"
                         android:src="@drawable/ic_informs_home"
-                        android:visibility="gone"
+                        android:visibility="visible"
                         app:layout_constraintEnd_toEndOf="@+id/viewBtnInforms"
                         app:layout_constraintStart_toStartOf="@+id/viewBtnInforms"
                         app:layout_constraintTop_toTopOf="@+id/viewBtnInforms" />
@@ -535,7 +535,7 @@
                         android:layout_weight="1"
                         android:background="@drawable/bg_button_white"
                         android:elevation="2dp"
-                        android:visibility="gone"
+                        android:visibility="visible"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@+id/viewBtnTasks"
                         app:layout_constraintHorizontal_bias="0.9"
@@ -587,7 +587,7 @@
                         android:layout_weight="1"
                         android:background="@drawable/bg_button_white"
                         android:elevation="2dp"
-                        android:visibility="gone"
+                        android:visibility="visible"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
@@ -608,6 +608,7 @@
                         android:elevation="2dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@+id/btSync"
+                        app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/viewBtnMessages"
                         app:layout_constraintVertical_bias="0.0" />
@@ -641,7 +642,7 @@
                         android:layout_marginBottom="10dp"
                         android:background="@drawable/bg_button_white"
                         android:elevation="2dp"
-                        android:visibility="gone"
+                        android:visibility="visible"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@+id/viewBtnCalendar"
                         app:layout_constraintHorizontal_bias="0.0"
@@ -651,7 +652,7 @@
 
                     <View
                         android:id="@+id/viewBtnTasks"
-                        android:layout_width="166dp"
+                        android:layout_width="0dp"
                         android:layout_height="120dp"
                         android:layout_marginStart="18dp"
                         android:layout_marginTop="16dp"
@@ -675,7 +676,7 @@
                         android:textColor="@color/white"
                         android:textSize="18sp"
                         android:textStyle="bold"
-                        android:visibility="gone"
+                        android:visibility="visible"
                         app:layout_constraintBottom_toBottomOf="@+id/vNotifyCount"
                         app:layout_constraintEnd_toEndOf="@+id/vNotifyCount"
                         app:layout_constraintStart_toStartOf="@+id/vNotifyCount"

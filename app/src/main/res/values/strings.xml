@@ -151,4 +151,8 @@
     <string name="only_one_audio_per_question">Solo se puede grabar un audio por pregunta. Borre un audio para poder grabar otro</string>
     <string name="no_data_tracking">No hay datos en esta fecha para los usuarios selecionados</string>
     <string name="select_dates">"Se debe seleccionar fecha de inicio y final "</string>
+    <string name="already_added">Este usuario ya se ha agregado</string>
+    <string name="qb_error_connection">Error de conexión con QuickBlox</string>
+    <string name="qb_reconnection">Reconectando con QuibckBlox</string>
+    <string name="no_issue">Se tiene que agregar un asunto</string>
 </resources>

@@ -95,6 +95,7 @@ class PdvFragment : BaseFragment() {
                     activity?.onBackPressed()
                 }
             }})
+
         }
         initViewModel = viewModel(viewModelFactory){
             observe(idPv,{it?.let{
@@ -102,6 +103,22 @@ class PdvFragment : BaseFragment() {
               /*  if(it)
                     findNavController().navigate(PdvFragmentDirections.actionNavigationPdvSelf())*/
             }})
+            observe(getLanguageSaved,{
+                it?.let {
+                    if(it != BaseFragment.SPANISH){
+                        CURRENT_LANGUAGE = it
+                        initViewModel.getLanguageByXml("fragment_pdv.xml")
+                    }
+                }
+            })
+            observe(getLanguageSuccess,{
+                it?.let { list ->
+                    if(list.isNotEmpty()){
+                        listLanguage = it
+                        changeLanguage(binding.root)
+                    }
+                }
+            })
         }
         pdvViewModel.getPdv()
         binding.btnBackPdv.setOnClickListener {
@@ -134,6 +151,8 @@ class PdvFragment : BaseFragment() {
                 "1"
             )
         }
+
+        initViewModel.getLanguage()
         return binding.root
     }
 
@@ -154,7 +173,7 @@ class PdvFragment : BaseFragment() {
     }
 
     private fun showDialogTakePhoto(){
-        val dialog = TakePhotoDialogFragment()
+        val dialog = TakePhotoDialogFragment(this)
         dialog.listener = object :TakePhotoDialogFragment.Callback{
             override fun onSave(urlImage: String) {
                 val imageUri = Uri.fromFile(File(urlImage))

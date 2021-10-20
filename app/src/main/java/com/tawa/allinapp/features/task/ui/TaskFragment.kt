@@ -8,18 +8,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import com.tawa.allinapp.R
+import com.tawa.allinapp.core.extensions.observe
+import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.FragmentTaskBinding
+import com.tawa.allinapp.features.init.InitViewModel
 
 
 class TaskFragment : BaseFragment() {
 
     private lateinit var binding: FragmentTaskBinding
-
-
-    private var mDay: Int? = null
-    private var mMonth: Int ? = null
-    private var mYear: Int? = null
+    private lateinit var initViewModel: InitViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,11 +28,25 @@ class TaskFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         checkPermissions()
-
-
-        binding.edDateTask.setOnClickListener {
-            getCurrentDay(binding.edDateTask)
+        initViewModel = viewModel(viewModelFactory){
+            observe(getLanguageSaved,{
+                it?.let {
+                    if(it != BaseFragment.SPANISH){
+                        BaseFragment.CURRENT_LANGUAGE = it
+                        initViewModel.getLanguageByXml("fragment_task.xml")
+                    }
+                }
+            })
+            observe(getLanguageSuccess,{
+                it?.let { list ->
+                    if(list.isNotEmpty()){
+                        listLanguage = it
+                        changeLanguage(binding.root)
+                    }
+                }
+            })
         }
+        initViewModel.getLanguage()
 
     }
 
@@ -44,11 +57,16 @@ class TaskFragment : BaseFragment() {
     ): View {
         binding = FragmentTaskBinding.inflate(inflater)
 
+        binding.edDateTask.setOnClickListener {
+            getCurrentDay(binding.edDateTask)
+        }
+
         return binding.root
     }
 
     @SuppressLint("SetTextI18n")
     private fun getCurrentDay(et: EditText){
+        updateCurrentDate()
         mDay?.let { day->
             mMonth?.let { month ->
                 mYear?.let { year ->

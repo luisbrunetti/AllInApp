@@ -23,6 +23,7 @@ import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.functional.Failure
 import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.FragmentReportsBinding
+import com.tawa.allinapp.features.init.InitViewModel
 import com.tawa.allinapp.models.Report
 import java.util.*
 import javax.inject.Inject
@@ -31,11 +32,11 @@ import javax.inject.Inject
 class ReportsFragment : BaseFragment() {
 
     private lateinit var reportsViewModel: ReportsViewModel
+    private lateinit var initViewModel: InitViewModel
     private lateinit var binding: FragmentReportsBinding
     private  var  typeUser = ""
     private  lateinit var  listReports:List<Report>
     @Inject lateinit var reportsAdapter: ReportsAdapter
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         appComponent.inject(this)
@@ -125,6 +126,25 @@ class ReportsFragment : BaseFragment() {
                 }
             }})
         }
+
+        initViewModel = viewModel(viewModelFactory){
+            observe(getLanguageSaved,{
+                it?.let {
+                    if(it != BaseFragment.SPANISH){
+                        BaseFragment.CURRENT_LANGUAGE = it
+                        initViewModel.getLanguageByXml("fragment_reports.xml")
+                    }
+                }
+            })
+            observe(getLanguageSuccess,{
+                it?.let { list ->
+                    if(list.isNotEmpty()){
+                        listLanguage = it
+                        changeLanguage(binding.root)
+                    }
+                }
+            })
+        }
         reportsViewModel.getPVName()
 
         binding.etDate.setOnClickListener{  getDay(binding.etDate) }
@@ -168,6 +188,7 @@ class ReportsFragment : BaseFragment() {
         })
         reportsViewModel.getCountSku()
         reportsViewModel.getStatePicture()
+        initViewModel.getLanguage()
         return binding.root
     }
 

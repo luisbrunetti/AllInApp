@@ -39,14 +39,15 @@ class SendPasswordFragment : BaseFragment() {
             })
             observe(getLanguageSuccess,{
                 it?.let {
-                    listLanguage = it
-                    changeLanguage(binding.root)
-                    Log.d("sendPasssword",it.toString())
+                    if (it.isNotEmpty()) {
+                        listLanguage = it
+                        changeLanguage(binding.root)
+                    }
                 }
             })
             observe(getLanguageSaved,{
                 it?.let {
-                    if(it != SPANISH){
+                    if(it != Companion.SPANISH){
                         CURRENT_LANGUAGE = it
                         initViewModel.getLanguageByXml("fragment_send_password.xml")
                     }

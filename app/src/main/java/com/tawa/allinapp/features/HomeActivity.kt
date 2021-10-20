@@ -4,7 +4,10 @@ import android.os.Bundle
 import android.provider.Settings
 import android.view.View
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
@@ -15,12 +18,19 @@ import com.tawa.allinapp.AndroidApplication
 import com.tawa.allinapp.BuildConfig
 import com.tawa.allinapp.R
 import com.tawa.allinapp.core.di.ApplicationComponent
+import com.tawa.allinapp.core.di.viewmodel.ViewModelFactory
+import com.tawa.allinapp.core.extensions.observe
+import com.tawa.allinapp.core.extensions.viewModel
+import com.tawa.allinapp.core.platform.BaseActivity
+import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.ActivityHomeBinding
+import com.tawa.allinapp.features.init.InitViewModel
 
 
 class HomeActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityHomeBinding
+    private lateinit var initViewModel: InitViewModel
     private val appComponent: ApplicationComponent by lazy(mode = LazyThreadSafetyMode.NONE) {
         (application as AndroidApplication).appComponent
     }

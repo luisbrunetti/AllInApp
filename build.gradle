@@ -2,6 +2,7 @@
 buildscript {
     ext.compose_version = '1.0.0'
     ext.kotlin_version = "1.5.10"
+    ext.quick_blox_version = "3.9"
     repositories {
         google()
         mavenCentral()
@@ -19,7 +20,8 @@ allprojects {
     repositories {
         google()
         mavenCentral()
-        maven { url 'https://jitpack.io' }
+        maven { url 'https://jitpack.io'}
+        maven { url "https://github.com/QuickBlox/quickblox-android-sdk-releases/raw/master/" }
     }
 }
 

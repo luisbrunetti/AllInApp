@@ -5,11 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import com.tawa.allinapp.core.interactor.UseCase
 import com.tawa.allinapp.core.platform.BaseViewModel
 import com.tawa.allinapp.data.local.Prefs
-import com.tawa.allinapp.data.remote.entities.LanguageRemote
-import com.tawa.allinapp.features.auth.usecase.DoLogin
-import com.tawa.allinapp.features.auth.usecase.GetCompaniesRemote
-import com.tawa.allinapp.features.auth.usecase.GetTranslate
-import com.tawa.allinapp.features.auth.usecase.SetLanguage
+import com.tawa.allinapp.features.auth.usecase.*
+import com.tawa.allinapp.features.init.usecase.GetLanguage
+import com.tawa.allinapp.features.init.usecase.SetSession
 import com.tawa.allinapp.models.Language
 import javax.inject.Inject
 
@@ -19,6 +17,8 @@ class AuthViewModel
     private val getCompaniesRemote: GetCompaniesRemote,
     private val getTranslate: GetTranslate,
     private val setLanguage: SetLanguage,
+    private val setSession: SetSession,
+    private val getLanguage: GetLanguage,
     private val pref: Prefs
 ): BaseViewModel(){
 
@@ -65,6 +65,13 @@ class AuthViewModel
     private val _setLanguageSuccess = MutableLiveData<Boolean>()
     val setLanguageSuccess : LiveData<Boolean> get() = _setLanguageSuccess
 
+    private val _getLanguageSuccess = MutableLiveData<String>()
+    val getLanguageSuccess : LiveData<String> get() = _getLanguageSuccess
+
+    private val _successSetSession = MutableLiveData<Boolean>()
+    val successSetSession: LiveData<Boolean> get() = _successSetSession
+
+
     fun setErrorLogin(error:String){
         _errorEdits.value = true
         _errorMessage.value = error
@@ -92,10 +99,23 @@ class AuthViewModel
 
     private fun setLanguage(value:Boolean){this._setLanguageSuccess.value = value}
 
+    fun getLanguage(){ getLanguage(UseCase.None()){ it.either(::handleFailure, ::handleGetLanguage)}}
+
+    private fun handleGetLanguage(value : String){ this._getLanguageSuccess.value = value}
+
     fun validateFields() { _enableButton.postValue(_username.value!!.isNotEmpty() && _password.value!!.isNotEmpty()) }
 
     fun endLogin(){ if(_successGetCompanies.value==true) _successEndLogin.value = true }
 
-    fun setSession(value: Boolean){ pref.session = value }
+    fun setSession(value: Boolean){
+        setSession(SetSession.Params(value)){
+            it.either(::handleFailure, ::handleSetSession)
+        }
+    }
+    private fun handleSetSession(value:Boolean){ this._successSetSession.value = value }
+
+    fun changeStateGetLanguage(value: String){ this._getLanguageSuccess.value = value }
+
+    fun changeStateGetTranslate(){this._successfulTranslate.value = emptyList()}
 
 }

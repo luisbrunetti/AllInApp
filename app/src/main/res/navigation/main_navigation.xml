@@ -9,7 +9,7 @@
         android:id="@+id/navigation_init"
         android:name="com.tawa.allinapp.features.init.ui.InitFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_init" >
+        tools:layout="@layout/fragment_init">
         <action
             android:id="@+id/action_navigation_init_to_navigation_routes"
             app:destination="@id/navigation_routes" />
@@ -30,39 +30,76 @@
             app:destination="@id/sendPasswordFragment" />
         <action
             android:id="@+id/action_navigation_init_to_pdvFragment"
-            app:destination="@id/navigation_pdv" >
-
-        </action>
+            app:destination="@id/navigation_pdv" />
         <action
             android:id="@+id/action_navigation_init_to_navigation_tasks"
             app:destination="@id/navigation_tasks" />
+        <action
+            android:id="@+id/action_navigation_init_to_navigation_messages"
+            app:destination="@id/navigation_messages" />
     </fragment>
 
+    <fragment
+        android:id="@+id/navigation_messages"
+        android:name="com.tawa.allinapp.features.messages.ui.MessagesFragment"
+        android:label="Mensajes"
+        tools:layout="@layout/fragment_messages">
+        <action
+            android:id="@+id/action_navigation_messages_to_navigation_confirm_new_group"
+            app:destination="@id/navigation_confirm_new_group"
+            app:enterAnim="@animator/nav_default_enter_anim">
+        </action>
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/navigation_confirm_new_group"
+        android:name="com.tawa.allinapp.features.messages.ui.ConfirmNewGroupFragment"
+        android:label="ConfirmNewGroup"
+        tools:layout="@layout/fragment_confirm_new_group"
+        >
+        <action
+            android:id="@+id/action_navigation_confirm_new_group_to_navigation_chat"
+            app:destination="@id/navigation_chat">
+            <argument
+                android:name="dialogId"
+                app:argType="string" />
+            <argument
+                android:name="newDialog"
+                app:argType="boolean" />
+        </action>
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_chat"
+        android:name="com.tawa.allinapp.features.messages.ui.ChatFragment"
+        android:label="Chat"
+        tools:layout="@layout/fragment_chat"
+        />
     <fragment
         android:id="@+id/navigation_reports"
         android:name="com.tawa.allinapp.features.reports.ReportsFragment"
         android:label="@string/title_reports"
-        tools:layout="@layout/fragment_reports" >
+        tools:layout="@layout/fragment_reports">
 
         <action
             android:id="@+id/action_navigation_reports_to_checkListFragment"
-            app:destination="@id/checkListFragment" >
+            app:destination="@id/checkListFragment">
             <argument
                 android:name="id"
-                app:argType="string"/>
+                app:argType="string" />
             <argument
                 android:name="name"
-                app:argType="string"/>
+                app:argType="string" />
         </action>
         <action
             android:id="@+id/action_navigation_reports_to_pictureFragment"
-            app:destination="@id/pictureFragment" >
+            app:destination="@id/pictureFragment">
             <argument
                 android:name="idUser"
-                app:argType="string"/>
+                app:argType="string" />
             <argument
                 android:name="state"
-                app:argType="string"/>
+                app:argType="string" />
         </action>
         <action
             android:id="@+id/action_navigation_reports_to_skuFragment"
@@ -73,10 +110,10 @@
 
             <argument
                 android:name="id"
-                app:argType="string"/>
+                app:argType="string" />
             <argument
                 android:name="idPv"
-                app:argType="string"/>
+                app:argType="string" />
             <argument
                 android:name="idUser"
                 app:argType="string" />
@@ -89,10 +126,10 @@
             app:destination="@id/reportAudioFragment">
             <argument
                 android:name="id"
-                app:argType="string"/>
+                app:argType="string" />
             <argument
                 android:name="name"
-                app:argType="string"/>
+                app:argType="string" />
 
         </action>
 
@@ -100,7 +137,7 @@
             android:id="@+id/action_navigation_reports_to_navigation_init"
             app:destination="@id/navigation_init"
             app:popUpTo="@id/navigation_reports"
-            app:popUpToInclusive="true"/>
+            app:popUpToInclusive="true" />
 
     </fragment>
 
@@ -131,21 +168,21 @@
         android:id="@+id/userStatusFragment"
         android:name="com.tawa.allinapp.features.reports.userstatus.UserStatusFragment"
         android:label="fragment_user_status"
-        tools:layout="@layout/fragment_user_status" >
+        tools:layout="@layout/fragment_user_status">
         <action
             android:id="@+id/action_userStatusFragment_to_lastLocationFragment"
             app:destination="@id/lastLocationFragment">
 
             <argument
                 android:name="latitude"
-                app:argType="string"/>
+                app:argType="string" />
             <argument
                 android:name="longitude"
-                app:argType="string"/>
+                app:argType="string" />
 
             <argument
                 android:name="name"
-                app:argType="string"/>
+                app:argType="string" />
 
         </action>
 
@@ -162,12 +199,6 @@
         android:label="fragment_last_location"
         tools:layout="@layout/fragment_last_location" />
     <fragment
-        android:id="@+id/audioFragment"
-        android:name="com.tawa.allinapp.features.reports.audio.AudioFragment"
-        android:label="AudioFragment"
-        tools:layout="@layout/fragment_audio"
-        />
-    <fragment
         android:id="@+id/reportAudioFragment"
         android:name="com.tawa.allinapp.features.reports.audiodinamico.DynamicAudioFragment"
         android:label="ReportAudioFragment"
@@ -178,7 +209,7 @@
         android:id="@+id/navigation_informs"
         android:name="com.tawa.allinapp.features.informs.InformsFragment"
         android:label="fragment_informs"
-        tools:layout="@layout/fragment_informs" >
+        tools:layout="@layout/fragment_informs">
         <action
             android:id="@+id/action_navigation_informs_to_userStatusFragment"
             app:destination="@id/userStatusFragment" />
@@ -196,14 +227,13 @@
         android:id="@+id/navigation_tasks"
         android:name="com.tawa.allinapp.features.task.ui.TaskFragment"
         android:label="task_fragment"
-        tools:layout="@layout/fragment_task">
-    </fragment>
+        tools:layout="@layout/fragment_task"></fragment>
 
     <fragment
         android:id="@+id/reportGeolocationFragment"
         android:name="com.tawa.allinapp.features.reports.geolocation.ReportGeolocationFragment"
         android:label="fragment_report_geolocation"
-        tools:layout="@layout/fragment_report_geolocation" >
+        tools:layout="@layout/fragment_report_geolocation">
 
     </fragment>
 
@@ -216,7 +246,7 @@
     <fragment
         android:id="@+id/coverageBoardFragment"
         android:name="com.tawa.allinapp.features.coverage.ui.CoverageBoardFragment"
-        android:label="CoverageBoardFragment" >
+        android:label="CoverageBoardFragment">
         <action
             android:id="@+id/action_coverageBoardFragment_to_coverageBoardGraphFragment"
             app:destination="@id/coverageBoardGraphFragment" />
@@ -226,12 +256,12 @@
     <fragment
         android:id="@+id/coverageBoardGraphFragment"
         android:name="com.tawa.allinapp.features.coverage.ui.CoverageBoardGraphFragment"
-        android:label="CoverageBoardGraphFragment" >
+        android:label="CoverageBoardGraphFragment">
         <argument
             android:name="graph"
             android:defaultValue="@null"
             app:argType="com.tawa.allinapp.models.CoverageGraph"
-            app:nullable="true"/>
+            app:nullable="true" />
     </fragment>
 
     <fragment

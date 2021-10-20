@@ -9,32 +9,24 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CheckBox
-import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.FileProvider
-import androidx.core.view.isVisible
-import androidx.core.view.setPadding
 import androidx.fragment.app.DialogFragment
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
-import com.tawa.allinapp.R
 import com.tawa.allinapp.core.extensions.observe
 import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.platform.BaseFragment
-import com.tawa.allinapp.databinding.DialogConfirmSkuBinding
-import com.tawa.allinapp.databinding.DialogConfirmSyncBinding
-import com.tawa.allinapp.databinding.DialogObservationsSkuBinding
 import com.tawa.allinapp.databinding.DialogTakePhotoBinding
+import com.tawa.allinapp.features.init.InitViewModel
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -42,9 +34,13 @@ import java.util.*
 import javax.inject.Inject
 
 
-class TakePhotoDialogFragment : DialogFragment() {
+class TakePhotoDialogFragment
+@Inject constructor(
+    private val baseFragment:BaseFragment
+): DialogFragment() {
 
     private lateinit var binding: DialogTakePhotoBinding
+    private lateinit var initViewModel: InitViewModel
     var photoFile: File? = null
     val CAPTURE_IMAGE_REQUEST = 1
     var mCurrentPhotoPath: String? = null
@@ -57,17 +53,40 @@ class TakePhotoDialogFragment : DialogFragment() {
     var listener: Callback? = null
 
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        baseFragment.appComponent.inject(this)
+    }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = DialogTakePhotoBinding.inflate(inflater)
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         isCancelable = false
-
-
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        initViewModel = viewModel(baseFragment.viewModelFactory){
+            observe(getLanguageSaved,{
+                it?.let {
+                    if(it != BaseFragment.SPANISH){
+                        BaseFragment.CURRENT_LANGUAGE = it
+                        initViewModel.getLanguageByXml("dialog_take_photo.xml")
+                    }
+                }
+            })
+            observe(getLanguageSuccess,{
+                it?.let { list ->
+                    if(list.isNotEmpty()){
+                        baseFragment.listLanguage = it
+                        baseFragment.changeLanguage(binding.root)
+                    }
+                }
+            })
+        }
+
+
         binding.btnTakePhotoPdv.setOnClickListener {
             validatePermissions()
         }
@@ -78,6 +97,8 @@ class TakePhotoDialogFragment : DialogFragment() {
         binding.btnCloseModalTakePhoto.setOnClickListener {
             dismiss()
         }
+
+        initViewModel.getLanguage()
     }
 
 

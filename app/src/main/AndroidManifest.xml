@@ -20,6 +20,8 @@
         android:required="true" />
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"/>
 
+    <meta-data android:name="com.quickblox.messages.TYPE" android:value="FCM" />
+    <meta-data android:name="com.quickblox.messages.QB_ENVIRONMENT" android:value="DEVELOPMENT" />
 
     <application
         android:name=".AndroidApplication"

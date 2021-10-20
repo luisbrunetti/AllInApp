@@ -8,7 +8,6 @@ import javax.inject.Inject
 
 class UpdateStatus
 @Inject constructor(private val reportsRepository: ReportsRepository) : UseCase<Boolean, UpdateStatus.Params>() {
-
     override suspend fun run(params: Params) = reportsRepository.updateStatus(params.latitude,params.longitude,params.battery)
 
     data class Params(val latitude: String,val longitude:String,val battery:String)

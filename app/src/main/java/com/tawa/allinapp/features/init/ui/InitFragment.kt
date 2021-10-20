@@ -60,7 +60,6 @@ class InitFragment : BaseFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentInitBinding.inflate(inflater)
         showProgressDialog()
-        Log.d("checkSelector",checkSelector.toString())
         initViewModel = viewModel(viewModelFactory) {
             observe(dayState, { it?.let { if(it) {
                 val currentDay = getString(R.string.current_day, getDayWeek(),getDayMonth(),getMonth(),getYear())
@@ -240,6 +239,22 @@ class InitFragment : BaseFragment() {
                     binding.vNotifyCount.isVisible = false
                 }
             }})
+            observe(getLanguageSaved,{
+                it?.let {
+                    if(it != BaseFragment.SPANISH){
+                        CURRENT_LANGUAGE = it
+                        initViewModel.getLanguageByXml("fragment_init.xml")
+                    }
+                }
+            })
+            observe(getLanguageSuccess,{
+                it?.let { list ->
+                    if(list.isNotEmpty()){
+                        listLanguage = it
+                        changeLanguage(binding.root)
+                    }
+                }
+            })
             failure(failure, ::handleFailure)
         }
         //Seleccionando empresa
@@ -249,12 +264,13 @@ class InitFragment : BaseFragment() {
         initViewModel.getUserName()
         initViewModel.getCheckMode()
         initViewModel.getPvIdFirstTime()
-        initViewModel.getIdCompany()
-        /*initViewModel.getIdCompanyPreferences().let {
+        //initViewModel.getIdCompany()
+        initViewModel.getLanguage()
+        initViewModel.getIdCompanyPreferences().let {
             if(it.isEmpty()) {
                 showSelector()
             }
-        }*/
+        }
 
         binding.btCheckIn.setOnClickListener{
             if(isLocationEnabled()){
@@ -287,21 +303,25 @@ class InitFragment : BaseFragment() {
         }
         binding.viewBtnPV.setOnClickListener {
             showSelectPdvDialog()
+            //findNavController().navigate(InitFragmentDirections.actionNavigationInitToPdvFragment())
         }
         binding.viewBtnCalendar.setOnClickListener {
             findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationCalendar())
         }
         binding.viewBtnReports.setOnClickListener {
             //initViewModel.getPVId()
-            if(_pvId.isNotEmpty()) findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationReports())
+            //findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationReports())
+            if(_pvId.isNotEmpty()){
+                findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationReports())
+
+            }
             else MessageDialogFragment.newInstance("Debes seleccionar o hacer chekIn en un punto de venta").show(childFragmentManager, "errorDialog")
         }
         binding.viewBtnInforms.setOnClickListener{
             findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationInforms())
         }
         binding.viewBtnMessages.setOnClickListener {
-            initViewModel.clearCountNotify()
-            showMessagesDialog()
+            findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationMessages())
         }
         binding.viewBtnTasks.setOnClickListener {
             findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationTasks())

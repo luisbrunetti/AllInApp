@@ -17,6 +17,6 @@ interface ParametersApi {
     @GET("api/cronograma/get")
     fun getSchedule(@Header("Authorization") token: String, @Query("id_empresa") company:String): Call<BaseResponse<List<ScheduleRemote.Response>>>
 
-    @GET("2451f8f5-a884-4d08-8cb1-c4b47b008d46/")
+    @GET("7534a95a-d7d8-44ca-be3c-39081f8b8d0e/")
     fun getLanguage(@Header("Language") language: String): Call<BaseResponse<List<LanguageRemote>>>
 }

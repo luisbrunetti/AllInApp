@@ -15,11 +15,13 @@ import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.FragmentInformsBinding
 
 import com.tawa.allinapp.databinding.FragmentPdvBinding
+import com.tawa.allinapp.features.init.InitViewModel
 import com.tawa.allinapp.features.reports.ReportsFragmentDirections
 
 class InformsFragment : BaseFragment() {
 
     private lateinit var informsViewModel: InformsViewModel
+    private lateinit var initViewModel: InitViewModel
     private lateinit var binding: FragmentInformsBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,6 +38,27 @@ class InformsFragment : BaseFragment() {
                 }
             })
         }
+
+        initViewModel = viewModel(viewModelFactory){
+            observe(getLanguageSaved,{
+                it?.let {
+                    if(it != BaseFragment.SPANISH){
+                        BaseFragment.CURRENT_LANGUAGE = it
+                        initViewModel.getLanguageByXml("fragment_informs.xml")
+                    }
+                }
+            })
+            observe(getLanguageSuccess,{
+                it?.let { list ->
+                    if(list.isNotEmpty()){
+                        listLanguage = it
+                        changeLanguage(binding.root)
+                    }
+                }
+            })
+        }
+
+
         binding.btnBackInforms.setOnClickListener {
             activity?.onBackPressed()
         }
@@ -72,6 +95,9 @@ class InformsFragment : BaseFragment() {
         binding.btReportGeolocation.setOnClickListener {
             findNavController().navigate(InformsFragmentDirections.actionNavigationInformsToReportGeolocationFragment())
         }
+
+        initViewModel.getLanguage()
+
         return binding.root
     }
 

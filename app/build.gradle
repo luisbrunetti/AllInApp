@@ -163,4 +163,10 @@ dependencies {
         exclude group: 'org.json', module: 'json'
     }
 
+    //QuickBlox
+    implementation "com.quickblox:quickblox-android-sdk-messages:3.9.11"
+    implementation "com.quickblox:quickblox-android-sdk-chat:3.9.11"
+    implementation "com.quickblox:quickblox-android-sdk-content:3.9.11"
+    implementation "com.quickblox:quickblox-android-sdk-customobjects:3.9.2"
+
 }

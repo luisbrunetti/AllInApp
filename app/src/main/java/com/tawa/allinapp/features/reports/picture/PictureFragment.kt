@@ -31,6 +31,7 @@ import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.functional.Failure
 import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.FragmentPictureBinding
+import com.tawa.allinapp.features.init.InitViewModel
 import com.tawa.allinapp.features.reports.standard.ConfirmSyncDialogFragment
 import com.tawa.allinapp.models.PhotoReport
 import java.io.*
@@ -42,6 +43,7 @@ class PictureFragment : BaseFragment() {
 
     private lateinit var binding: FragmentPictureBinding
     private lateinit var pictureViewModel: PictureViewModel
+    private lateinit var initViewModel: InitViewModel
 
     @Inject
     lateinit var pictureBeforeAdapter: PictureBeforeAdapter
@@ -163,7 +165,29 @@ class PictureFragment : BaseFragment() {
                 }
             })
         }
+
+        initViewModel = viewModel(viewModelFactory) {
+            observe(getLanguageSaved, {
+                it?.let {
+                    if (it != BaseFragment.SPANISH) {
+                        BaseFragment.CURRENT_LANGUAGE = it
+                        initViewModel.getLanguageByXml("fragment_picture.xml")
+                    }
+                }
+            })
+            observe(getLanguageSuccess, {
+                it?.let { list ->
+                    if (list.isNotEmpty()) {
+                        listLanguage = it
+                        changeLanguage(binding.root)
+                    }
+                }
+            })
+        }
+
         pictureViewModel.getTypePicture()
+        initViewModel.getLanguage()
+
         binding.iHeader.ivHeader.setOnClickListener { activity?.onBackPressed() }
         binding.btnPhotoBeforePicture.setOnClickListener {
             if (pictureBeforeAdapter.collection.size < 5) {

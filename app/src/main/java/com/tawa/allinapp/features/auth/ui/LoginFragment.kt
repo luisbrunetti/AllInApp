@@ -48,8 +48,7 @@ class LoginFragment : BaseFragment() {
                 if (it) {
                     hideProgressDialog()
                     showHome(context,true)
-                }
-            }})
+                }}})
             observe(username, { it?.let {
                 authViewModel.validateFields()
             }})
@@ -57,11 +56,21 @@ class LoginFragment : BaseFragment() {
                 authViewModel.validateFields()
             }})
             observe(successfulTranslate,{ it?.let {
-                listLanguage = it
-                changeLanguage(binding.root)
-                hideProgressDialog()
-                binding.swLoginFragment.text = "English"
+                if(it.isNotEmpty()){
+                    listLanguage = it
+                    changeStateGetTranslate()
+                    changeLanguage(binding.root)
+                    hideProgressDialog()
+                    binding.swLoginFragment.text = "English"
+                }
             }})
+            observe(getLanguageSuccess,{ it?.let {
+                if(it != SPANISH && it.isNotEmpty()){
+                    CURRENT_LANGUAGE = it
+                    changeStateGetLanguage("")
+                    binding.swLoginFragment.isChecked = true
+                    binding.swLoginFragment.text = "English"
+                }}})
             failure(failure, { it?.let {
                 hideProgressDialog()
                 when(it){
@@ -69,32 +78,33 @@ class LoginFragment : BaseFragment() {
                     is Failure.NetworkConnection    -> MessageDialogFragment.newInstance(getString(R.string.error_network)).show(childFragmentManager, "dialog")
                     is Failure.ServerError          -> MessageDialogFragment.newInstance(getString(R.string.error_network)).show(childFragmentManager, "dialog")
                     else                            -> MessageDialogFragment.newInstance(getString(R.string.error_unknown)).show(childFragmentManager, "dialog")
-                }
-            }})
+                }}})
+        }
+        binding.btnLoginFragment.setOnClickListener {
+            authViewModel.doLogin()
+            //showHome(context,true)
         }
 
-        binding.cbRememberLoginFragment.setOnClickListener {
-            authViewModel.setSession(binding.cbRememberLoginFragment.isChecked)
-        }
-        binding.edForgotPassword.setOnClickListener {
-            findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToSendPasswordFragment2())
-        }
+        binding.cbRememberLoginFragment.setOnClickListener { authViewModel.setSession(binding.cbRememberLoginFragment.isChecked) }
+
+        binding.edForgotPassword.setOnClickListener { findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToSendPasswordFragment2()) }
 
         binding.swLoginFragment.setOnCheckedChangeListener { compoundButton, b ->
             if (b) {
                 showProgressDialog()
-                CURRENT_LANGUAGE = ENGLISH
-                authViewModel.getTranslate(ENGLISH)
+                CURRENT_LANGUAGE = Companion.ENGLISH
+                authViewModel.getTranslate(Companion.ENGLISH)
                 binding.swLoginFragment.text = "English"
             }else{
                 showProgressDialog()
-                CURRENT_LANGUAGE = SPANISH
+                CURRENT_LANGUAGE = Companion.SPANISH
                 changeLanguage(binding.root)
-                authViewModel.setLanguage(SPANISH)
+                authViewModel.setLanguage(Companion.SPANISH)
                 binding.swLoginFragment.text = "Español"
                 hideProgressDialog()
             }
         }
+        authViewModel.getLanguage()
         return binding.root
     }
 

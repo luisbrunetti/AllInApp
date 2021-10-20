@@ -44,13 +44,6 @@ class ReportGeolocationViewModel
         this._getRouteUsers.value = list
     }
 
-    fun getCurrentDay(): Triple<Int,Int,Int>{
-        val c = Calendar.getInstance()
-        val year = c.get(Calendar.YEAR)
-        val month = c.get(Calendar.MONTH)
-        val day = c.get(Calendar.DAY_OF_MONTH)
-        return Triple(day,month,year)
-    }
     fun convertDate(date:String):String{
         val inputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
         val outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.ENGLISH)

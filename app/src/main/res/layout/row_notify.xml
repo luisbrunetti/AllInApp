@@ -17,7 +17,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <View
-        android:id="@+id/view17"
+        android:id="@+id/vFirstTwoLetters"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="20dp"
@@ -37,7 +37,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/vNotify"
         app:layout_constraintEnd_toEndOf="@+id/vNotify"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/view17"
+        app:layout_constraintStart_toEndOf="@+id/vFirstTwoLetters"
         app:layout_constraintTop_toTopOf="@+id/vNotify" />
 
     <TextView
@@ -47,10 +47,10 @@
         android:text="EG"
         android:textColor="@color/white"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/view17"
-        app:layout_constraintEnd_toEndOf="@+id/view17"
-        app:layout_constraintStart_toStartOf="@+id/view17"
-        app:layout_constraintTop_toTopOf="@+id/view17" />
+        app:layout_constraintBottom_toBottomOf="@+id/vFirstTwoLetters"
+        app:layout_constraintEnd_toEndOf="@+id/vFirstTwoLetters"
+        app:layout_constraintStart_toStartOf="@+id/vFirstTwoLetters"
+        app:layout_constraintTop_toTopOf="@+id/vFirstTwoLetters" />
 
     <View
         android:id="@+id/view12"

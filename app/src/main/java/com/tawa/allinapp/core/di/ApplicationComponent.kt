@@ -13,8 +13,11 @@ import com.tawa.allinapp.features.init.ui.*
 
 
 import com.tawa.allinapp.features.location.LocationFragment
+import com.tawa.allinapp.features.messages.ui.ConfirmNewGroupFragment
+import com.tawa.allinapp.features.messages.ui.MessagesFragment
 import com.tawa.allinapp.features.movies.ui.MoviesFragment
 import com.tawa.allinapp.features.pdv.PdvFragment
+import com.tawa.allinapp.features.pdv.TakePhotoDialogFragment
 import com.tawa.allinapp.features.reports.audio.AudioFragment
 import com.tawa.allinapp.features.reports.picture.PictureFragment
 import com.tawa.allinapp.features.reports.standard.CheckListFragment
@@ -59,8 +62,10 @@ interface ApplicationComponent{
     fun inject(coverageBoardFragment: CoverageBoardFragment)
     fun inject(coverageBoardGraphFragment: CoverageBoardGraphFragment)
     fun inject(pdvFragment: PdvFragment)
+    fun inject(takePhotoDialogFragment: TakePhotoDialogFragment)
     fun inject(reportGeolocationFragment: ReportGeolocationFragment)
     fun inject(messagesDialogFragment: MessagesDialogFragment)
     fun inject(taskFragment: TaskFragment)
-
+    fun inject(MessagesFragment: MessagesFragment)
+    fun inject(confirmNewGroupFragment: ConfirmNewGroupFragment)
 }

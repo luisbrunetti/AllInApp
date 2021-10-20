@@ -37,6 +37,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Español"
+                    android:theme="@style/SwitchTheme"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintBottom_toTopOf="@id/imageView"
@@ -86,7 +87,6 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
                     android:background="@drawable/selector"
-
                     android:paddingBottom="3dp"
                     android:hint="Usuario"
                     app:bgError="@{viewModel.errorEdits}"
@@ -178,7 +178,6 @@
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="18dp"
             android:background="@drawable/roundedbuttom"
-            android:onClick="@{()->viewModel.doLogin()}"
             android:text="Ingresar"
             android:textAllCaps="false"
             android:textColor="@color/colorTextPrimary"

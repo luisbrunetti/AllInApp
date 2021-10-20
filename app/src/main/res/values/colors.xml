@@ -30,11 +30,13 @@
     <color name="colorIndicator1">#CCE7FF</color>
     <color name="colorIndicator2">#CCEFFF</color>
     <color name="labelNames">#E9E9E9</color>
-
+    <color name="pink_1">#FF95B9</color>
+    <color name="lightBlue">#0BE3FF</color>
     <color name="green">#24BE82</color>
     <color name="red">#EA5757</color>
     <color name="yellow">#FFCD00</color>
     <color name="white">#ffff</color>
     <color name="blue">#044c7e</color>
     <color name="black">#131111</color>
+    <color name="gris_1">#E4E8ED</color>
 </resources>

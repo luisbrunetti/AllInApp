@@ -5,7 +5,6 @@
     android:id="@+id/rounded1"
     android:padding="10dp">
 
-
     <solid android:color="@color/blue" />
 
     <corners

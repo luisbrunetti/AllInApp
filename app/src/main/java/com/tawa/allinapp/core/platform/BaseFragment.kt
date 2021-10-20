@@ -36,6 +36,7 @@ import com.tawa.allinapp.core.di.ApplicationComponent
 import com.tawa.allinapp.core.dialog.MessageDialogFragment
 import com.tawa.allinapp.core.dialog.ProgressDialogFragment
 import com.tawa.allinapp.core.extensions.appContext
+import com.tawa.allinapp.core.extensions.observe
 import com.tawa.allinapp.core.extensions.viewContainer
 import com.tawa.allinapp.core.functional.Failure
 import com.tawa.allinapp.data.remote.entities.LanguageRemote
@@ -57,6 +58,18 @@ abstract class BaseFragment : Fragment() {
 
     var latitude :String= ""
     var longitude :String= ""
+
+
+    companion object {
+        const val SPANISH : String = "SPANISH"
+        const val ENGLISH : String = "ENGLISH"
+        var CURRENT_LANGUAGE: String = SPANISH
+    }
+
+    protected var mDay: Int? = null
+    protected var mMonth: Int? = null
+    protected var mYear: Int? = null
+
 
     val appComponent: ApplicationComponent by lazy(mode = LazyThreadSafetyMode.NONE) {
         (activity?.application as AndroidApplication).appComponent
@@ -309,15 +322,20 @@ abstract class BaseFragment : Fragment() {
         }
     }
 
-    companion object {
-        const val SPANISH : String = "SPANISH"
-        const val ENGLISH : String = "ENGLISH"
+    internal fun updateCurrentDate(){
+        val c = Calendar.getInstance()
+        val year = c.get(Calendar.YEAR)
+        val month = c.get(Calendar.MONTH)
+        val day = c.get(Calendar.DAY_OF_MONTH)
+        this.mDay = day
+        this.mMonth = month +1
+        this.mYear = year
     }
-    var CURRENT_LANGUAGE: String = SPANISH
 
     internal fun changeLanguage(view: View) {
         for (element in listLanguage) {
             val resourceID = resources.getIdentifier(element.id, "id", requireContext().packageName)
+            Log.d("element",element.id.toString())
             when (element.view) {
                 "TextView" -> {
                     view.findViewById<TextView>(resourceID)?.let {
@@ -357,4 +375,5 @@ abstract class BaseFragment : Fragment() {
             }
         }
     }
+
 }
