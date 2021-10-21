@@ -29,7 +29,7 @@ class ChatFragment : Fragment() {
     }
 
     private fun initSubscribeMessageEvents() {
-        TODO("Not yet implemented")
+
     }
 
 }

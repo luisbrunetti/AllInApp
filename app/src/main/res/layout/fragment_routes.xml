@@ -83,7 +83,7 @@
                         android:layout_height="match_parent">
 
                         <TextView
-                            android:id="@+id/textView36"
+                            android:id="@+id/tvLabelSelectDateRoute"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="36dp"
@@ -98,7 +98,7 @@
                             app:layout_constraintTop_toBottomOf="@+id/edUserRoutes" />
 
                         <EditText
-                            android:id="@+id/edDateGeoLocation"
+                            android:id="@+id/edDateRoute"
                             android:layout_width="0dp"
                             android:layout_height="56dp"
                             android:layout_marginStart="36dp"
@@ -114,7 +114,7 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintHorizontal_bias="1.0"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/textView36" />
+                            app:layout_constraintTop_toBottomOf="@+id/tvLabelSelectDateRoute" />
 
                         <AutoCompleteTextView
                             android:id="@+id/edUserRoutes"
@@ -131,10 +131,10 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintHorizontal_bias="0.0"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/textView12" />
+                            app:layout_constraintTop_toBottomOf="@+id/tvLabelUserRoute" />
 
                         <TextView
-                            android:id="@+id/textView12"
+                            android:id="@+id/tvLabelUserRoute"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="36dp"
@@ -165,7 +165,7 @@
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toEndOf="@id/btnRoutes"
-                            app:layout_constraintTop_toBottomOf="@+id/edDateGeoLocation"
+                            app:layout_constraintTop_toBottomOf="@+id/edDateRoute"
                             app:layout_constraintVertical_bias="0.0" />
 
                         <Button
@@ -185,7 +185,7 @@
                             app:layout_constraintEnd_toStartOf="@+id/btnTracking"
                             app:layout_constraintHorizontal_bias="0.0"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/edDateGeoLocation"
+                            app:layout_constraintTop_toBottomOf="@+id/edDateRoute"
                             app:layout_constraintVertical_bias="0.0" />
 
                         <LinearLayout
@@ -207,7 +207,7 @@
                                 android:orientation="vertical">
 
                                 <TextView
-                                    android:id="@+id/tvType"
+                                    android:id="@+id/tvTypeRoute"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="30dp"
@@ -218,7 +218,7 @@
                                     android:textStyle="bold" />
 
                                 <TextView
-                                    android:id="@+id/textView34"
+                                    android:id="@+id/tvPdvRoute"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="30dp"

@@ -119,9 +119,7 @@ class CoverageBoardFragment : BaseFragment() {
                 ){ list ->
                     if(list.isNotEmpty()){
                         selectedChannel = ch.filter { c ->
-                            c.description == list.find {
-                                it == c.description
-                            }
+                            c.description == list.find { it == c.description }
                         }.map { it.id?:""}
                         coverageViewModel.getChains(selectedChannel?: emptyList(),selectedRetail?: emptyList())
                     }

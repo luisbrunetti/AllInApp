@@ -2,7 +2,6 @@ package com.tawa.allinapp.features.routes
 
 import android.app.DatePickerDialog
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +15,7 @@ import com.tawa.allinapp.core.extensions.observe
 import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.FragmentRoutesBinding
-import com.tawa.allinapp.models.ReportStatus
+import com.tawa.allinapp.features.init.InitViewModel
 import com.tawa.allinapp.models.Routes
 import com.tawa.allinapp.models.RoutesUser
 import com.tawa.allinapp.models.Tracking
@@ -30,6 +29,7 @@ import kotlin.collections.ArrayList
 class RoutesFragment : BaseFragment() {
 
     private lateinit var routesViewModel: RoutesViewModel
+    private lateinit var initViewModel : InitViewModel
     private lateinit var binding: FragmentRoutesBinding
     private  val formatter: SimpleDateFormat = SimpleDateFormat("dd/MM/yyyy")
     private  val formatter1: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd")
@@ -61,7 +61,7 @@ class RoutesFragment : BaseFragment() {
                 if(it.isNotEmpty()){
                     listRoutesUser = it
                     binding.contRoutes.isVisible = true
-                    binding.tvType.text = "Rutas"
+                    binding.tvTypeRoute.text = getTypeOfLanguageById("tvTypeRoute")
                     createListRoutes(binding.listRoutes,it)
                 }
                 else {
@@ -72,23 +72,41 @@ class RoutesFragment : BaseFragment() {
                 if(it.isNotEmpty()){
                     listTrackingUser = it
                     binding.contRoutes.isVisible = true
-                    binding.tvType.text = "Seguimiento"
+                    binding.tvTypeRoute.text = getTypeOfLanguageById("tvTypeTracking")
                     createListTracking(binding.listRoutes,it)
                 }
                 else {
                     Toast.makeText(context, "No se encontraron datos", Toast.LENGTH_SHORT).show()
                 }
             } })
-
         }
+        initViewModel = viewModel(viewModelFactory){
+            observe(getLanguageSaved,{
+                it?.let {
+                    if(it != SPANISH){
+                        CURRENT_LANGUAGE = it
+                        initViewModel.getLanguageByXml("fragment_routes.xml")
+                    }
+                }
+            })
+            observe(getLanguageSuccess,{
+                it?.let { list ->
+                    if(list.isNotEmpty()){
+                        listLanguage = it
+                        changeLanguage(binding.root)
+                    }
+                }
+            })
+        }
+
         binding.btnBackRoutes.setOnClickListener {
             activity?.onBackPressed()
         }
-        binding.edDateGeoLocation.setOnClickListener{
-            getDay(binding.edDateGeoLocation)
+        binding.edDateRoute.setOnClickListener{
+            getDay(binding.edDateRoute)
         }
         binding.btnShowMapRoutes.setOnClickListener {
-            if(binding.tvType.text=="Rutas")
+            if(binding.tvTypeRoute.text=="Rutas")
                 showMapRoutesDialog(listRoutesUser)
             else
                 showMapTrackingDialog(listTrackingUser)
@@ -131,8 +149,11 @@ class RoutesFragment : BaseFragment() {
                 routesViewModel.getTracking(newList[0].id, dateFormat)
             }
         }
-        binding.edDateGeoLocation.setText(formatter.format(timestamp))
+        binding.edDateRoute.setText(formatter.format(timestamp))
         dateFormat = formatter1.format(timestamp)
+
+        initViewModel.getLanguage()
+
         return binding.root
     }
 

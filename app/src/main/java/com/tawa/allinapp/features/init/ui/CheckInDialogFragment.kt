@@ -32,12 +32,10 @@ import java.sql.Timestamp
 import java.text.SimpleDateFormat
 import javax.inject.Inject
 
-
 class CheckInDialogFragment
 @Inject constructor(
     private val baseFragment: BaseFragment
 ): DialogFragment(){
-
     private lateinit var binding: DialogCheckinBinding
     private  lateinit var initViewModel: InitViewModel
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient
@@ -64,6 +62,7 @@ class CheckInDialogFragment
             observe(schedule, {
                 it?.let {
                     list= it
+                    Log.d("Check in", it.toString())
                     arrayListPv.addAll(toArrayPv(it))
                     binding.pdvSpinner.adapter = aaPv
             } })
@@ -79,13 +78,29 @@ class CheckInDialogFragment
             observe(stateCheck, { it?.let {
                 checkState = it
             } })
+            observe(getLanguageSaved,{
+                it?.let {
+                    if(it != BaseFragment.SPANISH){
+                        BaseFragment.CURRENT_LANGUAGE = it
+                        initViewModel.getLanguageByXml("fragment_init.xml")
+                    }
+                }
+            })
+            observe(getLanguageSuccess,{
+                it?.let { list ->
+                    if(list.isNotEmpty()){
+                        baseFragment.listLanguage = it
+                        baseFragment.changeLanguage(binding.root)
+                    }
+                }
+            })
             failure(failure,{
                 Log.d("failure",it.toString())
             })
         }
         initViewModel.getIdCompany()
         initViewModel.getIdUser()
-
+        initViewModel.getLanguage()
         return binding.root
     }
 
