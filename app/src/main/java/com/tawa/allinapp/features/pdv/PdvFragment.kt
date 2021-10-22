@@ -38,6 +38,8 @@ class PdvFragment : BaseFragment() {
     var namePdv = ""
     var img64 = ""
     var stateLocation = 0
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         appComponent.inject(this)
@@ -103,22 +105,6 @@ class PdvFragment : BaseFragment() {
               /*  if(it)
                     findNavController().navigate(PdvFragmentDirections.actionNavigationPdvSelf())*/
             }})
-            observe(getLanguageSaved,{
-                it?.let {
-                    if(it != BaseFragment.SPANISH){
-                        CURRENT_LANGUAGE = it
-                        initViewModel.getLanguageByXml("fragment_pdv.xml")
-                    }
-                }
-            })
-            observe(getLanguageSuccess,{
-                it?.let { list ->
-                    if(list.isNotEmpty()){
-                        listLanguage = it
-                        changeLanguage(binding.root)
-                    }
-                }
-            })
         }
         pdvViewModel.getPdv()
         binding.btnBackPdv.setOnClickListener {
@@ -152,7 +138,7 @@ class PdvFragment : BaseFragment() {
             )
         }
 
-        initViewModel.getLanguage()
+        changeViewsFragment()
         return binding.root
     }
 
@@ -234,4 +220,5 @@ class PdvFragment : BaseFragment() {
             return@use outputStream.toString()
         }
     }
+    override fun changeViewsFragment() {}
 }

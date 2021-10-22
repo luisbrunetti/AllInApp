@@ -14,7 +14,7 @@ import android.os.Bundle
 import android.os.Looper
 import android.util.Log
 import android.view.View
-import android.widget.*
+import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
@@ -24,7 +24,6 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.location.*
 import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.textfield.TextInputLayout
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
@@ -35,16 +34,14 @@ import com.tawa.allinapp.R
 import com.tawa.allinapp.core.di.ApplicationComponent
 import com.tawa.allinapp.core.dialog.MessageDialogFragment
 import com.tawa.allinapp.core.dialog.ProgressDialogFragment
-import com.tawa.allinapp.core.extensions.appContext
-import com.tawa.allinapp.core.extensions.observe
-import com.tawa.allinapp.core.extensions.viewContainer
+import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.functional.Failure
-import com.tawa.allinapp.data.remote.entities.LanguageRemote
 import com.tawa.allinapp.features.HomeActivity
+import com.tawa.allinapp.features.auth.AuthViewModel
 import com.tawa.allinapp.features.auth.ui.LoginActivity
+import com.tawa.allinapp.models.Translate
+import com.tawa.allinapp.models.TranslateItem
 import kotlinx.android.synthetic.main.toolbar.*
-import org.intellij.lang.annotations.Language
-import org.json.JSONObject
 import java.util.*
 import javax.inject.Inject
 
@@ -54,7 +51,6 @@ abstract class BaseFragment : Fragment() {
     private var progressDialog: ProgressDialogFragment? = null
 
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient
-    lateinit var listLanguage: List<com.tawa.allinapp.models.Language>
 
     var latitude :String= ""
     var longitude :String= ""
@@ -65,6 +61,7 @@ abstract class BaseFragment : Fragment() {
         const val ENGLISH : String = "ENGLISH"
         var CURRENT_LANGUAGE: String = SPANISH
     }
+    var languagePosition: Int = 0
 
     protected var mDay: Int? = null
     protected var mMonth: Int? = null
@@ -79,6 +76,8 @@ abstract class BaseFragment : Fragment() {
     var year:String = ""
 
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject lateinit var translateObject: TranslateObject
+
 
     open fun onBackPressed() {
 
@@ -317,7 +316,7 @@ abstract class BaseFragment : Fragment() {
         activity?.let {
             val snackBar = Snackbar.make(it.findViewById(R.id.container), message, Snackbar.LENGTH_INDEFINITE)
             snackBar.setAction(actionText) { _ -> action.invoke() }
-            snackBar.setActionTextColor(ContextCompat.getColor(appContext, R.color.colorTextPrimary))
+            snackBar.setActionTextColor(ContextCompat.getColor(requireContext(), R.color.colorTextPrimary))
             snackBar.show()
         }
     }
@@ -332,48 +331,7 @@ abstract class BaseFragment : Fragment() {
         this.mYear = year
     }
 
-    internal fun changeLanguage(view: View) {
-        for (element in listLanguage) {
-            val resourceID = resources.getIdentifier(element.id, "id", requireContext().packageName)
-            Log.d("element",element.id.toString())
-            when (element.view) {
-                "TextView" -> {
-                    view.findViewById<TextView>(resourceID)?.let {
-                        if (CURRENT_LANGUAGE == SPANISH) it.text = element.spanishText
-                        else if (CURRENT_LANGUAGE == ENGLISH) it.text = element.englishText
-                    }
-                }
-                "Button" -> {
-                    view.findViewById<Button>(resourceID)?.let {
-                        if (CURRENT_LANGUAGE == SPANISH) it.text = element.spanishText
-                        else if (CURRENT_LANGUAGE == ENGLISH) it.text = element.englishText
-                    }
-                }
-                "TextInputLayout" -> {
-                    view.findViewById<TextInputLayout>(resourceID)?.let {
-                        if (CURRENT_LANGUAGE == SPANISH) it.hint = element.spanishText
-                        else if (CURRENT_LANGUAGE == ENGLISH) it.hint = element.englishText
-                    }
-                }
-                "EditText" -> {
-                    view.findViewById<EditText>(resourceID)?.let {
-                        if (element.type == "Hint") {
-                            if (CURRENT_LANGUAGE == SPANISH) it.hint = element.spanishText
-                            else if (CURRENT_LANGUAGE == ENGLISH) it.hint = element.englishText
-                        } else if (element.type == "Text") {
-                            if (CURRENT_LANGUAGE == SPANISH) it.setText(element.spanishText)
-                            else if (CURRENT_LANGUAGE == ENGLISH) it.setText(element.englishText)
-                        }
-                    }
-                }
-                "CheckBox" -> {
-                    view.findViewById<CheckBox>(resourceID)?.let {
-                        if (CURRENT_LANGUAGE == SPANISH) it.text = element.spanishText
-                        else if (CURRENT_LANGUAGE == ENGLISH) it.text = element.englishText
-                    }
-                }
-            }
-        }
-    }
+
+    abstract fun changeViewsFragment()
 
 }

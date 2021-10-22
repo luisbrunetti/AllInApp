@@ -53,6 +53,7 @@ class CoverageBoardFragment : BaseFragment() {
     private var startDate:String? = null
     private var endDate:String? = null
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         appComponent.inject(this)
@@ -95,6 +96,7 @@ class CoverageBoardFragment : BaseFragment() {
 
         }
         initViewModels()
+        changeViewsFragment()
         return ComposeView(requireContext()).apply {
             setContent {
                 main()
@@ -211,5 +213,8 @@ class CoverageBoardFragment : BaseFragment() {
     @Composable
     fun MainContainer(){
         main()
+    }
+    override fun changeViewsFragment() {
+
     }
 }

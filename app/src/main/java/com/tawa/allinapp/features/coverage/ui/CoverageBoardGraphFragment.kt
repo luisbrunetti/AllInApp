@@ -42,6 +42,7 @@ class CoverageBoardGraphFragment: BaseFragment() {
     private lateinit var coverageViewModel: CoverageViewModel
     private var graph:CoverageGraph? =null
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         appComponent.inject(this)
@@ -57,6 +58,7 @@ class CoverageBoardGraphFragment: BaseFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         initArgs()
+        changeViewsFragment()
         return ComposeView(requireContext()).apply {
             setContent {
                 Column {
@@ -69,6 +71,9 @@ class CoverageBoardGraphFragment: BaseFragment() {
 
             }
         }
+    }
+    override fun changeViewsFragment() {
+
     }
 
     @Composable

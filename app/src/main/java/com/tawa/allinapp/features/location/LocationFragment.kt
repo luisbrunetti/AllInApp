@@ -33,4 +33,8 @@ class LocationFragment : BaseFragment() {
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(mapCallback)
     }
+
+    override fun changeViewsFragment() {
+
+    }
 }

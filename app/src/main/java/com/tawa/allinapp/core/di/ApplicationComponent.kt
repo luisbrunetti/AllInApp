@@ -18,7 +18,6 @@ import com.tawa.allinapp.features.messages.ui.MessagesFragment
 import com.tawa.allinapp.features.movies.ui.MoviesFragment
 import com.tawa.allinapp.features.pdv.PdvFragment
 import com.tawa.allinapp.features.pdv.TakePhotoDialogFragment
-import com.tawa.allinapp.features.reports.audio.AudioFragment
 import com.tawa.allinapp.features.reports.picture.PictureFragment
 import com.tawa.allinapp.features.reports.standard.CheckListFragment
 import com.tawa.allinapp.features.reports.ReportsFragment
@@ -56,7 +55,6 @@ interface ApplicationComponent{
     fun inject(userStatusFragment: UserStatusFragment)
     fun inject(skuFragment: SkuFragment)
     fun inject(lastLocationFragment: LastLocationFragment)
-    fun inject(audioFragment: AudioFragment)
     fun inject(informsFragment: InformsFragment)
     fun inject(sendPasswordFragment: SendPasswordFragment)
     fun inject(coverageBoardFragment: CoverageBoardFragment)

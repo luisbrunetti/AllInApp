@@ -7,9 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import com.tawa.allinapp.R
-import com.tawa.allinapp.core.extensions.observe
-import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.FragmentTaskBinding
 import com.tawa.allinapp.features.init.InitViewModel
@@ -28,25 +25,11 @@ class TaskFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         checkPermissions()
-        initViewModel = viewModel(viewModelFactory){
-            observe(getLanguageSaved,{
-                it?.let {
-                    if(it != BaseFragment.SPANISH){
-                        BaseFragment.CURRENT_LANGUAGE = it
-                        initViewModel.getLanguageByXml("fragment_task.xml")
-                    }
-                }
-            })
-            observe(getLanguageSuccess,{
-                it?.let { list ->
-                    if(list.isNotEmpty()){
-                        listLanguage = it
-                        changeLanguage(binding.root)
-                    }
-                }
-            })
-        }
-        initViewModel.getLanguage()
+        changeViewsFragment()
+
+    }
+
+    override fun changeViewsFragment() {
 
     }
 

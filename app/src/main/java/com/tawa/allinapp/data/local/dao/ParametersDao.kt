@@ -7,6 +7,8 @@ import androidx.room.Query
 import com.tawa.allinapp.data.local.models.CompanyModel
 import com.tawa.allinapp.data.local.models.LanguageModel
 import com.tawa.allinapp.data.local.models.ScheduleModel
+import com.tawa.allinapp.data.local.models.TranslateModel
+import com.tawa.allinapp.models.TranslateItem
 
 @Dao
 interface ParametersDao {
@@ -24,8 +26,8 @@ interface ParametersDao {
     fun getPV(company:String,idUser: String): List<ScheduleModel>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertLanguages(languageModel: LanguageModel)
+    fun insertTranslateItem(translateModel: TranslateModel)
 
-    @Query("SELECT * FROM Language WHERE xmlName = :xmlName")
-    fun getLanguageByXml(xmlName: String) : List<LanguageModel>
+    /*@Query("SELECT * FROM Language WHERE xmlName = :xmlName")
+    fun getLanguageByXml(xmlName: String) : List<LanguageModel>*/
 }

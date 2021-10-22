@@ -1,0 +1,90 @@
+[
+  {
+    "id": "tvHellowLoginFragment",
+    "translate":["¡Hola!","Welcome"]
+  },
+  {
+    "id": "tvInfoLoginFragment",
+    "translate":["Ingresa tus datos para iniciar sesión","Enter your username and password to log in"]
+  },
+  {
+    "id": "txtInputUserLoginFragment",
+    "translate":["Usuario","User"]
+  },
+  {
+    "id": "txtInputPasswordLoginFragment",
+    "translate":["Contraseña","Password"]
+  },
+  {
+    "id": "cbRememberLoginFragment",
+    "translate":["Recuerdame","Remember me"]
+  },
+  {
+    "id": "btnLoginFragment",
+    "translate":["Ingresar","Log in"]
+  },
+  {
+    "id": "edForgotPassword",
+    "translate":["¿Olvidaste la contraseña?","Did you forget your password?"]
+  },
+  {
+    "id": "tvTitleSendPassword",
+    "translate":["Enviar contraseña","Send password"]
+  },
+  {
+    "id": "tvInputUserSendPassword",
+    "translate":["Ingresa el usuario con el que estás registrado:","Enter the user you are registered with:"]
+  },
+  {
+    "id": "txtIptUserSendPassword",
+    "translate":["Ingrese usuario","Enter user"]
+  },
+  {
+    "id": "btnSendPassword",
+    "translate":["Enviar contraseña","Send password"]
+  },
+  {
+    "id": "tvWelcomeInitFragment",
+    "translate":["Buenos Dias,","Welcome,"]
+  },
+  {
+    "id": "btCheckIn",
+    "translate":["Marcar Ingreso","Check In"]
+  },
+  {
+    "id": "tvPvInitFragment",
+    "translate":["Puntos de venta","Point of sales"]
+  },
+  {
+    "id": "tvReportInitFragment",
+    "translate":["Reporte","Reports"]
+  },
+  {
+    "id": "tvMessageInitFragment",
+    "translate":["Mensajes","Messages"]
+  },
+  {
+    "id": "tvInformsInitFragment",
+    "translate":["Informes","Information"]
+  },
+  {
+    "id": "tvSyncInitFragment",
+    "translate":["Sincronizar","Sync up"]
+  },
+  {
+    "id": "tvDocumentsInitFragment",
+    "translate":["Documentos","Documents"]
+  },
+  {
+    "id": "tvRoutesInitFragment",
+    "translate":["Rutas","Routes"]
+  },
+  {
+    "id": "tvCalendarInitFragment",
+    "translate":["Calendario","Calendar"]
+  },
+  {
+    "id": "tvTaskInitFragment",
+    "translate":["Tareas","Tasks"]
+  }
+]

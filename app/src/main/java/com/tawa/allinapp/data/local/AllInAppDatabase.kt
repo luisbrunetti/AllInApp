@@ -25,7 +25,7 @@ import com.tawa.allinapp.features.movies.models.Movie
     PdvModel::class,
     SubAnswerModel::class,
     TaskModel::class,
-    LanguageModel::class
+    TranslateModel::class
 ],version = 1)
 abstract class AllInAppDatabase: RoomDatabase(){
     abstract fun movieDao(): MovieDao

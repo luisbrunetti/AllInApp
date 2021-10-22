@@ -1,16 +1,21 @@
 package com.tawa.allinapp.data.repository
 
+
 import android.util.Log
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.tawa.allinapp.BuildConfig
 import com.tawa.allinapp.core.functional.Either
 import com.tawa.allinapp.core.functional.Failure
 import com.tawa.allinapp.core.functional.NetworkHandler
+import com.tawa.allinapp.core.platform.TranslateObject
 import com.tawa.allinapp.data.local.Prefs
 import com.tawa.allinapp.data.local.datasource.ParametersDataSource
 import com.tawa.allinapp.data.remote.api.ParametersApi
 import com.tawa.allinapp.data.remote.service.ParametersService
 import com.tawa.allinapp.models.Company
 import com.tawa.allinapp.models.Schedule
+import com.tawa.allinapp.models.Translate
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -22,15 +27,16 @@ interface ParametersRepository {
     fun getCompanies(): Either<Failure,List<Company>>
     fun setPV(idCompany: String): Either<Failure, Boolean>
     fun getPV(company:String): Either<Failure, List<Schedule>>
-    fun setLanguage(language:String) : Either<Failure, Boolean>
-    fun getLanguage(): Either<Failure,String>
-    fun getTranslate(language :String): Either<Failure,List<com.tawa.allinapp.models.Language>>
-    fun getLanguageByXml(xmlName : String): Either<Failure, List<com.tawa.allinapp.models.Language>>
+    fun setLanguage(language:Int) : Either<Failure, Boolean>
+    fun getLanguage(): Either<Failure,Translate>
+    fun getTranslate(): Either<Failure,Translate>
+    //fun getLanguageByXml(xmlName : String): Either<Failure, List<com.tawa.allinapp.models.Language>>
     class Network
     @Inject constructor(private val networkHandler: NetworkHandler,
                         private val parametersDataSource: ParametersDataSource,
                         private val prefs: Prefs,
-                        private val service: ParametersService
+                        private val service: ParametersService,
+                        private val translateObject: TranslateObject
     ): ParametersRepository{
         override fun setCompanies(): Either<Failure, Boolean> {
             return when (networkHandler.isConnected) {
@@ -114,14 +120,30 @@ interface ParametersRepository {
             }
         }
 
-        override fun getLanguage(): Either<Failure, String> {
-            return try{
-                Either.Right(prefs.language!!)
-            }catch (e : Exception){
-                Either.Left(Failure.DefaultError(e.message!!))
+        override fun getLanguage(): Either<Failure, Translate> {
+            try {
+                val retrofit = provideRetrofit()
+                val response = retrofit.getLanguage().execute()
+                if (response.isSuccessful) {
+                    response.body()?.let {
+                        Log.d("response", it.toString())
+                        /*for(element in it.data.arrayTranslate){
+                            val string = Gson().toJson(element.translate, object: TypeToken<List<String>>() {}.type)
+                            Log.d("string",string.toString())
+                            parametersDataSource.insertTranslateItem(element.toModel(string))
+                        }*/
+                        Log.d("posijtion",prefs.language.toString())
+                        translateObject.setInstance(it.data)
+                        translateObject.LANGUAGE = prefs.language!!.toInt()
+                        return Either.Right(it.data)
+                    } ?: Either.Right(Translate(emptyList()))
+                }
+                return Either.Right(Translate(emptyList()))
+            } catch (e: Exception) {
+                return Either.Left(Failure.DefaultError(e.message!!))
             }
         }
-        override fun setLanguage(language: String): Either<Failure, Boolean> {
+        override fun setLanguage(language: Int): Either<Failure, Boolean> {
             return try{
                 prefs.language = language
                 Either.Right(true)
@@ -130,32 +152,36 @@ interface ParametersRepository {
             }
         }
 
-        override fun getTranslate(language: String): Either<Failure, List<com.tawa.allinapp.models.Language>> {
+        override fun getTranslate(): Either<Failure, Translate> {
             try {
                 val retrofit = provideRetrofit()
-                val response = retrofit.getLanguage(language).execute()
+                val response = retrofit.getLanguage().execute()
                 if(response.isSuccessful){
                     response.body()?.let {
                         Log.d("response",it.toString())
-                        for(element in it.data){ parametersDataSource.insertLanguages(element.toModel()) }
-                        setLanguage(language)
-                        return Either.Right(it.data.map { element -> element.toView() })
-                    }
-                    return Either.Right(emptyList())
+
+                        for(element in it.data.arrayTranslate){
+                            val string = Gson().toJson(element.translate, object: TypeToken<List<String>>() {}.type)
+                            Log.d("string",string.toString())
+                            parametersDataSource.insertTranslateItem(element.toModel(string))
+                        }
+                        return Either.Right(it.data)
+                    }?: Either.Left(Failure.DefaultError(""))
                 }
-                return Either.Right(emptyList())
+                return Either.Left(Failure.DefaultError(""))
             }catch (e : Exception){
                 return Either.Left(Failure.DefaultError(e.message!!))
             }
         }
 
-        override fun getLanguageByXml(xmlName: String): Either<Failure, List<com.tawa.allinapp.models.Language>> {
+
+        /*override fun getLanguageByXml(xmlName: String): Either<Failure, List<com.tawa.allinapp.models.Language>> {
             return try{
                 Either.Right(parametersDataSource.getLanguageByXml(xmlName).map { it.toView() })
             }catch (e : Exception){
                 Either.Left(Failure.DefaultError(e.message))
             }
-        }
+        }*/
         fun provideRetrofit(): ParametersApi {
             return Retrofit.Builder()
                 .baseUrl("http://run.mocky.io/v3/")

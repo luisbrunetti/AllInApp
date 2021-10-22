@@ -14,3 +14,5 @@ data class AnswersPv(
 {
     fun toModel() = AnswersPvModel(id,idPv,idAnswer,idQuestion,nameAnswer,image,idUser)
 }
+
+

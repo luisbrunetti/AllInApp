@@ -68,7 +68,7 @@ class TakePhotoDialogFragment
         super.onViewCreated(view, savedInstanceState)
 
         initViewModel = viewModel(baseFragment.viewModelFactory){
-            observe(getLanguageSaved,{
+            /*observe(getLanguageSaved,{
                 it?.let {
                     if(it != BaseFragment.SPANISH){
                         BaseFragment.CURRENT_LANGUAGE = it
@@ -83,7 +83,7 @@ class TakePhotoDialogFragment
                         baseFragment.changeLanguage(binding.root)
                     }
                 }
-            })
+            })*/
         }
 
 
@@ -98,7 +98,7 @@ class TakePhotoDialogFragment
             dismiss()
         }
 
-        initViewModel.getLanguage()
+        //initViewModel.getLanguage()
     }
 
 

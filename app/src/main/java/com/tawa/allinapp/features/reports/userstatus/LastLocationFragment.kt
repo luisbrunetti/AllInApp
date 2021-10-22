@@ -29,7 +29,12 @@ class LastLocationFragment : BaseFragment() {
         binding.btnBackLocation.setOnClickListener{
             activity?.onBackPressed()
         }
+        changeViewsFragment()
         return binding.root
+    }
+
+    override fun changeViewsFragment() {
+
     }
 
     private val mapCallback = OnMapReadyCallback { googleMap ->

@@ -166,27 +166,8 @@ class PictureFragment : BaseFragment() {
             })
         }
 
-        initViewModel = viewModel(viewModelFactory) {
-            observe(getLanguageSaved, {
-                it?.let {
-                    if (it != BaseFragment.SPANISH) {
-                        BaseFragment.CURRENT_LANGUAGE = it
-                        initViewModel.getLanguageByXml("fragment_picture.xml")
-                    }
-                }
-            })
-            observe(getLanguageSuccess, {
-                it?.let { list ->
-                    if (list.isNotEmpty()) {
-                        listLanguage = it
-                        changeLanguage(binding.root)
-                    }
-                }
-            })
-        }
-
         pictureViewModel.getTypePicture()
-        initViewModel.getLanguage()
+        //initViewModel.getLanguage()
 
         binding.iHeader.ivHeader.setOnClickListener { activity?.onBackPressed() }
         binding.btnPhotoBeforePicture.setOnClickListener {
@@ -256,7 +237,12 @@ class PictureFragment : BaseFragment() {
 
 
         }
+        changeViewsFragment()
         return binding.root
+    }
+
+    override fun changeViewsFragment() {
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

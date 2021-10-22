@@ -77,7 +77,7 @@ class CheckInDialogFragment
             } })
             observe(stateCheck, { it?.let {
                 checkState = it
-            } })
+            } })/*
             observe(getLanguageSaved,{
                 it?.let {
                     if(it != BaseFragment.SPANISH){
@@ -93,14 +93,14 @@ class CheckInDialogFragment
                         baseFragment.changeLanguage(binding.root)
                     }
                 }
-            })
+            })*/
             failure(failure,{
                 Log.d("failure",it.toString())
             })
         }
         initViewModel.getIdCompany()
         initViewModel.getIdUser()
-        initViewModel.getLanguage()
+        //initViewModel.getLanguage()
         return binding.root
     }
 

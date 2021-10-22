@@ -29,6 +29,10 @@ class MoviesFragment : BaseFragment() {
         appComponent.inject(this)
     }
 
+    override fun changeViewsFragment() {
+
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentMoviesBinding.inflate(inflater)
         moviesViewModel = viewModel(viewModelFactory) {

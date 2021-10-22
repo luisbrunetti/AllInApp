@@ -1,7 +1,6 @@
 package com.tawa.allinapp.data.local.models
 
 import androidx.room.Entity
-import com.tawa.allinapp.models.Language
 
 @Entity(tableName = "Language",primaryKeys = ["id"])
 data class LanguageModel(
@@ -12,5 +11,5 @@ data class LanguageModel(
     val englishText : String,
     val xmlName : String
 ){
-    fun toView() = Language(view,type,id,spanishText,englishText,xmlName)
+   // fun toView() = Language(view,type,id,spanishText,englishText,xmlName)
 }

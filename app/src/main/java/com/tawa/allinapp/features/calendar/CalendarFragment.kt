@@ -28,6 +28,7 @@ class CalendarFragment : BaseFragment() {
     private lateinit var calendarViewModel: CalendarViewModel
     private lateinit var binding: FragmentCalendarBinding
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         appComponent.inject(this)
@@ -43,5 +44,8 @@ class CalendarFragment : BaseFragment() {
             })
         }
         return binding.root
+    }
+    override fun changeViewsFragment() {
+
     }
 }

@@ -239,22 +239,6 @@ class InitFragment : BaseFragment() {
                     binding.vNotifyCount.isVisible = false
                 }
             }})
-            observe(getLanguageSaved,{
-                it?.let {
-                    if(it != BaseFragment.SPANISH){
-                        CURRENT_LANGUAGE = it
-                        initViewModel.getLanguageByXml("fragment_init.xml")
-                    }
-                }
-            })
-            observe(getLanguageSuccess,{
-                it?.let { list ->
-                    if(list.isNotEmpty()){
-                        listLanguage = it
-                        changeLanguage(binding.root)
-                    }
-                }
-            })
             failure(failure, ::handleFailure)
         }
         //Seleccionando empresa
@@ -265,7 +249,7 @@ class InitFragment : BaseFragment() {
         initViewModel.getCheckMode()
         initViewModel.getPvIdFirstTime()
         //initViewModel.getIdCompany()
-        initViewModel.getLanguage()
+        //initViewModel.getLanguage()
         initViewModel.getIdCompanyPreferences().let {
             if(it.isEmpty()) {
                 showSelector()
@@ -456,6 +440,7 @@ class InitFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setUpBinding()
+        changeViewsFragment()
         hideProgressDialog()
     }
 
@@ -482,6 +467,22 @@ class InitFragment : BaseFragment() {
         super.onResume()
         (activity as HomeActivity).hideNavBar()
         initViewModel.getRoleUser()
+    }
+
+    override fun changeViewsFragment() {
+        translateObject.apply {
+            binding.tvWelcomeInitFragment.text = findTranslate("tvWelcomeInitFragment")
+            binding.btCheckIn.text = findTranslate("btCheckInInitFragment")
+            binding.tvPvInitFragment.text = findTranslate("tvPvInitFragment")
+            binding.tvReportInitFragment.text = findTranslate("tvReportInitFragment")
+            binding.tvMessageInitFragment.text = findTranslate("tvMessageInitFragment")
+            binding.tvInformsInitFragment.text = findTranslate("tvInformsInitFragment")
+            binding.tvSyncInitFragment.text = findTranslate("tvSyncInitFragment")
+            binding.tvDocumentsInitFragment.text = findTranslate("tvDocumentsInitFragment")
+            binding.tvRoutesInitFragment.text = findTranslate("tvRoutesInitFragment")
+            binding.tvCalendarInitFragment.text = findTranslate("tvCalendarInitFragment")
+            binding.tvTaskInitFragment.text = findTranslate("tvTaskInitFragment")
+        }
     }
 
     private fun setUpBinding() {

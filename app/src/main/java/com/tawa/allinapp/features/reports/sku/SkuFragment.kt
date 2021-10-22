@@ -202,9 +202,14 @@ class SkuFragment : BaseFragment() {
                 notify(activity, R.string.register_ready)
         }
         skuViewModel.getTypeSku(1)
+        changeViewsFragment()
         return binding.root
     }
 
+
+    override fun changeViewsFragment() {
+
+    }
     private fun showTable(){
         removeArray()
         binding.tlSku.removeViews(1,binding.tlSku.size-1)

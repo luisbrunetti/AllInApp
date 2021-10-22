@@ -85,9 +85,12 @@ class ConfirmNewGroupFragment
         savedInstanceState: Bundle?
     ): View {
         binding  = FragmentConfirmNewGroupBinding.inflate(inflater)
-
+        changeViewsFragment()
 
         return binding.root
+    }
+    override fun changeViewsFragment() {
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

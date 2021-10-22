@@ -61,7 +61,7 @@ class RoutesFragment : BaseFragment() {
                 if(it.isNotEmpty()){
                     listRoutesUser = it
                     binding.contRoutes.isVisible = true
-                    binding.tvTypeRoute.text = getTypeOfLanguageById("tvTypeRoute")
+                    //binding.tvTypeRoute.text = getTypeOfLanguageById("tvTypeRoute")
                     createListRoutes(binding.listRoutes,it)
                 }
                 else {
@@ -72,7 +72,7 @@ class RoutesFragment : BaseFragment() {
                 if(it.isNotEmpty()){
                     listTrackingUser = it
                     binding.contRoutes.isVisible = true
-                    binding.tvTypeRoute.text = getTypeOfLanguageById("tvTypeTracking")
+                    //binding.tvTypeRoute.text = getTypeOfLanguageById("tvTypeTracking")
                     createListTracking(binding.listRoutes,it)
                 }
                 else {
@@ -80,24 +80,7 @@ class RoutesFragment : BaseFragment() {
                 }
             } })
         }
-        initViewModel = viewModel(viewModelFactory){
-            observe(getLanguageSaved,{
-                it?.let {
-                    if(it != SPANISH){
-                        CURRENT_LANGUAGE = it
-                        initViewModel.getLanguageByXml("fragment_routes.xml")
-                    }
-                }
-            })
-            observe(getLanguageSuccess,{
-                it?.let { list ->
-                    if(list.isNotEmpty()){
-                        listLanguage = it
-                        changeLanguage(binding.root)
-                    }
-                }
-            })
-        }
+
 
         binding.btnBackRoutes.setOnClickListener {
             activity?.onBackPressed()
@@ -152,11 +135,13 @@ class RoutesFragment : BaseFragment() {
         binding.edDateRoute.setText(formatter.format(timestamp))
         dateFormat = formatter1.format(timestamp)
 
-        initViewModel.getLanguage()
-
+        changeViewsFragment()
         return binding.root
     }
 
+    override fun changeViewsFragment() {
+
+    }
     private fun showUser(list:List<RoutesUser>){
         val listUser  = ArrayList<String>()
         for(user in list)

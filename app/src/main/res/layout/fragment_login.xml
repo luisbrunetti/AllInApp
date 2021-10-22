@@ -81,7 +81,7 @@
                     app:layout_constraintVertical_bias="0.0" />
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/conteUsu"
+                    android:id="@+id/txtInputUserLoginFragment"
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
                     android:layout_marginStart="16dp"
@@ -107,7 +107,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/contePassword"
+                    android:id="@+id/txtInputPasswordLoginFragment"
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
                     android:layout_marginStart="16dp"
@@ -121,7 +121,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/conteUsu"
+                    app:layout_constraintTop_toBottomOf="@+id/txtInputUserLoginFragment"
                     app:layout_constraintVertical_bias="0.0"
                     app:passwordToggleDrawable="@drawable/icon_selector"
                     app:passwordToggleEnabled="true">
@@ -153,7 +153,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/contePassword" />
+                    app:layout_constraintTop_toBottomOf="@+id/txtInputPasswordLoginFragment" />
 
                 <TextView
                     android:id="@+id/tvErroLoginFragment"
@@ -164,7 +164,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/contePassword"
+                    app:layout_constraintTop_toBottomOf="@+id/txtInputPasswordLoginFragment"
                     app:layout_constraintVertical_bias="0.96" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>

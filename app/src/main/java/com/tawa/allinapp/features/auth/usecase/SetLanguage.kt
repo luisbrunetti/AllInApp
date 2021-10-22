@@ -11,6 +11,6 @@ class SetLanguage
 
     override suspend fun run(params: Params) = paramsRepository.setLanguage(params.language)
 
-    data class Params(val language:String)
+    data class Params(val language:Int)
 
 }

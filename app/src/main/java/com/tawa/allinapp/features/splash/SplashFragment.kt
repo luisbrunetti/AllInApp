@@ -35,4 +35,5 @@ class SplashFragment : BaseFragment() {
         return binding.root
     }
 
+    override fun changeViewsFragment() {}
 }

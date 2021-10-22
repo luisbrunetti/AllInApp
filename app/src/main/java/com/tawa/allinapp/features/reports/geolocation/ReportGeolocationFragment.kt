@@ -76,28 +76,6 @@ class ReportGeolocationFragment : BaseFragment(), RecyclerUser.onClickButton{
                 }
             })
         }
-
-        initViewModel = viewModel(viewModelFactory){
-            observe(getLanguageSaved,{
-                it?.let {
-                    if(it != BaseFragment.SPANISH){
-                        BaseFragment.CURRENT_LANGUAGE = it
-                        initViewModel.getLanguageByXml("fragment_report_geolocation.xml")
-                    }
-                }
-            })
-            observe(getLanguageSuccess,{
-                it?.let { list ->
-                    if(list.isNotEmpty()){
-                        listLanguage = it
-                        changeLanguage(binding.root)
-                    }
-                }
-            })
-        }
-
-        initViewModel.getLanguage()
-
         binding.edUserGeoLocation.setOnClickListener {
             if(binding.cvUsersReportLocation.visibility == View.VISIBLE) binding.cvUsersReportLocation.visibility = View.GONE
             else binding.cvUsersReportLocation.visibility = View.VISIBLE
@@ -149,7 +127,13 @@ class ReportGeolocationFragment : BaseFragment(), RecyclerUser.onClickButton{
         })*/
         //Llamadas a los servicios
         reportGeoViewModel.getListUser()
+
+        changeViewsFragment()
         return binding.root
+    }
+
+    override fun changeViewsFragment() {
+
     }
 
     private fun showUser(list:List<RoutesUser>){

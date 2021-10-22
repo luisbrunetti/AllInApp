@@ -10,16 +10,16 @@ import com.tawa.allinapp.features.init.InitViewModel
 import com.tawa.allinapp.features.messages.MessagesViewModel
 import com.tawa.allinapp.features.movies.MoviesViewModel
 import com.tawa.allinapp.features.pdv.PdvViewModel
-import com.tawa.allinapp.features.reports.audio.AudioViewModel
-import com.tawa.allinapp.features.reports.picture.PictureViewModel
-import com.tawa.allinapp.features.reports.standard.CheckListViewModel
 import com.tawa.allinapp.features.reports.ReportsViewModel
 import com.tawa.allinapp.features.reports.geolocation.ReportGeolocationViewModel
+import com.tawa.allinapp.features.reports.picture.PictureViewModel
 import com.tawa.allinapp.features.reports.sku.SkuViewModel
+import com.tawa.allinapp.features.reports.standard.CheckListViewModel
 import com.tawa.allinapp.features.reports.userstatus.UserStatusViewModel
 import com.tawa.allinapp.features.routes.RoutesViewModel
 import com.tawa.allinapp.features.splash.SplashViewModel
 import com.tawa.allinapp.features.task.TaskViewModel
+import com.tawa.allinapp.models.TranslateItem
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -84,10 +84,6 @@ abstract class ViewModelModule {
     @ViewModelKey(UserStatusViewModel::class)
     abstract fun bindsUserStatusViewModel(userStatusViewModel: UserStatusViewModel): ViewModel
 
-    @Binds
-    @IntoMap
-    @ViewModelKey(AudioViewModel::class)
-    abstract fun bindsAudioViewModel(audioViewModel: AudioViewModel): ViewModel
 
     @Binds
     @IntoMap

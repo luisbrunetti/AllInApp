@@ -76,24 +76,7 @@ class UserStatusFragment : BaseFragment() {
 
             } })
         }
-        initViewModel = viewModel(viewModelFactory){
-            observe(getLanguageSaved,{
-                it?.let {
-                    if(it != SPANISH){
-                        CURRENT_LANGUAGE = it
-                        initViewModel.getLanguageByXml("fragment_user_status.xml")
-                    }
-                }
-            })
-            observe(getLanguageSuccess,{
-                it?.let { list ->
-                    if(list.isNotEmpty()){
-                        listLanguage = it
-                        changeLanguage(binding.root)
-                    }
-                }
-            })
-        }
+
         binding.etDateUserStatus.setOnClickListener{
             getDay(binding.etDateUserStatus)
         }
@@ -131,11 +114,14 @@ class UserStatusFragment : BaseFragment() {
                 }
             }
         }
-        initViewModel.getLanguage()
+        changeViewsFragment()
 
         return binding.root
     }
 
+    override fun changeViewsFragment() {
+
+    }
     private  fun dateFilter(date:String){
         removeArray()
         binding.tlName.removeViews(1,listLimited.size)

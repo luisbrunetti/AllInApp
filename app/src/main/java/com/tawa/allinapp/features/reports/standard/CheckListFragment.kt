@@ -172,6 +172,9 @@ class CheckListFragment: BaseFragment() {
         super.onCreate(savedInstanceState)
         appComponent.inject(this)
     }
+    override fun changeViewsFragment() {
+
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentChecklistBinding.inflate(inflater)
@@ -904,8 +907,10 @@ class CheckListFragment: BaseFragment() {
             else
                 notify(activity, R.string.register_ready)
         }
+        changeViewsFragment()
         return binding.root
     }
+
 
     private fun findElements(){
        /* checkListViewModel.startRadio()

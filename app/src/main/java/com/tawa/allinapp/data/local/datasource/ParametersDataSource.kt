@@ -4,7 +4,8 @@ import com.tawa.allinapp.data.local.dao.ParametersDao
 import com.tawa.allinapp.data.local.models.CompanyModel
 import com.tawa.allinapp.data.local.models.LanguageModel
 import com.tawa.allinapp.data.local.models.ScheduleModel
-import com.tawa.allinapp.data.remote.entities.LanguageRemote
+import com.tawa.allinapp.data.local.models.TranslateModel
+import com.tawa.allinapp.models.TranslateItem
 import javax.inject.Inject
 
 
@@ -21,10 +22,10 @@ class ParametersDataSource @Inject constructor(private val parametersDao: Parame
     fun getPV(company:String,idUser: String):List<ScheduleModel> {
         return parametersDao.getPV(company,idUser)
     }
-    fun insertLanguages(languageRemote: LanguageModel){
-        return parametersDao.insertLanguages(languageRemote)
+    fun insertTranslateItem(translateModel: TranslateModel){
+        return parametersDao.insertTranslateItem(translateModel)
     }
-    fun getLanguageByXml(xmlName: String): List<LanguageModel>{
+    /*fun getLanguageByXml(xmlName: String): List<LanguageModel>{
         return parametersDao.getLanguageByXml(xmlName)
-    }
+    }*/
 }

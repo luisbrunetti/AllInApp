@@ -2,8 +2,9 @@ package com.tawa.allinapp.data.remote.api
 
 import com.tawa.allinapp.core.platform.BaseResponse
 import com.tawa.allinapp.data.remote.entities.CompanyRemote
-import com.tawa.allinapp.data.remote.entities.LanguageRemote
 import com.tawa.allinapp.data.remote.entities.ScheduleRemote
+import com.tawa.allinapp.data.remote.entities.TranslateRemote
+import com.tawa.allinapp.models.Translate
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -17,6 +18,6 @@ interface ParametersApi {
     @GET("api/cronograma/get")
     fun getSchedule(@Header("Authorization") token: String, @Query("id_empresa") company:String): Call<BaseResponse<List<ScheduleRemote.Response>>>
 
-    @GET("ccaf952c-5c92-40e7-95a2-38d084a50efd/")
-    fun getLanguage(@Header("Language") language: String): Call<BaseResponse<List<LanguageRemote>>>
+    @GET("91d58227-d3c1-4f6b-a478-ef5c4bb07365/")
+    fun getLanguage(): Call<BaseResponse<Translate>>
 }

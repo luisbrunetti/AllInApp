@@ -24,6 +24,7 @@ class InformsFragment : BaseFragment() {
     private lateinit var initViewModel: InitViewModel
     private lateinit var binding: FragmentInformsBinding
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         appComponent.inject(this)
@@ -38,26 +39,6 @@ class InformsFragment : BaseFragment() {
                 }
             })
         }
-
-        initViewModel = viewModel(viewModelFactory){
-            observe(getLanguageSaved,{
-                it?.let {
-                    if(it != BaseFragment.SPANISH){
-                        BaseFragment.CURRENT_LANGUAGE = it
-                        initViewModel.getLanguageByXml("fragment_informs.xml")
-                    }
-                }
-            })
-            observe(getLanguageSuccess,{
-                it?.let { list ->
-                    if(list.isNotEmpty()){
-                        listLanguage = it
-                        changeLanguage(binding.root)
-                    }
-                }
-            })
-        }
-
 
         binding.btnBackInforms.setOnClickListener {
             activity?.onBackPressed()
@@ -96,9 +77,12 @@ class InformsFragment : BaseFragment() {
             findNavController().navigate(InformsFragmentDirections.actionNavigationInformsToReportGeolocationFragment())
         }
 
-        initViewModel.getLanguage()
+        changeViewsFragment()
 
         return binding.root
+    }
+    override fun changeViewsFragment() {
+
     }
 
 }

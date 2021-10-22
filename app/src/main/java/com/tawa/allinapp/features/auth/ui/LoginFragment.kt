@@ -1,16 +1,12 @@
 package com.tawa.allinapp.features.auth.ui
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.CheckBox
-import android.widget.EditText
-import android.widget.TextView
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.textfield.TextInputLayout
 import com.tawa.allinapp.R
 import com.tawa.allinapp.core.dialog.MessageDialogFragment
 import com.tawa.allinapp.core.extensions.failure
@@ -20,6 +16,7 @@ import com.tawa.allinapp.core.functional.Failure
 import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.FragmentLoginBinding
 import com.tawa.allinapp.features.auth.AuthViewModel
+import java.io.IOException
 
 
 class LoginFragment : BaseFragment() {
@@ -55,22 +52,25 @@ class LoginFragment : BaseFragment() {
             observe(password, { it?.let {
                 authViewModel.validateFields()
             }})
-            observe(successfulTranslate,{ it?.let {
-                if(it.isNotEmpty()){
-                    listLanguage = it
-                    changeStateGetTranslate()
-                    changeLanguage(binding.root)
-                    hideProgressDialog()
-                    binding.swLoginFragment.text = "English"
+            observe(getLanguageSuccess, {
+                it?.let {
+                    if (translateObject.getInstance().arrayTranslate.isNotEmpty()) {
+                        Log.d("logintest", translateObject.getInstance().arrayTranslate.toString())
+                        //translateObject.setInstance(it)
+                        //translate = it.arrayTranslate
+                        if(translateObject.LANGUAGE==0) binding.swLoginFragment.text = "Espanol"
+                        else binding.swLoginFragment.text = "English"
+                    }
                 }
-            }})
-            observe(getLanguageSuccess,{ it?.let {
-                if(it != SPANISH && it.isNotEmpty()){
-                    CURRENT_LANGUAGE = it
-                    changeStateGetLanguage("")
-                    binding.swLoginFragment.isChecked = true
-                    binding.swLoginFragment.text = "English"
-                }}})
+            })
+            observe(setLanguageSuccess,{
+                if(it == true){
+                    changeViewsFragment()
+                    if(translateObject.LANGUAGE==0) binding.swLoginFragment.text = "Espanol"
+                    else binding.swLoginFragment.text = "English"
+                    hideProgressDialog()
+                }
+            })
             failure(failure, { it?.let {
                 hideProgressDialog()
                 when(it){
@@ -92,20 +92,30 @@ class LoginFragment : BaseFragment() {
         binding.swLoginFragment.setOnCheckedChangeListener { compoundButton, b ->
             if (b) {
                 showProgressDialog()
-                CURRENT_LANGUAGE = Companion.ENGLISH
-                authViewModel.getTranslate(Companion.ENGLISH)
-                binding.swLoginFragment.text = "English"
+                translateObject.LANGUAGE = 1
+                //val listType = object : TypeToken<List<TranslateItem>>() {}.type
+                //translate = Gson().fromJson(getJsonDataFromAsset(requireContext(),"mapText.json"),listType)
+                authViewModel.setLanguage(1)
             }else{
                 showProgressDialog()
-                CURRENT_LANGUAGE = Companion.SPANISH
-                changeLanguage(binding.root)
-                authViewModel.setLanguage(Companion.SPANISH)
-                binding.swLoginFragment.text = "Español"
-                hideProgressDialog()
+                translateObject.LANGUAGE = 0
+                authViewModel.setLanguage(1)
             }
         }
         authViewModel.getLanguage()
         return binding.root
+    }
+
+     override fun changeViewsFragment() {
+        translateObject.apply {
+            binding.tvHellowLoginFragment.text = findTranslate("tvHellowLoginFragment")
+            binding.tvInfoLoginFragment.text = findTranslate("tvInfoLoginFragment")
+            binding.txtInputUserLoginFragment.hint = findTranslate("txtInputUserLoginFragment")
+            binding.txtInputPasswordLoginFragment.hint = findTranslate("txtInputPasswordLoginFragment")
+            binding.cbRememberLoginFragment.text = findTranslate("cbRememberLoginFragment")
+            binding.btnLoginFragment.text = findTranslate("btnLoginFragment")
+            binding.edForgotPassword.text = findTranslate("edForgotPassword")
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -113,9 +123,26 @@ class LoginFragment : BaseFragment() {
         setUpBinding()
     }
 
+
     private fun setUpBinding() {
         binding.viewModel = authViewModel
         binding.lifecycleOwner = this
         binding.executePendingBindings()
+    }
+
+
+    private fun checkLanguageNumber(){
+
+    }
+
+    fun getJsonDataFromAsset(context: Context, fileName: String): String? {
+        val jsonString: String
+        try {
+            jsonString = context.assets.open(fileName).bufferedReader().use { it.readText() }
+        } catch (ioException: IOException) {
+            ioException.printStackTrace()
+            return null
+        }
+        return jsonString
     }
 }

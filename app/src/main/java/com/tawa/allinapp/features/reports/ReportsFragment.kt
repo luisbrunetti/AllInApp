@@ -64,6 +64,10 @@ class ReportsFragment : BaseFragment() {
                 )
             }
         }
+        changeViewsFragment()
+    }
+    override fun changeViewsFragment() {
+
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -128,7 +132,7 @@ class ReportsFragment : BaseFragment() {
         }
 
         initViewModel = viewModel(viewModelFactory){
-            observe(getLanguageSaved,{
+            /*observe(getLanguageSaved,{
                 it?.let {
                     if(it != BaseFragment.SPANISH){
                         BaseFragment.CURRENT_LANGUAGE = it
@@ -143,7 +147,7 @@ class ReportsFragment : BaseFragment() {
                         changeLanguage(binding.root)
                     }
                 }
-            })
+            })*/
         }
         reportsViewModel.getPVName()
 
@@ -188,7 +192,7 @@ class ReportsFragment : BaseFragment() {
         })
         reportsViewModel.getCountSku()
         reportsViewModel.getStatePicture()
-        initViewModel.getLanguage()
+        //initViewModel.getLanguage()
         return binding.root
     }
 

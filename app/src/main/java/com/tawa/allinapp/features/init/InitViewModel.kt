@@ -49,7 +49,6 @@ class InitViewModel
     private val getCountNotify: GetCountNotify,
     private val clearNotify: ClearNotify,
     private val getNotify: GetNotify,
-    private val getLanguageByXml: GetLanguageByXml,
     private val getLanguage: GetLanguage
 ) : BaseViewModel()  {
     private  val formatter: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
@@ -237,12 +236,12 @@ class InitViewModel
 
     private val _setSession = MutableLiveData<Boolean>()
     val setSessionLiveData : LiveData<Boolean> get() = _setSession
-
+/*
     private val _getLanguageSuccess = MutableLiveData<List<Language>>()
     val getLanguageSuccess : LiveData<List<Language>> get() = _getLanguageSuccess
 
     private var _getLanguageSaved = MutableLiveData<String>()
-    var getLanguageSaved : LiveData<String> = _getLanguageSaved
+    var getLanguageSaved : LiveData<String> = _getLanguageSaved*/
 
     init {
         startHome()
@@ -426,7 +425,7 @@ class InitViewModel
 
     private fun getPvId(value : String){ _getPvIdf.value = value }
 
-    fun getLanguageByXml(xmlName:String){ getLanguageByXml(GetLanguageByXml.Params(xmlName)){ it.either(::handleFailure,::handleGetLanguage)}}
+    /*fun getLanguageByXml(xmlName:String){ getLanguageByXml(GetLanguageByXml.Params(xmlName)){ it.either(::handleFailure,::handleGetLanguage)}}
 
     private fun handleGetLanguage(list : List<Language>){ this._getLanguageSuccess.value = list }
 
@@ -435,7 +434,7 @@ class InitViewModel
     fun handleSuccessGetLanguage(value: String){
         this._getLanguageSaved.value = value
     }
-
+*/
     fun changeCheckState(value:String){ this._successSendCheck.value = value }
 
     fun changeStatePv(value: String){ this._pvId.value = value }

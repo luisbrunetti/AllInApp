@@ -24,7 +24,7 @@ class Prefs
         const val VERIFY_CHECKLIST = "verifyChecklist"
         const val LOGO_COMPANY = "logoCompany"
         const val COUNT_NOTIFY = "countNotify"
-        const val LANGUAGE = "SPANISH"
+        const val LANGUAGE = "language"
     }
 
     private val prefs  = context.getSharedPreferences(FILENAME, Context.MODE_PRIVATE)
@@ -92,7 +92,7 @@ class Prefs
         get() = prefs.getInt(COUNT_NOTIFY,0)
         set(value) = prefs.edit().putInt(COUNT_NOTIFY,value).apply()
 
-    var language: String?
-        get() = prefs.getString(LANGUAGE,"")
-        set(value) = prefs.edit().putString(LANGUAGE,value).apply()
+    var language: Int?
+        get() = prefs.getInt(LANGUAGE,-1)
+        set(value) = prefs.edit().putInt(LANGUAGE,value!!).apply()
 }

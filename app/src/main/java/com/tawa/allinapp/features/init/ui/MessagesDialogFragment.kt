@@ -73,7 +73,7 @@ class MessagesDialogFragment
                 notifyAdapterYesterday.setData(it.filter {date-> date.dateCreation?.substring(0,10)==compYesterday }.sortedByDescending { it.dateCreation })
                // notifyAdapterYesterday.setData(it)
             }})
-            observe(getLanguageSaved,{
+            /*observe(getLanguageSaved,{
                 it?.let {
                     if(it != BaseFragment.SPANISH){
                         BaseFragment.CURRENT_LANGUAGE = it
@@ -88,7 +88,7 @@ class MessagesDialogFragment
                         baseFragment.changeLanguage(binding.root)
                     }
                 }
-            })
+            })*/
         }
         initViewModel.getNotify()
         notifyAdapter.clickListener = {
@@ -107,7 +107,7 @@ class MessagesDialogFragment
 
         }
 
-        initViewModel.getLanguage()
+        //initViewModel.getLanguage()
     }
     private fun NotificationManager.sendNotification(messageBody: String, applicationContext: Context,channel:String) {
         val builder = NotificationCompat.Builder(

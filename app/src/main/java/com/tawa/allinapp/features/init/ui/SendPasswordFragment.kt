@@ -15,7 +15,6 @@ import com.tawa.allinapp.core.extensions.observe
 import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.functional.Failure
 import com.tawa.allinapp.core.platform.BaseFragment
-
 import com.tawa.allinapp.databinding.FragmentSendPasswordBinding
 import com.tawa.allinapp.features.init.InitViewModel
 
@@ -35,39 +34,20 @@ class SendPasswordFragment : BaseFragment() {
             observe(successSendPassword, {
                 it?.let {
                     if(it) { showConfirmSendPassword() }
-                }
-            })
-            observe(getLanguageSuccess,{
-                it?.let {
-                    if (it.isNotEmpty()) {
-                        listLanguage = it
-                        changeLanguage(binding.root)
-                    }
-                }
-            })
-            observe(getLanguageSaved,{
-                it?.let {
-                    if(it != Companion.SPANISH){
-                        CURRENT_LANGUAGE = it
-                        initViewModel.getLanguageByXml("fragment_send_password.xml")
-                    }
-                }
-            })
+                }})
             failure(failure,{
-                when(it)
-                {
+                when(it){
                     is Failure.DefaultError -> {
                         binding.tvError.isVisible =true
                         binding.txtIptUserSendPassword.setBackgroundResource(R.drawable.error_border)
                     }
                     else -> ""
-                }
-            })
+                }})
         }
         binding.btnBackSendPass.setOnClickListener {
             activity?.onBackPressed()
         }
-        binding.btnSendPass.setOnClickListener {
+        binding.btnSendPassword.setOnClickListener {
             binding.tvError.isVisible =false
             binding.txtIptUserSendPassword.setBackgroundResource(R.drawable.selector)
             initViewModel.sendPassword(binding.edSendPass.text.toString())
@@ -96,19 +76,24 @@ class SendPasswordFragment : BaseFragment() {
                 }
             }
         })
-        initViewModel.getLanguage()
+        changeViewsFragment()
+        Log.d("test",translateObject.getInstance().arrayTranslate.toString())
         return binding.root
+    }
+    override fun changeViewsFragment() {
+        translateObject.apply {
+            binding.tvTitleSendPassword.text = findTranslate("tvTitleSendPassword")
+            binding.tvInputUserSendPassword.text = findTranslate("tvInputUserSendPassword")
+            binding.txtIptUserSendPassword.hint = findTranslate("txtIptUserSendPassword")
+            binding.btnSendPassword.text = findTranslate("btnSendPassword")
+        }
     }
 
     private fun showConfirmSendPassword(){
-        val dialog = PasswordSendDialogFragment(this)
+        /*val dialog = PasswordSendDialogFragment(this)
         dialog.listener = object : PasswordSendDialogFragment.Callback{
-            override fun onClick() {
-                activity?.onBackPressed()
-            }
+            override fun onClick() { activity?.onBackPressed() }
         }
-        dialog.show(childFragmentManager,"")
-
+        dialog.show(childFragmentManager,"")*/
     }
-
 }

@@ -76,8 +76,11 @@ class MessagesFragment @Inject constructor() : BaseFragment() {
 
         initViews()
         loginQB()
-
+        changeViewsFragment()
         return binding.root
+    }
+    override fun changeViewsFragment() {
+
     }
 
     private fun loginQB() {

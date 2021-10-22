@@ -66,7 +66,7 @@ class SelectPdvDialogFragment
             observe(successGetCompanyId, { it?.let {
                 initViewModel.getPv(it)
             } })
-            observe(getLanguageSaved,{
+            /*observe(getLanguageSaved,{
                 it?.let {
                     if(it != BaseFragment.SPANISH){
                         BaseFragment.CURRENT_LANGUAGE = it
@@ -81,7 +81,7 @@ class SelectPdvDialogFragment
                         baseFragment.changeLanguage(binding.root)
                     }
                 }
-            })
+            })*/
         }
         initViewModel.getIdCompany()
         return binding.root
