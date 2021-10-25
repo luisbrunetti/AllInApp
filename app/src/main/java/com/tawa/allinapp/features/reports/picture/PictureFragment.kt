@@ -37,7 +37,9 @@ import com.tawa.allinapp.models.PhotoReport
 import java.io.*
 import java.text.SimpleDateFormat
 import java.time.Instant
+import java.time.ZoneId
 import java.time.ZoneOffset
+import java.time.ZonedDateTime
 import java.util.*
 import javax.inject.Inject
 
@@ -198,7 +200,7 @@ class PictureFragment : BaseFragment() {
                     pictureBeforeAdapter.collection,
                     pictureAfterAdapter.collection,
                     binding.tvComments.text.toString(),
-                    Calendar.getInstance().toInstant().toString(),
+                    ZonedDateTime.now(ZoneId.of("America/Lima")).toLocalDateTime().toInstant(ZoneOffset.UTC).toString(),
                     longitude.toDouble(), latitude.toDouble(),
                 )
                 pictureViewModel.saveReport(report, "En proceso","borrador")
@@ -216,7 +218,7 @@ class PictureFragment : BaseFragment() {
                     pictureBeforeAdapter.collection,
                     pictureAfterAdapter.collection,
                     binding.tvComments.text.toString(),
-                    Calendar.getInstance().toInstant().toString(),
+                    ZonedDateTime.now(ZoneId.of("America/Lima")).toLocalDateTime().toInstant(ZoneOffset.UTC).toString(),
                     longitude.toDouble(), latitude.toDouble(),
                 )
                 pictureViewModel.saveReport(report, "En proceso","terminado")

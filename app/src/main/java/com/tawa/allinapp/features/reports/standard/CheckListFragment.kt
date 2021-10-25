@@ -47,6 +47,9 @@ import com.tawa.allinapp.models.Answer
 import com.tawa.allinapp.models.RecordAudioViews
 import java.io.*
 import java.text.SimpleDateFormat
+import java.time.ZoneId
+import java.time.ZoneOffset
+import java.time.ZonedDateTime
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -621,7 +624,9 @@ class CheckListFragment: BaseFragment() {
                 if(countRequired==0)
                 {
                     getLastLocation()
-                    checkListViewModel.updateReportPv(idReport,"En proceso","Terminado",Calendar.getInstance().toInstant().toString(),latitude,longitude)
+                    checkListViewModel.updateReportPv(idReport,"En proceso","Terminado",
+                        ZonedDateTime.now(ZoneId.of("America/Lima")).toLocalDateTime().toInstant(
+                            ZoneOffset.UTC).toString(),latitude,longitude)
                     for (radio in listRadioButton) {
                         val tag = radio.tag as ArrayList<String>
                         checkListViewModel.setAnswerPv(tag[0],tag[1],radio.isChecked.toString(),urlImage)

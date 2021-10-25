@@ -55,7 +55,7 @@ class HomeActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
         binding.navView.menu.findItem(R.id.navigation_informs).isVisible = false
-        binding.navView.menu.findItem(R.id.navigation_routes).isVisible = false
+        //binding.navView.menu.findItem(R.id.navigation_routes).isVisible = false
 
     }
 

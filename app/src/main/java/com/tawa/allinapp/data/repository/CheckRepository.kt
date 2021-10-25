@@ -9,6 +9,9 @@ import com.tawa.allinapp.data.local.datasource.CheckDataSource
 import com.tawa.allinapp.data.remote.entities.CheckRemote
 import com.tawa.allinapp.data.remote.service.CheckService
 import com.tawa.allinapp.models.Check
+import java.time.ZoneId
+import java.time.ZoneOffset
+import java.time.ZonedDateTime
 import java.util.*
 import javax.inject.Inject
 
@@ -61,7 +64,9 @@ interface CheckRepository {
             return when (networkHandler.isConnected) {
                 true ->{
                     try {
-                        val request = checkDataSource.getChecks(prefs.idUser?:"").map { it.toRemote(latitude.toDouble(),longitude.toDouble(),Calendar.getInstance().toInstant().toString()) }
+                        val request = checkDataSource.getChecks(prefs.idUser?:"").map { it.toRemote(latitude.toDouble(),longitude.toDouble(),
+                            ZonedDateTime.now(ZoneId.of("America/Lima")).toLocalDateTime().toInstant(
+                                ZoneOffset.UTC).toString()) }
                         Log.d("requestSyncChecks ->> ",request.toString())
                         val response = service.syncChecks("Bearer ${prefs.token!!}", request).execute()
                         Log.d("responseSyncChecks ->> ",response.toString())

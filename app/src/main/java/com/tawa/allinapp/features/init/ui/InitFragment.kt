@@ -65,6 +65,7 @@ class InitFragment : BaseFragment() {
         showProgressDialog()
         initViewModel = viewModel(viewModelFactory) {
             observe(dayState, { it?.let { if(it) {
+                getLastLocation()
                 val currentDay = getString(R.string.current_day, getDayWeek(),getDayMonth(),getMonth(),getYear())
                 binding.currentDay.text  = currentDay
             } }})
@@ -99,8 +100,9 @@ class InitFragment : BaseFragment() {
                         changeStateSuccessCheckIn(false)
 
                         initViewModel.getCheckMode()
-                        Log.d("successCheckin", "last -> $latitude  long -> $longitude")
+                        Log.d("successCheckin", "last -> $_lat  long -> $_long")
                         //initViewModel.updateStatus(_lat,_long,_battery,0)
+
                         initViewModel.updateStatus(latitude,longitude,_battery,0)
                         notify(activity,R.string.checkoout_successful)
                     }
@@ -397,6 +399,7 @@ class InitFragment : BaseFragment() {
                     getLastLocation()
                     _pv = pv;_pvId = pvId;_battery = battery
                     if(lat != "" && long != ""){
+
                         initViewModel.setCheckIn(idUser,pvId,lat,long)
                         binding.tvCheckIn.text = description
                     }else{

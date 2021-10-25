@@ -18,6 +18,9 @@ import com.tawa.allinapp.models.PhotoReport
 import com.tawa.allinapp.models.Report
 import com.tawa.allinapp.models.ReportStatus
 import com.tawa.allinapp.models.*
+import java.time.ZoneId
+import java.time.ZoneOffset
+import java.time.ZonedDateTime
 import java.util.*
 import javax.inject.Inject
 
@@ -136,7 +139,9 @@ interface ReportsRepository {
             return when (networkHandler.isConnected) {
                 true ->{
                     try {
-                        val request = reportsDataSource.getAllPhotoReports(prefs.idUser?:"").map { it.toRemote(longitude.toDouble(),latitude.toDouble(),Calendar.getInstance().toInstant().toString()) }
+                        val request = reportsDataSource.getAllPhotoReports(prefs.idUser?:"").map { it.toRemote(longitude.toDouble(),latitude.toDouble(),
+                            ZonedDateTime.now(ZoneId.of("America/Lima")).toLocalDateTime().toInstant(
+                                ZoneOffset.UTC).toString()) }
                         val response = service.syncPhotoReports("Bearer ${prefs.token!!}", request).execute()
                         when (response.isSuccessful) {
                             true -> {
@@ -526,7 +531,7 @@ interface ReportsRepository {
                                 linesAnswer.add(Lines(skuDetail.id,skuDetail.stock,skuDetail.exhibition,skuDetail.newPrice,observation))
                             }
                             listIdSku.add(sku.id)
-                            listSku.add(ReportsSkuRemote.RequestMassive(sku.id,sku.idPv,sku.idCompany,linesAnswer.map { it.toRequest() },"COMPLETADO",sku.dateCreation,sku.longitude,sku.latitude,longitude,latitude,Calendar.getInstance().toInstant().toString()))
+                            listSku.add(ReportsSkuRemote.RequestMassive(sku.id,sku.idPv,sku.idCompany,linesAnswer.map { it.toRequest() },"COMPLETADO",sku.dateCreation,sku.longitude,sku.latitude,longitude,latitude,ZonedDateTime.now(ZoneId.of("America/Lima")).toLocalDateTime().toInstant(ZoneOffset.UTC).toString()))
                         }
                         Log.d("lineas Sku Standard",linesAnswer.toString())
                         val response = service.syncSkuMassive("Bearer ${prefs.token!!}",listSku).execute()
@@ -705,7 +710,7 @@ interface ReportsRepository {
 
         override fun updateStateSku(idSku: String, state: String,type:String,latitude: String,longitude: String): Either<Failure, Boolean> {
             return try {
-                reportsDataSource.updateStateSku(idSku,state,type,Calendar.getInstance().toInstant().toString(),latitude,longitude)
+                reportsDataSource.updateStateSku(idSku,state,type,ZonedDateTime.now(ZoneId.of("America/Lima")).toLocalDateTime().toInstant(ZoneOffset.UTC).toString(),latitude,longitude)
                 Either.Right(true)
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))
@@ -782,7 +787,7 @@ interface ReportsRepository {
 
                             }
                             listIdStandard.add(report.id)
-                            reportMassive.add(ReportStandardMassive(report.id,report.idPv,report.idCompany,reportData,"COMPLETADO",stateReport.time,stateReport.longitude,stateReport.latitude,longitude,latitude,Calendar.getInstance().toInstant().toString()))
+                            reportMassive.add(ReportStandardMassive(report.id,report.idPv,report.idCompany,reportData,"COMPLETADO",stateReport.time,stateReport.longitude,stateReport.latitude,longitude,latitude,ZonedDateTime.now(ZoneId.of("America/Lima")).toLocalDateTime().toInstant(ZoneOffset.UTC).toString()))
                         }
 
                         Log.d("reportStandarMassive", "$reportData")

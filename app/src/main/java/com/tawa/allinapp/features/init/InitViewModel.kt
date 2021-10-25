@@ -10,6 +10,9 @@ import com.tawa.allinapp.features.reports.GetReportsRemote
 import com.tawa.allinapp.models.*
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
+import java.time.ZoneId
+import java.time.ZoneOffset
+import java.time.ZonedDateTime
 import java.util.*
 import javax.inject.Inject
 
@@ -251,12 +254,12 @@ class InitViewModel
 
     fun setCheckIn(idUser:String,pv:String,lat:String,lon:String) {
         _startSetCheckIn.value = true
-        setCheckIn(SetCheckIn.Params(0,pv,idUser,Calendar.getInstance().toInstant().toString(),lat,lon,"CHECKIN","no enviado")) {
+        setCheckIn(SetCheckIn.Params(0,pv,idUser,ZonedDateTime.now(ZoneId.of("America/Lima")).toLocalDateTime().toInstant(ZoneOffset.UTC).toString(),lat,lon,"CHECKIN","no enviado")) {
             it.either(::handleFailure, ::handleCheckIn)
         }
     }
     fun setCheckOut(idUser:String,pv:String,lat:String,long:String) {
-        setCheckIn(SetCheckIn.Params(0,pv,idUser,Calendar.getInstance().toInstant().toString(),lat,long,"CHECKOUT","no enviado")) {
+        setCheckIn(SetCheckIn.Params(0,pv,idUser,ZonedDateTime.now(ZoneId.of("America/Lima")).toLocalDateTime().toInstant(ZoneOffset.UTC).toString(),lat,long,"CHECKOUT","no enviado")) {
             it.either(::handleFailure, ::handleCheckOut)
         }
     }
