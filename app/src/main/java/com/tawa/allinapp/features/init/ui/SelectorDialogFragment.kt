@@ -89,11 +89,26 @@ class SelectorDialogFragment
             observe(successGetPV, { it?.let {
                 if (it)
                     initViewModel.getReportsRemote(selectedCompany)
-            } })
+            }})
+            observe(getLanguageSuccess, {
+                it?.let {
+                    if (baseFragment.translateObject.getInstance().arrayTranslate.isNotEmpty()) {
+                        //Log.d("logintest", translateObject.getInstance().arrayTranslate.toString())
+                        changeViewsFragment()
+                    }
+                }
+            })
         }
         return binding.root
     }
 
+
+    private fun changeViewsFragment() {
+        baseFragment.translateObject.apply {
+            binding.tvTtitleSelectPdv.text = findTranslate("tvTtitleSelectPdv")
+            binding.selectPdvSpinner.text = findTranslate("selectPdvSpinner")
+        }
+    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.spinnerCompany.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
@@ -102,7 +117,7 @@ class SelectorDialogFragment
                 initViewModel.selectPositionCompany(position)
             }
         }
-        binding.btnAccessHome.setOnClickListener {
+        binding.selectPdvSpinner.setOnClickListener {
             baseFragment.showProgressDialog()
             val positionCompany = binding.spinnerCompany.selectedItemPosition
             selectedCompany = listCompany[positionCompany].id

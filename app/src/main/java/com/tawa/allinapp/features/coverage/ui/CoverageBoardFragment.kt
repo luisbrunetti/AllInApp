@@ -83,8 +83,7 @@ class CoverageBoardFragment : BaseFragment() {
                     hashCheckedItem.clear()
                     for(element in it){ mutableListChain.add(element.description!!)}
                     for(keys in hashCheckedItem.keys) hashCheckedItem[keys] = false
-                }
-            })
+                }})
             observe(allChains,{
                 it?.let {
                     listAllChains.clear()
@@ -92,9 +91,7 @@ class CoverageBoardFragment : BaseFragment() {
                     listAllChains.addAll(it)
                     mutableListChain.addAll(it.map { chain -> chain.description!! })
                 }
-            })
-
-        }
+            })}
         initViewModels()
         changeViewsFragment()
         return ComposeView(requireContext()).apply {

@@ -27,6 +27,4 @@ class TranslateObject
             return it?.translate?.get(LANGUAGE)
         }
     }
-
-
 }

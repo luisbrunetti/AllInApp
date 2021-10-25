@@ -55,11 +55,17 @@ class LoginFragment : BaseFragment() {
             observe(getLanguageSuccess, {
                 it?.let {
                     if (translateObject.getInstance().arrayTranslate.isNotEmpty()) {
-                        Log.d("logintest", translateObject.getInstance().arrayTranslate.toString())
+                        //Log.d("logintest", translateObject.getInstance().arrayTranslate.toString())
                         //translateObject.setInstance(it)
                         //translate = it.arrayTranslate
-                        if(translateObject.LANGUAGE==0) binding.swLoginFragment.text = "Espanol"
-                        else binding.swLoginFragment.text = "English"
+                        if(translateObject.LANGUAGE==0){
+                            binding.swLoginFragment.text = "Espanol"
+                            binding.swLoginFragment.isChecked = false
+                        }
+                        else{
+                            binding.swLoginFragment.text = "English"
+                            binding.swLoginFragment.isChecked = true
+                        }
                     }
                 }
             })
@@ -68,7 +74,6 @@ class LoginFragment : BaseFragment() {
                     changeViewsFragment()
                     if(translateObject.LANGUAGE==0) binding.swLoginFragment.text = "Espanol"
                     else binding.swLoginFragment.text = "English"
-                    hideProgressDialog()
                 }
             })
             failure(failure, { it?.let {
@@ -91,15 +96,13 @@ class LoginFragment : BaseFragment() {
 
         binding.swLoginFragment.setOnCheckedChangeListener { compoundButton, b ->
             if (b) {
-                showProgressDialog()
                 translateObject.LANGUAGE = 1
                 //val listType = object : TypeToken<List<TranslateItem>>() {}.type
                 //translate = Gson().fromJson(getJsonDataFromAsset(requireContext(),"mapText.json"),listType)
                 authViewModel.setLanguage(1)
             }else{
-                showProgressDialog()
                 translateObject.LANGUAGE = 0
-                authViewModel.setLanguage(1)
+                authViewModel.setLanguage(0)
             }
         }
         authViewModel.getLanguage()

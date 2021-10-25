@@ -36,6 +36,8 @@ import com.tawa.allinapp.features.reports.standard.ConfirmSyncDialogFragment
 import com.tawa.allinapp.models.PhotoReport
 import java.io.*
 import java.text.SimpleDateFormat
+import java.time.Instant
+import java.time.ZoneOffset
 import java.util.*
 import javax.inject.Inject
 
@@ -186,6 +188,7 @@ class PictureFragment : BaseFragment() {
                     .show(childFragmentManager, "dialog")
             }
         }
+
         binding.btnSavePictures.setOnClickListener {
             if(type!="terminado")
             {

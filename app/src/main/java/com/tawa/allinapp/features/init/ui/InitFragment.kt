@@ -28,6 +28,7 @@ import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.data.local.Prefs
 import com.tawa.allinapp.databinding.FragmentInitBinding
 import com.tawa.allinapp.features.HomeActivity
+import com.tawa.allinapp.features.auth.AuthViewModel
 import com.tawa.allinapp.features.init.InitViewModel
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
@@ -36,6 +37,7 @@ import java.io.ByteArrayOutputStream
 class InitFragment : BaseFragment() {
 
     private lateinit var initViewModel: InitViewModel
+    private lateinit var authViewModel: AuthViewModel
     private lateinit var binding: FragmentInitBinding
     private lateinit var locationManager:LocationManager
     private var checkOutDialog: CheckOutDialogFragment? = null
@@ -242,6 +244,18 @@ class InitFragment : BaseFragment() {
             }})
             failure(failure, ::handleFailure)
         }
+
+        authViewModel = viewModel(viewModelFactory){
+            observe(getLanguageSuccess, {
+                it?.let {
+                    if (translateObject.getInstance().arrayTranslate.isNotEmpty()) {
+                        //Log.d("logintest", translateObject.getInstance().arrayTranslate.toString())
+                        changeViewsFragment()
+                    }
+                }
+            })
+        }
+
         //Seleccionando empresa
         initViewModel.getPVDesc()
         initViewModel.getLogoCompany()
@@ -250,7 +264,8 @@ class InitFragment : BaseFragment() {
         initViewModel.getCheckMode()
         initViewModel.getPvIdFirstTime()
         //initViewModel.getIdCompany()
-        //initViewModel.getLanguage()
+        Log.d("object", translateObject.LANGUAGE.toString())
+        authViewModel.getLanguage()
         initViewModel.getIdCompanyPreferences().let {
             if(it.isEmpty()) {
                 showSelector()
@@ -446,7 +461,6 @@ class InitFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setUpBinding()
-        //changeViewsFragment()
         hideProgressDialog()
     }
 
@@ -463,7 +477,7 @@ class InitFragment : BaseFragment() {
         val location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
         location?.let { location ->
             _lat = location.latitude.toString()
-            _long = location?.longitude.toString()
+            _long = location.longitude.toString()
         }
     }
 
