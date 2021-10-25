@@ -216,15 +216,51 @@
             android:layout_height="50dp"
             android:layout_marginTop="30dp"
             android:layout_marginEnd="16dp"
+            android:background="@drawable/roundedlinear"
+            android:elevation="2dp"
             android:textColor="@color/colorPrimary"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:background="@drawable/roundedlinear"
             app:layout_constraintBottom_toBottomOf="@+id/view5"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/tvHeaderName"
             app:layout_constraintTop_toTopOf="@+id/view5"
             app:layout_constraintVertical_bias="0.0" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/vNotifyCount"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_marginTop="-5dp"
+            android:layout_marginEnd="-5dp"
+            android:background="@drawable/view_rounded_notification"
+            android:elevation="1dp"
+            android:textColor="@color/colorPrimary"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/btUser"
+            app:layout_constraintEnd_toEndOf="@+id/btUser"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="@+id/btUser"
+            app:layout_constraintTop_toTopOf="@+id/btUser"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/edCountNotify"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:elevation="10dp"
+            android:text="2"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:translationZ="11dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/vNotifyCount"
+            app:layout_constraintEnd_toEndOf="@+id/vNotifyCount"
+            app:layout_constraintStart_toStartOf="@+id/vNotifyCount"
+            app:layout_constraintTop_toTopOf="@+id/vNotifyCount" />
 
         <ScrollView
             android:layout_width="0dp"
@@ -306,7 +342,7 @@
                         android:textColor="@color/blue"
                         android:textSize="16sp"
                         android:textStyle="bold"
-                        android:visibility="visible"
+                        android:visibility="gone"
                         app:layout_constraintEnd_toEndOf="@+id/viewBtnCalendar"
                         app:layout_constraintStart_toStartOf="@+id/viewBtnCalendar"
                         app:layout_constraintTop_toBottomOf="@+id/imageView9" />
@@ -322,6 +358,7 @@
                         android:textColor="@color/blue"
                         android:textSize="16sp"
                         android:textStyle="bold"
+                        android:visibility="gone"
                         app:layout_constraintBottom_toBottomOf="@+id/viewBtnDocs"
                         app:layout_constraintEnd_toEndOf="@+id/viewBtnDocs"
                         app:layout_constraintStart_toStartOf="@+id/viewBtnDocs"
@@ -353,7 +390,7 @@
                         android:textColor="@color/blue"
                         android:textSize="16sp"
                         android:textStyle="bold"
-                        android:visibility="visible"
+                        android:visibility="gone"
                         app:layout_constraintBottom_toBottomOf="@+id/viewBtnInforms"
                         app:layout_constraintEnd_toEndOf="@+id/viewBtnInforms"
                         app:layout_constraintStart_toStartOf="@+id/viewBtnInforms"
@@ -386,6 +423,7 @@
                         android:textColor="@color/blue"
                         android:textSize="16sp"
                         android:textStyle="bold"
+                        android:visibility="gone"
                         app:layout_constraintEnd_toEndOf="@+id/viewBtnTasks"
                         app:layout_constraintStart_toStartOf="@+id/viewBtnTasks"
                         app:layout_constraintTop_toBottomOf="@+id/imageViewTasks" />
@@ -432,7 +470,7 @@
                         android:layout_marginTop="26dp"
                         android:elevation="4dp"
                         android:src="@drawable/ic_calendar_home"
-                        android:visibility="visible"
+                        android:visibility="gone"
                         app:layout_constraintEnd_toEndOf="@+id/viewBtnCalendar"
                         app:layout_constraintStart_toStartOf="@+id/viewBtnCalendar"
                         app:layout_constraintTop_toTopOf="@+id/viewBtnCalendar" />
@@ -455,6 +493,7 @@
                         android:layout_marginTop="26dp"
                         android:elevation="4dp"
                         android:src="@drawable/ic_docs_home"
+                        android:visibility="gone"
                         app:layout_constraintEnd_toEndOf="@+id/viewBtnDocs"
                         app:layout_constraintStart_toStartOf="@+id/viewBtnDocs"
                         app:layout_constraintTop_toTopOf="@+id/viewBtnDocs" />
@@ -477,7 +516,7 @@
                         android:layout_marginTop="26dp"
                         android:elevation="4dp"
                         android:src="@drawable/ic_informs_home"
-                        android:visibility="visible"
+                        android:visibility="gone"
                         app:layout_constraintEnd_toEndOf="@+id/viewBtnInforms"
                         app:layout_constraintStart_toStartOf="@+id/viewBtnInforms"
                         app:layout_constraintTop_toTopOf="@+id/viewBtnInforms" />
@@ -489,6 +528,7 @@
                         android:layout_marginTop="26dp"
                         android:elevation="5dp"
                         android:src="@drawable/ic_task"
+                        android:visibility="gone"
                         app:layout_constraintEnd_toEndOf="@+id/viewBtnTasks"
                         app:layout_constraintStart_toStartOf="@+id/viewBtnTasks"
                         app:layout_constraintTop_toTopOf="@+id/viewBtnTasks" />
@@ -537,7 +577,7 @@
                         android:elevation="2dp"
                         android:visibility="visible"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/viewBtnTasks"
+                        app:layout_constraintEnd_toStartOf="@+id/btSync"
                         app:layout_constraintHorizontal_bias="0.9"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/viewBtnDocs"
@@ -562,32 +602,17 @@
                         app:layout_constraintTop_toBottomOf="@+id/viewBtnPV"
                         app:layout_constraintVertical_bias="0.0" />
 
-                    <androidx.appcompat.widget.AppCompatButton
-                        android:id="@+id/vNotifyCount"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_marginTop="-5dp"
-                        android:layout_marginEnd="-5dp"
-                        android:background="@drawable/view_rounded_notification"
-                        android:elevation="10dp"
-                        android:textColor="@color/colorPrimary"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:visibility="gone"
-                        app:layout_constraintEnd_toEndOf="@+id/viewBtnMessages"
-                        app:layout_constraintTop_toTopOf="@+id/viewBtnMessages" />
-
                     <View
                         android:id="@+id/viewBtnCalendar"
                         android:layout_width="0dp"
                         android:layout_height="120dp"
                         android:layout_marginStart="18dp"
-                        android:layout_marginEnd="36dp"
                         android:layout_marginTop="16dp"
+                        android:layout_marginEnd="36dp"
                         android:layout_weight="1"
                         android:background="@drawable/bg_button_white"
                         android:elevation="2dp"
-                        android:visibility="visible"
+                        android:visibility="gone"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
@@ -606,6 +631,7 @@
                         android:layout_weight="1"
                         android:background="@drawable/bg_button_white"
                         android:elevation="2dp"
+                        android:visibility="gone"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@+id/btSync"
                         app:layout_constraintHorizontal_bias="0.0"
@@ -636,19 +662,15 @@
                         android:id="@+id/viewBtnInforms"
                         android:layout_width="0dp"
                         android:layout_height="120dp"
-                        android:layout_marginStart="36dp"
+                        android:layout_marginStart="18dp"
                         android:layout_marginTop="16dp"
-                        android:layout_marginEnd="18dp"
-                        android:layout_marginBottom="10dp"
+                        android:layout_marginEnd="36dp"
                         android:background="@drawable/bg_button_white"
                         android:elevation="2dp"
-                        android:visibility="visible"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/viewBtnCalendar"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/viewBtnRoutes"
-                        app:layout_constraintVertical_bias="0.058" />
+                        android:visibility="gone"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/viewBtnRoutes"
+                        app:layout_constraintTop_toBottomOf="@+id/btSync" />
 
                     <View
                         android:id="@+id/viewBtnTasks"
@@ -661,26 +683,12 @@
                         android:layout_weight="1"
                         android:background="@drawable/bg_button_white"
                         android:elevation="2dp"
+                        android:visibility="gone"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/viewBtnDocs"
                         app:layout_constraintTop_toBottomOf="@+id/btSync"
                         app:layout_constraintVertical_bias="0.0" />
-
-                    <TextView
-                        android:id="@+id/edCountNotify"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:elevation="11dp"
-                        android:text="5"
-                        android:textColor="@color/white"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:visibility="visible"
-                        app:layout_constraintBottom_toBottomOf="@+id/vNotifyCount"
-                        app:layout_constraintEnd_toEndOf="@+id/vNotifyCount"
-                        app:layout_constraintStart_toStartOf="@+id/vNotifyCount"
-                        app:layout_constraintTop_toTopOf="@+id/vNotifyCount" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

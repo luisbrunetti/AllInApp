@@ -15,6 +15,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
@@ -273,6 +274,11 @@ class InitFragment : BaseFragment() {
                     showLogin(context)
                 }
 
+                override fun onNotify() {
+                    initViewModel.clearCountNotify()
+                    showMessagesDialog()
+                }
+
             }
             frag.show(childFragmentManager, "participant")
         }
@@ -440,7 +446,7 @@ class InitFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setUpBinding()
-        changeViewsFragment()
+        //changeViewsFragment()
         hideProgressDialog()
     }
 

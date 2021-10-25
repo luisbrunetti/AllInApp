@@ -48,7 +48,9 @@ class UserMenuDialogFragment : BottomSheetDialogFragment() {
             dismiss()
         }
         binding.tvNotify.setOnClickListener {
+            listener?.onNotify()
             dismiss()
+
         }
     }
 
@@ -61,5 +63,6 @@ class UserMenuDialogFragment : BottomSheetDialogFragment() {
 
     interface Callback {
         fun onAccept()
+        fun onNotify()
     }
 }

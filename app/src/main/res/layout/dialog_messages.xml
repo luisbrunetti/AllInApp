@@ -51,18 +51,6 @@
         app:layout_constraintStart_toStartOf="@+id/view10"
         app:layout_constraintTop_toTopOf="@+id/view10" />
 
-    <TextView
-        android:id="@+id/tvTapMsgMessageFragment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Mensajes"
-        android:textColor="@color/colorTextAll"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/view15"
-        app:layout_constraintEnd_toEndOf="@+id/view21"
-        app:layout_constraintStart_toStartOf="@+id/view21"
-        app:layout_constraintTop_toTopOf="@+id/view21" />
-
     <View
         android:id="@+id/view21"
         android:layout_width="0dp"

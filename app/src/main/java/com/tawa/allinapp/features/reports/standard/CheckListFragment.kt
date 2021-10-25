@@ -1188,10 +1188,10 @@ class CheckListFragment: BaseFragment() {
                 listTag.add(nameQ)
                 listTag.add(required.toString())
                 radioButton.tag = listTag
-                if(typeReport!="0")
-                    radioButton.isChecked = list.data.toBoolean()
                 listRadioButton.add(radioButton)
                 radioGroup.addView(radioButton)
+                if(typeReport!="0")
+                    radioButton.isChecked = list.data.toBoolean()
             }
             val textView1 = TextView(context)
             textView1.tag = listAnswers[0].idQuestion
@@ -1226,10 +1226,10 @@ class CheckListFragment: BaseFragment() {
             listTag.add(list.idQuestion)
             listTag.add(nameQ)
             radioButton.tag = listTag
-            if(typeReport!="0")
-                radioButton.isChecked = list.data.toBoolean()
             listRadioButtonBd.add(radioButton)
             radioGroup.addView(radioButton)
+            if(typeReport!="0")
+                radioButton.isChecked = list.data.toBoolean()
         }
         linearL.addView(radioGroup)
         val textView1 = TextView(context)
@@ -1349,14 +1349,12 @@ class CheckListFragment: BaseFragment() {
 
                 for(j in 0 until countColumn)
                 {
-
                     val radioButton  = RadioButton(context)
                     radioButton.width= 100f.toDips().toInt()
                     radioButton.height = 50f.toDips().toInt()
                     radioButton.textSize = 16f
                     radioButton.gravity = Gravity.START or Gravity.CENTER_VERTICAL
-                    if(typeReport!="0")
-                        radioButton.isChecked =  listEData[countRadio]
+
                     if(j==0)
                     {
                         val params4 = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
@@ -1388,6 +1386,8 @@ class CheckListFragment: BaseFragment() {
                     radioButton.tag = listTag
                     listMultiRadio.add(radioButton)
                     rg.addView(radioButton)
+                    if(typeReport!="0")
+                        radioButton.isChecked =  listEData[countRadio]
                     countRadio++
                 }
                 count++

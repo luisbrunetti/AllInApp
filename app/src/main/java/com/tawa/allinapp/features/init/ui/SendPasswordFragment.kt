@@ -76,7 +76,7 @@ class SendPasswordFragment : BaseFragment() {
                 }
             }
         })
-        changeViewsFragment()
+        //changeViewsFragment()
         Log.d("test",translateObject.getInstance().arrayTranslate.toString())
         return binding.root
     }
