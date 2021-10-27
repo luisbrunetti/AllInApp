@@ -71,6 +71,10 @@ class TrackingMapDialogFragment: DialogFragment() {
                         arrayDirections.add(track.dirCorpPv)
                         arrayNamePdv.add(track.nameCorpPv)
                         arrayType.add(visit?.comment.toString())
+                        arrayVisitsPending.add(track.checks.pendientes.toString())
+                        arrayVisitsComplete.add(track.checks.concluidas.toString())
+                        arrayTaskPending.add(track.reports.tareasPendientes.toString())
+                        arrayTaskComplete.add(track.reports.tareasCompletadas.toString())
                     }
                     // Log.d("visitasDato",track.visits.toString())
                     if(!tasks.isNullOrEmpty())
@@ -83,6 +87,10 @@ class TrackingMapDialogFragment: DialogFragment() {
                             arrayDirections.add(track.dirCorpPv)
                             arrayNamePdv.add(track.nameCorpPv)
                             arrayType.add(task?.reportState.toString())
+                            arrayVisitsPending.add(track.checks.pendientes.toString())
+                            arrayVisitsComplete.add(track.checks.concluidas.toString())
+                            arrayTaskPending.add(track.reports.tareasPendientes.toString())
+                            arrayTaskComplete.add(track.reports.tareasCompletadas.toString())
                         }
                     }
                 }
@@ -122,6 +130,7 @@ class TrackingMapDialogFragment: DialogFragment() {
                             val visitsComplete = bundle.getStringArrayList("visitsComplete")
                             val taskPending = bundle.getStringArrayList("taskPending")
                             val taskComplete = bundle.getStringArrayList("taskComplete")
+
                             for((index,data ) in lat.withIndex())
                             {
                                 if(type[index]=="INGRESO")
@@ -171,7 +180,8 @@ class TrackingMapDialogFragment: DialogFragment() {
                                 }
                                 if(type[index]=="none")
                                 {
-
+                                    Log.d("index",index.toString())
+                                    Log.d("visitas completas",visitsComplete.toString())
                                     val info = InfoWindowTrackingData(namePdv.get(index),dir[index],"","Visitas pendientes: "+visitsPending!![index],"Visitas completadas: "+visitsComplete!![index],"Tareas pendientes: "+taskPending!![index],"Tareas completadas: "+taskComplete!![index])
                                     val customInfoWindow = InfoWindowTracking(requireContext())
                                     googleMap.setInfoWindowAdapter(customInfoWindow)
