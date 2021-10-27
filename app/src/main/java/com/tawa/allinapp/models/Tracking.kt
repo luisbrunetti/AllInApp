@@ -1,6 +1,8 @@
 package com.tawa.allinapp.models
 
 import com.tawa.allinapp.data.remote.entities.RoutesRemote
+import com.google.gson.annotations.SerializedName
+
 
 
 data class Tracking(
@@ -14,5 +16,10 @@ data class Tracking(
     val longitude: Double?,
     val codPvCop: String,
     val visits: List<RoutesRemote.Visits?>,
-    val tasks: List<RoutesRemote.Tasks?>
+    val tasks: List<RoutesRemote.Tasks?>,
+    val checks: RoutesRemote.Checks,
+    val reports: RoutesRemote.Reports
+
 )
+
+

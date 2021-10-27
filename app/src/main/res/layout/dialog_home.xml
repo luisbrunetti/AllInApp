@@ -22,7 +22,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/tvTtitleSelectPdv"
+            android:id="@+id/tvTitleSelectCompany"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
@@ -33,7 +33,7 @@
             android:textStyle="bold" />
 
         <Spinner
-            android:id="@+id/spinnerCompany"
+            android:id="@+id/spSelectCompany"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_marginStart="24dp"
@@ -48,7 +48,7 @@
             android:spinnerMode="dropdown" />
 
         <Button
-            android:id="@+id/selectPdvSpinner"
+            android:id="@+id/btnEnterCompany"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_marginStart="24dp"

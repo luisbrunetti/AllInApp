@@ -31,18 +31,23 @@ class LoginFragment : BaseFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentLoginBinding.inflate(inflater)
+
         authViewModel= viewModel(viewModelFactory) {
             observe(successLogin, { it?.let {
                 if(it) authViewModel.getCompaniesRemote()
             }})
             observe(startLogin, { it?.let {
-                if(it) showProgressDialog()
+                    if(it){
+                        changeStateStartLogin()
+                        showProgressDialog()
+                    }
             }})
             observe(successGetCompanies, { it?.let {
                 if(it) authViewModel.endLogin()
             }})
             observe(successEndLogin, { it?.let {
                 if (it) {
+                    changeStateEndLogin()
                     hideProgressDialog()
                     showHome(context,true)
                 }}})

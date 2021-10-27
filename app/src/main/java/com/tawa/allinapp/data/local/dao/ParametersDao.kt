@@ -28,6 +28,6 @@ interface ParametersDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertTranslateItem(translateModel: TranslateModel)
 
-    /*@Query("SELECT * FROM Language WHERE xmlName = :xmlName")
-    fun getLanguageByXml(xmlName: String) : List<LanguageModel>*/
+    @Query("SELECT * FROM translate")
+    fun getTranslate() : List<TranslateModel>
 }

@@ -88,8 +88,6 @@ class ReportGeolocationFragment : BaseFragment(), RecyclerUser.onClickButton{
             val date = binding.btnSearchGeoLocation.text.toString()
             recyclerAdapter?.listChecked?.let {
                 if (date != "" && it.size > 0) {
-                    //val mutableListUser: MutableList<RoutesUser> = it.stream().collect(Collectors.toList()) as MutableList<RoutesUser>
-                    //Log.d("mutableList", mutableListUser.toString()) // Modificar tipo a arraylist
                     showProgressDialog()
                     reportGeoViewModel.getRoutesFromListUsers(
                         it, reportGeoViewModel.convertDate(binding.edDateGeoLocation.text.toString())

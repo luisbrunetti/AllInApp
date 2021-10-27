@@ -39,6 +39,7 @@ class InformRoutesMapDialogFragment : DialogFragment(), GoogleMap.OnInfoWindowCl
     private var listRoutes: List<TrackingInform>? = null
     private var listMarkers : ArrayList<Marker?>? = null
     private var hashMapMarkerRoute : MutableMap<String, InfoGeolocation>? = null
+    private var hmMarkerInfoWindow: MutableMap<String, InfoWindow> = mutableMapOf()
     private var lastLatLng: LatLng? = null
     companion object {
         const val LIST_ROUTES_INFORM = "list_routes_inform"
@@ -63,26 +64,35 @@ class InformRoutesMapDialogFragment : DialogFragment(), GoogleMap.OnInfoWindowCl
             mapType = GoogleMap.MAP_TYPE_NORMAL
             uiSettings.isZoomControlsEnabled = true
             setInfoWindowAdapter(object : GoogleMap.InfoWindowAdapter {
+                @SuppressLint("SetTextI18n")
                 override fun getInfoWindow(p0: Marker): View? {
                     var v : View? = null
-                    if(p0.title == POINT_SALE){
-                        v = layoutInflater.inflate(R.layout.info_adapter_pv_geolocation,null)
-                        val tvSalesPoint= v.findViewById<TextView>(R.id.tvSalesPointInfoAdapterPV)
-                        val tvDirPv = v.findViewById<TextView>(R.id.tvDirInfoAdapterPv)
-                        val snippet = p0.snippet
-                        val index = snippet.indexOf("-",0,true)
-                        tvSalesPoint.text = snippet.substring(0,index)
-                        tvDirPv.text = snippet.substring(index+1, snippet.length)
-                    }else{
-                        v = layoutInflater.inflate(R.layout.info_adapter_geolocation,null)
-                        val tvLatLng = v.findViewById<TextView>(R.id.tvDescInfoAdapter)
-                        val tvSalesPoint= v.findViewById<TextView>(R.id.tvSalesPointInfoAdapter)
-                        val tvType = v.findViewById<TextView>(R.id.tvTypeInfoAdapter)
-                        tvType.text = p0.title
-                        tvSalesPoint.text = p0.snippet
-                        tvLatLng.text =  "("+p0.position.latitude.toString().substring(0,9)+","+p0.position.longitude.toString().substring(0,9)+")"
-                    }
+                    hmMarkerInfoWindow[p0.id]?.let {
+                        if(it.typePoint == POINT_SALE){
+                            v = layoutInflater.inflate(R.layout.info_adapter_pv_geolocation,null)
+                            val tvSalesPoint= v?.findViewById<TextView>(R.id.tvSalesPointInfoAdapterPV)
+                            val tvDirPv = v?.findViewById<TextView>(R.id.tvDirInfoAdapterPv)
+                            val checkToDo = v?.findViewById<TextView>(R.id.tvCheckInToDoAdapterPv)
+                            val checkFinished = v?.findViewById<TextView>(R.id.tvCheckInFinshiedAdapterPV)
+                            val taskToDo = v?.findViewById<TextView>(R.id.tvTasksTodoAdapterPv)
+                            val taskFinished = v?.findViewById<TextView>(R.id.tvTasksFinishedAdapterPv)
+                            tvSalesPoint?.text = "${it.pv} - ${it.codPv}"
+                            tvDirPv?.text = it.dirPv
+                            checkToDo?.text = "Check in pendientes : ${it.checkInTodo}"
+                            checkFinished?.text = "Check in realizados: ${it.checkInDone}"
+                            taskToDo?.text = "Tareas pendientes : ${it.tasksTodo}"
+                            taskFinished?.text = "Tareas realizadas : ${it.taskFinished}"
 
+                        }else{
+                            v = layoutInflater.inflate(R.layout.info_adapter_geolocation,null)
+                            val tvLatLng = v?.findViewById<TextView>(R.id.tvDescInfoAdapter)
+                            val tvSalesPoint= v?.findViewById<TextView>(R.id.tvSalesPointInfoAdapter)
+                            val tvType = v?.findViewById<TextView>(R.id.tvTypeInfoAdapter)
+                            tvType?.text = it.typePoint
+                            tvSalesPoint?.text = "${it.pv} - ${it.codPv}"
+                            tvLatLng?.text =  "("+p0.position.latitude.toString().substring(0,9)+","+p0.position.longitude.toString().substring(0,9)+")"
+                        }
+                    }
                     return v
                 }
 
@@ -105,60 +115,102 @@ class InformRoutesMapDialogFragment : DialogFragment(), GoogleMap.OnInfoWindowCl
                 for (tracking in userTracking.listTracking) {
                     var checkin= false
                     var checkout= false
-                    for(visit in tracking.visits){
+                    for (visit in tracking.visits) {
+                        //for(visit in visits?.visit!!){
+                        var markerId: String = ""
+                        var markerType: String = ""
                         when (visit?.comment) {
                             "INGRESO" -> {
-                                val userPosition = LatLng(visit.latitude.toDouble(), visit.longitude.toDouble())
+                                val userPosition =
+                                    LatLng(visit.latitude.toDouble(), visit.longitude.toDouble())
                                 val iconD = resources.getDrawable(R.drawable.ic_marker_checkin)
-                                val marker = googleMap.addMarker(MarkerOptions()
-                                    .position(userPosition)
-                                    .title(CHECK_IN)
-                                    .snippet("${tracking.Pv} - ${tracking.codPvCop}")
-                                    .infoWindowAnchor(0f,-0.1f)
-                                    .icon(getMarkerIconFromDrawable(iconD))
+                                val marker = googleMap.addMarker(
+                                    MarkerOptions()
+                                        .position(userPosition)
+                                        .infoWindowAnchor(0f, -0.1f)
+                                        .icon(getMarkerIconFromDrawable(iconD))
                                 )
                                 checkin = true
-                                hashMapMarkerRoute!![marker.id] = InfoGeolocation(visit.comment, visit.creation, userTracking.nameUser, tracking.codPvCop,tracking.dirCorpPv,tracking.Pv)
+                                markerId = marker.id
+                                markerType = CHECK_IN
+                                hashMapMarkerRoute!![marker.id] = InfoGeolocation(
+                                    visit.comment,
+                                    visit.creation,
+                                    userTracking.nameUser,
+                                    tracking.codPvCop,
+                                    tracking.dirCorpPv,
+                                    tracking.Pv
+                                )
                             }
                             "SALIDA" -> {
-                                val userPosition = LatLng(visit.latitude.toDouble(), visit.longitude.toDouble())
-                                Log.d("pos",userPosition.toString())
+                                val userPosition =
+                                    LatLng(visit.latitude.toDouble(), visit.longitude.toDouble())
+                                Log.d("pos", userPosition.toString())
                                 val iconD = resources.getDrawable(R.drawable.ic_marker_checkout)
-                                val marker = googleMap.addMarker(MarkerOptions()
-                                    .position(userPosition)
-                                    .title(CHECK_OUT)
-                                    .snippet("${tracking.Pv} - ${tracking.codPvCop}")
-                                    .icon(getMarkerIconFromDrawable(iconD))
+                                val marker = googleMap.addMarker(
+                                    MarkerOptions()
+                                        .position(userPosition)
+                                        .icon(getMarkerIconFromDrawable(iconD))
                                 )
                                 checkout = true
-                                hashMapMarkerRoute!![marker.id] = InfoGeolocation(visit.comment,visit.creation, userTracking.nameUser, tracking.codPvCop,tracking.dirCorpPv,tracking.Pv)
+                                markerId = marker.id
+                                markerType = CHECK_OUT
+                                hashMapMarkerRoute!![marker.id] = InfoGeolocation(
+                                    visit.comment,
+                                    visit.creation,
+                                    userTracking.nameUser,
+                                    tracking.codPvCop,
+                                    tracking.dirCorpPv,
+                                    tracking.Pv
+                                )
                             }
                             "none" -> {
-                                val userPosition = LatLng(visit.latitude.toDouble(), visit.longitude.toDouble())
-                                Log.d("pos",userPosition.toString())
+                                val userPosition =
+                                    LatLng(visit.latitude.toDouble(), visit.longitude.toDouble())
+                                Log.d("pos", userPosition.toString())
                                 val iconD = resources.getDrawable(R.drawable.ic_marker_routes)
-                                val marker = googleMap.addMarker(MarkerOptions()
-                                    .position(userPosition)
-                                    .title(POINT_SALE)
-                                    .snippet("${tracking.Pv} - ${tracking.codPvCop}")
-                                    .icon(getMarkerIconFromDrawable(iconD))
+                                val marker = googleMap.addMarker(
+                                    MarkerOptions()
+                                        .position(userPosition)
+                                        .icon(getMarkerIconFromDrawable(iconD))
                                 )
-                                hashMapMarkerRoute!![marker.id] = InfoGeolocation(visit.comment,visit.creation, userTracking.nameUser,tracking.codPvCop,tracking.dirCorpPv,tracking.Pv)
+                                markerType = POINT_SALE
+                                hashMapMarkerRoute!![marker.id] = InfoGeolocation(
+                                    visit.comment,
+                                    visit.creation,
+                                    userTracking.nameUser,
+                                    tracking.codPvCop,
+                                    tracking.dirCorpPv,
+                                    tracking.Pv
+                                )
                             }
                         }
+                        hmMarkerInfoWindow[markerId] = InfoWindow(
+                            tracking.Pv,
+                            tracking.codPvCop,
+                            tracking.dirCorpPv,
+                            markerType,
+                            tracking.checks.pendientes,
+                            tracking.checks.concluidas,
+                            tracking.reports.tareasPendientes,
+                            tracking.reports.tareasCompletadas
+                        )
                     }
                     for(task in tracking.tasks){
                         when(task?.reportState){
                             "COMPLETADO" -> {
                                 val userPosition = LatLng(task.latitude.toDouble(), task.longitude.toDouble())
-                                Log.d("pos",userPosition.toString())
                                 val iconD = resources.getDrawable(R.drawable.ic_marker_reports)
                                 val marker = googleMap.addMarker(MarkerOptions()
                                     .position(userPosition)
-                                    .title(REPORTED)
-                                    .snippet("${tracking.Pv} - ${tracking.codPvCop}")
+                                    //.title(REPORTED)
+                                    //.snippet("${tracking.Pv} - ${tracking.codPvCop}")
                                     .icon(getMarkerIconFromDrawable(iconD))
                                 )
+                                hmMarkerInfoWindow[marker.id] = InfoWindow(tracking.Pv, tracking.codPvCop,
+                                    tracking.dirCorpPv,REPORTED, tracking.checks.pendientes,
+                                    tracking.checks.concluidas, tracking.reports.tareasPendientes,
+                                    tracking.reports.tareasCompletadas)
                                 hashMapMarkerRoute!![marker.id] = InfoGeolocation("Reporte",task.creation, userTracking.nameUser,tracking.codPvCop,tracking.dirCorpPv,tracking.Pv)
                             }
                         }
@@ -191,18 +243,20 @@ class InformRoutesMapDialogFragment : DialogFragment(), GoogleMap.OnInfoWindowCl
         lastLatLng = convertLatLngInMeter(pvPosition)
         val marker = googleMap.addMarker(MarkerOptions()
             .position(lastLatLng)
-            .title(POINT_SALE)
-            .snippet("$state- ${tracking.Pv}-${tracking.dirCorpPv}")
             .infoWindowAnchor(0f,-0.1f)
             .icon(getMarkerIconFromDrawable(iconD))
         )
+        hmMarkerInfoWindow[marker.id] = InfoWindow(tracking.Pv, tracking.codPvCop,
+            tracking.dirCorpPv, POINT_SALE, tracking.checks.pendientes,
+            tracking.checks.concluidas, tracking.reports.tareasPendientes,
+            tracking.reports.tareasCompletadas)
         //hashMapMarkerRoute!![marker.id] = InfoGeolocation(POINT_SALE, "", tracking.nameUser, tracking.codPvCop,tracking.dirCorpPv,tracking.Pv)
     }
 
     private fun convertLatLngInMeter(oldLatLng: LatLng) : LatLng{
         val r = Random()
         val randomHeading: Double = r.nextInt(360).toDouble()
-        return SphericalUtil.computeOffset(oldLatLng, 10.0, randomHeading)
+        return SphericalUtil.computeOffset(oldLatLng, 20.0, randomHeading)
     }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -273,4 +327,15 @@ data class InfoGeolocation(
     val pv_cod:String,
     val pv_dir:String,
     val pv_desc:String
+)
+
+data class InfoWindow(
+    val pv:String,
+    val codPv:String,
+    val dirPv:String,
+    val typePoint:String,
+    val checkInTodo:Int,
+    val checkInDone:Int,
+    val tasksTodo:Int,
+    val taskFinished:Int
 )

@@ -5,7 +5,7 @@ import com.tawa.allinapp.data.local.models.TranslateModel
 
 data class Translate(
     @SerializedName("arrayData")
-    val arrayTranslate : List<TranslateItem>
+    val arrayTranslate : ArrayList<TranslateItem>
 )
 
 data class TranslateItem(

@@ -51,10 +51,8 @@ class InitFragment : BaseFragment() {
     private var title  = "Check In"
     private var companySelected = false
     private var checkSelector: Boolean = false
+    companion object { val TAG = "Init_Fragment" }
 
-    companion object {
-        val TAG = "Init_Fragment"
-    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         appComponent.inject(this)
@@ -81,6 +79,7 @@ class InitFragment : BaseFragment() {
                 if(it != ""){
                     initViewModel.changeStatePvDesc("")
                     _pv = it
+                    Log.d("_pv",_pv.toString())
                     initViewModel.getIdPV()
                 }
             }})
@@ -89,6 +88,7 @@ class InitFragment : BaseFragment() {
                 if(it != ""){
                     initViewModel.changeStatePv("")
                     _pvId = it
+                    Log.d("_pvId",_pvId)
                     showCheckOut()
                 }
             }})
@@ -100,9 +100,8 @@ class InitFragment : BaseFragment() {
                         changeStateSuccessCheckIn(false)
 
                         initViewModel.getCheckMode()
-                        Log.d("successCheckin", "last -> $_lat  long -> $_long")
+                        Log.d("successCheckin", "last -> $latitude  long -> $longitude")
                         //initViewModel.updateStatus(_lat,_long,_battery,0)
-
                         initViewModel.updateStatus(latitude,longitude,_battery,0)
                         notify(activity,R.string.checkoout_successful)
                     }
@@ -170,11 +169,6 @@ class InitFragment : BaseFragment() {
             observe(descPV, { it?.let {
                 if (it.isNotEmpty()){ binding.tvCheckIn.text = it }
             }})
-            observe(idPV, { it?.let {
-                it.let { _pvId = it }
-                //if(it.isNotEmpty()) findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationReports())
-                //else MessageDialogFragment.newInstance("Debes seleccionar o hacer chekIn en un punto de venta").show(childFragmentManager, "errorDialog")
-            }})
             observe(successSyncAudio, { it?.let {
                 if(it){
                     Log.d(TAG,"// se realizado correctamente")
@@ -208,15 +202,11 @@ class InitFragment : BaseFragment() {
                 }
             })
             observe(successGetCompanyId, {
-                Log.d("SucessCompanyId",it.toString())
-                it?.let {
-                    if(it.isEmpty()) {
-                       showSelector()
-                    }
-                }
+                it?.let { if(it.isEmpty()) { showSelector() } }
             })
             observe(getPvIdf,{
                 it?.let {
+                    Log.d("pvId",_pvId.toString())
                     _pvId = it
                 }
             })
@@ -226,8 +216,7 @@ class InitFragment : BaseFragment() {
                 }
             })
             observe(updateNotify,{it?.let{
-                if(it)
-                    initViewModel.getCountNotify()
+                if(it) initViewModel.getCountNotify()
             }})
             observe(countNotify,{it?.let{
                 if(it>0)
@@ -244,6 +233,11 @@ class InitFragment : BaseFragment() {
                     binding.vNotifyCount.isVisible = false
                 }
             }})
+            observe(successfulTranslate,{
+                it?.let{
+                    translateObject.setInstance(it)
+                }
+            })
             failure(failure, ::handleFailure)
         }
 
@@ -265,13 +259,11 @@ class InitFragment : BaseFragment() {
         initViewModel.getUserName()
         initViewModel.getCheckMode()
         initViewModel.getPvIdFirstTime()
-        //initViewModel.getIdCompany()
-        Log.d("object", translateObject.LANGUAGE.toString())
         authViewModel.getLanguage()
+        //initViewModel.getIdCompany()
+        //Log.d("object", translateObject.LANGUAGE.toString())
         initViewModel.getIdCompanyPreferences().let {
-            if(it.isEmpty()) {
-                showSelector()
-            }
+            if(it.isEmpty()) { showSelector() }
         }
 
         binding.btCheckIn.setOnClickListener{
@@ -394,22 +386,32 @@ class InitFragment : BaseFragment() {
     private fun showSelectorCheckIn(){
         val dialog = CheckInDialogFragment(this)
         dialog.listener = object : CheckInDialogFragment.Callback {
-            override fun onAccept(idUser:String,pvId:String, pv:String,lat:String, long:String,description: String,battery:String) {
-                    //getActualLocation()
-                    getLastLocation()
-                    _pv = pv;_pvId = pvId;_battery = battery
-                    if(lat != "" && long != ""){
-
-                        initViewModel.setCheckIn(idUser,pvId,lat,long)
-                        binding.tvCheckIn.text = description
-                    }else{
-                        val dialog = MessageDialogFragment.newInstance("Ha ocurrido un error al capturar tu ubiación. Vuelvo a intentar por favor.")
-                        dialog.show(childFragmentManager,"")
-                    }
+            override fun onAccept(
+                idUser: String,
+                pvId: String,
+                pv: String,
+                lat: String,
+                long: String,
+                description: String,
+                battery: String
+            ) {
+                //getActualLocation()
+                getLastLocation()
+                _pv = pv;_pvId = pvId;_battery = battery
+                Log.d("PV",_pv.toString() + _pvId.toString())
+                if (lat != "" && long != "") {
+                    initViewModel.setCheckIn(idUser, pvId, lat, long)
+                    binding.tvCheckIn.text = description
+                } else {
+                    val dialog =
+                        MessageDialogFragment.newInstance("Ha ocurrido un error al capturar tu ubiación. Vuelvo a intentar por favor.")
+                    dialog.show(childFragmentManager, "")
+                }
 
             }
+
             override fun onSnack(snack: Boolean) {
-                if (snack) notify(activity,R.string.notify_already)
+                if (snack) notify(activity, R.string.notify_already)
             }
 
             override fun onClose() {
@@ -451,6 +453,7 @@ class InitFragment : BaseFragment() {
                 //getActualLocation()
                 getLastLocation()
                 //initViewModel.setPv("","","")
+                Log.d("pv_id_checkout", _pvId.toString())
                 Log.d("data ", latitude.toString() + longitude.toString())
                 initViewModel.setCheckOut(_user,_pvId,latitude,longitude)
                 //_pvId = ""

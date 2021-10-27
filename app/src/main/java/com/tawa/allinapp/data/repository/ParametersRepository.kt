@@ -16,6 +16,7 @@ import com.tawa.allinapp.data.remote.service.ParametersService
 import com.tawa.allinapp.models.Company
 import com.tawa.allinapp.models.Schedule
 import com.tawa.allinapp.models.Translate
+import com.tawa.allinapp.models.TranslateItem
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -122,23 +123,47 @@ interface ParametersRepository {
 
         override fun getLanguage(): Either<Failure, Translate> {
             try {
-                val retrofit = provideRetrofit()
-                val response = retrofit.getLanguage().execute()
-                if (response.isSuccessful) {
-                    response.body()?.let {
-                        Log.d("response", it.toString())
-                        /*for(element in it.data.arrayTranslate){
-                            val string = Gson().toJson(element.translate, object: TypeToken<List<String>>() {}.type)
-                            Log.d("string",string.toString())
-                            parametersDataSource.insertTranslateItem(element.toModel(string))
-                        }*/
-                        Log.d("posijtion",prefs.language.toString())
-                        translateObject.setInstance(it.data)
+                when (networkHandler.isConnected) {
+                    true -> {
+                        val retrofit = provideRetrofit()
+                        val response = retrofit.getLanguage().execute()
+                        if (response.isSuccessful) {
+                            response.body()?.let {
+                                //Log.d("response", it.toString())
+                                for (element in it.data.arrayTranslate) {
+                                    val json = Gson().toJson(
+                                        element.translate,
+                                        object : TypeToken<List<String>>() {}.type
+                                    )
+                                    parametersDataSource.insertTranslateItem(element.toModel(json))
+                                }
+                                Log.d("posijtion", prefs.language.toString())
+                                translateObject.setInstance(it.data)
+                                translateObject.LANGUAGE = prefs.language!!.toInt()
+                                return Either.Right(it.data)
+                            } ?: Either.Right(Translate(arrayListOf()))
+                        }
+                        return Either.Right(Translate(arrayListOf()))
+                    }
+                    false -> {
+                        val dataSaved = parametersDataSource.getTranslate()
+                        val translate = Translate(arrayListOf())
+                        for (element in dataSaved) {
+                            translate.arrayTranslate.add(
+                                TranslateItem(
+                                    element.id,
+                                    Gson()
+                                        .fromJson(element.translate, Array<String>::class.java)
+                                        .toList()
+                                )
+                            )
+                        }
                         translateObject.LANGUAGE = prefs.language!!.toInt()
-                        return Either.Right(it.data)
-                    } ?: Either.Right(Translate(emptyList()))
+                        translateObject.setInstance(translate)
+                        Log.d("translate", translate.toString())
+                        return Either.Right(translate)
+                    }
                 }
-                return Either.Right(Translate(emptyList()))
             } catch (e: Exception) {
                 return Either.Left(Failure.DefaultError(e.message!!))
             }
@@ -154,34 +179,19 @@ interface ParametersRepository {
 
         override fun getTranslate(): Either<Failure, Translate> {
             try {
-                val retrofit = provideRetrofit()
-                val response = retrofit.getLanguage().execute()
-                if(response.isSuccessful){
-                    response.body()?.let {
-                        Log.d("response",it.toString())
-
-                        for(element in it.data.arrayTranslate){
-                            val string = Gson().toJson(element.translate, object: TypeToken<List<String>>() {}.type)
-                            Log.d("string",string.toString())
-                            parametersDataSource.insertTranslateItem(element.toModel(string))
-                        }
-                        return Either.Right(it.data)
-                    }?: Either.Left(Failure.DefaultError(""))
+                val response = parametersDataSource.getTranslate()
+                Log.d("responseGetTranslate",response.toString())
+                val translate  = Translate(arrayListOf())
+                for(element in response){
+                    val arrayParsed = Gson().fromJson(element.translate,Array<String>::class.java)
+                    translate.arrayTranslate.add(TranslateItem(element.id,arrayParsed.toList()))
                 }
-                return Either.Left(Failure.DefaultError(""))
+                Log.d("translate",translate.toString())
+                return Either.Right(translate)
             }catch (e : Exception){
                 return Either.Left(Failure.DefaultError(e.message!!))
             }
         }
-
-
-        /*override fun getLanguageByXml(xmlName: String): Either<Failure, List<com.tawa.allinapp.models.Language>> {
-            return try{
-                Either.Right(parametersDataSource.getLanguageByXml(xmlName).map { it.toView() })
-            }catch (e : Exception){
-                Either.Left(Failure.DefaultError(e.message))
-            }
-        }*/
         fun provideRetrofit(): ParametersApi {
             return Retrofit.Builder()
                 .baseUrl("http://run.mocky.io/v3/")

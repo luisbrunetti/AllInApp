@@ -22,10 +22,10 @@ class ParametersDataSource @Inject constructor(private val parametersDao: Parame
     fun getPV(company:String,idUser: String):List<ScheduleModel> {
         return parametersDao.getPV(company,idUser)
     }
-    fun insertTranslateItem(translateModel: TranslateModel){
+    fun insertTranslateItem(translateModel: TranslateModel) {
         return parametersDao.insertTranslateItem(translateModel)
     }
-    /*fun getLanguageByXml(xmlName: String): List<LanguageModel>{
-        return parametersDao.getLanguageByXml(xmlName)
-    }*/
+    fun getTranslate(): List<TranslateModel>{
+        return parametersDao.getTranslate()
+    }
 }

@@ -10,7 +10,7 @@ class TranslateObject
 
     companion object var LANGUAGE = 0
 
-    private var translate : Translate = Translate(emptyList())
+    private var translate : Translate = Translate(arrayListOf())
 
     fun setInstance(translate: Translate){
         this.translate = translate

@@ -84,7 +84,7 @@ interface RoutesRepository {
                             true -> {
                                 response.body()?.let { body ->
                                     if(body.success) {
-                                        //Log.d("Tracking",body.message.toString())
+                                        Log.d("Tracking",body.message.toString())
                                         Either.Right(body.data.map {
                                             it.toView()
                                         })
@@ -133,7 +133,7 @@ interface RoutesRepository {
             dateStart: String
         ): Either<Failure, List<TrackingInform>> {
             val arrayResponse: ArrayList<TrackingInform> = ArrayList()
-            try {
+            return try {
                 for (user in mutableListUser) {
                     Log.d("request", user.id + "  " + dateStart.toString() + "  " + prefs.companyId.toString())
                     getTracking(user.id, dateStart).either({
@@ -143,9 +143,9 @@ interface RoutesRepository {
                     })
                 }
                 Log.d("arrayResponse", arrayResponse.toString())
-                return Either.Right(arrayResponse)
+                Either.Right(arrayResponse)
             } catch (e: Exception) {
-                return Either.Left(Failure.DefaultError(e.message!!))
+                Either.Left(Failure.DefaultError(e.message!!))
             }
         }
     }

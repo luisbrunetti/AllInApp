@@ -185,7 +185,7 @@ abstract class BaseFragment : Fragment() {
     private val locationCallback = object : LocationCallback(){
         override fun onLocationResult(locationResult: LocationResult) {
             val lastLocation: Location = locationResult.lastLocation
-            Log.d("Debug:","your last last location: "+ lastLocation.longitude.toString())
+            //Log.d("Debug:","your last last location: "+ lastLocation.longitude.toString())
             longitude = lastLocation.longitude.toString()
             latitude = lastLocation.latitude.toString()
         }

@@ -20,8 +20,10 @@ class RoutesRemote {
         @SerializedName("punto_venta") val pv:Pv,
         @SerializedName("visitas") val visits: List<Visits?>,
         @SerializedName("tareas") val tasks: List<Tasks?>,
+        @SerializedName("reportes") val reports: Reports,
+        @SerializedName("checks") val checks: Checks,
     ){
-        fun toView() = Tracking(pv.id, pv.Pv, pv.zone.zoneName?:"", pv.zone.zoneDistrict?:"", pv.corp.dirCorpPv, pv.corp.nameCorpPv, pv.corp.latitude, pv.corp.longitude, pv.corp.codPvCrop ?: "", visits, tasks)
+        fun toView() = Tracking(pv.id, pv.Pv, pv.zone.zoneName?:"", pv.zone.zoneDistrict?:"", pv.corp.dirCorpPv, pv.corp.nameCorpPv, pv.corp.latitude, pv.corp.longitude, pv.corp.codPvCrop ?: "", visits, tasks,checks,reports)
 
     }
 
@@ -70,7 +72,17 @@ class RoutesRemote {
         @SerializedName("status_reporte") val reportState:String,
         @SerializedName("fe_creacion") val creation:String,
     )
+    data class Checks(
+        @SerializedName("concluidas") val concluidas: Int, // 0
+        @SerializedName("pendientes") val pendientes: Int, // 5
+        @SerializedName("titulo") val titulo: String, // VISITAS
+        @SerializedName("total") val total: Int // 5
+    )
 
-
-
+    data class Reports(
+        @SerializedName("tareasCompletadas") val tareasCompletadas: Int, // 0
+        @SerializedName("tareasPendientes") val tareasPendientes: Int, // 1
+        @SerializedName("titulo") val titulo: String, // TAREAS
+        @SerializedName("totalTareasHacer") val totalTareasHacer: Int // 1
+    )
 }

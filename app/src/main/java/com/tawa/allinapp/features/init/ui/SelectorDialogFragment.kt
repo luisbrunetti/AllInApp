@@ -35,7 +35,7 @@ class SelectorDialogFragment
     var listener: Callback? = null
     private lateinit var listCompany:List<Company>
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = DialogHomeBinding.inflate(inflater)
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         isCancelable = false
@@ -47,7 +47,7 @@ class SelectorDialogFragment
             observe(companies, { it?.let {
                 if(positionCompany.value==-1) {
                     arrayList.addAll(toArray(it))
-                    binding.spinnerCompany.adapter = aa
+                    binding.spSelectCompany.adapter = aa
                     listCompany = it
                 }
             } })
@@ -99,27 +99,28 @@ class SelectorDialogFragment
                 }
             })
         }
+        changeViewsFragment()
         return binding.root
     }
 
 
     private fun changeViewsFragment() {
         baseFragment.translateObject.apply {
-            binding.tvTtitleSelectPdv.text = findTranslate("tvTtitleSelectPdv")
-            binding.selectPdvSpinner.text = findTranslate("selectPdvSpinner")
+            binding.tvTitleSelectCompany.text = findTranslate("tvTtitleSelectPdv")
+            binding.btnEnterCompany.text = findTranslate("selectPdvSpinner")
         }
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.spinnerCompany.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+        binding.spSelectCompany.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
             override fun onNothingSelected(parent: AdapterView<*>?) {  }
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 initViewModel.selectPositionCompany(position)
             }
         }
-        binding.selectPdvSpinner.setOnClickListener {
+        binding.btnEnterCompany.setOnClickListener {
             baseFragment.showProgressDialog()
-            val positionCompany = binding.spinnerCompany.selectedItemPosition
+            val positionCompany = binding.spSelectCompany.selectedItemPosition
             selectedCompany = listCompany[positionCompany].id
             initViewModel.setIdCompany(selectedCompany,listCompany[positionCompany].image)
             // initViewModel.getAudioRemote()

@@ -91,7 +91,7 @@ class AuthViewModel
 
     private fun handlePVRemote(success: Boolean) { this._successGetPV.value = success }
 
-    fun getTranslate(language:String) { getTranslate(UseCase.None()){ it.either(::handleFailure, ::handleGetTranslate) } }
+    fun getTranslate() { getTranslate(UseCase.None()){ it.either(::handleFailure, ::handleGetTranslate) } }
 
     private fun handleGetTranslate(value : Translate?){ this._successfulTranslate.value = value }
 
@@ -116,6 +116,6 @@ class AuthViewModel
 
     fun changeStateGetLanguage(value: Translate){ this._getLanguageSuccess.value = value }
 
-    //fun changeStateGetTranslate(){this._successfulTranslate.value = emptyList()}
-
+    fun changeStateStartLogin(){ this._startLogin.value = false }
+    fun changeStateEndLogin(){ this._successEndLogin.value = false}
 }

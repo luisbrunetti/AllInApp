@@ -37,8 +37,6 @@ class LoginActivity : AppCompatActivity() {
         supportActionBar?.hide()
         setContentView(binding.root)
         findNavController(R.id.nav_host_auth_home)
-        //val intent = Intent(this,HomeActivity::class.java)
-        //startActivity(intent)
     }
 
     private fun devMod():Int{

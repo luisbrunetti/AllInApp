@@ -77,23 +77,7 @@ class CheckInDialogFragment
             } })
             observe(stateCheck, { it?.let {
                 checkState = it
-            } })/*
-            observe(getLanguageSaved,{
-                it?.let {
-                    if(it != BaseFragment.SPANISH){
-                        BaseFragment.CURRENT_LANGUAGE = it
-                        initViewModel.getLanguageByXml("fragment_init.xml")
-                    }
-                }
-            })
-            observe(getLanguageSuccess,{
-                it?.let { list ->
-                    if(list.isNotEmpty()){
-                        baseFragment.listLanguage = it
-                        baseFragment.changeLanguage(binding.root)
-                    }
-                }
-            })*/
+            } })
             failure(failure,{
                 Log.d("failure",it.toString())
             })
@@ -102,6 +86,13 @@ class CheckInDialogFragment
         initViewModel.getIdUser()
         //initViewModel.getLanguage()
         return binding.root
+    }
+
+    private fun changeViewsFragment() {
+        baseFragment.translateObject.apply {
+            binding.tvLabelSelectPdvCheckIn.text = findTranslate("tvTtitleSelectComp")
+            //binding.tvTitleSelectCompany.text = findTranslate("selectPdvSpinner")
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -131,12 +122,13 @@ class CheckInDialogFragment
                     //   {
                     list?.let { list->
                         _pv = list[_positionPv].nameCorp
-                        _pvId = list[_positionPv].id
+                        _pvId = list[_positionPv].pv // problema
                         _description = list[_positionPv].nameCorp
                         initViewModel.setPv(list[_positionPv].id,list[_positionPv].pv,list[_positionPv].nameCorp)
                         // initViewModel.setCheckIn(idUsers,list[_positionPv].pv,latitude,longitude)
                         //initViewModel.updateStatus(latitude,longitude,getBatteryPercentage(requireContext()).toString())
                         //initViewModel.sendCheck(latitude,longitude,0)
+                        Log.d("CheckInDialogFragm",_pvId.toString())
                         listener?.onAccept(idUsers,_pvId,_pv, latitude,longitude,_description,getBatteryPercentage(requireContext()).toString())
                         dismiss()
                     }

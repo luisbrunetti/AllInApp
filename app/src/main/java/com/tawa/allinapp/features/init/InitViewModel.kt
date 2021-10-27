@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.tawa.allinapp.core.interactor.UseCase
 import com.tawa.allinapp.core.platform.BaseViewModel
 import com.tawa.allinapp.data.local.Prefs
+import com.tawa.allinapp.features.auth.usecase.GetTranslate
 import com.tawa.allinapp.features.init.usecase.*
 import com.tawa.allinapp.features.reports.GetReportsRemote
 import com.tawa.allinapp.models.*
@@ -52,7 +53,7 @@ class InitViewModel
     private val getCountNotify: GetCountNotify,
     private val clearNotify: ClearNotify,
     private val getNotify: GetNotify,
-    private val getLanguage: GetLanguage
+    private val getTranslate: GetTranslate
 ) : BaseViewModel()  {
     private  val formatter: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
     var timestamp: Timestamp = Timestamp(System.currentTimeMillis())
@@ -160,9 +161,6 @@ class InitViewModel
     val pvId: LiveData<String>
         get()= _pvId
 
-    private val _idPV = MutableLiveData<String>()
-    val idPV: LiveData<String>
-        get()= _idPV
 
     private val _dayState = MutableLiveData<Boolean>(false)
     val dayState: LiveData<Boolean>
@@ -239,6 +237,9 @@ class InitViewModel
 
     private val _setSession = MutableLiveData<Boolean>()
     val setSessionLiveData : LiveData<Boolean> get() = _setSession
+
+    private val _successfulTranslate = MutableLiveData<Translate>()
+    val successfulTranslate : LiveData<Translate> = _successfulTranslate
 /*
     private val _getLanguageSuccess = MutableLiveData<List<Language>>()
     val getLanguageSuccess : LiveData<List<Language>> get() = _getLanguageSuccess
@@ -333,8 +334,6 @@ class InitViewModel
     private fun handleDescPV(checkIn:String) { this._descPV.value = checkIn }
 
     private fun handlePVId(checkIn:String) { this._pvId.value = checkIn }
-
-    private fun handleIdPV(checkIn:String) { this._idPV.value = checkIn }
 
     private fun handleCheckIn(success: Boolean) { this._successCheckIn.value = success }
 
@@ -438,6 +437,10 @@ class InitViewModel
         this._getLanguageSaved.value = value
     }
 */
+    fun getTranslate() { getTranslate(UseCase.None()){ it.either(::handleFailure, ::handleGetTranslate) } }
+
+    private fun handleGetTranslate(value : Translate?){ this._successfulTranslate.value = value }
+
     fun changeCheckState(value:String){ this._successSendCheck.value = value }
 
     fun changeStatePv(value: String){ this._pvId.value = value }

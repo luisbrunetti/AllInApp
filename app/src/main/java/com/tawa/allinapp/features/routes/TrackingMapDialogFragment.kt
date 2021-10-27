@@ -64,7 +64,7 @@ class TrackingMapDialogFragment: DialogFragment() {
                         arrayNamePdv.add(track.nameCorpPv)
                         arrayType.add(visit?.comment.toString())
                     }
-                   // Log.d("visitasDato",track.visits.toString())
+                    // Log.d("visitasDato",track.visits.toString())
                     if(!tasks.isNullOrEmpty())
                     {
                         Log.d("tareas",tasks.toString())

@@ -44,6 +44,8 @@ interface CheckRepository {
                 val check = Check(id,prefs.schedule?:"",prefs.companyId?:"",pv,idUser,registerDate,latitude,longitude,comment,state)
                 checkDataSource.insertCheck(check.toModel())
                 prefs.checkIn = !prefs.checkIn
+                Log.d("IdpvRepository",pv.toString())
+                prefs.pvId = pv
                 Either.Right(true)
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))

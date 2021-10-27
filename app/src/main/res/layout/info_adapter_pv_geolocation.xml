@@ -9,7 +9,7 @@
 
     <TextView
         android:id="@+id/tvSalesPointInfoAdapterPV"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Real Plaza Ate - 83"
         android:textAlignment="textStart"
@@ -21,17 +21,68 @@
 
     <TextView
         android:id="@+id/tvDirInfoAdapterPv"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:text="(123123231,123123)"
+        android:text="AAAAAAAAA"
         android:textAlignment="textStart"
-        android:lines="2"
+        android:maxLines="2"
         android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.027"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvSalesPointInfoAdapterPV" />
+
+
+
+    <TextView
+        android:id="@+id/tvCheckInToDoAdapterPv"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginTop="4dp"
+        android:textColor="@color/black"
+        android:text="Check in pendientes: "
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvDirInfoAdapterPv" />
+
+    <TextView
+        android:id="@+id/tvCheckInFinshiedAdapterPV"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Check in realizados:"
+        android:layout_marginTop="4dp"
+        android:textAlignment="textStart"
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.36"
+        app:layout_constraintTop_toBottomOf="@id/tvCheckInToDoAdapterPv"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/tvTasksTodoAdapterPv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="Tareas pendientes: "
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.384"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvCheckInFinshiedAdapterPV" />
+
+    <TextView
+        android:id="@+id/tvTasksFinishedAdapterPv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="Tareas terminadas: "
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.344"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvTasksTodoAdapterPv" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
