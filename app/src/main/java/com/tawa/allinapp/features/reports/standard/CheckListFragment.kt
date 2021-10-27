@@ -894,7 +894,7 @@ class CheckListFragment: BaseFragment() {
                     //checkListViewModel.updateAnswers(tag[0], input.text.toString())
                 }
                 for (i in mutableHashMapTag.values) {
-                    Log.d("i", "hashTagRecord -> ${i.answerRecorded.toString()}  hashSelected -> ${i.answerSelected.toString()}")
+                    //Log.d("i", "hashTagRecord -> ${i.answerRecorded.toString()}  hashSelected -> ${i.answerSelected.toString()}")
                     val answerbyQuestion = if (i.answerSelected == "") {
                         "${TYPE_RECCORDED}&${i.answerRecorded}"
                     } else {

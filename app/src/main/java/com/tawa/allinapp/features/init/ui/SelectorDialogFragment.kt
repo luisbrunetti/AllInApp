@@ -31,7 +31,6 @@ class SelectorDialogFragment
     private lateinit var initViewModel: InitViewModel
     private lateinit var authViewModel: AuthViewModel
     private lateinit var selectedCompany: String
-
     var listener: Callback? = null
     private lateinit var listCompany:List<Company>
 
@@ -106,8 +105,8 @@ class SelectorDialogFragment
 
     private fun changeViewsFragment() {
         baseFragment.translateObject.apply {
-            binding.tvTitleSelectCompany.text = findTranslate("tvTtitleSelectPdv")
-            binding.btnEnterCompany.text = findTranslate("selectPdvSpinner")
+            binding.tvTitleSelectCompany.text = findTranslate("tvTitleSelectCompany")
+            binding.btnEnterCompany.text = findTranslate("btnEnterCompany")
         }
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
