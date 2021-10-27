@@ -13,7 +13,7 @@ import javax.inject.Inject
 class GetTracking
 @Inject constructor(private val routesRepository: RoutesRepository) : UseCase<List<Tracking>, GetTracking.Params>() {
 
-    override suspend fun run(params: Params) = routesRepository.getTracking(params.idUser,params.dateStart)
-    data class Params(val idUser:String,val dateStart:String)
+    override suspend fun run(params: Params) = routesRepository.getTracking(params.idUser,params.dateStart,params.type)
+    data class Params(val idUser:String,val dateStart:String,val type:Int)
 
 }

@@ -42,6 +42,10 @@ class TrackingMapDialogFragment: DialogFragment() {
             val arrayDirections = ArrayList<String>()
             val arrayNamePdv = ArrayList<String>()
             val arrayType = ArrayList<String>()
+            val arrayVisitsPending = ArrayList<String>()
+            val arrayVisitsComplete = ArrayList<String>()
+            val arrayTaskPending = ArrayList<String>()
+            val arrayTaskComplete = ArrayList<String>()
             for(track in listTracking)
             {
                 Log.d("visitias",track.visits.toString())
@@ -52,6 +56,10 @@ class TrackingMapDialogFragment: DialogFragment() {
                 arrayLongitude.add(track.longitude.toString())
                 arrayDirections.add(track.dirCorpPv)
                 arrayNamePdv.add(track.nameCorpPv)
+                arrayVisitsPending.add(track.checks.pendientes.toString())
+                arrayVisitsComplete.add(track.checks.concluidas.toString())
+                arrayTaskPending.add(track.reports.tareasPendientes.toString())
+                arrayTaskComplete.add(track.reports.tareasCompletadas.toString())
                 arrayType.add("none")
 
                 if(!visits.isNullOrEmpty())
@@ -85,6 +93,10 @@ class TrackingMapDialogFragment: DialogFragment() {
             bundle.putStringArrayList("directions", arrayDirections)
             bundle.putStringArrayList("type", arrayType)
             bundle.putStringArrayList("namePdv", arrayNamePdv)
+            bundle.putStringArrayList("visitsPending", arrayVisitsPending)
+            bundle.putStringArrayList("visitsComplete", arrayVisitsComplete)
+            bundle.putStringArrayList("taskPending", arrayTaskPending)
+            bundle.putStringArrayList("taskComplete", arrayTaskComplete)
             frag.arguments = bundle
             return frag
         }
@@ -106,11 +118,15 @@ class TrackingMapDialogFragment: DialogFragment() {
                     bundle.getStringArrayList("directions")?.let {dir->
                         bundle.getStringArrayList("type")?.let { type->
                             val namePdv = bundle.getStringArrayList("namePdv")!!
+                            val visitsPending = bundle.getStringArrayList("visitsPending")
+                            val visitsComplete = bundle.getStringArrayList("visitsComplete")
+                            val taskPending = bundle.getStringArrayList("taskPending")
+                            val taskComplete = bundle.getStringArrayList("taskComplete")
                             for((index,data ) in lat.withIndex())
                             {
                                 if(type[index]=="INGRESO")
                                 {
-                                    val info = InfoWindowTrackingData(namePdv.get(index),"${data}, ${lon[index]}","Check in")
+                                    val info = InfoWindowTrackingData(namePdv.get(index),"${data}, ${lon[index]}","Check in","","","","")
                                     val customInfoWindow = InfoWindowTracking(requireContext())
                                     googleMap.setInfoWindowAdapter(customInfoWindow)
                                     val userPosition = LatLng(data.toDouble(), lon[index].toDouble())
@@ -125,7 +141,7 @@ class TrackingMapDialogFragment: DialogFragment() {
                                 }
                                 if(type[index]=="SALIDA")
                                 {
-                                    val info = InfoWindowTrackingData(namePdv.get(index),"${data}, ${lon[index]}","Check out")
+                                    val info = InfoWindowTrackingData(namePdv.get(index),"${data}, ${lon[index]}","Check out","","","","")
                                     val customInfoWindow = InfoWindowTracking(requireContext())
                                     googleMap.setInfoWindowAdapter(customInfoWindow)
                                     val userPosition = LatLng(data.toDouble(), lon[index].toDouble())
@@ -140,7 +156,7 @@ class TrackingMapDialogFragment: DialogFragment() {
                                 }
                                 if(type[index]=="COMPLETADO")
                                 {
-                                    val info = InfoWindowTrackingData(namePdv.get(index),"${data}, ${lon[index]}","Reporte")
+                                    val info = InfoWindowTrackingData(namePdv.get(index),"${data}, ${lon[index]}","Reporte","","","","")
                                     val customInfoWindow = InfoWindowTracking(requireContext())
                                     googleMap.setInfoWindowAdapter(customInfoWindow)
                                     val userPosition = LatLng(data.toDouble(), lon[index].toDouble())
@@ -155,7 +171,8 @@ class TrackingMapDialogFragment: DialogFragment() {
                                 }
                                 if(type[index]=="none")
                                 {
-                                    val info = InfoWindowTrackingData(namePdv.get(index),dir[index],"")
+
+                                    val info = InfoWindowTrackingData(namePdv.get(index),dir[index],"","Visitas pendientes: "+visitsPending!![index],"Visitas completadas: "+visitsComplete!![index],"Tareas pendientes: "+taskPending!![index],"Tareas completadas: "+taskComplete!![index])
                                     val customInfoWindow = InfoWindowTracking(requireContext())
                                     googleMap.setInfoWindowAdapter(customInfoWindow)
                                     val userPosition = LatLng(data.toDouble(), lon[index].toDouble())

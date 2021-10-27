@@ -5,6 +5,20 @@ import com.tawa.allinapp.models.Routes
 import com.tawa.allinapp.models.RoutesUser
 import com.tawa.allinapp.models.Tracking
 
+    data class VisitsCount(
+        @SerializedName("titulo") val title: String,
+        @SerializedName("total") val total: String,
+        @SerializedName("concluidas") val complete: String,
+        @SerializedName("pendientes") val pending: String,
+    )
+
+    data class TasksCount(
+        @SerializedName("titulo") val title: String,
+        @SerializedName("totalTareasHacer") val total: String,
+        @SerializedName("tareasCompletadas") val complete: String,
+        @SerializedName("tareasPendientes") val pending:String,
+    )
+
 
 class RoutesRemote {
     data class RoutesUser(
@@ -12,8 +26,10 @@ class RoutesRemote {
         @SerializedName("descripcion_ptv") val Pv: String?,
         @SerializedName("id_zona") val zone: Zone,
         @SerializedName("id_ptv_corp") val corp: IdPtvCorp,
+        @SerializedName("visitas") val visits: VisitsCount,
+        @SerializedName("reportes") val tasks: TasksCount,
     ){
-        fun toView() = Routes(id,Pv?:"",zone.zoneName?:"",zone.zoneDistrict?:"",corp.dirCorpPv?:"",corp.nameCorpPv?:"",corp.latitude?:0.0,corp.longitude?:0.0)
+        fun toView() = Routes(id,Pv?:"",zone.zoneName?:"",zone.zoneDistrict?:"",corp.dirCorpPv?:"",corp.nameCorpPv?:"",corp.latitude?:0.0,corp.longitude?:0.0,visits.total,visits.complete,visits.pending,tasks.total,tasks.complete,tasks.pending)
     }
 
     data class TrackingUser(

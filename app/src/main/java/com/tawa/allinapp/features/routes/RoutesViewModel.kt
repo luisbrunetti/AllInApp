@@ -44,13 +44,13 @@ class RoutesViewModel
         _listUser.value = listUser
     }
 
-    fun getRoutes(idUser:String,dateStart:String) = getRoutes(GetRoutes.Params(idUser,dateStart)) { it.either(::handleFailure, ::handleGetRoutes) }
+    fun getRoutes(idUser:String,dateStart:String,type:Int) = getRoutes(GetRoutes.Params(idUser,dateStart,type)) { it.either(::handleFailure, ::handleGetRoutes) }
 
     private fun handleGetRoutes(listRoutes : List<Routes>) {
         _successGetRoutes.value = listRoutes
     }
 
-    fun getTracking(idUser:String,dateStart:String) = getTracking(GetTracking.Params(idUser,dateStart)) {
+    fun getTracking(idUser:String,dateStart:String,type:Int) = getTracking(GetTracking.Params(idUser,dateStart,type)) {
         it.either(::handleFailure, ::handleGetTracking)
     }
 

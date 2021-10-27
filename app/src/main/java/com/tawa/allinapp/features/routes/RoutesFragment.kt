@@ -2,6 +2,7 @@ package com.tawa.allinapp.features.routes
 
 import android.app.DatePickerDialog
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +10,7 @@ import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.ListView
 import android.widget.Toast
+import androidx.compose.ui.text.toUpperCase
 import androidx.core.view.isVisible
 import com.tawa.allinapp.R
 import com.tawa.allinapp.core.extensions.observe
@@ -38,6 +40,7 @@ class RoutesFragment : BaseFragment() {
     private var listRoutesUser  = listOf<Routes>()
     var listTrackingUser  = listOf<Tracking>()
     var dateFormat = ""
+    private var _role = ""
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,7 +56,6 @@ class RoutesFragment : BaseFragment() {
                 it?.let {
                     showUser(it)
                     listUserData = it
-
                 }
             })
             observe(successGetRoutes,{it?.let {
@@ -61,6 +63,7 @@ class RoutesFragment : BaseFragment() {
                 if(it.isNotEmpty()){
                     listRoutesUser = it
                     binding.contRoutes.isVisible = true
+                    binding.tvTypeRoute.text= "Rutas"
                     //binding.tvTypeRoute.text = getTypeOfLanguageById("tvTypeRoute")
                     createListRoutes(binding.listRoutes,it)
                 }
@@ -73,6 +76,7 @@ class RoutesFragment : BaseFragment() {
                     listTrackingUser = it
                     binding.contRoutes.isVisible = true
                     //binding.tvTypeRoute.text = getTypeOfLanguageById("tvTypeTracking")
+                    binding.tvTypeRoute.text= "Seguimiento"
                     createListTracking(binding.listRoutes,it)
                 }
                 else {
@@ -92,44 +96,76 @@ class RoutesFragment : BaseFragment() {
             if(binding.tvTypeRoute.text=="Rutas")
                 showMapRoutesDialog(listRoutesUser)
             else
+
                 showMapTrackingDialog(listTrackingUser)
         }
-        routesViewModel.getListUser()
+        arguments?.getString("role").toString().also {role->
+            routesViewModel.getListUser()
+            _role = role
+            if(_role.toUpperCase()!="SUPERVISOR")
+                binding.edUserRoutes.isEnabled = false
+        }
+
         binding.btnRoutes.setOnClickListener {
-            binding.listRoutes.adapter= null
-            binding.contRoutes.isVisible = false
-            val user = binding.edUserRoutes.text.toString()
-            if(user.isEmpty()){
-                Toast.makeText(context,"Seleccione un usuario",Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
+            if(_role.toUpperCase()=="SUPERVISOR")
+            {
+                binding.listRoutes.adapter= null
+                binding.contRoutes.isVisible = false
+                val user = binding.edUserRoutes.text.toString()
+                if(user.isEmpty()){
+                    Toast.makeText(context,"Seleccione un usuario",Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+                if(dateFormat.isEmpty()){
+                    Toast.makeText(context,"Seleccione una fecha valida",Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+                val newList = listUserData.filter { it.name == user }
+                if (newList.isNullOrEmpty())
+                    Toast.makeText(context,"No se encontró el usuario",Toast.LENGTH_SHORT).show()
+                else
+                    routesViewModel.getRoutes(newList[0].id,dateFormat,1)
             }
-            if(dateFormat.isEmpty()){
-                Toast.makeText(context,"Seleccione una fecha valida",Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
+            else{
+                binding.listRoutes.adapter= null
+                binding.contRoutes.isVisible = false
+                if(dateFormat.isEmpty()){
+                    Toast.makeText(context,"Seleccione una fecha valida",Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+                routesViewModel.getRoutes("",dateFormat,2)
+
             }
-            val newList = listUserData.filter { it.name == user }
-            if (newList.isNullOrEmpty())
-                Toast.makeText(context,"No se encontró el usuario",Toast.LENGTH_SHORT).show()
-            else
-                routesViewModel.getRoutes(newList[0].id,dateFormat)
+
         }
         binding.btnTracking.setOnClickListener {
-            binding.listRoutes.adapter= null
-            binding.contRoutes.isVisible = false
-            val user = binding.edUserRoutes.text.toString()
-            if(user.isEmpty()){
-                Toast.makeText(context,"Seleccione un usuario",Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
+            if(_role.toUpperCase()=="SUPERVISOR"){
+                binding.listRoutes.adapter= null
+                binding.contRoutes.isVisible = false
+                val user = binding.edUserRoutes.text.toString()
+                if(user.isEmpty()){
+                    Toast.makeText(context,"Seleccione un usuario",Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+                if(dateFormat.isEmpty()){
+                    Toast.makeText(context,"Seleccione una fecha valida",Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+                val newList = listUserData.filter { it.name == user }
+                if (newList.isNullOrEmpty())
+                    Toast.makeText(context,"No se encontró el usuario",Toast.LENGTH_SHORT).show()
+                else {
+                    routesViewModel.getTracking(newList[0].id, dateFormat,1)
+                }
             }
-            if(dateFormat.isEmpty()){
-                Toast.makeText(context,"Seleccione una fecha valida",Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-            val newList = listUserData.filter { it.name == user }
-            if (newList.isNullOrEmpty())
-                Toast.makeText(context,"No se encontró el usuario",Toast.LENGTH_SHORT).show()
-            else {
-                routesViewModel.getTracking(newList[0].id, dateFormat)
+            else{
+                binding.listRoutes.adapter= null
+                binding.contRoutes.isVisible = false
+                if(dateFormat.isEmpty()){
+                    Toast.makeText(context,"Seleccione una fecha valida",Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+                routesViewModel.getTracking("", dateFormat,2)
             }
         }
         binding.edDateRoute.setText(formatter.format(timestamp))

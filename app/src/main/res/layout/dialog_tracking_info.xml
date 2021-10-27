@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -31,5 +32,34 @@
             android:layout_height="wrap_content"
             android:text="TEXTO 2"
             android:textColor="@color/colorAccent" />
+
+        <TextView
+            android:id="@+id/txVisitsPending2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="texto3"
+            android:textColor="@color/colorAccent" />
+
+        <TextView
+            android:id="@+id/txVisitsComplete2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="texto3"
+            android:textColor="@color/colorAccent" />
+
+        <TextView
+            android:id="@+id/txTaskPending2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="texto3"
+            android:textColor="@color/colorAccent" />
+
+        <TextView
+            android:id="@+id/txTaskComplete2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="texto3"
+            android:textColor="@color/colorAccent" />
+
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

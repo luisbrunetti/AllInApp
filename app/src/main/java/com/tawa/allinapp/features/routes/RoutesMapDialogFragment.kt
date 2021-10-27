@@ -46,17 +46,30 @@ class RoutesMapDialogFragment: DialogFragment() {
             val arrayLongitude = ArrayList<String>()
             val arrayDirections = ArrayList<String>()
             val arrayNamePdv = ArrayList<String>()
+            val arrayVisitsPending = ArrayList<String>()
+            val arrayVisitsComplete = ArrayList<String>()
+            val arrayTaskPending = ArrayList<String>()
+            val arrayTaskComplete = ArrayList<String>()
             for(route in listRoutes)
             {
                 arrayLatitude.add(route.latitude.toString())
                 arrayLongitude.add(route.longitude.toString())
                 arrayDirections.add(route.dirCorpPv.toString())
                 arrayNamePdv.add(route.nameCorpPv.toString())
+                arrayVisitsPending.add(route.visitPending)
+                arrayVisitsComplete.add(route.visitComplete)
+                arrayTaskPending.add(route.taskPending)
+                arrayTaskComplete.add(route.taskComplete)
+
             }
             bundle.putStringArrayList("latitude", arrayLatitude)
             bundle.putStringArrayList("longitude", arrayLongitude)
             bundle.putStringArrayList("directions", arrayDirections)
             bundle.putStringArrayList("namePdv", arrayNamePdv)
+            bundle.putStringArrayList("visitsPending", arrayVisitsPending)
+            bundle.putStringArrayList("visitsComplete", arrayVisitsComplete)
+            bundle.putStringArrayList("taskPending", arrayTaskPending)
+            bundle.putStringArrayList("taskComplete", arrayTaskComplete)
             frag.arguments = bundle
             return frag
         }
@@ -77,10 +90,14 @@ class RoutesMapDialogFragment: DialogFragment() {
                 bundle.getStringArrayList("longitude")?.let { lon->
                     bundle.getStringArrayList("directions")?.let {dir->
                         val name = bundle.getStringArrayList("namePdv")
+                        val visitsPending = bundle.getStringArrayList("visitsPending")
+                        val visitsComplete = bundle.getStringArrayList("visitsComplete")
+                        val taskPending = bundle.getStringArrayList("taskPending")
+                        val taskComplete = bundle.getStringArrayList("taskComplete")
                         for((index,data ) in lat.withIndex())
                         {
 
-                            val info = InfoWindowRoutesData(name!![index], dir[index])
+                            val info = InfoWindowRoutesData(name!![index], dir[index],"Visitas pendientes: "+visitsPending!![index],"Visitas completadas: "+visitsComplete!![index],"Tareas pendientes: "+taskPending!![index],"Tareas completadas: "+taskComplete!![index])
                             val customInfoWindow = InfoWindowRoutes(requireContext())
                             googleMap.setInfoWindowAdapter(customInfoWindow)
                             val userPosition = LatLng(data.toDouble(), lon[index].toDouble())

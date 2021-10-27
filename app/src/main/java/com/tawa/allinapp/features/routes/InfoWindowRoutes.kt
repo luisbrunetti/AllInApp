@@ -18,6 +18,10 @@ class InfoWindowRoutes(val context: Context) : GoogleMap.InfoWindowAdapter {
 
         mInfoView.textView55.text = mInfoWindow?.title
         mInfoView.textView56.text = mInfoWindow?.content
+        mInfoView.txVisitsPending.text = mInfoWindow?.visitsPending
+        mInfoView.txVisitsComplete.text = mInfoWindow?.visitsComplete
+        mInfoView.txTaskPending.text = mInfoWindow?.taskPending
+        mInfoView.txTaskComplete.text = mInfoWindow?.taskComplete
         mInfoView.textView55.setOnClickListener {
             closeMarker(p0)
         }

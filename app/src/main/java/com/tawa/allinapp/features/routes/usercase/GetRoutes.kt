@@ -12,7 +12,7 @@ import javax.inject.Inject
 class GetRoutes
 @Inject constructor(private val routesRepository: RoutesRepository) : UseCase<List<Routes>, GetRoutes.Params>() {
 
-    override suspend fun run(params: Params) = routesRepository.getRoutes(params.idUser,params.dateStart)
-    data class Params(val idUser:String,val dateStart:String)
+    override suspend fun run(params: Params) = routesRepository.getRoutes(params.idUser,params.dateStart,params.type)
+    data class Params(val idUser:String,val dateStart:String,val type:Int)
 
 }

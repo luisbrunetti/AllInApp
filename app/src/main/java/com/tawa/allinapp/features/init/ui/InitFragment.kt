@@ -44,6 +44,7 @@ class InitFragment : BaseFragment() {
     private var checkIn:Boolean = true
     private var _user = ""
     private var _pvId = ""
+    private var role = ""
     private var _battery = ""
     private var _pv: String = ""
     private lateinit var _lat: String
@@ -188,6 +189,7 @@ class InitFragment : BaseFragment() {
             observe(successGetRole,{
                 it?.let {
                     if(it.isNotEmpty()) {
+                        role = it
                         if(it=="supervisor".toUpperCase()) {
                             (activity as HomeActivity).showInforms()
                             (activity as HomeActivity).showRoutes()
@@ -298,7 +300,7 @@ class InitFragment : BaseFragment() {
            // initViewModel.syncStandardReportsMassive("12","10")
         }
         binding.viewBtnRoutes.setOnClickListener {
-            findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationRoutes())
+            findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationRoutes(role))
         }
         binding.viewBtnPV.setOnClickListener {
             showSelectPdvDialog()

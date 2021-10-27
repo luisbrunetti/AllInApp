@@ -24,5 +24,33 @@
             android:layout_height="wrap_content"
             android:text="TEXTO 2"
             android:textColor="@color/colorAccent" />
+
+        <TextView
+            android:id="@+id/txVisitsPending"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="texto3"
+            android:textColor="@color/colorAccent" />
+
+        <TextView
+            android:id="@+id/txVisitsComplete"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="texto3"
+            android:textColor="@color/colorAccent" />
+
+        <TextView
+            android:id="@+id/txTaskPending"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="texto3"
+            android:textColor="@color/colorAccent" />
+
+        <TextView
+            android:id="@+id/txTaskComplete"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="texto3"
+            android:textColor="@color/colorAccent" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -12,7 +12,12 @@
         tools:layout="@layout/fragment_init">
         <action
             android:id="@+id/action_navigation_init_to_navigation_routes"
-            app:destination="@id/navigation_routes" />
+            app:destination="@id/navigation_routes" >
+            <argument
+                android:name="role"
+                app:argType="string" />
+
+        </action>
         <action
             android:id="@+id/action_navigation_init_to_navigation_reports"
             app:destination="@id/navigation_reports" />
