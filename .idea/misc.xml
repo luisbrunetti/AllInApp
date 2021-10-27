@@ -136,6 +136,7 @@
         <entry key="..\:/Users/luisb/OneDrive/Documents/AndroidStudio/tawa-android/app/src/main/res/layout/dialog_message.xml" value="0.20520833333333333" />
         <entry key="..\:/Users/luisb/OneDrive/Documents/AndroidStudio/tawa-android/app/src/main/res/layout/dialog_messages.xml" value="0.33" />
         <entry key="..\:/Users/luisb/OneDrive/Documents/AndroidStudio/tawa-android/app/src/main/res/layout/dialog_progress.xml" value="0.20520833333333333" />
+        <entry key="..\:/Users/luisb/OneDrive/Documents/AndroidStudio/tawa-android/app/src/main/res/layout/dialog_routes_info.xml" value="0.23229166666666667" />
         <entry key="..\:/Users/luisb/OneDrive/Documents/AndroidStudio/tawa-android/app/src/main/res/layout/dialog_select_pdv.xml" value="0.22708333333333333" />
         <entry key="..\:/Users/luisb/OneDrive/Documents/AndroidStudio/tawa-android/app/src/main/res/layout/dialog_take_photo.xml" value="0.23143115942028986" />
         <entry key="..\:/Users/luisb/OneDrive/Documents/AndroidStudio/tawa-android/app/src/main/res/layout/fragment_audio.xml" value="0.31354166666666666" />
@@ -160,7 +161,7 @@
         <entry key="..\:/Users/luisb/OneDrive/Documents/AndroidStudio/tawa-android/app/src/main/res/layout/fragment_task.xml" value="0.25815217391304346" />
         <entry key="..\:/Users/luisb/OneDrive/Documents/AndroidStudio/tawa-android/app/src/main/res/layout/fragment_user_status.xml" value="0.24139492753623187" />
         <entry key="..\:/Users/luisb/OneDrive/Documents/AndroidStudio/tawa-android/app/src/main/res/layout/header_report.xml" value="0.27239583333333334" />
-        <entry key="..\:/Users/luisb/OneDrive/Documents/AndroidStudio/tawa-android/app/src/main/res/layout/info_adapter_geolocation.xml" value="0.23229166666666667" />
+        <entry key="..\:/Users/luisb/OneDrive/Documents/AndroidStudio/tawa-android/app/src/main/res/layout/info_adapter_geolocation.xml" value="0.67" />
         <entry key="..\:/Users/luisb/OneDrive/Documents/AndroidStudio/tawa-android/app/src/main/res/layout/info_adapter_pv_geolocation.xml" value="0.5" />
         <entry key="..\:/Users/luisb/OneDrive/Documents/AndroidStudio/tawa-android/app/src/main/res/layout/item_user_selected.xml" value="0.67" />
         <entry key="..\:/Users/luisb/OneDrive/Documents/AndroidStudio/tawa-android/app/src/main/res/layout/row_movie.xml" value="0.24895833333333334" />

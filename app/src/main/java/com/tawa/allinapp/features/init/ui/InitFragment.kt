@@ -147,13 +147,13 @@ class InitFragment : BaseFragment() {
             observe(successSyncChecks, { it?.let {
                 if (it)
                 {
-                    initViewModel.syncPhotoReportMassive(_lat,_long)
+                    initViewModel.syncPhotoReportMassive(latitude,longitude)
                 }
             } })
             observe(successSyncPhotoReports, { it?.let {
                 getActualLocation()
                 if(it)
-                    initViewModel.syncStandardReportsMassive(_lat,_long)
+                    initViewModel.syncStandardReportsMassive(latitude,longitude)
             } })
             observe(successSyncSku, { it?.let {
                 Log.d(TAG,"SuccessSyncSku se realizado correctamente")
@@ -165,7 +165,7 @@ class InitFragment : BaseFragment() {
             } })
             observe(successSyncReportStandard, { it?.let {
                 getActualLocation()
-                if (it) initViewModel.syncSkuMassive(_lat,_long)
+                if (it) initViewModel.syncSkuMassive(latitude,longitude)
             }})
             observe(descPV, { it?.let {
                 if (it.isNotEmpty()){ binding.tvCheckIn.text = it }
@@ -295,8 +295,13 @@ class InitFragment : BaseFragment() {
         }
         binding.btSync.setOnClickListener {
             showProgressDialog()
-            getActualLocation()
-            initViewModel.syncCheck(_lat,_long)
+            if(isLocationEnabled()){
+                getActualLocation()
+                initViewModel.syncCheck(latitude,longitude)
+            }else{
+                MessageDialogFragment.newInstance("Se tiene que activar el GPS para usar esta funcionalidad").show(childFragmentManager,"")
+                hideProgressDialog()
+            }
            // initViewModel.syncStandardReportsMassive("12","10")
         }
         binding.viewBtnRoutes.setOnClickListener {
@@ -488,8 +493,6 @@ class InitFragment : BaseFragment() {
             _long = location.longitude.toString()
         }
     }
-
-
 
     override fun onResume() {
         super.onResume()
