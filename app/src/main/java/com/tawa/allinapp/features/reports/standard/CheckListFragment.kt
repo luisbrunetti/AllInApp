@@ -739,6 +739,22 @@ class CheckListFragment: BaseFragment() {
                         //checkListViewModel.updateAnswers(tag[0], input.text.toString())
                     }
 
+                    for (input in listRowsRadio) {
+                        val tag = input.tag as ArrayList<String>
+                        checkListViewModel.setAnswerPv(tag[0],tag[1],input.text.toString(),urlImage)
+                        //checkListViewModel.updateAnswers(tag[0], input.text.toString())
+                    }
+                    for (input in listRowsCheck) {
+                        val tag = input.tag as ArrayList<String>
+                        checkListViewModel.setAnswerPv(tag[0],tag[1],input.text.toString(),urlImage)
+                        //checkListViewModel.updateAnswers(tag[0], input.text.toString())
+                    }
+                    for (input in listRowsInput) {
+                        val tag = input.tag as ArrayList<String>
+                        checkListViewModel.setAnswerPv(tag[0],tag[1],input.text.toString(),urlImage)
+                        //checkListViewModel.updateAnswers(tag[0], input.text.toString())
+                    }
+
                     for(tag in mutableHashMapTag.values){
                         //Log.d("setReadyAnswer9764", "hashTagRecord -> ${tag.answerRecorded.toString()}  hashSelected -> ${tag.answerSelected.toString()}" )
                         if (tag.answerSelected == "") {
