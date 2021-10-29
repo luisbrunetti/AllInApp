@@ -65,13 +65,13 @@ class ReportGeolocationFragment : BaseFragment(), RecyclerUser.onClickButton{
                         }
                     }
                     if (!fullEmpty) showMapRoutesDialog(it)
-                    else notify(requireActivity() ,R.string.no_data_tracking)
+                    else notify(requireActivity() ,"No hay datos en esta fecha para los usuarios selecionados")
                 }
             })
             observe(failure,{
                 hideProgressDialog()
                 it?.let {
-                    val dialog = MessageDialogFragment.newInstance(it.toString())
+                    val dialog = MessageDialogFragment.newInstance(this@ReportGeolocationFragment,it.toString())
                     dialog.show(childFragmentManager,"dialog")
                 }
             })
@@ -93,7 +93,7 @@ class ReportGeolocationFragment : BaseFragment(), RecyclerUser.onClickButton{
                         it, reportGeoViewModel.convertDate(binding.edDateGeoLocation.text.toString())
                     )
                 } else {
-                    notify(requireActivity(), R.string.warningReportGeolocation)
+                    notify(requireActivity(), "Tiene que seleccionar una fecha y al menos un usuario")
                 }
             }
         }

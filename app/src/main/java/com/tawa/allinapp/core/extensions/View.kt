@@ -84,8 +84,12 @@ fun View.setErrorBg(value: Boolean?){
 fun Button.setCheckModeBtn(value: Boolean?){
     value?.let { enable ->
         background =
-            if (enable) ResourcesCompat.getDrawable(resources, R.drawable.bg_button_check_in, null)
-            else ResourcesCompat.getDrawable(resources, R.drawable.bg_button_check_out, null)
+            if (enable) {
+                ResourcesCompat.getDrawable(resources, R.drawable.bg_button_check_in, null)
+            }
+            else{
+                ResourcesCompat.getDrawable(resources, R.drawable.bg_button_check_out, null)
+            }
         text =
             if (enable) resources.getString(R.string.text_check_in)
             else resources.getString(R.string.text_check_out)

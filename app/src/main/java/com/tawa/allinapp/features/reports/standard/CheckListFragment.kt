@@ -773,10 +773,10 @@ class CheckListFragment: BaseFragment() {
                     showConfirmSync()
                 }
                 else
-                    notify(activity, R.string.notify_error_register)
+                    notify(activity, "No se pudo registrar, debe completar las preguntas obligatorias")
             }
             else
-                notify(activity, R.string.register_ready)
+                notify(activity, "Ya se registró")
         }
         binding.btnBackCheckList.setOnClickListener{
             activity?.onBackPressed()
@@ -930,7 +930,7 @@ class CheckListFragment: BaseFragment() {
                 activity?.onBackPressed()
             }
             else
-                notify(activity, R.string.register_ready)
+                notify(activity, "Ya se registró")
         }
         changeViewsFragment()
         return binding.root
@@ -2294,7 +2294,7 @@ class CheckListFragment: BaseFragment() {
                     recordingAudio(parent.tag.toString())
                 }
             }else{
-                notify(requireActivity(),R.string.only_one_audio_per_question)
+                notify(requireActivity(), "Solo se puede grabar un audio por pregunta. Borre un audio para poder grabar otro")
             }
 
         }
@@ -2427,7 +2427,7 @@ class CheckListFragment: BaseFragment() {
                     responseLauncher.launch("audio/*")
                 }
             }else{
-                notify(requireActivity(),R.string.only_one_audio_per_question)
+                notify(requireActivity(), "Solo se puede grabar un audio por pregunta. Borre un audio para poder grabar otro")
             }
         }
 
@@ -2603,7 +2603,7 @@ class CheckListFragment: BaseFragment() {
                                     onChronometerTickListener = null
                                     visibility = View.GONE
                                     base = SystemClock.elapsedRealtime()
-                                    notify(activity, R.string.error_audio_limit)
+                                    notify(activity, "Solo puedes grabar 7 minutos como máximo")
                                     stopRecord(recordAudio)
                                     recordAudio.textViewRecording?.visibility = View.VISIBLE
                                     recordAudio.layoutShowRecord?.visibility = View.VISIBLE
@@ -2665,7 +2665,7 @@ class CheckListFragment: BaseFragment() {
                 recordAudio.textViewRecording?.visibility = View.VISIBLE
                 recordAudio.layoutShowRecord?.visibility = View.VISIBLE
                 Log.e("RECORD", e.toString())
-                val msg = MessageDialogFragment.newInstance("Ha ocurrido un error al grabar el audio")
+                val msg = MessageDialogFragment.newInstance(this@CheckListFragment,"Ha ocurrido un error al grabar el audio")
                 msg.show(childFragmentManager, "dialog")
             }
         }
@@ -2758,7 +2758,7 @@ class CheckListFragment: BaseFragment() {
                 }
             } catch (e: IOException) {
                 val message =
-                    MessageDialogFragment.newInstance("No se puede reproducir el audio seleccionado debido que es un formato no compatible")
+                    MessageDialogFragment.newInstance(this@CheckListFragment,"No se puede reproducir el audio seleccionado debido que es un formato no compatible")
                 message.show(childFragmentManager,"")
                 Log.e("PLAYING ERROR", " $e \n No se encuentra ael recordpat -> ")
             }

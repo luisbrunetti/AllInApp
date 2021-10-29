@@ -11,9 +11,12 @@ import androidx.fragment.app.DialogFragment
 import com.tawa.allinapp.R
 import com.tawa.allinapp.core.extensions.invisible
 import com.tawa.allinapp.core.extensions.visible
+import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.DialogMessageBinding
+import javax.inject.Inject
 
-class MessageDialogFragment : DialogFragment() {
+class MessageDialogFragment
+@Inject constructor(val baseFragment: BaseFragment): DialogFragment() {
     private lateinit var binding: DialogMessageBinding
     var listener: Callback? = null
 
@@ -23,10 +26,10 @@ class MessageDialogFragment : DialogFragment() {
         const val BUTTON = "left"
         const val ICON = "icon"
         const val NO_ICON = -1
-        fun newInstance(message: String, title: Int = R.string.error_unknown, button: Int = R.string.bt_accept, icon: Int = R.drawable.ic_error): MessageDialogFragment {
-            val frag = MessageDialogFragment()
+        fun newInstance(baseFragment: BaseFragment,message: String, title: String = "Ha ocurrido un error", button: Int = R.string.bt_accept, icon: Int = R.drawable.ic_error): MessageDialogFragment {
+            val frag = MessageDialogFragment(baseFragment = baseFragment)
             val bundle = Bundle()
-            bundle.putInt(TITLE, title)
+            bundle.putString(TITLE, title)
             bundle.putString(MESSAGE, message)
             bundle.putInt(BUTTON, button)
             bundle.putInt(ICON, icon)
@@ -45,7 +48,7 @@ class MessageDialogFragment : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         arguments?.let { bundle ->
-            bundle.getInt(TITLE).let { binding.tvTitle.text = context?.getString(it) }
+            bundle.getString(TITLE).let { binding.tvTitle.text = it }
             bundle.getString(MESSAGE)?.let { if (it.isNotEmpty()) binding.tvMessage.text = it else binding.tvMessage.visibility = View.INVISIBLE }
             bundle.getInt(BUTTON).let { binding.btAccept.text = context?.getString(it) }
             bundle.getInt(ICON).let {
@@ -58,6 +61,13 @@ class MessageDialogFragment : DialogFragment() {
         binding.btAccept.setOnClickListener {
             listener?.onAccept()
             dismiss()
+        }
+        changeViewFragment()
+    }
+
+    private fun changeViewFragment(){
+        baseFragment.translateObject.apply {
+            binding.btAccept.text = findTranslate("tvSuccessAcceptMessageFrag")
         }
     }
 

@@ -151,7 +151,7 @@ class ConfirmNewGroupFragment
                     override fun onError(p0: QBResponseException?) { Log.d("failure",p0.toString()) }
                 })
             }else{
-                notify(requireActivity(), R.string.no_issue)
+                notify(requireActivity(), "Se tiene que agregar un asunto")
             }
         }
     }

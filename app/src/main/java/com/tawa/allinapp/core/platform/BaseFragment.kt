@@ -264,7 +264,7 @@ abstract class BaseFragment : Fragment() {
     }
 
     open fun showMessage(message:String?){
-        val dialog = MessageDialogFragment.newInstance(message ?:"")
+        val dialog = MessageDialogFragment.newInstance(this,message ?:"")
         dialog.show(childFragmentManager, "dialog")
     }
 
@@ -285,13 +285,13 @@ abstract class BaseFragment : Fragment() {
         failure?.let {
             errorDialog = when (it) {
                 is Failure.DefaultError -> {
-                    MessageDialogFragment.newInstance(it.message ?: getString(R.string.error_unknown))
+                    MessageDialogFragment.newInstance(this,it.message ?: getString(R.string.error_unknown))
                 }
                 is Failure.NetworkConnection -> {
-                    MessageDialogFragment.newInstance(getString(R.string.error_network))
+                    MessageDialogFragment.newInstance(this,getString(R.string.error_network))
                 }
                 else -> {
-                    MessageDialogFragment.newInstance(getString(R.string.error_unknown))
+                    MessageDialogFragment.newInstance(this,getString(R.string.error_unknown))
                 }
             }
             errorDialog?.listener = object : MessageDialogFragment.Callback {
@@ -309,7 +309,7 @@ abstract class BaseFragment : Fragment() {
 
     fun showLogin(context: Context?) = context?.let { it.startActivity(Intent(it, LoginActivity::class.java)) }
 
-    internal fun notify(activity: FragmentActivity?,@StringRes message: Int) =
+    internal fun notify(activity: FragmentActivity?,message: String) =
         activity?.let { Snackbar.make(it.findViewById(R.id.container), message, Snackbar.LENGTH_SHORT).show() }
 
     internal fun notifyWithAction(activity: FragmentActivity?, @StringRes message: Int, @StringRes actionText: Int, action: () -> Any) {

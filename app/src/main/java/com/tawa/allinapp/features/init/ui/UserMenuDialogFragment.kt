@@ -9,17 +9,21 @@ import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.tawa.allinapp.R
+import com.tawa.allinapp.core.platform.BaseFragment
+import com.tawa.allinapp.core.platform.TranslateObject
 import com.tawa.allinapp.databinding.DialogUserMenuBinding
+import javax.inject.Inject
 
 
-class UserMenuDialogFragment : BottomSheetDialogFragment() {
+class UserMenuDialogFragment
+@Inject constructor(val baseFragment: BaseFragment): BottomSheetDialogFragment() {
     private lateinit var binding: DialogUserMenuBinding
     var listener: Callback? = null
 
     companion object {
         const val BUTTON = "left"
-        fun newInstance(): UserMenuDialogFragment {
-            val frag = UserMenuDialogFragment()
+        fun newInstance(baseFragment: BaseFragment): UserMenuDialogFragment {
+            val frag = UserMenuDialogFragment(baseFragment)
             val bundle = Bundle()
             frag.arguments = bundle
             return frag
@@ -38,19 +42,27 @@ class UserMenuDialogFragment : BottomSheetDialogFragment() {
         return binding.root
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         arguments?.let { bundle ->
             //bundle.getInt(TITLE).let { binding.tvItem.text = context?.getString(it) }
         }
-        binding.tvLogout.setOnClickListener {
+        binding.tvLogoutUserMenu.setOnClickListener {
             listener?.onAccept()
             dismiss()
         }
-        binding.tvNotify.setOnClickListener {
+        binding.tvNotifyUserMenu.setOnClickListener {
             listener?.onNotify()
             dismiss()
 
+        }
+        changeViewFragment()
+    }
+    private fun changeViewFragment(){
+        baseFragment.translateObject.apply {
+            binding.tvLogoutUserMenu.text = findTranslate("tvLogoutUserMenu")
+            binding.tvNotifyUserMenu.text = findTranslate("tvNotifyUserMenu")
         }
     }
 

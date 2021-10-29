@@ -21,10 +21,7 @@ class TranslateObject
     }
 
     internal fun findTranslate(id:String): String? {
-        translate.arrayTranslate.find {
-            it.id == id
-        }.also {
-            return it?.translate?.get(LANGUAGE)
-        }
+        translate.arrayTranslate.find { it.id == id }
+            .also { return it?.translate?.get(LANGUAGE) }
     }
 }

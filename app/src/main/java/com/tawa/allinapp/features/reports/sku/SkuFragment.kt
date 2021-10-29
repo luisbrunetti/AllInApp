@@ -181,7 +181,7 @@ class SkuFragment : BaseFragment() {
                 showConfirmDialog("Terminado")
             }
             else
-                notify(activity, R.string.register_ready)
+                notify(activity, "Ya se registró")
         }
         binding.btnBrSku.setOnClickListener {
             if(skuType!="Terminado"){
@@ -199,7 +199,7 @@ class SkuFragment : BaseFragment() {
                 showConfirmDialog("Borrador")
             }
             else
-                notify(activity, R.string.register_ready)
+                notify(activity, "Ya se registró")
         }
         skuViewModel.getTypeSku(1)
         changeViewsFragment()

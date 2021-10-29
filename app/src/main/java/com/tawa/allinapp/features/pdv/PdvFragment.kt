@@ -93,7 +93,7 @@ class PdvFragment : BaseFragment() {
             }})
             observe(successUpdatePdvState,{it?.let {
                 if(it) {
-                    notify(activity, R.string.notify_update)
+                    notify(activity, "Actualización exitosa")
                     activity?.onBackPressed()
                 }
             }})
@@ -118,7 +118,7 @@ class PdvFragment : BaseFragment() {
             getLastLocation()
             latitudePdv= latitude
             longitudePdv = longitude
-            notify(activity, R.string.notify_update_location)
+            notify(activity, "Se actualizó la ubicación")
         }
         binding.btnShowModalPhotoPdv.setOnClickListener {
             showDialogTakePhoto()

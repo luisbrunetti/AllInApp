@@ -324,7 +324,7 @@ class InitViewModel
     fun syncCheck(latitude: String,longitude: String) = syncCheck(SyncCheck.Params(latitude,longitude)) { it.either(::handleFailure, ::handleSyncCheck) }
 
     fun syncPhotoReportMassive(latitude: String,longitude: String) = syncPhotoReports(SyncPhotoReports.Params(latitude,longitude)) {
-        this._successSyncChecks.value = false
+        //this._successSyncChecks.value = false
         it.either(::handleFailure, ::handleSyncPhotoReport)
     }
 
@@ -372,7 +372,7 @@ class InitViewModel
     private fun handleSyncStandardReport(success:Boolean) { this._successSyncReportStandard.value = success }
 
     fun syncSkuMassive(latitude: String,longitude: String) = syncSkuMassive(SyncSkuMassive.Params(latitude,longitude)) {
-        this._successSyncReportStandard.value = false
+        //this._successSyncReportStandard.value = false
         it.either(::handleFailure, ::handleSyncSku)
     }
 
@@ -465,4 +465,10 @@ class InitViewModel
     fun changeStatePvDesc(value : String) {this._pvDesc.value = value}
 
     fun changeStateSyncSku(value : Boolean){this._successSyncSku.value = value}
+
+    fun changeStateSuccessSyncPhotoReports(value: Boolean){ this._successSyncPhotoReports.value = value }
+
+    fun changeStateSuccesSyncReportStandard(value : Boolean) { this._successSyncReportStandard.value = value}
+
+    fun changeStateSyncChecks(value:Boolean){this._successSyncChecks.value = value}
 }

@@ -85,6 +85,7 @@ class CheckInDialogFragment
         initViewModel.getIdCompany()
         initViewModel.getIdUser()
         //initViewModel.getLanguage()
+        changeViewsFragment()
         return binding.root
     }
 

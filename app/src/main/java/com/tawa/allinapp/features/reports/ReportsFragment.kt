@@ -127,9 +127,9 @@ class ReportsFragment : BaseFragment() {
             failure(failure, { it?.let {
                 hideProgressDialog()
                 when(it){
-                    is Failure.NetworkConnection    -> MessageDialogFragment.newInstance(getString(R.string.error_network)).show(childFragmentManager, "dialog")
-                    is Failure.ServerError          -> MessageDialogFragment.newInstance(getString(R.string.error_network)).show(childFragmentManager, "dialog")
-                    else                            -> MessageDialogFragment.newInstance(getString(R.string.error_unknown)).show(childFragmentManager, "dialog")
+                    is Failure.NetworkConnection    -> MessageDialogFragment.newInstance(this@ReportsFragment,getString(R.string.error_network)).show(childFragmentManager, "dialog")
+                    is Failure.ServerError          -> MessageDialogFragment.newInstance(this@ReportsFragment,getString(R.string.error_network)).show(childFragmentManager, "dialog")
+                    else                            -> MessageDialogFragment.newInstance(this@ReportsFragment,getString(R.string.error_unknown)).show(childFragmentManager, "dialog")
                 }
             }})
         }

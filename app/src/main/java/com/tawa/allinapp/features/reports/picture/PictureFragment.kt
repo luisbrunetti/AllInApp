@@ -117,7 +117,7 @@ class PictureFragment : BaseFragment() {
             })
             observe(errorMessage, {
                 it?.let {
-                    if (it.isNotEmpty()) MessageDialogFragment.newInstance(it)
+                    if (it.isNotEmpty()) MessageDialogFragment.newInstance(this@PictureFragment,it)
                         .show(childFragmentManager, "dialog")
                 }
             })
@@ -160,10 +160,10 @@ class PictureFragment : BaseFragment() {
                         is Failure.DefaultError -> pictureViewModel.setError(
                             it.message ?: getString(R.string.error_unknown)
                         )
-                        is Failure.NetworkConnection -> notify(activity, R.string.error_network_ok)
-                        is Failure.ServerError -> MessageDialogFragment.newInstance(getString(R.string.error_network))
+                        is Failure.NetworkConnection -> notify(activity, "La informacion se guardo correctamente, pero no se subio a internet")
+                        is Failure.ServerError -> MessageDialogFragment.newInstance(this@PictureFragment,getString(R.string.error_network))
                             .show(childFragmentManager, "dialog")
-                        else -> MessageDialogFragment.newInstance(getString(R.string.error_unknown))
+                        else -> MessageDialogFragment.newInstance(this@PictureFragment,getString(R.string.error_unknown))
                             .show(childFragmentManager, "dialog")
                     }
                 }
@@ -178,7 +178,7 @@ class PictureFragment : BaseFragment() {
             if (pictureBeforeAdapter.collection.size < 5) {
                 checkCameraPermissions(before)
             } else {
-                MessageDialogFragment.newInstance(getString(R.string.error_photo_limit))
+                MessageDialogFragment.newInstance(this@PictureFragment,getString(R.string.error_photo_limit))
                     .show(childFragmentManager, "dialog")
             }
         }
@@ -186,7 +186,7 @@ class PictureFragment : BaseFragment() {
             if (pictureAfterAdapter.collection.size < 5) {
                 checkCameraPermissions(after)
             } else {
-                MessageDialogFragment.newInstance(getString(R.string.error_photo_limit))
+                MessageDialogFragment.newInstance(this@PictureFragment,getString(R.string.error_photo_limit))
                     .show(childFragmentManager, "dialog")
             }
         }
@@ -207,7 +207,7 @@ class PictureFragment : BaseFragment() {
                 activity?.onBackPressed()
             }
             else
-                notify(activity,R.string.register_ready)
+                notify(activity, "Ya se registró")
         }
         binding.btnSendPictures.setOnClickListener {
             if(type!="terminado")
@@ -238,7 +238,7 @@ class PictureFragment : BaseFragment() {
                 confirm.show(childFragmentManager, "dialog")
             }
             else
-                notify(activity,R.string.register_ready)
+                notify(activity,"Ya se registró")
 
 
         }
@@ -268,7 +268,7 @@ class PictureFragment : BaseFragment() {
             }
         } catch (e : Exception){
             Log.d("Error", e.toString())
-            MessageDialogFragment.newInstance("Ha ocurrido un error\nVuelvalo a intentar").show(childFragmentManager,"dialog")
+            MessageDialogFragment.newInstance(this@PictureFragment,"Ha ocurrido un error\nVuelvalo a intentar").show(childFragmentManager,"dialog")
         }
     }
 

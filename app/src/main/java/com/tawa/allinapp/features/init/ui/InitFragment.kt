@@ -15,8 +15,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.app.ActivityCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 import com.tawa.allinapp.R
@@ -70,6 +70,7 @@ class InitFragment : BaseFragment() {
             }}})
             observe(checkInMode, { it?.let {
                 checkIn = it
+                setCheckModeBtn(it)
                 //if(!checkIn) binding.tvCheckIn.text = _pv
                 hideProgressDialog()
             }})
@@ -105,19 +106,16 @@ class InitFragment : BaseFragment() {
                         Log.d("successCheckin", "last -> $latitude  long -> $longitude")
                         //initViewModel.updateStatus(_lat,_long,_battery,0)
                         initViewModel.updateStatus(latitude, longitude, _battery, 0)
-                        notify(activity, R.string.checkoout_successful)
+                        notify(activity, "Registro exitoso")
                     }
                 }
             })
             observe(successSendCheck, { it?.let {
                 if(it.isNotEmpty()){
                     initViewModel.changeCheckState("")
-                    if(it == "CREADO SATISFACTORIAMENTE")
-                        notify(activity,R.string.notify_sended)
-                    if(it=="YA REALIZO UN INGRESO EN ESTE PUNTO DE VENTA EL DIA DE HOY")
-                        notify(activity,R.string.notify_sended_error)
-                    if(it=="YA REALIZO UN SALIDA EN ESTE PUNTO DE VENTA EL DIA DE HOY")
-                        notify(activity,R.string.notify_sended_error)
+                    if(it == "CREADO SATISFACTORIAMENTE") notify(activity,translateObject.findTranslate("tvMessageSentSuccessNotify") ?: "La información fue guardada y enviada correctamente")
+                    else if(it =="YA REALIZO UN INGRESO EN ESTE PUNTO DE VENTA EL DIA DE HOY") notify(activity,"Información registrada y no enviada")
+                    else if(it=="YA REALIZO UN SALIDA EN ESTE PUNTO DE VENTA EL DIA DE HOY") notify(activity,"Información registrada y no enviada")
                 }
             } })
             observe(successUpdate, { it?.let {
@@ -143,12 +141,13 @@ class InitFragment : BaseFragment() {
                     initViewModel.changeStateSuccessCheckout(false)
                     initViewModel.getCheckMode()
                     initViewModel.updateStatus(latitude,longitude,_battery,1)
-                    notify(activity,R.string.checkoout_successful)
+                    notify(activity, "Registro exitoso")
                 }
             }})
             observe(successSyncChecks, {
                 it?.let {
                     if (it) {
+                        changeStateSyncChecks(false)
                         initViewModel.syncPhotoReportMassive(latitude, longitude)
                     }
                 }
@@ -156,6 +155,7 @@ class InitFragment : BaseFragment() {
             observe(successSyncPhotoReports, { it?.let {
                 getActualLocation()
                 if(it) {
+                    changeStateSuccessSyncPhotoReports(false)
                     initViewModel.syncStandardReportsMassive(latitude, longitude)
                 }
             } })
@@ -163,20 +163,25 @@ class InitFragment : BaseFragment() {
                 it?.let {
                     //Log.d(TAG, "SuccessSyncSku se realizado correctamente")
                     if (it) {
+                        initViewModel.changeStateSyncSku(false)
                         hideProgressDialog()
                         MessageDialogFragment.newInstance(
+                            this@InitFragment,
                             message = "",
-                            title = R.string.end_sync,
+                            title = translateObject.findTranslate("tvSuccessSyncFragment") ?: "Sincronización exitosa",
                             icon = R.drawable.ic_checkin
                         ).show(childFragmentManager, "dialog")
-                        initViewModel.changeStateSyncSku(false)
                     }
                     //if (it) initViewModel.syncAudio()
                 }
+                //changeStateSyncSku(false)
             })
             observe(successSyncReportStandard, { it?.let {
                 getActualLocation()
-                if (it) initViewModel.syncSkuMassive(latitude,longitude)
+                if (it){
+                    changeStateSuccesSyncReportStandard(false)
+                    initViewModel.syncSkuMassive(latitude,longitude)
+                }
             }})
             observe(descPV, { it?.let {
                 if (it.isNotEmpty()){ binding.tvCheckIn.text = it }
@@ -185,7 +190,11 @@ class InitFragment : BaseFragment() {
                 if(it){
                     Log.d(TAG,"// se realizado correctamente")
                     hideProgressDialog()
-                    MessageDialogFragment.newInstance(message = "", title = R.string.end_sync,icon = R.drawable.ic_checkin).show(childFragmentManager, "dialog")
+                    MessageDialogFragment.newInstance(
+                        this@InitFragment,
+                        message = "",
+                        title = translateObject.findTranslate("tvSuccessSyncFragment") ?: "Sincronización exitosa",
+                        icon = R.drawable.ic_checkin).show(childFragmentManager, "dialog")
                 }
             }})
             observe(userName, {
@@ -195,11 +204,6 @@ class InitFragment : BaseFragment() {
                         if (it.isNotEmpty()) getFirstLetters(it.toUpperCase()) else ""
                 }
             })
-            /*observe(idPv,{it?.let{
-              /*  if(it)
-                    findNavController().navigate(InitFragmentDirections.actionNavigationInitToPdvFragment())*/
-
-            }})*/
             observe(successGetRole,{
                 it?.let {
                     if(it.isNotEmpty()) {
@@ -269,13 +273,13 @@ class InitFragment : BaseFragment() {
         }
 
         //Seleccionando empresa
+        authViewModel.getLanguage()
         initViewModel.getPVDesc()
         initViewModel.getLogoCompany()
         initViewModel.getIdUser()
         initViewModel.getUserName()
         initViewModel.getCheckMode()
         initViewModel.getPvIdFirstTime()
-        authViewModel.getLanguage()
         //initViewModel.getIdCompany()
         //Log.d("object", translateObject.LANGUAGE.toString())
         initViewModel.getIdCompanyPreferences().let {
@@ -286,10 +290,14 @@ class InitFragment : BaseFragment() {
             if(isLocationEnabled()){
                 if(checkIn) showSelectorCheckIn()
                 else initViewModel.getDescPV()
-            }else MessageDialogFragment.newInstance("Se tiene que activar el GPS para usar esta funcionalidad").show(childFragmentManager,"")
+            }else MessageDialogFragment.newInstance(
+                this,
+                translateObject.findTranslate("tvGpsActivatedMessageFrag")
+                    ?: "Se tiene que activar el GPS para usar esta funcionalidad"
+            ).show(childFragmentManager, "")
         }
         binding.btUser.setOnClickListener {
-            val frag = UserMenuDialogFragment.newInstance()
+            val frag = UserMenuDialogFragment.newInstance(this)
             frag.listener = object : UserMenuDialogFragment.Callback {
                 override fun onAccept() {
                     initViewModel.setSession(false)
@@ -311,7 +319,10 @@ class InitFragment : BaseFragment() {
                 getActualLocation()
                 initViewModel.syncCheck(latitude,longitude)
             }else{
-                MessageDialogFragment.newInstance("Se tiene que activar el GPS para usar esta funcionalidad").show(childFragmentManager,"")
+                MessageDialogFragment.newInstance(this,
+                    translateObject.findTranslate("tvGpsActivatedMessageFrag")
+                        ?: "Se tiene que activar el GPS para usar esta funcionalidad"
+                ).show(childFragmentManager,"")
                 hideProgressDialog()
             }
            // initViewModel.syncStandardReportsMassive("12","10")
@@ -333,7 +344,9 @@ class InitFragment : BaseFragment() {
                 findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationReports())
 
             }
-            else MessageDialogFragment.newInstance("Debes seleccionar o hacer chekIn en un punto de venta").show(childFragmentManager, "errorDialog")
+            else MessageDialogFragment.newInstance(this,
+                translateObject.findTranslate("tvErrorDoCheckInMessageFrag")
+                    ?: "Debes seleccionar o hacer chekIn en un punto de venta").show(childFragmentManager, "errorDialog")
         }
         binding.viewBtnInforms.setOnClickListener{
             findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationInforms())
@@ -359,6 +372,22 @@ class InitFragment : BaseFragment() {
             firstLetters += s[0]
         }
         return firstLetters
+    }
+
+    private fun setCheckModeBtn(value: Boolean){
+        value.let { enable ->
+            binding.btCheckIn.apply{
+                background =
+                    if (enable) {
+                        ResourcesCompat.getDrawable(resources, R.drawable.bg_button_check_in, null)
+                    } else{
+                        ResourcesCompat.getDrawable(resources, R.drawable.bg_button_check_out, null)
+                    }
+                text =
+                    if (enable) translateObject.findTranslate("btCheckInInitFragment")
+                    else translateObject.findTranslate("btCheckOutInitFragment")
+            }
+        }
     }
 
     private fun initNotify(){
@@ -418,19 +447,20 @@ class InitFragment : BaseFragment() {
                 getLastLocation()
                 _pv = pv;_pvId = pvId;_battery = battery
                 Log.d("PV",_pv.toString() + _pvId.toString())
-                if (lat != "" && long != "") {
+                if (latitude != "" && longitude != "") {
                     initViewModel.setCheckIn(idUser, pvId, lat, long)
                     binding.tvCheckIn.text = description
                 } else {
                     val dialog =
-                        MessageDialogFragment.newInstance("Ha ocurrido un error al capturar tu ubiación. Vuelvo a intentar por favor.")
+                        MessageDialogFragment.newInstance(this@InitFragment,translateObject.findTranslate("tvErrorGLocationsMessageFrag")
+                            ?: "Ha ocurrido un error al capturar tu ubiación. Vuelvo a intentar por favor.")
                     dialog.show(childFragmentManager, "")
                 }
 
             }
 
             override fun onSnack(snack: Boolean) {
-                if (snack) notify(activity, R.string.notify_already)
+                if (snack) notify(activity, "Ya realizaste check-in en el punto de venta")
             }
 
             override fun onClose() {

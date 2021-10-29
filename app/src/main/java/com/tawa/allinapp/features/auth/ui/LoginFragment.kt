@@ -87,9 +87,9 @@ class LoginFragment : BaseFragment() {
                 hideProgressDialog()
                 when(it){
                     is Failure.DefaultError         -> authViewModel.setErrorLogin(it.message ?: getString(R.string.error_unknown))
-                    is Failure.NetworkConnection    -> MessageDialogFragment.newInstance(getString(R.string.error_network)).show(childFragmentManager, "dialog")
-                    is Failure.ServerError          -> MessageDialogFragment.newInstance(getString(R.string.error_network)).show(childFragmentManager, "dialog")
-                    else                            -> MessageDialogFragment.newInstance(getString(R.string.error_unknown)).show(childFragmentManager, "dialog")
+                    is Failure.NetworkConnection    -> MessageDialogFragment.newInstance(this@LoginFragment,getString(R.string.error_network)).show(childFragmentManager, "dialog")
+                    is Failure.ServerError          -> MessageDialogFragment.newInstance(this@LoginFragment,getString(R.string.error_network)).show(childFragmentManager, "dialog")
+                    else                            -> MessageDialogFragment.newInstance(this@LoginFragment,getString(R.string.error_unknown)).show(childFragmentManager, "dialog")
                 }}})
         }
         binding.btnLoginFragment.setOnClickListener {

@@ -128,7 +128,6 @@
             android:textColor="@color/colorTextPrimary"
             android:textSize="18sp"
             android:translationZ="5dp"
-            app:checkModeBtn="@{viewModel.checkInMode}"
             app:layout_constraintBottom_toBottomOf="@+id/view7"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"

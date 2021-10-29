@@ -231,7 +231,7 @@ class MessagesFragment @Inject constructor() : BaseFragment() {
                 binding.fbConfirmNewGroup.visible()
                 selectedUserAdapter.setData(listSelectedUsers)
             }else{
-                notify(requireActivity(),R.string.already_added)
+                notify(requireActivity(),"Este usuario ya se ha agregado")
             }
         }
         binding.rvContactsNewGroup.adapter = contactUserAdapter
