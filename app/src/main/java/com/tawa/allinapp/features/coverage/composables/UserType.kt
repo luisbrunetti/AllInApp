@@ -16,9 +16,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.tawa.allinapp.R
+import com.tawa.allinapp.core.platform.TranslateObject
 
 @Composable
 fun UserCount(
+    translateObject: TranslateObject,
     title: String,
     qty:Int,
     @DrawableRes icon: Int,
@@ -55,5 +57,5 @@ fun UserCount(
 @Composable
 @Preview
 fun DefaultUserTypePreview(){
-    UserCount(title = "Usuarios activos",color = Color.Black, qty = 3, icon = R.drawable.ic_contract1)
+    //UserCount(title = "Usuarios activos",color = Color.Black, qty = 3, icon = R.drawable.ic_contract1)
 }

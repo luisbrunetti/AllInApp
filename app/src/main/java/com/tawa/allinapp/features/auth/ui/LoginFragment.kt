@@ -30,6 +30,7 @@ class LoginFragment : BaseFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        showProgressDialog()
         binding = FragmentLoginBinding.inflate(inflater)
 
         authViewModel= viewModel(viewModelFactory) {
@@ -73,6 +74,7 @@ class LoginFragment : BaseFragment() {
                         }
                     }
                 }
+                hideProgressDialog()
             })
             observe(setLanguageSuccess,{
                 if(it == true){

@@ -89,14 +89,14 @@ class SelectorDialogFragment
                 if (it)
                     initViewModel.getReportsRemote(selectedCompany)
             }})
-            observe(getLanguageSuccess, {
+            /*observe(getLanguageSuccess, {
                 it?.let {
                     if (baseFragment.translateObject.getInstance().arrayTranslate.isNotEmpty()) {
                         //Log.d("logintest", translateObject.getInstance().arrayTranslate.toString())
                         changeViewsFragment()
                     }
                 }
-            })
+            })*/
         }
         changeViewsFragment()
         return binding.root
@@ -131,9 +131,7 @@ class SelectorDialogFragment
 
     private fun toArray(list : List<Company>):ArrayList<String>{
         val arrayList = ArrayList<String>()
-        for(element in list) {
-            arrayList.add(element.name)
-        }
+        for(element in list) { arrayList.add(element.name) }
         return  arrayList
     }
 

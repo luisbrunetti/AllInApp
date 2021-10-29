@@ -323,7 +323,10 @@ class InitViewModel
 
     fun syncCheck(latitude: String,longitude: String) = syncCheck(SyncCheck.Params(latitude,longitude)) { it.either(::handleFailure, ::handleSyncCheck) }
 
-    fun syncPhotoReportMassive(latitude: String,longitude: String) = syncPhotoReports(SyncPhotoReports.Params(latitude,longitude)) { it.either(::handleFailure, ::handleSyncPhotoReport) }
+    fun syncPhotoReportMassive(latitude: String,longitude: String) = syncPhotoReports(SyncPhotoReports.Params(latitude,longitude)) {
+        this._successSyncChecks.value = false
+        it.either(::handleFailure, ::handleSyncPhotoReport)
+    }
 
     private fun handleSyncPhotoReport(success:Boolean) { this._successSyncPhotoReports.value = success }
 
@@ -361,11 +364,17 @@ class InitViewModel
 
     private fun handleReportsSku(success: Boolean) { this._successReportsSku.value = success }
 
-    fun syncStandardReportsMassive(latitude: String,longitude: String) = syncStandardReportsMassive(SyncStandardReportsMassive.Params(latitude,longitude)) { it.either(::handleFailure, ::handleSyncStandardReport) }
+    fun syncStandardReportsMassive(latitude: String,longitude: String) = syncStandardReportsMassive(SyncStandardReportsMassive.Params(latitude,longitude)) {
+        this._successSyncPhotoReports.value = false
+        it.either(::handleFailure, ::handleSyncStandardReport)
+    }
 
     private fun handleSyncStandardReport(success:Boolean) { this._successSyncReportStandard.value = success }
 
-    fun syncSkuMassive(latitude: String,longitude: String) = syncSkuMassive(SyncSkuMassive.Params(latitude,longitude)) { it.either(::handleFailure, ::handleSyncSku) }
+    fun syncSkuMassive(latitude: String,longitude: String) = syncSkuMassive(SyncSkuMassive.Params(latitude,longitude)) {
+        this._successSyncReportStandard.value = false
+        it.either(::handleFailure, ::handleSyncSku)
+    }
 
     private fun handleSyncSku(success:Boolean) { this._successSyncSku.value = success }
 
@@ -443,7 +452,7 @@ class InitViewModel
 
     fun changeCheckState(value:String){ this._successSendCheck.value = value }
 
-    fun changeStatePv(value: String){ this._pvId.value = value }
+    fun changeStatePv(value: String){this._pvId.value = value}
 
     fun changeStateSuccessCompanyId(value:String){ this._successGetCompanyId.value = value }
 
@@ -453,5 +462,7 @@ class InitViewModel
 
     fun changeStateSuccessCheckout(value:Boolean) {this._successCheckOut.value = value}
 
-    fun changeStatePvDesc(value:String) {this._pvDesc.value = value}
+    fun changeStatePvDesc(value : String) {this._pvDesc.value = value}
+
+    fun changeStateSyncSku(value : Boolean){this._successSyncSku.value = value}
 }

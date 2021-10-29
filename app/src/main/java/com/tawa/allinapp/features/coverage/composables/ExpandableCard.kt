@@ -23,10 +23,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.tawa.allinapp.R
+import com.tawa.allinapp.core.platform.TranslateObject
 import java.util.*
 
 @Composable
 fun ExpandableCard(
+    translateObject: TranslateObject,
     title: String,
     listElementsPrincipal:List<String>,
     onSelected: (List<String>) -> Unit
@@ -109,7 +111,7 @@ fun ExpandableCard(
                                 }
                             },
                         )
-                        Text(text = " Seleccionar todos", fontSize = 16.sp)
+                        Text(text = translateObject.findTranslate("tvSelectEveryone").toString(), fontSize = 16.sp)
                     }
                     var listFiltered = listElementsPrincipal
                     if(textState.value.text != ""){

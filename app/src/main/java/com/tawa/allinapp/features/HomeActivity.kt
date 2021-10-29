@@ -15,14 +15,17 @@ import com.tawa.allinapp.AndroidApplication
 import com.tawa.allinapp.BuildConfig
 import com.tawa.allinapp.R
 import com.tawa.allinapp.core.di.ApplicationComponent
+import com.tawa.allinapp.core.platform.TranslateObject
 import com.tawa.allinapp.databinding.ActivityHomeBinding
 import com.tawa.allinapp.features.init.InitViewModel
+import javax.inject.Inject
 
 
 class HomeActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityHomeBinding
     private lateinit var initViewModel: InitViewModel
+    @Inject lateinit var translateObject: TranslateObject
     private val appComponent: ApplicationComponent by lazy(mode = LazyThreadSafetyMode.NONE) {
         (application as AndroidApplication).appComponent
     }
@@ -55,8 +58,10 @@ class HomeActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
         binding.navView.menu.findItem(R.id.navigation_informs).isVisible = false
+
         //binding.navView.menu.findItem(R.id.navigation_routes).isVisible = false
 
+        changeViewLanguage()
     }
 
     private fun devMod():Int{
@@ -71,7 +76,13 @@ class HomeActivity : AppCompatActivity() {
         val dev = devMod()
         if(dev==BuildConfig.DEV) finish()
     }
-
+    private fun changeViewLanguage(){
+        binding.navView.menu.findItem(R.id.navigation_informs).title = translateObject.findTranslate("navigation_informs")
+        binding.navView.menu.findItem(R.id.navigation_routes).title = translateObject.findTranslate("navigation_routes")
+        binding.navView.menu.findItem(R.id.navigation_reports).title = translateObject.findTranslate("navigation_reports")
+        binding.navView.menu.findItem(R.id.navigation_pdv).title = translateObject.findTranslate("navigation_pdv")
+        binding.navView.menu.findItem(R.id.navigation_init).title = translateObject.findTranslate("navigation_init")
+    }
     fun hideNavBar(){ binding.navView.visibility = View.GONE }
 
     fun showNavBar(){ binding.navView.visibility = View.VISIBLE }

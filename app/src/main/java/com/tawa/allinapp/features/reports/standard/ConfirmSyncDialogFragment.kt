@@ -9,10 +9,15 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.DialogFragment
+import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.DialogConfirmSyncBinding
+import javax.inject.Inject
 
 
-class ConfirmSyncDialogFragment : DialogFragment() {
+class ConfirmSyncDialogFragment
+@Inject constructor(
+    private val baseFragment: BaseFragment
+): DialogFragment() {
 
     private lateinit var binding: DialogConfirmSyncBinding
 
@@ -28,7 +33,6 @@ class ConfirmSyncDialogFragment : DialogFragment() {
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         isCancelable = false
 
-
         return binding.root
     }
 
@@ -42,6 +46,18 @@ class ConfirmSyncDialogFragment : DialogFragment() {
         binding.btnBackSync.setOnClickListener {
             listener?.onBack()
             dismiss()
+        }
+        changeViewFragment()
+    }
+
+    private fun changeViewFragment() {
+        baseFragment.translateObject.apply {
+            binding.apply {
+                btnBackSync.text = findTranslate("btnBackSync")
+                btnConfirmSync.text = findTranslate("btnConfirmSync")
+                tvMessageDialogConfirm.text = findTranslate("tvMessageDialogConfirm")
+                tvTitleDialogConfirm.text = findTranslate("tvTitleDialogConfirm")
+            }
         }
     }
 

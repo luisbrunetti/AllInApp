@@ -32,8 +32,11 @@ class SendPasswordFragment : BaseFragment() {
         binding = FragmentSendPasswordBinding.inflate(inflater)
         initViewModel = viewModel(viewModelFactory) {
             observe(successSendPassword, {
+                hideProgressDialog()
                 it?.let {
-                    if(it) { showConfirmSendPassword() }
+                    if(it) {
+                        showConfirmSendPassword()
+                    }
                 }})
             failure(failure,{
                 when(it){
@@ -48,6 +51,7 @@ class SendPasswordFragment : BaseFragment() {
             activity?.onBackPressed()
         }
         binding.btnSendPassword.setOnClickListener {
+            showProgressDialog()
             binding.tvError.isVisible =false
             binding.txtIptUserSendPassword.setBackgroundResource(R.drawable.selector)
             initViewModel.sendPassword(binding.edSendPass.text.toString())
@@ -90,10 +94,11 @@ class SendPasswordFragment : BaseFragment() {
     }
 
     private fun showConfirmSendPassword(){
-        /*val dialog = PasswordSendDialogFragment(this)
+
+        val dialog = PasswordSendDialogFragment(this)
         dialog.listener = object : PasswordSendDialogFragment.Callback{
             override fun onClick() { activity?.onBackPressed() }
         }
-        dialog.show(childFragmentManager,"")*/
+        dialog.show(childFragmentManager,"")
     }
 }

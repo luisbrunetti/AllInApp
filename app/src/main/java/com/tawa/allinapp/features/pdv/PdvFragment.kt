@@ -106,6 +106,7 @@ class PdvFragment : BaseFragment() {
                 //if(it) findNavController().navigate(PdvFragmentDirections.actionNavigationPdvSelf())
             }})
          }
+
         pdvViewModel.getPdv()
         binding.btnBackPdv.setOnClickListener {
             activity?.onBackPressed()
@@ -220,5 +221,19 @@ class PdvFragment : BaseFragment() {
             return@use outputStream.toString()
         }
     }
-    override fun changeViewsFragment() {}
+    override fun changeViewsFragment() {
+        translateObject.apply {
+            binding.tvTitlePdvFragment.text = findTranslate("tvTitlePdvFragment")
+            binding.tvTitlteInformPdvFragment.text = findTranslate("tvTitlteInformPdvFragment")
+            binding.tvGeolocationPdvFragment.text = findTranslate("tvGeolocationPdvFragment")
+            binding.showLocationPdv.text = findTranslate("showLocationPdv")
+            binding.btnUpdateLocation.text = findTranslate("btnUpdateLocation")
+            binding.tvNamePdvFragment.text = findTranslate("tvNamePdvFragment")
+            binding.edNameContact.hint = findTranslate("edNameContact")
+            binding.tvPhonePdvFragment.text = findTranslate("tvPhonePdvFragment")
+            binding.edPhoneContact.hint = findTranslate("edPhoneContact")
+            binding.edRuc.hint = findTranslate("edRucPdvFragment")
+            binding.btnUpdatePdvRemote.text = findTranslate("btnUpdatePdvRemote")
+        }
+    }
 }

@@ -35,7 +35,7 @@ class InformsFragment : BaseFragment() {
         informsViewModel = viewModel(viewModelFactory) {
             observe(text, {
                 it?.let {
-                 //   binding.tvInforms.text = it
+                 //binding.tvInforms.text = it
                 }
             })
         }
@@ -82,7 +82,13 @@ class InformsFragment : BaseFragment() {
         return binding.root
     }
     override fun changeViewsFragment() {
-
+        translateObject.apply{
+            binding.tvTitleInformsFragment.text = findTranslate("tvTitleInformsFragment")
+            binding.tvSelectTypeInform.text = findTranslate("tvSelectTypeInform")
+            binding.tvStatusUserInformFragment.text = findTranslate("tvStatusUserInformFragment")
+            binding.tvDashBoardInformFragment.text = findTranslate("tvDashBoardInformFragment")
+            binding.tvReportGeolocation.text = findTranslate("tvReportGeolocation")
+        }
     }
 
 }

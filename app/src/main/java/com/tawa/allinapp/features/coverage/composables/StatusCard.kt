@@ -20,12 +20,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.tawa.allinapp.R
-import com.tawa.allinapp.core.extensions.round
+import com.tawa.allinapp.core.platform.TranslateObject
 import kotlin.math.roundToInt
-import kotlin.math.roundToLong
 
 @Composable
 fun StatusCard(
+    translateObject: TranslateObject,
     title:String,
     percent:Float,
     total:Int,
@@ -62,11 +62,11 @@ fun StatusCard(
                     Text(text = "Total: $total", fontSize = 12.sp)
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Surface(Modifier.height(8.dp).width(20.dp).padding(end = 5.dp), shape = RoundedCornerShape(10.dp), color = colorResource(id = R.color.green)) {}
-                        Text(text = "Concluidas: $finished", fontSize = 11.sp)
+                        Text(text = translateObject.findTranslate("tvFinishedGraphFrag") ?: "Concluidas" +": $finished", fontSize = 11.sp)
                     }
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Surface(Modifier.height(8.dp).width(20.dp).padding(end = 5.dp), shape = RoundedCornerShape(10.dp), color = colorResource(id = R.color.red)) {}
-                        Text(text = "Pendientes: $pending", fontSize = 11.sp)
+                        Text(text = translateObject.findTranslate("tvUnfinishedGrapFrag")?: "Pendientes" + ": $pending", fontSize = 11.sp)
                     }
                 }
             }
@@ -127,5 +127,5 @@ fun CircularProgress(percent:Float){
 @Composable
 @Preview
 fun DefaultStatusCardPreview(){
-    StatusCard("Visitas",0.8f,100,80,10, R.color.colorIndicator1)
+    //StatusCard(translateObject = translate"Visitas",0.8f,100,80,10, R.color.colorIndicator1)
 }

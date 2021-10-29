@@ -63,7 +63,8 @@ class RoutesFragment : BaseFragment() {
                 if(it.isNotEmpty()){
                     listRoutesUser = it
                     binding.contRoutes.isVisible = true
-                    binding.tvTypeRoute.text= "Rutas"
+                    //binding.tvTypeRoute.text= "Rutas"
+                    binding.tvTypeRoute.text = translateObject.findTranslate("tvTypeRoute")
                     //binding.tvTypeRoute.text = getTypeOfLanguageById("tvTypeRoute")
                     createListRoutes(binding.listRoutes,it)
                 }
@@ -76,7 +77,8 @@ class RoutesFragment : BaseFragment() {
                     listTrackingUser = it
                     binding.contRoutes.isVisible = true
                     //binding.tvTypeRoute.text = getTypeOfLanguageById("tvTypeTracking")
-                    binding.tvTypeRoute.text= "Seguimiento"
+                    //binding.tvTypeRoute.text= "Seguimiento"
+                    binding.tvTypeRoute.text = translateObject.findTranslate("tvTypeTracking")
                     createListTracking(binding.listRoutes,it)
                 }
                 else {
@@ -89,27 +91,27 @@ class RoutesFragment : BaseFragment() {
         binding.btnBackRoutes.setOnClickListener {
             activity?.onBackPressed()
         }
+
         binding.edDateRoute.setOnClickListener{
             getDay(binding.edDateRoute)
         }
+
         binding.btnShowMapRoutes.setOnClickListener {
             if(binding.tvTypeRoute.text=="Rutas")
                 showMapRoutesDialog(listRoutesUser)
             else
-
                 showMapTrackingDialog(listTrackingUser)
         }
-        arguments?.getString("role").toString().also {role->
+
+        arguments?.getString("role").toString().also { role->
             routesViewModel.getListUser()
             _role = role
-            if(_role.toUpperCase()!="SUPERVISOR")
-                binding.edUserRoutes.isEnabled = false
+            if(_role.toUpperCase()!="SUPERVISOR") binding.edUserRoutes.isEnabled = false
         }
 
         binding.btnRoutes.setOnClickListener {
-            if(_role.toUpperCase()=="SUPERVISOR")
-            {
-                binding.listRoutes.adapter= null
+            if(_role.toUpperCase()=="SUPERVISOR"){
+                binding.listRoutes.adapter = null
                 binding.contRoutes.isVisible = false
                 val user = binding.edUserRoutes.text.toString()
                 if(user.isEmpty()){
@@ -121,10 +123,8 @@ class RoutesFragment : BaseFragment() {
                     return@setOnClickListener
                 }
                 val newList = listUserData.filter { it.name == user }
-                if (newList.isNullOrEmpty())
-                    Toast.makeText(context,"No se encontró el usuario",Toast.LENGTH_SHORT).show()
-                else
-                    routesViewModel.getRoutes(newList[0].id,dateFormat,1)
+                if (newList.isNullOrEmpty()) Toast.makeText(context,"No se encontró el usuario",Toast.LENGTH_SHORT).show()
+                else routesViewModel.getRoutes(newList[0].id,dateFormat,1)
             }
             else{
                 binding.listRoutes.adapter= null
@@ -134,7 +134,6 @@ class RoutesFragment : BaseFragment() {
                     return@setOnClickListener
                 }
                 routesViewModel.getRoutes("",dateFormat,2)
-
             }
 
         }
@@ -157,8 +156,7 @@ class RoutesFragment : BaseFragment() {
                 else {
                     routesViewModel.getTracking(newList[0].id, dateFormat,1)
                 }
-            }
-            else{
+            }else{
                 binding.listRoutes.adapter= null
                 binding.contRoutes.isVisible = false
                 if(dateFormat.isEmpty()){
@@ -172,11 +170,22 @@ class RoutesFragment : BaseFragment() {
         dateFormat = formatter1.format(timestamp)
 
         changeViewsFragment()
+
         return binding.root
     }
 
     override fun changeViewsFragment() {
-
+        translateObject.apply{
+            binding.textView31.text = findTranslate("tvTypeRoute")
+            binding.tvLabelUserRoute.text = findTranslate("tvLabelUserRoute")
+            binding.edUserRoutes.hint = findTranslate("edUserRoutes")
+            binding.tvLabelSelectDateRoute.text = findTranslate("tvLabelSelectDateRoute")
+            binding.edDateRoute.hint = findTranslate("edDateRoute")
+            binding.btnRoutes.text = findTranslate("btnRoutes")
+            binding.btnTracking.text = findTranslate("btnTracking")
+            binding.btnShowMapRoutes.text = findTranslate("btnShowMapRoutes")
+            binding.tvPdvRoute.text = findTranslate("tvPdvRoute")
+        }
     }
     private fun showUser(list:List<RoutesUser>){
         val listUser  = ArrayList<String>()

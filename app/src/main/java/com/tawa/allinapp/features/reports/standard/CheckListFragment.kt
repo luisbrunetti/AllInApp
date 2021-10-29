@@ -176,6 +176,10 @@ class CheckListFragment: BaseFragment() {
         appComponent.inject(this)
     }
     override fun changeViewsFragment() {
+        translateObject.apply {
+            binding.btnBr.text = findTranslate("btnBrCheckFragment")
+            binding.btnSaveReport.text = findTranslate("btnSaveCheckReport")
+        }
 
     }
 
@@ -2938,7 +2942,7 @@ class CheckListFragment: BaseFragment() {
     }
 
     private fun showConfirmSync(){
-        val dialog = ConfirmSyncDialogFragment()
+        val dialog = ConfirmSyncDialogFragment(this)
         dialog.listener = object : ConfirmSyncDialogFragment.Callback{
             override fun onClick() {
                 getLastLocation()

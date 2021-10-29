@@ -127,11 +127,21 @@ class ReportGeolocationFragment : BaseFragment(), RecyclerUser.onClickButton{
         reportGeoViewModel.getListUser()
 
         changeViewsFragment()
+        binding.iHeader.tvHeaderSubtitle.text = "ANOTHER BIRCK ON THE WALL "
         return binding.root
     }
 
     override fun changeViewsFragment() {
-
+        translateObject.apply {
+            binding.btnSearchGeoLocation.text = findTranslate("btnSearchGeoLocation")
+            //binding.edDateGeoLocation.hint = findTranslate("edDateGeoLocation")
+            binding.edUserGeoLocation.hint = findTranslate("edUserGeoLocation")
+            binding.tvDateGeoLocation.hint = findTranslate("tvDateGeoLocation")
+            binding.tvUserGeoLocation.text = findTranslate("tvUserGeoLocation")
+            Log.d("findTranslate",findTranslate("tvReportGeolocation").toString() + findTranslate("tvInformCheckListFragment").toString())
+            binding.iHeader.tvHeaderSubtitle.text = findTranslate("tvInformCheckListFragment")
+            binding.iHeader.tvHeaderTitle.text = findTranslate("tvReportGeolocation")
+        }
     }
 
     private fun showUser(list:List<RoutesUser>){

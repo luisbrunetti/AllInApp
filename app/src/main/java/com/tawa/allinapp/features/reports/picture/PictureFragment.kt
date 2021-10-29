@@ -223,7 +223,7 @@ class PictureFragment : BaseFragment() {
                 )
                 pictureViewModel.saveReport(report, "En proceso","terminado")
 
-                val confirm = ConfirmSyncDialogFragment()
+                val confirm = ConfirmSyncDialogFragment(this)
                 confirm.listener = object : ConfirmSyncDialogFragment.Callback {
                     override fun onClick() {
 

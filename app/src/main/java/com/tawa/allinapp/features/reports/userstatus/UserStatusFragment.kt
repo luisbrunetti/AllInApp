@@ -120,7 +120,22 @@ class UserStatusFragment : BaseFragment() {
     }
 
     override fun changeViewsFragment() {
-
+        translateObject.apply {
+            binding.tvTitleStatusFragment.text = findTranslate("tvTitleStatusFragment")
+            binding.tvUserStatus.text = findTranslate("tvUserStatus")
+            binding.tvSelectDateStatusFragment.text = findTranslate("tvSelectDateStatusFragment")
+            binding.etDateUserStatus.hint  = findTranslate("etDateUserStatus")
+            binding.tvReporterStatusFragment.text = findTranslate("tvReporterStatusFragment")
+            binding.edReporter.hint = findTranslate("edReporterStatusFragment")
+            binding.btnFilter.text = findTranslate("btnFilter")
+            binding.tvTableUser.text = findTranslate("tvTableUserStatusFrag")
+            binding.tvBattery.text = findTranslate("tvBatteryStatusFrag")
+            binding.tvState.text = findTranslate("tvStateStatusFrag")
+            binding.tvStateGps.text = findTranslate("tvBatteryStatusFrag")
+            binding.tvLast.text = findTranslate("tvLastStatusFrag")
+            binding.tvLastUbication.text = findTranslate("tvLastUbication")
+            binding.btnFilter.text = findTranslate("btnFilterStatusFrag")
+        }
     }
     private  fun dateFilter(date:String){
         removeArray()
@@ -131,8 +146,7 @@ class UserStatusFragment : BaseFragment() {
         val input = Date(date)
         val instant = input.toInstant()
         listLimited= listStatus.filter { it.lastConnection?.subSequence(0,10)  == instant.toString().subSequence(0,10) }
-        if(listLimited.isNotEmpty())
-        {
+        if(listLimited.isNotEmpty()) {
             showDataTable(listLimited,0)
             createPager(listLimited,binding.pageNumber,binding.tlName,binding.tlGridTable)
         }

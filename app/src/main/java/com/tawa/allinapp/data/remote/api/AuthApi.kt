@@ -7,6 +7,7 @@ import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.Query
 
 interface AuthApi {
 
@@ -14,5 +15,5 @@ interface AuthApi {
     fun login(@Body request: LoginRemote.Request): Call<BaseResponse<LoginRemote.Response>>
 
     @POST("/api/user/enviar/password")
-    fun sendPassword(@Header("Authorization") token: String, @Body request: SendPassword.Request): Call<BaseResponse<String>>
+    fun sendPassword(@Header("Authorization") token: String, @Query("usuario") user: String): Call<BaseResponse<String>>
 }

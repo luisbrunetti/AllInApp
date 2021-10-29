@@ -67,7 +67,10 @@ class ReportsFragment : BaseFragment() {
         changeViewsFragment()
     }
     override fun changeViewsFragment() {
-
+        translateObject.apply {
+            binding.tvTitleReportFragment.text = findTranslate("tvTitleReportFragment")
+            binding.tvSelectReportFragment.text = findTranslate("tvSelectReportFragment")
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {

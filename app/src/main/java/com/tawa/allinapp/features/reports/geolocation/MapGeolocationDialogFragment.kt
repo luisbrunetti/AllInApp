@@ -78,7 +78,7 @@ class InformRoutesMapDialogFragment : DialogFragment(), GoogleMap.OnInfoWindowCl
                             val taskFinished = v?.findViewById<TextView>(R.id.tvTasksFinishedAdapterPv)
                             tvSalesPoint?.text = "${it.pv} - ${it.codPv}"
                             tvDirPv?.text = it.dirPv
-                            checkToDo?.text = "Check in pendientes : ${it.checkInTodo}"
+                            checkToDo?.text = "Check out pendientes : ${it.checkInTodo}"
                             checkFinished?.text = "Check in realizados: ${it.checkInDone}"
                             taskToDo?.text = "Tareas pendientes : ${it.tasksTodo}"
                             taskFinished?.text = "Tareas realizadas : ${it.taskFinished}"

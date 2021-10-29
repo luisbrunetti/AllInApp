@@ -109,11 +109,12 @@ class CoverageBoardFragment : BaseFragment() {
         val userList by coverageViewModel.userList.observeAsState()
 
         Column{
-            DateFilter({ startDate = it },{ endDate = it })
+            DateFilter(translateObject,{ startDate = it },{ endDate = it })
             channels?.let { ch ->
                 Log.d("Channels -> ",channels.toString())
                 ExpandableCard(
-                    title = "Canal",
+                    translateObject,
+                    title = translateObject.findTranslate("tvChannelCoverageFragment").toString(),
                     listElementsPrincipal = ch.map { it.description?:"" }
                 ){ list ->
                     if(list.isNotEmpty()){
@@ -130,7 +131,8 @@ class CoverageBoardFragment : BaseFragment() {
             }
             retails?.let { r ->
                 ExpandableCard(
-                    title = "Tipo Retail",
+                    translateObject,
+                    title = translateObject.findTranslate("tvRetailCoverageFragment").toString(),
                     listElementsPrincipal = r.map {
                         it.description?:""
                     }
@@ -150,7 +152,7 @@ class CoverageBoardFragment : BaseFragment() {
                 }
             }
             ExpandableCardChain(
-                title = "Cadena",
+                title = translateObject.findTranslate("tvChainCoverageFragment").toString(),
                 checkedListChain,
                 hashCheckedItem,
                 mainCheckState,
@@ -164,7 +166,8 @@ class CoverageBoardFragment : BaseFragment() {
 
             userList?.let { u ->
                 ExpandableCard(
-                    title = "Usuarios",
+                    translateObject,
+                    title = translateObject.findTranslate("tvUsersCoverageFragment").toString(),
                     listElementsPrincipal = u.map { it.fullName?:"" }
                 ){ list ->
                     if(list.isNotEmpty())
@@ -201,7 +204,7 @@ class CoverageBoardFragment : BaseFragment() {
                     coverageViewModel.getGraph(startDate,endDate,selectedUser,selectedChain)
                 }
             ) {
-                Text("Buscar", color = Color.White, fontSize = 18.sp)
+                Text(translateObject.findTranslate("tvSearchCoverageFragment").toString(), color = Color.White, fontSize = 18.sp)
             }
         }
     }

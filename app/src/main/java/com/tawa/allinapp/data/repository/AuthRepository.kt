@@ -62,11 +62,14 @@ interface AuthRepository {
             return when (networkHandler.isConnected) {
                 true ->{
                     try {
-                        val response = service.sendPassword("Bearer ${prefs.token!!}",SendPassword.Request(password)).execute()
+                        val response = service.sendPassword("Bearer ${prefs.token!!}", password).execute()
                         when (response.isSuccessful) {
                             true -> {
                                 response.body()?.let { body ->
+                                    Log.d("response", body.success.toString())
+                                    Log.d("response", body.message.toString())
                                     if(body.success) {
+                                        Log.d("response", response.body().toString())
                                         Either.Right(true)
                                     }
                                     else

@@ -18,12 +18,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.tawa.allinapp.R
+import com.tawa.allinapp.core.platform.TranslateObject
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.datetime.date.datepicker
 import java.time.format.DateTimeFormatter
 
 @Composable
 fun DateFilter(
+    translateObject: TranslateObject,
     onStart: (start:String) ->Unit,
     onEnd: (end:String) ->Unit,
 ){
@@ -36,17 +38,17 @@ fun DateFilter(
         Column(
             modifier = Modifier.padding(20.dp),
         ) {
-            Text(text = "Fecha:",fontSize = 16.sp,)
+            Text(text = translateObject.findTranslate("tvTimeDateFilter").toString(),fontSize = 16.sp,)
             Spacer(Modifier.height(8.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center
             ) {
                 Surface(Modifier.weight(1f)) {
-                    ReadonlyDateField("Inicio"){ onStart(it) }
+                    ReadonlyDateField(translateObject.findTranslate("tvStartDateFilter").toString()){ onStart(it) }
                 }
                 Surface(Modifier.weight(1f)) {
-                    ReadonlyDateField("Final", true){ onEnd(it) }
+                    ReadonlyDateField(translateObject.findTranslate("tvFinalDateFilter").toString(), true){ onEnd(it) }
                 }
             }
         }

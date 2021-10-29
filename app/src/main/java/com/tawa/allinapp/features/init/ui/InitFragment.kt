@@ -67,7 +67,7 @@ class InitFragment : BaseFragment() {
                 getLastLocation()
                 val currentDay = getString(R.string.current_day, getDayWeek(),getDayMonth(),getMonth(),getYear())
                 binding.currentDay.text  = currentDay
-            } }})
+            }}})
             observe(checkInMode, { it?.let {
                 checkIn = it
                 //if(!checkIn) binding.tvCheckIn.text = _pv
@@ -93,8 +93,9 @@ class InitFragment : BaseFragment() {
                     showCheckOut()
                 }
             }})
-            observe(successCheckIn, { it?.let {
-                    if(it) {
+            observe(successCheckIn, {
+                it?.let {
+                    if (it) {
                         //getActualLocation()
                         getLastLocation()
 
@@ -103,10 +104,11 @@ class InitFragment : BaseFragment() {
                         initViewModel.getCheckMode()
                         Log.d("successCheckin", "last -> $latitude  long -> $longitude")
                         //initViewModel.updateStatus(_lat,_long,_battery,0)
-                        initViewModel.updateStatus(latitude,longitude,_battery,0)
-                        notify(activity,R.string.checkoout_successful)
+                        initViewModel.updateStatus(latitude, longitude, _battery, 0)
+                        notify(activity, R.string.checkoout_successful)
                     }
-            } })
+                }
+            })
             observe(successSendCheck, { it?.let {
                 if(it.isNotEmpty()){
                     initViewModel.changeCheckState("")
@@ -134,7 +136,7 @@ class InitFragment : BaseFragment() {
                 else
                     binding.imageView16.isVisible= false
             }})
-            observe(successCheckOut, { it?.let {
+            observe(successCheckOut,{ it?.let {
                 if(it) {
                     getLastLocation()
                     //getActualLocation()
@@ -143,26 +145,35 @@ class InitFragment : BaseFragment() {
                     initViewModel.updateStatus(latitude,longitude,_battery,1)
                     notify(activity,R.string.checkoout_successful)
                 }
-            } })
-            observe(successSyncChecks, { it?.let {
-                if (it)
-                {
-                    initViewModel.syncPhotoReportMassive(latitude,longitude)
+            }})
+            observe(successSyncChecks, {
+                it?.let {
+                    if (it) {
+                        initViewModel.syncPhotoReportMassive(latitude, longitude)
+                    }
                 }
-            } })
+            })
             observe(successSyncPhotoReports, { it?.let {
                 getActualLocation()
-                if(it)
-                    initViewModel.syncStandardReportsMassive(latitude,longitude)
-            } })
-            observe(successSyncSku, { it?.let {
-                Log.d(TAG,"SuccessSyncSku se realizado correctamente")
-                if(it){
-                    hideProgressDialog()
-                    MessageDialogFragment.newInstance(message = "", title = R.string.end_sync,icon = R.drawable.ic_checkin).show(childFragmentManager, "dialog")
+                if(it) {
+                    initViewModel.syncStandardReportsMassive(latitude, longitude)
                 }
-                //if (it) initViewModel.syncAudio()
             } })
+            observe(successSyncSku, {
+                it?.let {
+                    //Log.d(TAG, "SuccessSyncSku se realizado correctamente")
+                    if (it) {
+                        hideProgressDialog()
+                        MessageDialogFragment.newInstance(
+                            message = "",
+                            title = R.string.end_sync,
+                            icon = R.drawable.ic_checkin
+                        ).show(childFragmentManager, "dialog")
+                        initViewModel.changeStateSyncSku(false)
+                    }
+                    //if (it) initViewModel.syncAudio()
+                }
+            })
             observe(successSyncReportStandard, { it?.let {
                 getActualLocation()
                 if (it) initViewModel.syncSkuMassive(latitude,longitude)
@@ -177,10 +188,13 @@ class InitFragment : BaseFragment() {
                     MessageDialogFragment.newInstance(message = "", title = R.string.end_sync,icon = R.drawable.ic_checkin).show(childFragmentManager, "dialog")
                 }
             }})
-            observe(userName, { it?.let {
-                binding.tvHeaderName.text = it
-                binding.btUser.text = if(it.isNotEmpty()) getFirstLetters(it.toUpperCase()) else ""
-            } })
+            observe(userName, {
+                it?.let {
+                    binding.tvHeaderName.text = it
+                    binding.btUser.text =
+                        if (it.isNotEmpty()) getFirstLetters(it.toUpperCase()) else ""
+                }
+            })
             /*observe(idPv,{it?.let{
               /*  if(it)
                     findNavController().navigate(InitFragmentDirections.actionNavigationInitToPdvFragment())*/
@@ -284,12 +298,10 @@ class InitFragment : BaseFragment() {
                     //initViewModel.setPv("","","")
                     showLogin(context)
                 }
-
                 override fun onNotify() {
                     initViewModel.clearCountNotify()
                     showMessagesDialog()
                 }
-
             }
             frag.show(childFragmentManager, "participant")
         }
@@ -503,7 +515,7 @@ class InitFragment : BaseFragment() {
     override fun changeViewsFragment() {
         translateObject.apply {
             binding.tvWelcomeInitFragment.text = findTranslate("tvWelcomeInitFragment")
-            binding.btCheckIn.text = findTranslate("btCheckInInitFragment")
+            //binding.btCheckIn.text = findTranslate("btCheckInInitFragment")
             binding.tvPvInitFragment.text = findTranslate("tvPvInitFragment")
             binding.tvReportInitFragment.text = findTranslate("tvReportInitFragment")
             binding.tvMessageInitFragment.text = findTranslate("tvMessageInitFragment")

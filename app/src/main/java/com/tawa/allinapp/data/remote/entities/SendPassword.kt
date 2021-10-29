@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 
 class SendPassword {
     data class Request(
-        @SerializedName("contraseña") @Expose val password: String
+        @SerializedName("usuario") @Expose val user: String
     )
 
     data class Response(

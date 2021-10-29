@@ -67,26 +67,6 @@ class TakePhotoDialogFragment
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initViewModel = viewModel(baseFragment.viewModelFactory){
-            /*observe(getLanguageSaved,{
-                it?.let {
-                    if(it != BaseFragment.SPANISH){
-                        BaseFragment.CURRENT_LANGUAGE = it
-                        initViewModel.getLanguageByXml("dialog_take_photo.xml")
-                    }
-                }
-            })
-            observe(getLanguageSuccess,{
-                it?.let { list ->
-                    if(list.isNotEmpty()){
-                        baseFragment.listLanguage = it
-                        baseFragment.changeLanguage(binding.root)
-                    }
-                }
-            })*/
-        }
-
-
         binding.btnTakePhotoPdv.setOnClickListener {
             validatePermissions()
         }
@@ -99,6 +79,14 @@ class TakePhotoDialogFragment
         }
 
         //initViewModel.getLanguage()
+        changeViewsFragment()
+    }
+
+    private fun changeViewsFragment() {
+        baseFragment.translateObject.apply {
+            binding.btnSavePdv.text = findTranslate("btnSavePdv")
+            binding.btnTakePhotoPdv.text = findTranslate("btnTakePhotoPdv")
+        }
     }
 
 

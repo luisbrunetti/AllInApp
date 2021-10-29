@@ -16,6 +16,6 @@ class AuthService
 
     override fun login(request: LoginRemote.Request) = authApi.login(request)
 
-    override fun sendPassword(token:String,request: SendPassword.Request) =authApi.sendPassword(token,request)
+    override fun sendPassword(token:String, user:String) =authApi.sendPassword(token,user)
 
 }

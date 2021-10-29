@@ -68,7 +68,14 @@ class SelectPdvDialogFragment
             } })
         }
         initViewModel.getIdCompany()
+        changeViewsFragment()
         return binding.root
+    }
+    private fun changeViewsFragment(){
+        baseFragment.translateObject.apply {
+            binding.tvTtitleSelectPdv.text = findTranslate("tvTtitleSelectPdv")
+            binding.btnSelectPdv.text = findTranslate("btnSelectPdv")
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

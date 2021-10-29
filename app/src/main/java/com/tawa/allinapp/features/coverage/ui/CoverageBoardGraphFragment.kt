@@ -62,7 +62,7 @@ class CoverageBoardGraphFragment: BaseFragment() {
         return ComposeView(requireContext()).apply {
             setContent {
                 Column {
-                    HeaderPage("Dashboard","Cobertura") {
+                    HeaderPage("Dashboard",translateObject.findTranslate("tvTitleCoverageFragment") ?: "Cobertura") {
                         findNavController().popBackStack(R.id.coverageBoardFragment,true)
                         //findNavController().popBackStack(R.id.coverageBoardGraphFragment,true)
                     }
@@ -72,9 +72,7 @@ class CoverageBoardGraphFragment: BaseFragment() {
             }
         }
     }
-    override fun changeViewsFragment() {
-
-    }
+    override fun changeViewsFragment() {}
 
     @Composable
     fun CoverageBoardGraphPage(){
@@ -97,7 +95,8 @@ class CoverageBoardGraphFragment: BaseFragment() {
             ) {
                 Users()
 
-                Text(modifier = Modifier.padding(12.dp), text = "Cobertura por cadena",
+                Text(modifier = Modifier.padding(12.dp),
+                    text = translateObject.findTranslate("tvChainCvrgGraphFrag")?:"Cobertura por cadena",
                     fontWeight = FontWeight.Bold,
                     fontSize = 24.sp)
 
@@ -108,25 +107,25 @@ class CoverageBoardGraphFragment: BaseFragment() {
                             .height(15.dp)
                             .width(15.dp), shape = RoundedCornerShape(100.dp), color = colorResource(id = R.color.green)) {}
                     Spacer(Modifier.width(8.dp))
-                    Text(text = "Mayor 75%", fontSize = 14.sp)
+                    Text(text = translateObject.findTranslate("tvGreaterThanGraphFrag") ?:"Mayor 75%", fontSize = 14.sp)
                     Spacer(Modifier.width(10.dp))
                     Surface(
                         Modifier
                             .height(15.dp)
                             .width(15.dp), shape = RoundedCornerShape(100.dp), color = colorResource(id = R.color.red)) {}
                     Spacer(Modifier.width(8.dp))
-                    Text(text = "Menor 75%", fontSize = 14.sp)
+                    Text(text = translateObject.findTranslate("tvLowerThanGraphFrag") ?:"Menor 75%", fontSize = 14.sp)
                 }
 
                 Spacer(Modifier.height(10.dp))
 
                 Status()
 
-                Text(modifier = Modifier.padding(12.dp), text = "Status de Cumplimiento", fontWeight = FontWeight.Bold, fontSize = 24.sp)
+                Text(modifier = Modifier.padding(12.dp), text = translateObject.findTranslate("tvComplianceGraphFrag") ?: "Status de Cumplimiento", fontWeight = FontWeight.Bold, fontSize = 24.sp)
 
-                StatusCard("Visitas",visits,graph?.visits?.total?.toInt()?:0,graph?.visits?.concluded?.toInt()?:0,graph?.visits?.pending?.toInt()?:0, R.color.colorIndicator1)
+                StatusCard(translateObject,translateObject.findTranslate("tvVisitsGraphFrag")?:"Visitas",visits,graph?.visits?.total?.toInt()?:0,graph?.visits?.concluded?.toInt()?:0,graph?.visits?.pending?.toInt()?:0, R.color.colorIndicator1)
 
-                StatusCard("Tareas por hacer",reports,graph?.reports?.total?.toInt()?:0,graph?.reports?.concluded?.toInt()?:0,graph?.reports?.pending?.toInt()?:0, R.color.colorIndicator2)
+                StatusCard(translateObject,translateObject.findTranslate("tvTaskToDoGraphFrag")?: "Tareas por hacer",reports,graph?.reports?.total?.toInt()?:0,graph?.reports?.concluded?.toInt()?:0,graph?.reports?.pending?.toInt()?:0, R.color.colorIndicator2)
             }
         }
     }
@@ -223,10 +222,10 @@ class CoverageBoardGraphFragment: BaseFragment() {
                 .wrapContentHeight()
         ) {
             Surface(modifier = Modifier.weight(1f)) {
-                UserCount(title = "Usuarios activos",color = colorResource(id = R.color.green), qty = graph?.user?.active?.toInt()?:0, icon = R.drawable.ic_contract2)
+                UserCount(translateObject,title = translateObject.findTranslate("tvActiveUserGraphFrag") ?: "Usuarios activos",color = colorResource(id = R.color.green), qty = graph?.user?.active?.toInt()?:0, icon = R.drawable.ic_contract2)
             }
             Surface(modifier = Modifier.weight(1f)) {
-                UserCount(title = "Usuarios no reportados",color = colorResource(id = R.color.red),
+                UserCount(translateObject,title = translateObject.findTranslate("tvNoActiveUserGraphFrag") ?: "Usuarios no reportados",color = colorResource(id = R.color.red),
                     qty = (graph?.user?.active?.toInt() ?: 0) - (graph?.user?.activeReported?.toInt() ?:0),icon = R.drawable.ic_contract1)
             }
         }
