@@ -13,7 +13,7 @@ import com.tawa.allinapp.R
 import com.tawa.allinapp.models.RoutesUser
 
 
-open class RecyclerUser (data: ArrayList<RoutesUser>, var context: Context?, var listener:onClickButton):
+class RecyclerUser (val selectAllString : String, data: ArrayList<RoutesUser>, var context: Context?, var listener:onClickButton):
     RecyclerView.Adapter<RecyclerUser.ViewHolder>() {
     var mData: ArrayList<RoutesUser>? = data
     private var mAllData: ArrayList<RoutesUser> = data
@@ -21,8 +21,6 @@ open class RecyclerUser (data: ArrayList<RoutesUser>, var context: Context?, var
     var listChecked: ArrayList<RoutesUser> = ArrayList()
     val listChexBoxes: HashSet<CheckBox> = hashSetOf()
     private var allSelected : Boolean = false
-
-    val ALL_SELECTED = "Selecionar todos"
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -66,7 +64,7 @@ open class RecyclerUser (data: ArrayList<RoutesUser>, var context: Context?, var
                     params.setMargins(60,0,0,0)
                     holder.mLayout?.layoutParams = params
                 }*/
-                if(item.name == "Selecionar todos"){
+                if(item.name == selectAllString){
                     if(isChecked){
                         listChecked.clear()
                         for(i in listChexBoxes){ i.isChecked = true }
@@ -85,7 +83,7 @@ open class RecyclerUser (data: ArrayList<RoutesUser>, var context: Context?, var
                 }
             }
             mCheckBox?.setOnClickListener {
-                if(item.name == ALL_SELECTED) listener.onClick(true)
+                if(item.name == selectAllString) listener.onClick(true)
                 else listener.onClick(false)
             }
         }

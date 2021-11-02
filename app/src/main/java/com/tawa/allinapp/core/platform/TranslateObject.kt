@@ -12,7 +12,7 @@ class TranslateObject
 
     private var translate : Translate = Translate(arrayListOf())
 
-    fun setInstance(translate: Translate){
+    fun setInstance(translate: Translate) {
         this.translate = translate
     }
 
@@ -20,7 +20,7 @@ class TranslateObject
         return this.translate
     }
 
-    internal fun findTranslate(id:String): String? {
+    fun findTranslate(id:String): String? {
         translate.arrayTranslate.find { it.id == id }
             .also { return it?.translate?.get(LANGUAGE) }
     }

@@ -114,7 +114,7 @@ class CoverageBoardFragment : BaseFragment() {
                 Log.d("Channels -> ",channels.toString())
                 ExpandableCard(
                     translateObject,
-                    title = translateObject.findTranslate("tvChannelCoverageFragment").toString(),
+                    title = translateObject.findTranslate("tvChannelCoverageFragment") ?: "Canal",
                     listElementsPrincipal = ch.map { it.description?:"" }
                 ){ list ->
                     if(list.isNotEmpty()){
@@ -132,7 +132,7 @@ class CoverageBoardFragment : BaseFragment() {
             retails?.let { r ->
                 ExpandableCard(
                     translateObject,
-                    title = translateObject.findTranslate("tvRetailCoverageFragment").toString(),
+                    title = translateObject.findTranslate("tvRetailCoverageFragment") ?: "Retail",
                     listElementsPrincipal = r.map {
                         it.description?:""
                     }
@@ -152,7 +152,8 @@ class CoverageBoardFragment : BaseFragment() {
                 }
             }
             ExpandableCardChain(
-                title = translateObject.findTranslate("tvChainCoverageFragment").toString(),
+                title = translateObject.findTranslate("tvChainCoverageFragment") ?: "Cadena",
+                translateObject,
                 checkedListChain,
                 hashCheckedItem,
                 mainCheckState,
@@ -167,7 +168,7 @@ class CoverageBoardFragment : BaseFragment() {
             userList?.let { u ->
                 ExpandableCard(
                     translateObject,
-                    title = translateObject.findTranslate("tvUsersCoverageFragment").toString(),
+                    title = translateObject.findTranslate("tvUsersCoverageFragment") ?: "Usuarios",
                     listElementsPrincipal = u.map { it.fullName?:"" }
                 ){ list ->
                     if(list.isNotEmpty())
@@ -184,7 +185,7 @@ class CoverageBoardFragment : BaseFragment() {
         Column(
             Modifier.verticalScroll(rememberScrollState())
         ){
-            HeaderPage("Dashboard","Cobertura") {
+            HeaderPage("Dashboard",translateObject.findTranslate("tvSubTitleCoverageFragment")?: "Covertura") {
                 findNavController().popBackStack()
             }
             Filters()
@@ -204,7 +205,7 @@ class CoverageBoardFragment : BaseFragment() {
                     coverageViewModel.getGraph(startDate,endDate,selectedUser,selectedChain)
                 }
             ) {
-                Text(translateObject.findTranslate("tvSearchCoverageFragment").toString(), color = Color.White, fontSize = 18.sp)
+                Text(translateObject.findTranslate("tvSearchCoverageFragment") ?: "Buscar", color = Color.White, fontSize = 18.sp)
             }
         }
     }
@@ -214,7 +215,5 @@ class CoverageBoardFragment : BaseFragment() {
     fun MainContainer(){
         main()
     }
-    override fun changeViewsFragment() {
-
-    }
+    override fun changeViewsFragment() {}
 }

@@ -11,9 +11,7 @@
         tools:context=".features.reports.geolocation.ReportGeolocationFragment">
         <include
             android:id="@+id/iHeader"
-            layout="@layout/header_report"
-            app:title="@{`Reporte de geolocalización`}"
-            app:sub="@{`Informe:`}"/>
+            layout="@layout/header_report" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvUserGeoLocation"

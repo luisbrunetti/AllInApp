@@ -11,7 +11,6 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
-import androidx.compose.runtime.snapshots.SnapshotMutableState
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Alignment
@@ -26,11 +25,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.tawa.allinapp.R
+import com.tawa.allinapp.core.platform.TranslateObject
 import java.util.*
 
 @Composable
 fun ExpandableCardChain(
     title: String,
+    translateObject: TranslateObject,
     checkedList: SnapshotStateList<String>,
     hashCheckedItem: SnapshotStateMap<String,Boolean>,
     mainCheckState: MutableState<Boolean>,
@@ -109,7 +110,7 @@ fun ExpandableCardChain(
                                 }
                             },
                         )
-                        Text(text = " Seleccionar todos", fontSize = 16.sp)
+                        Text(text = translateObject.findTranslate("tvSelectEveryone")?: "Seleccionar a todos", fontSize = 16.sp)
                     }
                     var listFiltered = content
                     if(textState.value.text != ""){

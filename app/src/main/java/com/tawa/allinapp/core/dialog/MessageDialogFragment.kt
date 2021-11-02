@@ -26,7 +26,7 @@ class MessageDialogFragment
         const val BUTTON = "left"
         const val ICON = "icon"
         const val NO_ICON = -1
-        fun newInstance(baseFragment: BaseFragment,message: String, title: String = "Ha ocurrido un error", button: Int = R.string.bt_accept, icon: Int = R.drawable.ic_error): MessageDialogFragment {
+        fun newInstance(baseFragment: BaseFragment,message: String, title: String = baseFragment.translateObject.findTranslate("tvErrorMessageFrag") ?: "Ocurrio un error", button: Int = R.string.bt_accept, icon: Int = R.drawable.ic_error): MessageDialogFragment {
             val frag = MessageDialogFragment(baseFragment = baseFragment)
             val bundle = Bundle()
             bundle.putString(TITLE, title)

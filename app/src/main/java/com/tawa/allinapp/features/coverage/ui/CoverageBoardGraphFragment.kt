@@ -46,9 +46,7 @@ class CoverageBoardGraphFragment: BaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         appComponent.inject(this)
-        coverageViewModel = viewModel(viewModelFactory) {
-
-        }
+        coverageViewModel = viewModel(viewModelFactory) {}
     }
 
     private fun initArgs(){

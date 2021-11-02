@@ -89,9 +89,8 @@ class RoutesRemote {
         @SerializedName("fe_creacion") val creation:String,
     )
     data class Checks(
-        @SerializedName("concluidas") val concluidas: Int, // 0
-        @SerializedName("pendientes") val pendientes: Int, // 5
-        @SerializedName("titulo") val titulo: String, // VISITAS
+        @SerializedName("checkInConcluidas") val checksFinished: Int, // 0
+        @SerializedName("checkOutPendientes") val checkOutToDo: Int, // 5
         @SerializedName("total") val total: Int // 5
     )
 

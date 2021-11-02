@@ -62,11 +62,11 @@ fun StatusCard(
                     Text(text = "Total: $total", fontSize = 12.sp)
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Surface(Modifier.height(8.dp).width(20.dp).padding(end = 5.dp), shape = RoundedCornerShape(10.dp), color = colorResource(id = R.color.green)) {}
-                        Text(text = translateObject.findTranslate("tvFinishedGraphFrag") ?: "Concluidas" +": $finished", fontSize = 11.sp)
+                        Text(text = "${translateObject.findTranslate("tvFinishedGraphFrag") ?: "Concluidas"}: $finished", fontSize = 11.sp)
                     }
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Surface(Modifier.height(8.dp).width(20.dp).padding(end = 5.dp), shape = RoundedCornerShape(10.dp), color = colorResource(id = R.color.red)) {}
-                        Text(text = translateObject.findTranslate("tvUnfinishedGrapFrag")?: "Pendientes" + ": $pending", fontSize = 11.sp)
+                        Text(text = "${translateObject.findTranslate("tvUnfinishedGrapFrag") ?: "Pendientes"}: $pending", fontSize = 11.sp)
                     }
                 }
             }

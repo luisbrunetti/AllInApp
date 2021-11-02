@@ -11,7 +11,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.DialogFragment
@@ -24,22 +23,26 @@ import com.google.gson.Gson
 import com.tawa.allinapp.R
 import com.tawa.allinapp.databinding.FragmentInformRoutesMapDialogBinding
 import com.tawa.allinapp.models.RoutesInform
-import com.tawa.allinapp.models.Tracking
 import com.tawa.allinapp.models.TrackingInform
 import java.lang.Exception
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.SphericalUtil
+import com.tawa.allinapp.core.platform.BaseFragment
+import com.tawa.allinapp.models.Tracking
 import java.util.*
+import javax.inject.Inject
 import kotlin.collections.ArrayList
 
 
-class InformRoutesMapDialogFragment : DialogFragment(), GoogleMap.OnInfoWindowClickListener {
+class InformRoutesMapDialogFragment
+@Inject constructor(val baseFragment: BaseFragment): DialogFragment(), GoogleMap.OnInfoWindowClickListener {
 
     private lateinit var binding: FragmentInformRoutesMapDialogBinding
     private var listRoutes: List<TrackingInform>? = null
     private var listMarkers : ArrayList<Marker?>? = null
     private var hashMapMarkerRoute : MutableMap<String, InfoGeolocation>? = null
-    private var hmMarkerInfoWindow: MutableMap<String, InfoWindow> = mutableMapOf()
+    private var hmPvsInfoWindow: MutableMap<String, InfoWindowPv> = mutableMapOf()
+    private var arrayMarkerInfoWindow: ArrayList<InfoWindowChecks> = ArrayList()
     private var lastLatLng: LatLng? = null
     companion object {
         const val LIST_ROUTES_INFORM = "list_routes_inform"
@@ -47,8 +50,8 @@ class InformRoutesMapDialogFragment : DialogFragment(), GoogleMap.OnInfoWindowCl
         const val CHECK_OUT = "Check out"
         const val REPORTED = "Reporte"
         const val POINT_SALE= "Punto de venta"
-        fun newInstance(listRoutes : List<TrackingInform>): InformRoutesMapDialogFragment {
-            val frag = InformRoutesMapDialogFragment()
+        fun newInstance(baseFragment: BaseFragment, listRoutes : List<TrackingInform>): InformRoutesMapDialogFragment {
+            val frag = InformRoutesMapDialogFragment(baseFragment)
             val bundle = Bundle()
             val jsonParsed = Gson().toJson(listRoutes)
             bundle.putString(LIST_ROUTES_INFORM,jsonParsed)
@@ -66,31 +69,41 @@ class InformRoutesMapDialogFragment : DialogFragment(), GoogleMap.OnInfoWindowCl
             setInfoWindowAdapter(object : GoogleMap.InfoWindowAdapter {
                 @SuppressLint("SetTextI18n")
                 override fun getInfoWindow(p0: Marker): View? {
-                    var v : View? = null
-                    hmMarkerInfoWindow[p0.id]?.let {
-                        if(it.typePoint == POINT_SALE){
-                            v = layoutInflater.inflate(R.layout.info_adapter_pv_geolocation,null)
-                            val tvSalesPoint= v?.findViewById<TextView>(R.id.tvSalesPointInfoAdapterPV)
-                            val tvDirPv = v?.findViewById<TextView>(R.id.tvDirInfoAdapterPv)
-                            val checkToDo = v?.findViewById<TextView>(R.id.tvCheckInToDoAdapterPv)
-                            val checkFinished = v?.findViewById<TextView>(R.id.tvCheckInFinshiedAdapterPV)
-                            val taskToDo = v?.findViewById<TextView>(R.id.tvTasksTodoAdapterPv)
-                            val taskFinished = v?.findViewById<TextView>(R.id.tvTasksFinishedAdapterPv)
-                            tvSalesPoint?.text = "${it.pv} - ${it.codPv}"
-                            tvDirPv?.text = it.dirPv
-                            checkToDo?.text = "Check out pendientes : ${it.checkInTodo}"
-                            checkFinished?.text = "Check in realizados: ${it.checkInDone}"
-                            taskToDo?.text = "Tareas pendientes : ${it.tasksTodo}"
-                            taskFinished?.text = "Tareas realizadas : ${it.taskFinished}"
+                    var v: View? = null
 
-                        }else{
-                            v = layoutInflater.inflate(R.layout.info_adapter_geolocation,null)
+                    hmPvsInfoWindow[p0.id]?.let {
+                        v = layoutInflater.inflate(R.layout.info_adapter_pv_geolocation, null)
+                        val tvSalesPoint = v?.findViewById<TextView>(R.id.tvSalesPointInfoAdapterPV)
+                        val tvDirPv = v?.findViewById<TextView>(R.id.tvDirInfoAdapterPv)
+                        val checkToDo = v?.findViewById<TextView>(R.id.tvCheckInToDoAdapterPv)
+                        val checkFinished =
+                            v?.findViewById<TextView>(R.id.tvCheckInFinshiedAdapterPV)
+                        val taskToDo = v?.findViewById<TextView>(R.id.tvTasksTodoAdapterPv)
+                        val taskFinished = v?.findViewById<TextView>(R.id.tvTasksFinishedAdapterPv)
+                        tvSalesPoint?.text = "${it.pv} - ${it.codPv}"
+                        tvDirPv?.text = it.dirPv
+                        val checkInToDo = it.total-it.checkInConcluidas
+                        val checkInFinished = it.checkInConcluidas
+                        val checkOutToDo = it.checkOutPendientes
+                        val checkOutFinished = it.total - it.checkOutPendientes
+                        checkToDo?.text = "Check in pendientes/realizados : $checkInToDo/$checkInFinished"
+                        checkFinished?.text = "Check out pendientes/realizados: $checkOutToDo/$checkOutFinished"
+                        taskToDo?.text = "Tareas pendientes : ${it.tasksTodo}"
+                        taskFinished?.text = "Tareas realizadas : ${it.taskFinished}"
+
+                    }
+                    for (infoWindow in arrayMarkerInfoWindow) {
+                        if (infoWindow.markerId == p0.id) {
+                            v = layoutInflater.inflate(R.layout.info_adapter_geolocation, null)
                             val tvLatLng = v?.findViewById<TextView>(R.id.tvDescInfoAdapter)
-                            val tvSalesPoint= v?.findViewById<TextView>(R.id.tvSalesPointInfoAdapter)
+                            val tvSalesPoint =
+                                v?.findViewById<TextView>(R.id.tvSalesPointInfoAdapter)
                             val tvType = v?.findViewById<TextView>(R.id.tvTypeInfoAdapter)
-                            tvType?.text = it.typePoint
-                            tvSalesPoint?.text = "${it.pv} - ${it.codPv}"
-                            tvLatLng?.text =  "("+p0.position.latitude.toString().substring(0,9)+","+p0.position.longitude.toString().substring(0,9)+")"
+                            tvType?.text = infoWindow.typePoint
+                            tvSalesPoint?.text = "${infoWindow.pv} - ${infoWindow.codPv}"
+                            tvLatLng?.text = "(" + p0.position.latitude.toString()
+                                .substring(0, 9) + "," + p0.position.longitude.toString()
+                                .substring(0, 9) + ")"
                         }
                     }
                     return v
@@ -109,6 +122,7 @@ class InformRoutesMapDialogFragment : DialogFragment(), GoogleMap.OnInfoWindowCl
         var firstTime = true
         var lat : Double? = null
         var long: Double? = null
+        val pvs = ArrayList<String>()
         listRoutes?.let { listInformTracking ->
             for (userTracking in listInformTracking) {
                 Log.d("UserTracking", "UserTracking -> ${userTracking.nameUser} List -> ${userTracking.listTracking}")
@@ -185,18 +199,9 @@ class InformRoutesMapDialogFragment : DialogFragment(), GoogleMap.OnInfoWindowCl
                                 )
                             }
                         }
-                        hmMarkerInfoWindow[markerId] = InfoWindow(
-                            tracking.Pv,
-                            tracking.codPvCop,
-                            tracking.dirCorpPv,
-                            markerType,
-                            tracking.checks.pendientes,
-                            tracking.checks.concluidas,
-                            tracking.reports.tareasPendientes,
-                            tracking.reports.tareasCompletadas
-                        )
+                        arrayMarkerInfoWindow.add(InfoWindowChecks(markerId, tracking.Pv, tracking.codPvCop, tracking.dirCorpPv, markerType))
                     }
-                    for(task in tracking.tasks){
+                    for (task in tracking.tasks){
                         when(task?.reportState){
                             "COMPLETADO" -> {
                                 val userPosition = LatLng(task.latitude.toDouble(), task.longitude.toDouble())
@@ -207,10 +212,7 @@ class InformRoutesMapDialogFragment : DialogFragment(), GoogleMap.OnInfoWindowCl
                                     //.snippet("${tracking.Pv} - ${tracking.codPvCop}")
                                     .icon(getMarkerIconFromDrawable(iconD))
                                 )
-                                hmMarkerInfoWindow[marker.id] = InfoWindow(tracking.Pv, tracking.codPvCop,
-                                    tracking.dirCorpPv,REPORTED, tracking.checks.pendientes,
-                                    tracking.checks.concluidas, tracking.reports.tareasPendientes,
-                                    tracking.reports.tareasCompletadas)
+                                arrayMarkerInfoWindow.add(InfoWindowChecks(marker.id, tracking.Pv, tracking.codPvCop, tracking.dirCorpPv, REPORTED))
                                 hashMapMarkerRoute!![marker.id] = InfoGeolocation("Reporte",task.creation, userTracking.nameUser,tracking.codPvCop,tracking.dirCorpPv,tracking.Pv)
                             }
                         }
@@ -220,7 +222,12 @@ class InformRoutesMapDialogFragment : DialogFragment(), GoogleMap.OnInfoWindowCl
                         long = tracking.longitude
                         firstTime = false
                     }
-                    createMarkerPv(tracking,googleMap,checkin,checkout)
+
+                    if(!pvs.contains(tracking.Pv)){
+                        createMarkerPv(googleMap,tracking)
+                        pvs.add(tracking.Pv)
+                    }
+                    else sumValues(tracking)
                 }
             }
             if (lat != null && long != null) {
@@ -232,12 +239,9 @@ class InformRoutesMapDialogFragment : DialogFragment(), GoogleMap.OnInfoWindowCl
     }
 
     private fun createMarkerPv(
-        tracking: Tracking,
         googleMap: GoogleMap,
-        checkin: Boolean,
-        checkout: Boolean
+        tracking: Tracking,
     ) {
-        val state = if(checkout) "Terminado" else if (checkin) "Check In" else "En proceso"
         val pvPosition = LatLng(tracking.latitude!!,tracking.longitude!!)
         val iconD = resources.getDrawable(R.drawable.ic_marker_routes)
         lastLatLng = convertLatLngInMeter(pvPosition)
@@ -246,12 +250,27 @@ class InformRoutesMapDialogFragment : DialogFragment(), GoogleMap.OnInfoWindowCl
             .infoWindowAnchor(0f,-0.1f)
             .icon(getMarkerIconFromDrawable(iconD))
         )
-        hmMarkerInfoWindow[marker.id] = InfoWindow(tracking.Pv, tracking.codPvCop,
-            tracking.dirCorpPv, POINT_SALE, tracking.checks.pendientes,
-            tracking.checks.concluidas, tracking.reports.tareasPendientes,
+        hmPvsInfoWindow[marker.id] = InfoWindowPv(
+            markerId = marker.id,
+            tracking.Pv, tracking.codPvCop,
+            tracking.dirCorpPv, POINT_SALE,
+            tracking.checks.total,
+            tracking.checks.checksFinished,
+            tracking.checks.checkOutToDo,
+            tracking.reports.tareasPendientes,
             tracking.reports.tareasCompletadas)
-        //hashMapMarkerRoute!![marker.id] = InfoGeolocation(POINT_SALE, "", tracking.nameUser, tracking.codPvCop,tracking.dirCorpPv,tracking.Pv)
     }
+
+    private fun sumValues(tracking: Tracking) {
+
+        for((key,value) in hmPvsInfoWindow){
+            if(value.pv == tracking.Pv) {
+                value.taskFinished = value.taskFinished.plus(tracking.reports.tareasCompletadas)
+                value.tasksTodo = value.tasksTodo.plus(tracking.reports.tareasPendientes)!!
+            }
+        }
+    }
+
 
     private fun convertLatLngInMeter(oldLatLng: LatLng) : LatLng{
         val r = Random()
@@ -314,7 +333,7 @@ class InformRoutesMapDialogFragment : DialogFragment(), GoogleMap.OnInfoWindowCl
     override fun onInfoWindowClick(p0: Marker) {
         val infoGeolocation = hashMapMarkerRoute?.get(p0.id)
         infoGeolocation?.let {
-            val dialog = InfoGeolocationDialogFragment.newInstance(it)
+            val dialog = InfoGeolocationDialogFragment.newInstance(baseFragment,it)
             dialog.show(childFragmentManager, "dialog")
         }
     }
@@ -329,13 +348,23 @@ data class InfoGeolocation(
     val pv_desc:String
 )
 
-data class InfoWindow(
+data class InfoWindowPv(
+    val markerId: String,
     val pv:String,
     val codPv:String,
     val dirPv:String,
     val typePoint:String,
-    val checkInTodo:Int,
-    val checkInDone:Int,
-    val tasksTodo:Int,
-    val taskFinished:Int
+    val total: Int,
+    val checkInConcluidas:Int,
+    val checkOutPendientes:Int,
+    var tasksTodo:Int,
+    var taskFinished:Int
+)
+
+data class InfoWindowChecks(
+    val markerId: String,
+    val pv:String,
+    val codPv:String,
+    val dirPv:String,
+    val typePoint:String
 )

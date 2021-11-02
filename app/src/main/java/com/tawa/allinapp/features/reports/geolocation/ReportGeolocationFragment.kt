@@ -93,7 +93,7 @@ class ReportGeolocationFragment : BaseFragment(), RecyclerUser.onClickButton{
                         it, reportGeoViewModel.convertDate(binding.edDateGeoLocation.text.toString())
                     )
                 } else {
-                    notify(requireActivity(), "Tiene que seleccionar una fecha y al menos un usuario")
+                    notify(requireActivity(), translateObject.findTranslate("tvNoDataGeolocation") ?: "Tiene que seleccionar una fecha y al menos un usuario")
                 }
             }
         }
@@ -108,26 +108,11 @@ class ReportGeolocationFragment : BaseFragment(), RecyclerUser.onClickButton{
 
         //Seteando la fecha de hoy
         binding.edDateGeoLocation.setText(SimpleDateFormat("dd/MM/yyyy", Locale("es", "ES")).format(Date()))
-        /*binding.edUserRoutes.addTextChangedListener( object: TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                binding.cvUsersReportLocation.visibility = View.VISIBLE
-            }
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                if(s.toString() == "") binding.cvUsersReportLocation.invisible()
-                filter(s.toString())
-            }
-
-        })*/
         //Llamadas a los servicios
         reportGeoViewModel.getListUser()
 
         changeViewsFragment()
-        binding.iHeader.tvHeaderSubtitle.text = "ANOTHER BIRCK ON THE WALL "
         return binding.root
     }
 
@@ -136,11 +121,11 @@ class ReportGeolocationFragment : BaseFragment(), RecyclerUser.onClickButton{
             binding.btnSearchGeoLocation.text = findTranslate("btnSearchGeoLocation")
             //binding.edDateGeoLocation.hint = findTranslate("edDateGeoLocation")
             binding.edUserGeoLocation.hint = findTranslate("edUserGeoLocation")
-            binding.tvDateGeoLocation.hint = findTranslate("tvDateGeoLocation")
+            binding.tvDateGeoLocation.text = findTranslate("tvDateGeoLocation")
             binding.tvUserGeoLocation.text = findTranslate("tvUserGeoLocation")
             Log.d("findTranslate",findTranslate("tvReportGeolocation").toString() + findTranslate("tvInformCheckListFragment").toString())
-            binding.iHeader.tvHeaderSubtitle.text = findTranslate("tvInformCheckListFragment")
-            binding.iHeader.tvHeaderTitle.text = findTranslate("tvReportGeolocation")
+            binding.iHeader.title = findTranslate("tvTitleGeolocation")
+            binding.iHeader.sub = findTranslate("tvSubTitleGeolocation")
         }
     }
 
@@ -149,7 +134,7 @@ class ReportGeolocationFragment : BaseFragment(), RecyclerUser.onClickButton{
         listRecycleView?.let { it->
             for((count, user) in list.withIndex()){
                 if(count < 1 ){
-                    val route = RoutesUser("1","Selecionar todos")
+                    val route = RoutesUser("1",translateObject.findTranslate("tvSelectAllAdapter") ?: "Seleccionar a todos")
                     it.add(route)
                     it.add(user)
                     backupRecycleView?.add(user)
@@ -160,7 +145,12 @@ class ReportGeolocationFragment : BaseFragment(), RecyclerUser.onClickButton{
                 }
             }
         } ?: emptyList<RoutesUser>()
-        recyclerAdapter = RecyclerUser(listRecycleView!!,requireContext(),this)
+        recyclerAdapter = RecyclerUser(
+            translateObject.findTranslate("tvSelectAllAdapter") ?: "Seleccionar a todos",
+            listRecycleView!!,
+            requireContext(),
+            this
+        )
         binding.rvUsersReportLocation.layoutManager = LinearLayoutManager(requireContext())
         binding.rvUsersReportLocation.adapter = recyclerAdapter
     }
@@ -176,7 +166,6 @@ class ReportGeolocationFragment : BaseFragment(), RecyclerUser.onClickButton{
     }
 
     private fun openDatePicker(et:EditText){
-        //Log.d("log",(mDay.toString()+mMonth.toString()+mYear.toString()).toString())
         mDay?.let { day->
             mMonth?.let { month ->
                 mYear?.let { year ->
@@ -195,7 +184,7 @@ class ReportGeolocationFragment : BaseFragment(), RecyclerUser.onClickButton{
     }
 
     private fun showMapRoutesDialog(listRoutes:List<TrackingInform>){
-        val dialog = InformRoutesMapDialogFragment.newInstance(listRoutes)
+        val dialog = InformRoutesMapDialogFragment.newInstance(this,listRoutes)
         dialog.show(childFragmentManager,"")
     }
 
@@ -204,14 +193,13 @@ class ReportGeolocationFragment : BaseFragment(), RecyclerUser.onClickButton{
         var count = 0
         for (userChecked in recyclerAdapter?.listChecked!!) {
             if(selectedAll){
-                namesConcant = "Todos seleccionados"
+                namesConcant = translateObject.findTranslate("tvEveryoneSelectedAdapter") ?: "Todos seleccionados"
             }else{
                 if(count == 0){
                     namesConcant = "${userChecked.name}"
                     count++
-                }else{
-                    namesConcant = "$namesConcant, ${userChecked.name}"
-                }
+                }else namesConcant = "$namesConcant, ${userChecked.name}"
+
             }
         }
         binding.edUserGeoLocation.setText(namesConcant)

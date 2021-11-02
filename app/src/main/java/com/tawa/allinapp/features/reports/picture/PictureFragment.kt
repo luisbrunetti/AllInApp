@@ -207,7 +207,7 @@ class PictureFragment : BaseFragment() {
                 activity?.onBackPressed()
             }
             else
-                notify(activity, "Ya se registró")
+                notify(activity, translateObject.findTranslate("tvAlreadyRegistered") ?: "Ya se registro")
         }
         binding.btnSendPictures.setOnClickListener {
             if(type!="terminado")
@@ -247,7 +247,19 @@ class PictureFragment : BaseFragment() {
     }
 
     override fun changeViewsFragment() {
+        translateObject.apply {
+            binding.tvPVPicture.text = findTranslate("tvPVPicture")
+            binding.btnPhotoBeforePicture.text = findTranslate("btnPhotoBeforePicture")
+            binding.btnPhotoAfterPicture.text = findTranslate("btnPhotoAfterPicture")
+            binding.tvTtitleComments.text = findTranslate("tvTtitleComments")
+            binding.contentLayout.hint = findTranslate("tvComments")
+            binding.btnSavePictures.text = findTranslate("btnSavePictures")
+            binding.btnSendPictures.text = findTranslate("btnSendPictures")
+            binding.iHeader.title = findTranslate("tvTitlePictureFragment")
+            binding.iHeader.sub = findTranslate("tvSubPictureFragment")
 
+
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -403,7 +415,7 @@ class PictureFragment : BaseFragment() {
                 .setPaddingBottom(5)
                 .setPaddingLeft(10)
                 .setPaddingRight(10)
-                .setText("Máximo solo cinco fotos")
+                .setText(translateObject.findTranslate("tvFivePhotosPictureFragment") ?: "Máximo solo cinco fotos")
                 .setTextColorResource(R.color.white)
                 .setBackgroundColorResource(R.color.colorLayoutTopGradient)
                 .setBalloonAnimation(BalloonAnimation.FADE).setLifecycleOwner(lifecycleOwner)

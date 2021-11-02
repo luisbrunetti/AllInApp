@@ -87,7 +87,7 @@ class InformsFragment : BaseFragment() {
             binding.tvSelectTypeInform.text = findTranslate("tvSelectTypeInform")
             binding.tvStatusUserInformFragment.text = findTranslate("tvStatusUserInformFragment")
             binding.tvDashBoardInformFragment.text = findTranslate("tvDashBoardInformFragment")
-            binding.tvReportGeolocation.text = findTranslate("tvReportGeolocation")
+            binding.tvReportGeolocation.text = findTranslate("tvGeolocationInformFragment")
         }
     }
 

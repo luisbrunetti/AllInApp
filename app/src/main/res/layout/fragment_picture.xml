@@ -16,9 +16,7 @@
 
         <include
             android:id="@+id/iHeader"
-            layout="@layout/header_report"
-            app:title="@{`Fotográfico`}"
-            app:sub="@{`Reporte`}"/>
+            layout="@layout/header_report" />
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/nestedScrollView"

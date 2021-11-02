@@ -12,13 +12,16 @@ import android.widget.LinearLayout
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.DialogFragment
 import com.google.gson.Gson
+import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.FragmentInfoGeolocationDialogBinding
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
+import javax.inject.Inject
 
 
-class InfoGeolocationDialogFragment : DialogFragment() {
+class InfoGeolocationDialogFragment
+@Inject constructor(val baseFragment: BaseFragment ) : DialogFragment() {
     private lateinit var binding: FragmentInfoGeolocationDialogBinding
 
     val params = LinearLayout.LayoutParams(
@@ -27,11 +30,11 @@ class InfoGeolocationDialogFragment : DialogFragment() {
     )
 
     companion object {
-        const val INFO_GEOLOCATION ="info_geolocation"
+        const val INFO_GEOLOCATION = "info_geolocation"
         const val GENERIC_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
         const val FORMAT_VIEW = "dd-MM-yyy HH:mm:ss"
-        fun newInstance(infoGeolocation: InfoGeolocation) : InfoGeolocationDialogFragment{
-            val frag = InfoGeolocationDialogFragment()
+        fun newInstance(baseFragment: BaseFragment, infoGeolocation: InfoGeolocation) : InfoGeolocationDialogFragment{
+            val frag = InfoGeolocationDialogFragment(baseFragment)
             val bundle = Bundle()
             val jsonObject = Gson().toJson(infoGeolocation)
             Log.d("object", infoGeolocation.toString())
@@ -56,7 +59,12 @@ class InfoGeolocationDialogFragment : DialogFragment() {
         infoGeolocation?.let {
             val (date, time ) = parseTime(it.time)
             binding.tvUserInfoGeolocation.text = it.user
-            binding.tvTypeInfoGeolocation.text = it.type
+            binding.tvTypeInfoGeolocation.text = when(it.type){
+                "INGRESO" -> baseFragment.translateObject.findTranslate("tvCheckInInfoGelocation")
+                "SALIDA" -> baseFragment.translateObject.findTranslate("tvCheckOutInfoGelocation")
+                "REPORTE" -> baseFragment.translateObject.findTranslate("tvReportInfoGelocation")
+                else -> ""
+            }
             binding.tvPointInfoGeolocation.text = "${it.pv_desc} - ${it.pv_cod}"
             binding.tvPointDirInfoGeolocation.text = it.pv_dir
             binding.tvDateInfoGeolocation.text = "$date - $time"
@@ -72,8 +80,17 @@ class InfoGeolocationDialogFragment : DialogFragment() {
         dialog!!.window!!.attributes = params as android.view.WindowManager.LayoutParams
     }
 
+    private fun changeViewFragment(){
+        baseFragment.translateObject.apply {
+            binding.tvTitleInfoGeolocation.text = findTranslate("tvTitleInfoGeolocation")
+            binding.tvTypeTitleInfoGeolocation.text = findTranslate("tvTypeTitleInfoGeolocation")
+            binding.tvTitleUserInfoGeolocation.text = findTranslate("tvTitleUserInfoGeolocation")
+            binding.tvTitleDateInfoGeolocation.text = findTranslate("tvTitleDateInfoGeolocation")
+            binding.tvTitlePointInfoGeolocation.text = findTranslate("tvTitlePointInfoGeolocation")
+        }
+    }
+
     private fun parseTime(time:String): Pair<String,String>{
-        Log.d("parse", time)
         val inputFormatter = DateTimeFormatter.ofPattern(GENERIC_FORMAT, Locale.ENGLISH)
         val outputFormatter = DateTimeFormatter.ofPattern(FORMAT_VIEW, Locale.ENGLISH)
         val dateTime = LocalDateTime.parse(time,inputFormatter)
