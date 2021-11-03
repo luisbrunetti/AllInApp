@@ -67,8 +67,11 @@ class RecyclerUser (val selectAllString : String, data: ArrayList<RoutesUser>, v
                 if(item.name == selectAllString){
                     if(isChecked){
                         listChecked.clear()
+                        Log.d("listChecked",listChecked.toString())
                         for(i in listChexBoxes){ i.isChecked = true }
-                        for(j in mAllData){ listChecked.add(j)}
+                        for(j in mAllData){
+                            listChecked.add(j)
+                        }
                         Log.d(" -- >",listChecked.toString())
                         allSelected = true
                     }else{

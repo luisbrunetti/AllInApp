@@ -86,7 +86,7 @@ class InformRoutesMapDialogFragment
                         val checkInFinished = it.checkInFinished
                         val checkOutToDo = it.checkOutToDo
                         val checkOutFinished = it.checkOutFinished
-                        checkToDo?.text = "Check in pendientes/realizados : $checkInToDo/$checkInFinished"
+                        checkToDo?.text = "Check in pendientes/realizados: $checkInToDo/$checkInFinished"
                         checkFinished?.text = "Check out pendientes/realizados: $checkOutToDo/$checkOutFinished"
                         taskToDo?.text = "Tareas pendientes : ${it.tasksTodo}"
                         taskFinished?.text = "Tareas realizadas : ${it.taskFinished}"
@@ -264,7 +264,7 @@ class InformRoutesMapDialogFragment
     }
 
     private fun sumValues(tracking: Tracking) {
-
+        Log.d("hmPvsInfoWindow", hmPvsInfoWindow.toString())
         for((key,value) in hmPvsInfoWindow){
             if(value.pv == tracking.Pv) {
                 value.taskFinished = value.taskFinished.plus(tracking.reports.tareasCompletadas)

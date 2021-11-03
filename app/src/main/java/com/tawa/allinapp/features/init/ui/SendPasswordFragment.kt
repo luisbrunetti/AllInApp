@@ -42,9 +42,13 @@ class SendPasswordFragment : BaseFragment() {
                 when(it){
                     is Failure.DefaultError -> {
                         binding.tvError.isVisible =true
+                        hideProgressDialog()
                         binding.txtIptUserSendPassword.setBackgroundResource(R.drawable.error_border)
                     }
-                    else -> ""
+                    else -> {
+                        hideProgressDialog()
+                        ""
+                    }
                 }})
         }
         binding.btnBackSendPass.setOnClickListener {

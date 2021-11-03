@@ -31,7 +31,7 @@ interface ParametersRepository {
     fun setLanguage(language:Int) : Either<Failure, Boolean>
     fun getLanguage(): Either<Failure,List<TranslateItem>>
     fun getTranslate(): Either<Failure,List<TranslateItem>>
-    //fun getLanguageByXml(xmlName : String): Either<Failure, List<com.tawa.allinapp.models.Language>>
+
     class Network
     @Inject constructor(private val networkHandler: NetworkHandler,
                         private val parametersDataSource: ParametersDataSource,

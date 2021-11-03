@@ -31,6 +31,8 @@ class ReportGeolocationFragment : BaseFragment(), RecyclerUser.onClickButton{
     private var recyclerAdapter : RecyclerUser? = null
     private var listRecycleView: ArrayList<RoutesUser>? = null
     private var backupRecycleView: ArrayList<RoutesUser> ? = ArrayList()
+    private var selectedAll: Boolean = false
+
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -87,8 +89,11 @@ class ReportGeolocationFragment : BaseFragment(), RecyclerUser.onClickButton{
             recyclerAdapter?.listChecked?.let {
                 if (date != "" && it.size > 0) {
                     showProgressDialog()
+                    val listFiltered =
+                        if(this.selectedAll) it.distinct() as ArrayList<RoutesUser>
+                        else it
                     reportGeoViewModel.getRoutesFromListUsers(
-                        it, reportGeoViewModel.convertDate(binding.edDateGeoLocation.text.toString())
+                        listFiltered, reportGeoViewModel.convertDate(binding.edDateGeoLocation.text.toString())
                     )
                 } else {
                     notify(requireActivity(), translateObject.findTranslate("tvNoDataGeolocation") ?: "Tiene que seleccionar una fecha y al menos un usuario")
@@ -142,6 +147,7 @@ class ReportGeolocationFragment : BaseFragment(), RecyclerUser.onClickButton{
                     backupRecycleView?.add(user)
                 }
             }
+            Log.d("listRecycleView",listRecycleView.toString())
         } ?: emptyList<RoutesUser>()
         recyclerAdapter = RecyclerUser(
             translateObject.findTranslate("tvSelectAllAdapter") ?: "Seleccionar a todos",
@@ -177,17 +183,17 @@ class ReportGeolocationFragment : BaseFragment(), RecyclerUser.onClickButton{
     }
 
     override fun onClick(selectedAll: Boolean) {
+        this.selectedAll = selectedAll
         var namesConcant = ""
         var count = 0
         for (userChecked in recyclerAdapter?.listChecked!!) {
-            if(selectedAll){
+            if(this.selectedAll){
                 namesConcant = translateObject.findTranslate("tvEveryoneSelectedAdapter") ?: "Todos seleccionados"
             }else{
                 if(count == 0){
                     namesConcant = "${userChecked.name}"
                     count++
                 }else namesConcant = "$namesConcant, ${userChecked.name}"
-
             }
         }
         binding.edUserGeoLocation.setText(namesConcant)
