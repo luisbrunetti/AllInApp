@@ -26,10 +26,10 @@ class RoutesRemote {
         @SerializedName("descripcion_ptv") val Pv: String?,
         @SerializedName("id_zona") val zone: Zone,
         @SerializedName("id_ptv_corp") val corp: IdPtvCorp,
-        @SerializedName("visitas") val visits: VisitsCount,
-        @SerializedName("reportes") val tasks: TasksCount,
+        @SerializedName("checks") val checks:Checks,
+        @SerializedName("reportes") val reports: Reports,
     ){
-        fun toView() = Routes(id,Pv?:"",zone.zoneName?:"",zone.zoneDistrict?:"",corp.dirCorpPv?:"",corp.nameCorpPv?:"",corp.latitude?:0.0,corp.longitude?:0.0,visits.total,visits.complete,visits.pending,tasks.total,tasks.complete,tasks.pending)
+        fun toView() = Routes(id,Pv?:"",zone.zoneName?:"",zone.zoneDistrict?:"",corp.dirCorpPv?:"",corp.nameCorpPv?:"",corp.latitude?:0.0,corp.longitude?:0.0,checks,reports)
     }
 
     data class TrackingUser(

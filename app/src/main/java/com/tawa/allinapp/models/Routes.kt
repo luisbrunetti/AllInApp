@@ -1,5 +1,6 @@
 package com.tawa.allinapp.models
 
+import com.tawa.allinapp.data.remote.entities.RoutesRemote
 
 
 data class Routes(
@@ -11,11 +12,6 @@ data class Routes(
     val nameCorpPv: String?,
     val latitude: Double?,
     val longitude: Double?,
-    val visitTotal :String,
-    val visitComplete:String,
-    val visitPending :String,
-    val taskTotal :String,
-    val taskComplete:String,
-    val taskPending :String
-
+    val checks: RoutesRemote.Checks,
+    val reports:RoutesRemote.Reports,
 )

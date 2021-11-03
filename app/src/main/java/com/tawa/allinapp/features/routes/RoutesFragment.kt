@@ -27,7 +27,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-
 class RoutesFragment : BaseFragment() {
 
     private lateinit var routesViewModel: RoutesViewModel
@@ -58,7 +57,6 @@ class RoutesFragment : BaseFragment() {
                     _role = it
                     if(_role.toUpperCase()!="SUPERVISOR") binding.edUserRoutes.isEnabled = false
                 }
-
             }})
             observe(listUser, {
                 it?.let {
@@ -67,7 +65,6 @@ class RoutesFragment : BaseFragment() {
                 }
             })
             observe(successGetRoutes,{it?.let {
-
                 if(it.isNotEmpty()){
                     listRoutesUser = it
                     binding.contRoutes.isVisible = true
@@ -105,7 +102,7 @@ class RoutesFragment : BaseFragment() {
         }
 
         binding.btnShowMapRoutes.setOnClickListener {
-            if(binding.tvTypeRoute.text=="Rutas")
+            if(binding.tvTypeRoute.text=="Rutas"||binding.tvTypeRoute.text=="Routes")
                 showMapRoutesDialog(listRoutesUser)
             else
                 showMapTrackingDialog(listTrackingUser)
