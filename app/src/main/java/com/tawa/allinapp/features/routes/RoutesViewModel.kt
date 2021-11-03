@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.tawa.allinapp.core.interactor.UseCase
 import com.tawa.allinapp.core.platform.BaseViewModel
+import com.tawa.allinapp.features.init.usecase.GetRoleUser
 import com.tawa.allinapp.features.routes.usercase.GetListUser
 import com.tawa.allinapp.features.routes.usercase.GetRoutes
 import com.tawa.allinapp.features.routes.usercase.GetTracking
@@ -17,7 +18,8 @@ class RoutesViewModel
 @Inject constructor(
     private val getListUser: GetListUser,
     private val getRoutes: GetRoutes,
-    private val getTracking: GetTracking
+    private val getTracking: GetTracking,
+    private val getRoleUser: GetRoleUser
 
 ) : BaseViewModel() {
 
@@ -36,6 +38,10 @@ class RoutesViewModel
     private val _successGetTracking= MutableLiveData<List<Tracking>>()
     val successGetTracking: LiveData<List<Tracking>>
         get()= _successGetTracking
+
+    private val _successGetRole = MutableLiveData("")
+    val successGetRole: LiveData<String>
+        get() = _successGetRole
 
 
     fun getListUser() = getListUser(UseCase.None()) { it.either(::handleFailure, ::handleListUser) }
@@ -58,4 +64,8 @@ class RoutesViewModel
         Log.d("tracking", listTracking.toString())
         _successGetTracking.value = listTracking
     }
+
+    fun getRoleUser() = getRoleUser(UseCase.None()) { it.either(::handleFailure, ::handleGetRole) }
+
+    private fun handleGetRole(role:String) { this._successGetRole.value = role }
 }
