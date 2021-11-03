@@ -52,6 +52,14 @@ class RoutesFragment : BaseFragment() {
         binding = FragmentRoutesBinding.inflate(inflater)
 
         routesViewModel = viewModel(viewModelFactory) {
+            observe(successGetRole,{it?.let {
+                if(it.isNotEmpty()){
+                    routesViewModel.getListUser()
+                    _role = it
+                    if(_role.toUpperCase()!="SUPERVISOR") binding.edUserRoutes.isEnabled = false
+                }
+
+            }})
             observe(listUser, {
                 it?.let {
                     showUser(it)
@@ -102,14 +110,7 @@ class RoutesFragment : BaseFragment() {
             else
                 showMapTrackingDialog(listTrackingUser)
         }
-
-        arguments?.getString("role").toString().also { role->
-            routesViewModel.getListUser()
-            Log.d("role",role.toString())
-            _role = role
-            if(_role.toUpperCase()!="SUPERVISOR") binding.edUserRoutes.isEnabled = false
-        }
-
+        routesViewModel.getRoleUser()
         binding.btnRoutes.setOnClickListener {
             if(_role.toUpperCase()=="SUPERVISOR"){
                 binding.listRoutes.adapter = null
