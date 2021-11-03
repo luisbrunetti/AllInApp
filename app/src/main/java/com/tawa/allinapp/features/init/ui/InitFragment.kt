@@ -19,6 +19,8 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.navigation.NavigationView
 import com.tawa.allinapp.R
 import com.tawa.allinapp.core.dialog.MessageDialogFragment
 import com.tawa.allinapp.core.extensions.failure
@@ -26,6 +28,7 @@ import com.tawa.allinapp.core.extensions.observe
 import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.data.local.Prefs
+import com.tawa.allinapp.databinding.ActivityHomeBinding
 import com.tawa.allinapp.databinding.FragmentInitBinding
 import com.tawa.allinapp.features.HomeActivity
 import com.tawa.allinapp.features.auth.AuthViewModel
@@ -51,8 +54,7 @@ class InitFragment : BaseFragment() {
     private lateinit var _long: String
     private var title  = "Check In"
     private var companySelected = false
-    private var checkSelector: Boolean = false
-    companion object { val TAG = "Init_Fragment" }
+    companion object val TAG = "Init_Fragment"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,6 +68,7 @@ class InitFragment : BaseFragment() {
             observe(dayState, { it?.let { if(it) {
                 getLastLocation()
                 val currentDay = getString(R.string.current_day, getDayWeek(),getDayMonth(),getMonth(),getYear())
+                //val currentDay = "${getDayWeek()}, ${getDayMonth()} ${getMonth()} ${getYear()}"
                 binding.currentDay.text  = currentDay
             }}})
             observe(checkInMode, { it?.let {
@@ -106,7 +109,7 @@ class InitFragment : BaseFragment() {
                         Log.d("successCheckin", "last -> $latitude  long -> $longitude")
                         //initViewModel.updateStatus(_lat,_long,_battery,0)
                         initViewModel.updateStatus(latitude, longitude, _battery, 0)
-                        notify(activity, "Registro exitoso")
+                        notify(activity, translateObject.findTranslate("tvSuccessfulRegistration") ?: "Registro exitoso")
                     }
                 }
             })
@@ -188,7 +191,7 @@ class InitFragment : BaseFragment() {
             }})
             observe(successSyncAudio, { it?.let {
                 if(it){
-                    Log.d(TAG,"// se realizado correctamente")
+                   // Log.d(TAG,"// se realizado correctamente")
                     hideProgressDialog()
                     MessageDialogFragment.newInstance(
                         this@InitFragment,
@@ -264,7 +267,7 @@ class InitFragment : BaseFragment() {
         authViewModel = viewModel(viewModelFactory){
             observe(getLanguageSuccess, {
                 it?.let {
-                    if (translateObject.getInstance().arrayTranslate.isNotEmpty()) {
+                    if (translateObject.getInstance().isNotEmpty()) {
                         //Log.d("logintest", translateObject.getInstance().arrayTranslate.toString())
                         changeViewsFragment()
                     }
@@ -543,9 +546,9 @@ class InitFragment : BaseFragment() {
     }
 
     override fun changeViewsFragment() {
+        val navView = activity?.findViewById<BottomNavigationView>(R.id.nav_view)
         translateObject.apply {
             binding.tvWelcomeInitFragment.text = findTranslate("tvWelcomeInitFragment")
-            //binding.btCheckIn.text = findTranslate("btCheckInInitFragment")
             binding.tvPvInitFragment.text = findTranslate("tvPvInitFragment")
             binding.tvReportInitFragment.text = findTranslate("tvReportInitFragment")
             binding.tvMessageInitFragment.text = findTranslate("tvMessageInitFragment")
@@ -555,7 +558,14 @@ class InitFragment : BaseFragment() {
             binding.tvRoutesInitFragment.text = findTranslate("tvRoutesInitFragment")
             binding.tvCalendarInitFragment.text = findTranslate("tvCalendarInitFragment")
             binding.tvTaskInitFragment.text = findTranslate("tvTaskInitFragment")
+
+            navView?.menu?.findItem(R.id.navigation_informs)?.title = translateObject.findTranslate("navigation_informs") ?: "Informes"
+            navView?.menu?.findItem(R.id.navigation_routes)?.title = translateObject.findTranslate("navigation_routes") ?: "Rutas"
+            navView?.menu?.findItem(R.id.navigation_reports)?.title = translateObject.findTranslate("navigation_reports") ?: "Reportes"
+            navView?.menu?.findItem(R.id.navigation_pdv)?.title = translateObject.findTranslate("navigation_pdv") ?: "Pdv"
+            navView?.menu?.findItem(R.id.navigation_init)?.title = translateObject.findTranslate("navigation_init") ?: "Inicio"
         }
+
     }
 
     private fun setUpBinding() {

@@ -60,12 +60,12 @@ class LoginFragment : BaseFragment() {
             }})
             observe(getLanguageSuccess, {
                 it?.let {
-                    if (translateObject.getInstance().arrayTranslate.isNotEmpty()) {
+                    if (translateObject.getInstance().isNotEmpty()) {
                         //Log.d("logintest", translateObject.getInstance().arrayTranslate.toString())
                         //translateObject.setInstance(it)
                         //translate = it.arrayTranslate
                         if(translateObject.LANGUAGE==0){
-                            binding.swLoginFragment.text = "Espanol"
+                            binding.swLoginFragment.text = "Español"
                             binding.swLoginFragment.isChecked = false
                         }
                         else{
@@ -79,7 +79,7 @@ class LoginFragment : BaseFragment() {
             observe(setLanguageSuccess,{
                 if(it == true){
                     changeViewsFragment()
-                    if(translateObject.LANGUAGE==0) binding.swLoginFragment.text = "Espanol"
+                    if(translateObject.LANGUAGE==0) binding.swLoginFragment.text = "Español"
                     else binding.swLoginFragment.text = "English"
                 }
             })

@@ -29,8 +29,8 @@ interface ParametersRepository {
     fun setPV(idCompany: String): Either<Failure, Boolean>
     fun getPV(company:String): Either<Failure, List<Schedule>>
     fun setLanguage(language:Int) : Either<Failure, Boolean>
-    fun getLanguage(): Either<Failure,Translate>
-    fun getTranslate(): Either<Failure,Translate>
+    fun getLanguage(): Either<Failure,List<TranslateItem>>
+    fun getTranslate(): Either<Failure,List<TranslateItem>>
     //fun getLanguageByXml(xmlName : String): Either<Failure, List<com.tawa.allinapp.models.Language>>
     class Network
     @Inject constructor(private val networkHandler: NetworkHandler,
@@ -121,16 +121,16 @@ interface ParametersRepository {
             }
         }
 
-        override fun getLanguage(): Either<Failure, Translate> {
+        override fun getLanguage(): Either<Failure, List<TranslateItem>> {
             try {
                 when (networkHandler.isConnected) {
                     true -> {
                         val retrofit = provideRetrofit()
-                        val response = retrofit.getLanguage().execute()
+                        val response = service.getLanguage().execute()
                         if (response.isSuccessful) {
                             response.body()?.let {
                                 //Log.d("response", it.toString())
-                                for (element in it.data.arrayTranslate) {
+                                for (element in it.data) {
                                     val json = Gson().toJson(
                                         element.translate,
                                         object : TypeToken<List<String>>() {}.type
@@ -141,15 +141,15 @@ interface ParametersRepository {
                                 translateObject.setInstance(it.data)
                                 translateObject.LANGUAGE = prefs.language!!.toInt()
                                 return Either.Right(it.data)
-                            } ?: Either.Right(Translate(arrayListOf()))
+                            }
                         }
-                        return Either.Right(Translate(arrayListOf()))
+                        return Either.Right(emptyList())
                     }
                     false -> {
                         val dataSaved = parametersDataSource.getTranslate()
-                        val translate = Translate(arrayListOf())
+                        val arrayTranslateItem : ArrayList<TranslateItem> = arrayListOf()
                         for (element in dataSaved) {
-                            translate.arrayTranslate.add(
+                            arrayTranslateItem.add(
                                 TranslateItem(
                                     element.id,
                                     Gson()
@@ -159,9 +159,9 @@ interface ParametersRepository {
                             )
                         }
                         translateObject.LANGUAGE = prefs.language!!.toInt()
-                        translateObject.setInstance(translate)
-                        Log.d("translate", translate.toString())
-                        return Either.Right(translate)
+                        translateObject.setInstance(arrayTranslateItem)
+                        Log.d("translate", arrayTranslateItem.toString())
+                        return Either.Right(arrayTranslateItem)
                     }
                 }
             } catch (e: Exception) {
@@ -177,17 +177,16 @@ interface ParametersRepository {
             }
         }
 
-        override fun getTranslate(): Either<Failure, Translate> {
+        override fun getTranslate(): Either<Failure, List<TranslateItem>> {
             try {
                 val response = parametersDataSource.getTranslate()
                 Log.d("responseGetTranslate",response.toString())
-                val translate  = Translate(arrayListOf())
+                val arrayTranslateItem  = ArrayList<TranslateItem>(emptyList())
                 for(element in response){
                     val arrayParsed = Gson().fromJson(element.translate,Array<String>::class.java)
-                    translate.arrayTranslate.add(TranslateItem(element.id,arrayParsed.toList()))
+                    arrayTranslateItem.add(TranslateItem(element.id,arrayParsed.toList()))
                 }
-                Log.d("translate",translate.toString())
-                return Either.Right(translate)
+                return Either.Right(arrayTranslateItem)
             }catch (e : Exception){
                 return Either.Left(Failure.DefaultError(e.message!!))
             }

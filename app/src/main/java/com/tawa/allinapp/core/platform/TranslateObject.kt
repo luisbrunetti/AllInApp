@@ -1,6 +1,7 @@
 package com.tawa.allinapp.core.platform
 
 import com.tawa.allinapp.models.Translate
+import com.tawa.allinapp.models.TranslateItem
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -10,18 +11,18 @@ class TranslateObject
 
     companion object var LANGUAGE = 0
 
-    private var translate : Translate = Translate(arrayListOf())
+    private var translate : List<TranslateItem> = arrayListOf()
 
-    fun setInstance(translate: Translate) {
+    fun setInstance(translate: List<TranslateItem>) {
         this.translate = translate
     }
 
-    fun getInstance(): Translate{
+    fun getInstance(): List<TranslateItem>{
         return this.translate
     }
 
     fun findTranslate(id:String): String? {
-        translate.arrayTranslate.find { it.id == id }
+        translate.find { it.id == id }
             .also { return it?.translate?.get(LANGUAGE) }
     }
 }

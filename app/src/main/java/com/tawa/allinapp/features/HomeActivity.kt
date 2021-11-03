@@ -2,6 +2,7 @@ package com.tawa.allinapp.features
 
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -77,11 +78,8 @@ class HomeActivity : AppCompatActivity() {
         if(dev==BuildConfig.DEV) finish()
     }
     private fun changeViewLanguage(){
-        binding.navView.menu.findItem(R.id.navigation_informs).title = translateObject.findTranslate("navigation_informs")
-        binding.navView.menu.findItem(R.id.navigation_routes).title = translateObject.findTranslate("navigation_routes")
-        binding.navView.menu.findItem(R.id.navigation_reports).title = translateObject.findTranslate("navigation_reports")
-        binding.navView.menu.findItem(R.id.navigation_pdv).title = translateObject.findTranslate("navigation_pdv")
-        binding.navView.menu.findItem(R.id.navigation_init).title = translateObject.findTranslate("navigation_init")
+        Log.d("inform",translateObject.findTranslate("navigation_informs").toString())
+
     }
     fun hideNavBar(){ binding.navView.visibility = View.GONE }
 

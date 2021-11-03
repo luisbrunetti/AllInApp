@@ -30,4 +30,7 @@ interface ParametersDao {
 
     @Query("SELECT * FROM translate")
     fun getTranslate() : List<TranslateModel>
+
+    @Query("SELECT COUNT(*) FROM translate ")
+    fun getCountTranslate() : Int
 }

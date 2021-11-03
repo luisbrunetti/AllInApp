@@ -3,6 +3,7 @@ package com.tawa.allinapp.data.remote.service
 import com.tawa.allinapp.core.platform.BaseResponse
 import com.tawa.allinapp.data.remote.api.ParametersApi
 import com.tawa.allinapp.models.Translate
+import com.tawa.allinapp.models.TranslateItem
 import retrofit2.Call
 import retrofit2.Retrofit
 import javax.inject.Inject
@@ -16,5 +17,5 @@ class ParametersService
 
     override fun getCompanies(token:String) = authApi.getCompanies(token)
     override fun getSchedule(token:String, company:String) = authApi.getSchedule(token,company)
-    override fun getLanguage(): Call<BaseResponse<Translate>> = authApi.getLanguage()
+    override fun getLanguage(): Call<BaseResponse<List<TranslateItem>>> = authApi.getLanguage()
 }

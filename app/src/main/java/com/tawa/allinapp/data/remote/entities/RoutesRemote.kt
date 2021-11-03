@@ -88,10 +88,32 @@ class RoutesRemote {
         @SerializedName("status_reporte") val reportState:String,
         @SerializedName("fe_creacion") val creation:String,
     )
+
     data class Checks(
-        @SerializedName("checkInConcluidas") val checksFinished: Int, // 0
-        @SerializedName("checkOutPendientes") val checkOutToDo: Int, // 5
-        @SerializedName("total") val total: Int // 5
+        @SerializedName("checkIn")
+        val checkIn: CheckIn,
+        @SerializedName("checkOut")
+        val checkOut: CheckOut,
+        @SerializedName("titulo")
+        val titulo: String // VISITAS
+    )
+
+    data class CheckIn(
+        @SerializedName("concluidas")
+        val concluidas: Int, // 0
+        @SerializedName("pendientes")
+        val pendientes: Int, // 1
+        @SerializedName("total")
+        val total: Int // 1
+    )
+
+    data class CheckOut(
+        @SerializedName("concluidas")
+        val concluidas: Int, // 0
+        @SerializedName("pendientes")
+        val pendientes: Int, // 1
+        @SerializedName("total")
+        val total: Int // 1
     )
 
     data class Reports(
@@ -100,4 +122,6 @@ class RoutesRemote {
         @SerializedName("titulo") val titulo: String, // TAREAS
         @SerializedName("totalTareasHacer") val totalTareasHacer: Int // 1
     )
+
+
 }

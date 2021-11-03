@@ -9,6 +9,7 @@ import com.tawa.allinapp.features.auth.usecase.*
 import com.tawa.allinapp.features.init.usecase.GetLanguage
 import com.tawa.allinapp.features.init.usecase.SetSession
 import com.tawa.allinapp.models.Translate
+import com.tawa.allinapp.models.TranslateItem
 import javax.inject.Inject
 
 class AuthViewModel
@@ -59,14 +60,14 @@ class AuthViewModel
     private val _password = MutableLiveData("")
     val password = _password
 
-    private val _successfulTranslate = MutableLiveData<Translate>()
-    val successfulTranslate : LiveData<Translate> = _successfulTranslate
+    private val _successfulTranslate = MutableLiveData<List<TranslateItem>>()
+    val successfulTranslate : LiveData<List<TranslateItem>> = _successfulTranslate
 
     private val _setLanguageSuccess = MutableLiveData<Boolean>()
     val setLanguageSuccess : LiveData<Boolean> get() = _setLanguageSuccess
 
-    private val _getLanguageSuccess = MutableLiveData<Translate>()
-    val getLanguageSuccess : LiveData<Translate> get() = _getLanguageSuccess
+    private val _getLanguageSuccess = MutableLiveData<List<TranslateItem>>()
+    val getLanguageSuccess : LiveData<List<TranslateItem>> get() = _getLanguageSuccess
 
     private val _successSetSession = MutableLiveData<Boolean>()
     val successSetSession: LiveData<Boolean> get() = _successSetSession
@@ -93,7 +94,7 @@ class AuthViewModel
 
     fun getTranslate() { getTranslate(UseCase.None()){ it.either(::handleFailure, ::handleGetTranslate) } }
 
-    private fun handleGetTranslate(value : Translate?){ this._successfulTranslate.value = value }
+    private fun handleGetTranslate(value : List<TranslateItem>){ this._successfulTranslate.value = value }
 
     fun setLanguage(language:Int){ setLanguage(SetLanguage.Params(language)){ it.either(::handleFailure,::setLanguage) } }
 
@@ -101,7 +102,7 @@ class AuthViewModel
 
     fun getLanguage(){ getLanguage(UseCase.None()){ it.either(::handleFailure, ::handleGetLanguage)}}
 
-    private fun handleGetLanguage(value : Translate){ this._getLanguageSuccess.value = value}
+    private fun handleGetLanguage(value : List<TranslateItem>){ this._getLanguageSuccess.value = value}
 
     fun validateFields() { _enableButton.postValue(_username.value!!.isNotEmpty() && _password.value!!.isNotEmpty()) }
 
@@ -113,8 +114,6 @@ class AuthViewModel
         }
     }
     private fun handleSetSession(value:Boolean){ this._successSetSession.value = value }
-
-    fun changeStateGetLanguage(value: Translate){ this._getLanguageSuccess.value = value }
 
     fun changeStateStartLogin(){ this._startLogin.value = false }
     fun changeStateEndLogin(){ this._successEndLogin.value = false}

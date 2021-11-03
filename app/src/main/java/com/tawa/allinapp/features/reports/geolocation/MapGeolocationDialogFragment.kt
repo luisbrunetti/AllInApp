@@ -82,10 +82,10 @@ class InformRoutesMapDialogFragment
                         val taskFinished = v?.findViewById<TextView>(R.id.tvTasksFinishedAdapterPv)
                         tvSalesPoint?.text = "${it.pv} - ${it.codPv}"
                         tvDirPv?.text = it.dirPv
-                        val checkInToDo = it.total-it.checkInConcluidas
-                        val checkInFinished = it.checkInConcluidas
-                        val checkOutToDo = it.checkOutPendientes
-                        val checkOutFinished = it.total - it.checkOutPendientes
+                        val checkInToDo = it.checkInToDo
+                        val checkInFinished = it.checkInFinished
+                        val checkOutToDo = it.checkOutToDo
+                        val checkOutFinished = it.checkOutFinished
                         checkToDo?.text = "Check in pendientes/realizados : $checkInToDo/$checkInFinished"
                         checkFinished?.text = "Check out pendientes/realizados: $checkOutToDo/$checkOutFinished"
                         taskToDo?.text = "Tareas pendientes : ${it.tasksTodo}"
@@ -254,9 +254,11 @@ class InformRoutesMapDialogFragment
             markerId = marker.id,
             tracking.Pv, tracking.codPvCop,
             tracking.dirCorpPv, POINT_SALE,
-            tracking.checks.total,
-            tracking.checks.checksFinished,
-            tracking.checks.checkOutToDo,
+            1,
+            tracking.checks.checkIn.pendientes,
+            tracking.checks.checkIn.concluidas,
+            tracking.checks.checkOut.pendientes,
+            tracking.checks.checkOut.concluidas,
             tracking.reports.tareasPendientes,
             tracking.reports.tareasCompletadas)
     }
@@ -266,7 +268,12 @@ class InformRoutesMapDialogFragment
         for((key,value) in hmPvsInfoWindow){
             if(value.pv == tracking.Pv) {
                 value.taskFinished = value.taskFinished.plus(tracking.reports.tareasCompletadas)
-                value.tasksTodo = value.tasksTodo.plus(tracking.reports.tareasPendientes)!!
+                value.tasksTodo = value.tasksTodo.plus(tracking.reports.tareasPendientes)
+                value.checkInToDo = value.checkInToDo.plus(tracking.checks.checkIn.pendientes)
+                value.checkInFinished = value.checkInFinished.plus(tracking.checks.checkIn.concluidas)
+                value.checkOutToDo = value.checkOutToDo.plus(tracking.checks.checkOut.pendientes)
+                value.checkOutFinished = value.checkOutFinished.plus(tracking.checks.checkOut.concluidas)
+                value.total = value.total + 1
             }
         }
     }
@@ -354,9 +361,11 @@ data class InfoWindowPv(
     val codPv:String,
     val dirPv:String,
     val typePoint:String,
-    val total: Int,
-    val checkInConcluidas:Int,
-    val checkOutPendientes:Int,
+    var total: Int,
+    var checkInToDo: Int,
+    var checkInFinished:Int,
+    var checkOutToDo:Int,
+    var checkOutFinished:Int,
     var tasksTodo:Int,
     var taskFinished:Int
 )

@@ -212,40 +212,49 @@ abstract class BaseFragment : Fragment() {
         }
     }
 
-    internal fun hideProgressDialog() {
+    internal fun hideProgressDialog(){
         progressDialog?.dismiss()
     }
 
-    internal  fun getDayWeek()= when(current.day){
-        0 ->  "Domingo"
-        1 -> "Lunes"
-        2 -> "Martes"
-        3 -> "Miercoles"
-        4 ->  "Jueves"
-        5 ->  "Viernes"
-        6 -> "Sabado"
-        else -> ""
+    internal  fun getDayWeek() : String{
+        translateObject.apply{
+            return when(current.day){
+                0 ->  findTranslate("tvSunday") ?: "Domingo"
+                1 -> findTranslate("tvMonday") ?: "Lunes"
+                2 -> findTranslate("tvTuesday") ?: "Martes"
+                3 -> findTranslate("tvWednesday") ?:"Miercoles"
+                4 ->  findTranslate("tvThursday") ?: "Jueves"
+                5 ->  findTranslate("tvFriday") ?: "Viernes"
+                6 -> findTranslate("tvSaturday")?: "Sabado"
+                else -> ""
+            }
+        }
     }
 
     internal  fun getDayMonth() = current.date.toString()
 
     internal  fun getYear() = "${current.year + 1900}"
 
-    internal  fun getMonth() = when (current.month) {
-        0 -> "Enero"
-        1 -> "Febrero"
-        2 -> "Marzo"
-        3 -> "Abril"
-        4 -> "Mayo"
-        5 -> "Junio"
-        6 ->  "Julio"
-        7 ->  "Agosto"
-        8 ->  "Septiembre"
-        9 ->  "Octubre"
-        10 -> "Noviembre"
-        11 ->  "Diciembre"
-        else -> ""
+    internal fun getMonth() : String {
+        translateObject.apply {
+            return when (current.month) {
+                0 -> findTranslate("tvJanuary")?:"Enero"
+                1 -> findTranslate("tvFebrary")?:"Febrero"
+                2 -> findTranslate("tvMarch")?:"Marzo"
+                3 -> findTranslate("tvApril")?:"Abril"
+                4 -> findTranslate("tvMay") ?:"Mayo"
+                5 -> findTranslate("tvJune")?:"Junio"
+                6 -> findTranslate("tvJuly")?:"Julio"
+                7 -> findTranslate("tvAugust")?:"Agosto"
+                8 -> findTranslate("tvSeptember")?:"Septiembre"
+                9 -> findTranslate("tvOctober")?:"Octubre"
+                10 -> findTranslate("tvNovember")?:"Noviembre"
+                11 -> findTranslate("tvDecember")?:"Diciembre"
+                else -> ""
+            }
+        }
     }
+
 
     internal fun getMonthByNumber(monthYear: Int) = when(monthYear){
         0 -> "01"

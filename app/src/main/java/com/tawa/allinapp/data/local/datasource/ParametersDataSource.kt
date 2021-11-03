@@ -28,4 +28,7 @@ class ParametersDataSource @Inject constructor(private val parametersDao: Parame
     fun getTranslate(): List<TranslateModel>{
         return parametersDao.getTranslate()
     }
+    fun getCountTranslate() : Int{
+        return parametersDao.getCountTranslate()
+    }
 }

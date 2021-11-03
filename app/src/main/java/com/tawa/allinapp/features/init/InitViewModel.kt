@@ -238,8 +238,8 @@ class InitViewModel
     private val _setSession = MutableLiveData<Boolean>()
     val setSessionLiveData : LiveData<Boolean> get() = _setSession
 
-    private val _successfulTranslate = MutableLiveData<Translate>()
-    val successfulTranslate : LiveData<Translate> = _successfulTranslate
+    private val _successfulTranslate = MutableLiveData<List<TranslateItem>>()
+    val successfulTranslate : LiveData<List<TranslateItem>> = _successfulTranslate
 /*
     private val _getLanguageSuccess = MutableLiveData<List<Language>>()
     val getLanguageSuccess : LiveData<List<Language>> get() = _getLanguageSuccess
@@ -448,7 +448,7 @@ class InitViewModel
 */
     fun getTranslate() { getTranslate(UseCase.None()){ it.either(::handleFailure, ::handleGetTranslate) } }
 
-    private fun handleGetTranslate(value : Translate?){ this._successfulTranslate.value = value }
+    private fun handleGetTranslate(value : List<TranslateItem>){ this._successfulTranslate.value = value }
 
     fun changeCheckState(value:String){ this._successSendCheck.value = value }
 

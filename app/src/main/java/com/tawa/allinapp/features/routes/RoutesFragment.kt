@@ -105,6 +105,7 @@ class RoutesFragment : BaseFragment() {
 
         arguments?.getString("role").toString().also { role->
             routesViewModel.getListUser()
+            Log.d("role",role.toString())
             _role = role
             if(_role.toUpperCase()!="SUPERVISOR") binding.edUserRoutes.isEnabled = false
         }

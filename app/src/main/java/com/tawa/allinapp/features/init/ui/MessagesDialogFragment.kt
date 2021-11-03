@@ -73,22 +73,6 @@ class MessagesDialogFragment
                 notifyAdapterYesterday.setData(it.filter {date-> date.dateCreation?.substring(0,10)==compYesterday }.sortedByDescending { it.dateCreation })
                // notifyAdapterYesterday.setData(it)
             }})
-            /*observe(getLanguageSaved,{
-                it?.let {
-                    if(it != BaseFragment.SPANISH){
-                        BaseFragment.CURRENT_LANGUAGE = it
-                        initViewModel.getLanguageByXml("dialog_message.xml")
-                    }
-                }
-            })
-            observe(getLanguageSuccess,{
-                it?.let { list ->
-                    if(list.isNotEmpty()){
-                        baseFragment.listLanguage = it
-                        baseFragment.changeLanguage(binding.root)
-                    }
-                }
-            })*/
         }
         initViewModel.getNotify()
         notifyAdapter.clickListener = {
@@ -106,8 +90,16 @@ class MessagesDialogFragment
             binding.rvNotifyYesterday.isVisible = true
 
         }
-
+        changeViewsFragment()
         //initViewModel.getLanguage()
+    }
+
+    private fun changeViewsFragment(){
+        baseFragment.translateObject.apply {
+            binding.tvTabNotifyMessageFragment.text = findTranslate("tvTabNotifyMessageFragment")
+            binding.tvCurrentDateNotificationFragment.text = findTranslate("tvCurrentDateNotificationFragment")
+            binding.tvYesterdayMessageFragment.text = findTranslate("tvYesterdayMessageFragment")
+        }
     }
     private fun NotificationManager.sendNotification(messageBody: String, applicationContext: Context,channel:String) {
         val builder = NotificationCompat.Builder(

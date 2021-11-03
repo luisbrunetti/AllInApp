@@ -28,7 +28,6 @@ class ReportGeolocationFragment : BaseFragment(), RecyclerUser.onClickButton{
 
     private lateinit var binding: FragmentReportGeolocationBinding
     private lateinit var reportGeoViewModel: ReportGeolocationViewModel
-    private lateinit var initViewModel: InitViewModel
     private var recyclerAdapter : RecyclerUser? = null
     private var listRecycleView: ArrayList<RoutesUser>? = null
     private var backupRecycleView: ArrayList<RoutesUser> ? = ArrayList()
@@ -57,9 +56,8 @@ class ReportGeolocationFragment : BaseFragment(), RecyclerUser.onClickButton{
                     Log.d("tracking info", it.toString())
                     var fullEmpty = true
                     for(tracking in it){
-                        if(tracking.listTracking.isEmpty()){
-                            fullEmpty = true
-                        }else{
+                        if(tracking.listTracking.isEmpty())fullEmpty = true
+                        else{
                             fullEmpty = false
                             break
                         }
@@ -153,16 +151,6 @@ class ReportGeolocationFragment : BaseFragment(), RecyclerUser.onClickButton{
         )
         binding.rvUsersReportLocation.layoutManager = LinearLayoutManager(requireContext())
         binding.rvUsersReportLocation.adapter = recyclerAdapter
-    }
-
-    private fun filter(text: String){
-        val newList = ArrayList<RoutesUser>()
-        backupRecycleView?.let{  orgList ->
-            for(user in orgList){
-                if(user.name.toLowerCase(Locale.ROOT).contains(text.toLowerCase(Locale.ROOT))){ newList.add(user) }
-            }
-        }
-        recyclerAdapter?.filteredList(newList)
     }
 
     private fun openDatePicker(et:EditText){
