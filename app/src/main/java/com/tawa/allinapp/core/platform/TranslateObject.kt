@@ -1,6 +1,5 @@
 package com.tawa.allinapp.core.platform
 
-import com.tawa.allinapp.models.Translate
 import com.tawa.allinapp.models.TranslateItem
 import javax.inject.Inject
 import javax.inject.Singleton

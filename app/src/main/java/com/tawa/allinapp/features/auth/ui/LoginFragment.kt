@@ -117,15 +117,18 @@ class LoginFragment : BaseFragment() {
     }
 
      override fun changeViewsFragment() {
-        translateObject.apply {
-            binding.tvHellowLoginFragment.text = findTranslate("tvHellowLoginFragment")
-            binding.tvInfoLoginFragment.text = findTranslate("tvInfoLoginFragment")
-            binding.txtInputUserLoginFragment.hint = findTranslate("txtInputUserLoginFragment")
-            binding.txtInputPasswordLoginFragment.hint = findTranslate("txtInputPasswordLoginFragment")
-            binding.cbRememberLoginFragment.text = findTranslate("cbRememberLoginFragment")
-            binding.btnLoginFragment.text = findTranslate("btnLoginFragment")
-            binding.edForgotPassword.text = findTranslate("edForgotPassword")
-        }
+         Log.d("TRANS",translateObject.toString())
+         translateObject.let {
+             it.apply {
+                 binding.tvHellowLoginFragment.text = findTranslate("tvHellowLoginFragment")
+                 binding.tvInfoLoginFragment.text = findTranslate("tvInfoLoginFragment")
+                 binding.txtInputUserLoginFragment.hint = findTranslate("txtInputUserLoginFragment")
+                 binding.txtInputPasswordLoginFragment.hint = findTranslate("txtInputPasswordLoginFragment")
+                 binding.cbRememberLoginFragment.text = findTranslate("cbRememberLoginFragment")
+                 binding.btnLoginFragment.text = findTranslate("btnLoginFragment")
+                 binding.edForgotPassword.text = findTranslate("edForgotPassword")
+             }
+         }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

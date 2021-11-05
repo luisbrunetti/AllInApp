@@ -217,6 +217,7 @@ abstract class BaseFragment : Fragment() {
     }
 
     internal  fun getDayWeek() : String{
+
         translateObject.apply{
             return when(current.day){
                 0 ->  findTranslate("tvSunday") ?: "Domingo"

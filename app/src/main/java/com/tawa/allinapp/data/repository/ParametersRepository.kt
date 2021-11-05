@@ -143,30 +143,35 @@ interface ParametersRepository {
                                 return Either.Right(it.data)
                             }
                         }
-                        return Either.Right(emptyList())
+                        return Either.Right(getTranslateObjectSaved())
+
                     }
                     false -> {
-                        val dataSaved = parametersDataSource.getTranslate()
-                        val arrayTranslateItem : ArrayList<TranslateItem> = arrayListOf()
-                        for (element in dataSaved) {
-                            arrayTranslateItem.add(
-                                TranslateItem(
-                                    element.id,
-                                    Gson()
-                                        .fromJson(element.translate, Array<String>::class.java)
-                                        .toList()
-                                )
-                            )
-                        }
-                        translateObject.LANGUAGE = prefs.language!!.toInt()
-                        translateObject.setInstance(arrayTranslateItem)
-                        Log.d("translate", arrayTranslateItem.toString())
-                        return Either.Right(arrayTranslateItem)
+                        return Either.Right(getTranslateObjectSaved())
                     }
                 }
             } catch (e: Exception) {
                 return Either.Left(Failure.DefaultError(e.message!!))
             }
+        }
+
+        private fun getTranslateObjectSaved():List<TranslateItem>{
+            val dataSaved = parametersDataSource.getTranslate()
+            val arrayTranslateItem : ArrayList<TranslateItem> = arrayListOf()
+            for (element in dataSaved) {
+                arrayTranslateItem.add(
+                    TranslateItem(
+                        element.id,
+                        Gson()
+                            .fromJson(element.translate, Array<String>::class.java)
+                            .toList()
+                    )
+                )
+            }
+            translateObject.LANGUAGE = prefs.language!!.toInt()
+            translateObject.setInstance(arrayTranslateItem)
+            Log.d("translate", arrayTranslateItem.toString())
+            return arrayTranslateItem
         }
         override fun setLanguage(language: Int): Either<Failure, Boolean> {
             return try{
