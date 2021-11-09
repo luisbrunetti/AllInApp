@@ -68,8 +68,10 @@ class ReportsFragment : BaseFragment() {
     }
     override fun changeViewsFragment() {
         translateObject.apply {
-            binding.tvTitleReportFragment.text = findTranslate("tvTitleReportFragment")
-            binding.tvSelectReportFragment.text = findTranslate("tvSelectReportFragment")
+            if(getInstance().isNotEmpty()) {
+                binding.tvTitleReportFragment.text = findTranslate("tvTitleReportFragment")
+                binding.tvSelectReportFragment.text = findTranslate("tvSelectReportFragment")
+            }else authViewModel.getTranslate()
         }
     }
 
@@ -132,25 +134,6 @@ class ReportsFragment : BaseFragment() {
                     else                            -> MessageDialogFragment.newInstance(this@ReportsFragment,getString(R.string.error_unknown)).show(childFragmentManager, "dialog")
                 }
             }})
-        }
-
-        initViewModel = viewModel(viewModelFactory){
-            /*observe(getLanguageSaved,{
-                it?.let {
-                    if(it != BaseFragment.SPANISH){
-                        BaseFragment.CURRENT_LANGUAGE = it
-                        initViewModel.getLanguageByXml("fragment_reports.xml")
-                    }
-                }
-            })
-            observe(getLanguageSuccess,{
-                it?.let { list ->
-                    if(list.isNotEmpty()){
-                        listLanguage = it
-                        changeLanguage(binding.root)
-                    }
-                }
-            })*/
         }
         reportsViewModel.getPVName()
 

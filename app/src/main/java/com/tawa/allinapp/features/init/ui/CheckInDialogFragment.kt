@@ -91,8 +91,8 @@ class CheckInDialogFragment
 
     private fun changeViewsFragment() {
         baseFragment.translateObject.apply {
-            binding.tvLabelSelectPdvCheckIn.text = findTranslate("tvTtitleSelectComp")
-            //binding.tvTitleSelectCompany.text = findTranslate("selectPdvSpinner")
+            binding.tvLabelSelectPdvCheckIn.text = findTranslate("tvTtitleSelectPdv")
+            binding.btnDoCheckin.text = findTranslate("btnSelectPdv")
         }
     }
 

@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".features.reports.geolocation.InformRoutesMapDialogFragment">
+    tools:context=".features.reports.geolocation.ui.InformRoutesMapDialogFragment">
 
 
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -48,7 +48,7 @@
                     android:name="com.google.android.gms.maps.SupportMapFragment"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    tools:context=".features.reports.geolocation.InformRoutesMapDialogFragment" />
+                    tools:context=".features.reports.geolocation.ui.InformRoutesMapDialogFragment" />
             </androidx.cardview.widget.CardView>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

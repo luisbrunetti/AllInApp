@@ -89,7 +89,7 @@ class SelectorDialogFragment
                 if (it)
                     initViewModel.getReportsRemote(selectedCompany)
             }})
-            /*observe(getLanguageSuccess, {
+            /*observe(getTranslateSaved, {
                 it?.let {
                     if (baseFragment.translateObject.getInstance().arrayTranslate.isNotEmpty()) {
                         //Log.d("logintest", translateObject.getInstance().arrayTranslate.toString())

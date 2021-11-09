@@ -484,7 +484,7 @@ class SkuFragment : BaseFragment() {
         val dialog = ConfirmDialogFragment()
         dialog.show(childFragmentManager, "dialog")
         dialog.listener = object  : ConfirmDialogFragment.Callback{
-            override fun onClick() {
+            override fun onClickConfirm() {
                 for (data in mapCheckStock)
                 {
                     val stock =data.value
@@ -493,14 +493,17 @@ class SkuFragment : BaseFragment() {
                     if(price==null)
                         price=0.0f
                     if (exhibition != null) {
-                            if (stock != null) {
-                                skuViewModel.updateSkuDetail(data.key,stock,exhibition,price)
-                            }
+                        if (stock != null) {
+                            skuViewModel.updateSkuDetail(data.key,stock,exhibition,price)
+                        }
                     }
                 }
-
                 skuViewModel.updateStateSku(idSkuUpdate,"En proceso",type,latitude,longitude)
+                activity?.onBackPressed()
+            }
 
+            override fun onClickOnBack() {
+                activity?.onBackPressed()
             }
         }
 

@@ -84,8 +84,10 @@ class TakePhotoDialogFragment
 
     private fun changeViewsFragment() {
         baseFragment.translateObject.apply {
-            binding.btnSavePdv.text = findTranslate("btnSavePdv")
-            binding.btnTakePhotoPdv.text = findTranslate("btnTakePhotoPdv")
+            if(getInstance().isNotEmpty()) {
+                binding.btnSavePdv.text = findTranslate("btnSavePdv")
+                binding.btnTakePhotoPdv.text = findTranslate("btnTakePhotoPdv")
+            }else baseFragment.authViewModel.getTranslate()
         }
     }
 

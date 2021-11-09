@@ -236,7 +236,7 @@
 
     <fragment
         android:id="@+id/reportGeolocationFragment"
-        android:name="com.tawa.allinapp.features.reports.geolocation.ReportGeolocationFragment"
+        android:name="com.tawa.allinapp.features.reports.geolocation.ui.ReportGeolocationFragment"
         android:label="fragment_report_geolocation"
         tools:layout="@layout/fragment_report_geolocation">
 

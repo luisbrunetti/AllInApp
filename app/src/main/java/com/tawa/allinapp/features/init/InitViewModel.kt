@@ -1,5 +1,6 @@
 package com.tawa.allinapp.features.init
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.tawa.allinapp.core.interactor.UseCase
@@ -14,7 +15,6 @@ import java.text.SimpleDateFormat
 import java.time.ZoneId
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
-import java.util.*
 import javax.inject.Inject
 
 class InitViewModel
@@ -201,10 +201,6 @@ class InitViewModel
     val successSyncAudio : LiveData<Boolean>
         get() = _successSyncAudio
 
-    private val _successGetAudioRemote = MutableLiveData(false)
-    val successGetAudioRemote: LiveData<Boolean>
-        get() = _successGetAudioRemote
-
     private val _successGetRole = MutableLiveData("")
     val successGetRole: LiveData<String>
         get() = _successGetRole
@@ -240,12 +236,9 @@ class InitViewModel
 
     private val _successfulTranslate = MutableLiveData<List<TranslateItem>>()
     val successfulTranslate : LiveData<List<TranslateItem>> = _successfulTranslate
-/*
-    private val _getLanguageSuccess = MutableLiveData<List<Language>>()
-    val getLanguageSuccess : LiveData<List<Language>> get() = _getLanguageSuccess
 
-    private var _getLanguageSaved = MutableLiveData<String>()
-    var getLanguageSaved : LiveData<String> = _getLanguageSaved*/
+    private val _getTranslateSaved = MutableLiveData<List<TranslateItem>>()
+    val getTranslateSaved : LiveData<List<TranslateItem>> get() = _getTranslateSaved
 
     init {
         startHome()
@@ -378,10 +371,6 @@ class InitViewModel
 
     private fun handleSyncSku(success:Boolean) { this._successSyncSku.value = success }
 
-    private fun handleGetAudioRemote(success:Boolean) { this._successGetAudioRemote.value = success }
-
-    fun syncAudio() = syncAudio(UseCase.None()) { it.either(::handleFailure, ::handleSyncAudio) }
-
     private fun handleSyncAudio(success:Boolean) { this._successSyncAudio.value = success }
 
     fun getRoleUser() = getRoleUser(UseCase.None()) { it.either(::handleFailure, ::handleGetRole) }
@@ -436,16 +425,13 @@ class InitViewModel
 
     private fun getPvId(value : String){ _getPvIdf.value = value }
 
-    /*fun getLanguageByXml(xmlName:String){ getLanguageByXml(GetLanguageByXml.Params(xmlName)){ it.either(::handleFailure,::handleGetLanguage)}}
-
-    private fun handleGetLanguage(list : List<Language>){ this._getLanguageSuccess.value = list }
-
-    fun getLanguage()= getLanguage(UseCase.None()){ it.either(::handleFailure, ::handleSuccessGetLanguage)}
-
-    fun handleSuccessGetLanguage(value: String){
-        this._getLanguageSaved.value = value
+    fun getTranslateSaved(){
+        getTranslate(UseCase.None()){
+            it.either(::handleFailure,::handleGetTranslateSaved)}
     }
-*/
+
+    private fun handleGetTranslateSaved(list : List<TranslateItem>){ this._getTranslateSaved.value = list }
+
     fun getTranslate() { getTranslate(UseCase.None()){ it.either(::handleFailure, ::handleGetTranslate) } }
 
     private fun handleGetTranslate(value : List<TranslateItem>){ this._successfulTranslate.value = value }
@@ -471,4 +457,9 @@ class InitViewModel
     fun changeStateSuccesSyncReportStandard(value : Boolean) { this._successSyncReportStandard.value = value}
 
     fun changeStateSyncChecks(value:Boolean){this._successSyncChecks.value = value}
+
+    fun checkpref(){
+        Log.d("pref",pref.language.toString())
+    }
+
 }

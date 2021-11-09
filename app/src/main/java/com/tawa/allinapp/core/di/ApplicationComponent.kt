@@ -21,7 +21,7 @@ import com.tawa.allinapp.features.pdv.TakePhotoDialogFragment
 import com.tawa.allinapp.features.reports.picture.PictureFragment
 import com.tawa.allinapp.features.reports.standard.CheckListFragment
 import com.tawa.allinapp.features.reports.ReportsFragment
-import com.tawa.allinapp.features.reports.geolocation.ReportGeolocationFragment
+import com.tawa.allinapp.features.reports.geolocation.ui.ReportGeolocationFragment
 import com.tawa.allinapp.features.reports.sku.SkuFragment
 import com.tawa.allinapp.features.reports.userstatus.LastLocationFragment
 import com.tawa.allinapp.features.reports.userstatus.UserStatusFragment

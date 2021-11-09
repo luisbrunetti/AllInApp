@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.compose.ui.text.toUpperCase
 import androidx.core.view.isVisible
 import com.tawa.allinapp.R
+import com.tawa.allinapp.core.extensions.invisible
 import com.tawa.allinapp.core.extensions.observe
 import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.platform.BaseFragment
@@ -49,13 +50,16 @@ class RoutesFragment : BaseFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentRoutesBinding.inflate(inflater)
-
         routesViewModel = viewModel(viewModelFactory) {
             observe(successGetRole,{it?.let {
                 if(it.isNotEmpty()){
-                    routesViewModel.getListUser()
                     _role = it
-                    if(_role.toUpperCase()!="SUPERVISOR") binding.edUserRoutes.isEnabled = false
+                    routesViewModel.getListUser()
+                    if(_role.toUpperCase()!="SUPERVISOR"){
+                        binding.tvLabelUserRoute.invisible()
+                        binding.edUserRoutes.invisible()
+                        binding.edUserRoutes.isEnabled = false
+                    }
                 }
             }})
             observe(listUser, {
@@ -69,7 +73,7 @@ class RoutesFragment : BaseFragment() {
                     listRoutesUser = it
                     binding.contRoutes.isVisible = true
                     //binding.tvTypeRoute.text= "Rutas"
-                    binding.tvTypeRoute.text = translateObject.findTranslate("tvTypeRoute")
+                    binding.tvTypeRoute.text = translateObject.findTranslate("tvTypeRoute") ?: "Rutas"
                     //binding.tvTypeRoute.text = getTypeOfLanguageById("tvTypeRoute")
                     createListRoutes(binding.listRoutes,it)
                 }
@@ -83,7 +87,7 @@ class RoutesFragment : BaseFragment() {
                     binding.contRoutes.isVisible = true
                     //binding.tvTypeRoute.text = getTypeOfLanguageById("tvTypeTracking")
                     //binding.tvTypeRoute.text= "Seguimiento"
-                    binding.tvTypeRoute.text = translateObject.findTranslate("tvTypeTracking")
+                    binding.tvTypeRoute.text = translateObject.findTranslate("tvTypeTracking") ?: "Seguimiento"
                     createListTracking(binding.listRoutes,it)
                 }
                 else {
@@ -175,15 +179,17 @@ class RoutesFragment : BaseFragment() {
 
     override fun changeViewsFragment() {
         translateObject.apply{
-            binding.textView31.text = findTranslate("tvTypeRoute")
-            binding.tvLabelUserRoute.text = findTranslate("tvLabelUserRoute")
-            binding.edUserRoutes.hint = findTranslate("edUserRoutes")
-            binding.tvLabelSelectDateRoute.text = findTranslate("tvLabelSelectDateRoute")
-            binding.edDateRoute.hint = findTranslate("edDateRoute")
-            binding.btnRoutes.text = findTranslate("btnRoutes")
-            binding.btnTracking.text = findTranslate("btnTracking")
-            binding.btnShowMapRoutes.text = findTranslate("btnShowMapRoutes")
-            binding.tvPdvRoute.text = findTranslate("tvPdvRoute")
+            if(getInstance().isNotEmpty()) {
+                binding.textView31.text = findTranslate("tvTypeRoute")
+                binding.tvLabelUserRoute.text = findTranslate("tvLabelUserRoute")
+                binding.edUserRoutes.hint = findTranslate("edUserRoutes")
+                binding.tvLabelSelectDateRoute.text = findTranslate("tvLabelSelectDateRoute")
+                binding.edDateRoute.hint = findTranslate("edDateRoute")
+                binding.btnRoutes.text = findTranslate("btnRoutes")
+                binding.btnTracking.text = findTranslate("btnTracking")
+                binding.btnShowMapRoutes.text = findTranslate("btnShowMapRoutes")
+                binding.tvPdvRoute.text = findTranslate("tvPdvRoute")
+            }else authViewModel.getTranslate()
         }
     }
     private fun showUser(list:List<RoutesUser>){

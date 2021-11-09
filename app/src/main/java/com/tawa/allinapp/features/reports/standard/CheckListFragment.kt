@@ -177,10 +177,11 @@ class CheckListFragment: BaseFragment() {
     }
     override fun changeViewsFragment() {
         translateObject.apply {
-            binding.btnBr.text = findTranslate("btnBrCheckFragment")
-            binding.btnSaveReport.text = findTranslate("btnSaveCheckReport")
+            if(getInstance().isNotEmpty()) {
+                binding.btnBr.text = findTranslate("btnBrCheckFragment")
+                binding.btnSaveReport.text = findTranslate("btnSaveCheckReport")
+            }else authViewModel.getTranslate()
         }
-
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {

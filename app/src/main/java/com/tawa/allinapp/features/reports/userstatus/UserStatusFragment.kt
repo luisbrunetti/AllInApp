@@ -121,20 +121,23 @@ class UserStatusFragment : BaseFragment() {
 
     override fun changeViewsFragment() {
         translateObject.apply {
-            binding.tvTitleStatusFragment.text = findTranslate("tvTitleStatusFragment")
-            binding.tvUserStatus.text = findTranslate("tvUserStatus")
-            binding.tvSelectDateStatusFragment.text = findTranslate("tvSelectDateStatusFragment")
-            binding.etDateUserStatus.hint  = findTranslate("etDateUserStatus")
-            binding.tvReporterStatusFragment.text = findTranslate("tvReporterStatusFragment")
-            binding.edReporter.hint = findTranslate("edReporterStatusFragment")
-            binding.btnFilter.text = findTranslate("btnFilter")
-            binding.tvTableUser.text = findTranslate("tvTableUserStatusFrag")
-            binding.tvBattery.text = findTranslate("tvBatteryStatusFrag")
-            binding.tvState.text = findTranslate("tvStateStatusFrag")
-            binding.tvStateGps.text = findTranslate("tvBatteryStatusFrag")
-            binding.tvLast.text = findTranslate("tvLastStatusFrag")
-            binding.tvLastUbication.text = findTranslate("tvLastUbication")
-            binding.btnFilter.text = findTranslate("btnFilterStatusFrag")
+            if(getInstance().isNotEmpty()) {
+                binding.tvTitleStatusFragment.text = findTranslate("tvTitleStatusFragment")
+                binding.tvUserStatus.text = findTranslate("tvUserStatus")
+                binding.tvSelectDateStatusFragment.text =
+                    findTranslate("tvSelectDateStatusFragment")
+                binding.etDateUserStatus.hint = findTranslate("etDateUserStatus")
+                binding.tvReporterStatusFragment.text = findTranslate("tvReporterStatusFragment")
+                binding.edReporter.hint = findTranslate("edReporterStatusFragment")
+                binding.btnFilter.text = findTranslate("btnFilter")
+                binding.tvTableUser.text = findTranslate("tvTableUserStatusFrag")
+                binding.tvBattery.text = findTranslate("tvBatteryStatusFrag")
+                binding.tvState.text = findTranslate("tvStateStatusFrag")
+                binding.tvStateGps.text = findTranslate("tvBatteryStatusFrag")
+                binding.tvLast.text = findTranslate("tvLastStatusFrag")
+                binding.tvLastUbication.text = findTranslate("tvLastUbication")
+                binding.btnFilter.text = findTranslate("btnFilterStatusFrag")
+            }else authViewModel.getTranslate()
         }
     }
     private  fun dateFilter(date:String){
@@ -328,13 +331,13 @@ class UserStatusFragment : BaseFragment() {
             numPages.add(list.size%5)
         }
         binding.tvPager.text = "${pageNum*5+1} "
-        binding.tvPager2.text = " - ${pageNum*5+numPages[pageNum]} de ${list.size} entradas"
+        binding.tvPager2.text = " - ${pageNum*5+numPages[pageNum]} de ${list.size} ${translateObject.findTranslate("labelInputStatusFragment")}"
         binding.btnPrevPage.setOnClickListener{
             if(pageNum>0)
             {
                 pageNum--
                 binding.tvPager.text = "${pageNum*5+1} "
-                binding.tvPager2.text = " - ${pageNum*5+numPages[pageNum]} de ${list.size} entradas"
+                binding.tvPager2.text = " - ${pageNum*5+numPages[pageNum]} de ${list.size} ${translateObject.findTranslate("labelInputStatusFragment")}"
                 limitedTable(tl1,tl2,pageNum)
             }
         }
@@ -343,7 +346,7 @@ class UserStatusFragment : BaseFragment() {
             {
                 pageNum++
                 binding.tvPager.text = "${pageNum*5+1} "
-                binding.tvPager2.text = " - ${pageNum*5+numPages[pageNum]} de ${list.size} entradas"
+                binding.tvPager2.text = " - ${pageNum*5+numPages[pageNum]} de ${list.size} ${translateObject.findTranslate("labelInputStatusFragment")}"
                 limitedTable(tl1,tl2,pageNum)
             }
         }

@@ -8,7 +8,7 @@
         android:id="@+id/clReportGeolocation"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".features.reports.geolocation.ReportGeolocationFragment">
+        tools:context=".features.reports.geolocation.ui.ReportGeolocationFragment">
         <include
             android:id="@+id/iHeader"
             layout="@layout/header_report" />

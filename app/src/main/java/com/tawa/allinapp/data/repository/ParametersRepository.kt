@@ -137,9 +137,9 @@ interface ParametersRepository {
                                     )
                                     parametersDataSource.insertTranslateItem(element.toModel(json))
                                 }
-                                Log.d("posijtion", prefs.language.toString())
                                 translateObject.setInstance(it.data)
                                 translateObject.LANGUAGE = prefs.language!!.toInt()
+                                Log.d("prefs",prefs.language!!.toInt().toString())
                                 return Either.Right(it.data)
                             }
                         }
@@ -175,6 +175,7 @@ interface ParametersRepository {
         }
         override fun setLanguage(language: Int): Either<Failure, Boolean> {
             return try{
+                translateObject.LANGUAGE = language
                 prefs.language = language
                 Either.Right(true)
             }catch (e : Exception){
@@ -191,6 +192,7 @@ interface ParametersRepository {
                     val arrayParsed = Gson().fromJson(element.translate,Array<String>::class.java)
                     arrayTranslateItem.add(TranslateItem(element.id,arrayParsed.toList()))
                 }
+                translateObject.LANGUAGE = prefs.language!!.toInt()
                 return Either.Right(arrayTranslateItem)
             }catch (e : Exception){
                 return Either.Left(Failure.DefaultError(e.message!!))

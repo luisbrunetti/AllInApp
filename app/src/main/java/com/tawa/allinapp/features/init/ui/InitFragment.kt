@@ -15,6 +15,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.ui.text.toUpperCase
 import androidx.core.app.ActivityCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
@@ -40,7 +41,6 @@ import java.io.ByteArrayOutputStream
 class InitFragment : BaseFragment() {
 
     private lateinit var initViewModel: InitViewModel
-    private lateinit var authViewModel: AuthViewModel
     private lateinit var binding: FragmentInitBinding
     private lateinit var locationManager:LocationManager
     private var checkOutDialog: CheckOutDialogFragment? = null
@@ -52,9 +52,7 @@ class InitFragment : BaseFragment() {
     private var _pv: String = ""
     private lateinit var _lat: String
     private lateinit var _long: String
-    private var title  = "Check In"
     private var companySelected = false
-    companion object val TAG = "Init_Fragment"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,7 +70,9 @@ class InitFragment : BaseFragment() {
                 binding.currentDay.text  = currentDay
             }}})
             observe(checkInMode, { it?.let {
+                Log.d("checkMode",it.toString())
                 checkIn = it
+//                changeStateStartCheckIn(it)
                 setCheckModeBtn(it)
                 //if(!checkIn) binding.tvCheckIn.text = _pv
                 hideProgressDialog()
@@ -256,38 +256,18 @@ class InitFragment : BaseFragment() {
                     binding.vNotifyCount.isVisible = false
                 }
             }})
-            observe(successfulTranslate,{
-                it?.let{
-                    translateObject.setInstance(it)
-                }
-            })
             failure(failure, ::handleFailure)
         }
-
-        authViewModel = viewModel(viewModelFactory){
-            observe(getLanguageSuccess, {
-                it?.let {
-                    if (translateObject.getInstance().isNotEmpty()) {
-                        //Log.d("logintest", translateObject.getInstance().arrayTranslate.toString())
-                        changeViewsFragment()
-                    }
-                }
-            })
-        }
+        authViewModel = viewModel(viewModelFactory){}
 
         //Seleccionando empresa
-        authViewModel.getLanguage()
         initViewModel.getPVDesc()
         initViewModel.getLogoCompany()
         initViewModel.getIdUser()
         initViewModel.getUserName()
         initViewModel.getCheckMode()
         initViewModel.getPvIdFirstTime()
-        //initViewModel.getIdCompany()
-        //Log.d("object", translateObject.LANGUAGE.toString())
-        initViewModel.getIdCompanyPreferences().let {
-            if(it.isEmpty()) { showSelector() }
-        }
+        initViewModel.getIdCompanyPreferences().let { if(it.isEmpty()) { showSelector() } }
 
         binding.btCheckIn.setOnClickListener{
             if(isLocationEnabled()){
@@ -330,16 +310,14 @@ class InitFragment : BaseFragment() {
             }
            // initViewModel.syncStandardReportsMassive("12","10")
         }
-        binding.viewBtnRoutes.setOnClickListener {
-            findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationRoutes(role))
-        }
+        binding.viewBtnRoutes.setOnClickListener { findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationRoutes(role)) }
+
         binding.viewBtnPV.setOnClickListener {
             showSelectPdvDialog()
             //findNavController().navigate(InitFragmentDirections.actionNavigationInitToPdvFragment())
         }
-        binding.viewBtnCalendar.setOnClickListener {
-            findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationCalendar())
-        }
+        binding.viewBtnCalendar.setOnClickListener { findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationCalendar()) }
+
         binding.viewBtnReports.setOnClickListener {
             //initViewModel.getPVId()
             //findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationReports())
@@ -351,19 +329,14 @@ class InitFragment : BaseFragment() {
                 translateObject.findTranslate("tvErrorDoCheckInMessageFrag")
                     ?: "Debes seleccionar o hacer chekIn en un punto de venta").show(childFragmentManager, "errorDialog")
         }
-        binding.viewBtnInforms.setOnClickListener{
-            findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationInforms())
-        }
-        binding.viewBtnMessages.setOnClickListener {
-            findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationMessages())
-        }
-        binding.viewBtnTasks.setOnClickListener {
-            findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationTasks())
-        }
 
+        binding.viewBtnInforms.setOnClickListener{ findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationInforms()) }
+        binding.viewBtnMessages.setOnClickListener { findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationMessages()) }
+        binding.viewBtnTasks.setOnClickListener { findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationTasks()) }
 
         initNotify()
         initViewModel.getCountNotify()
+        changeViewsFragment()
         return binding.root
     }
 
@@ -381,11 +354,8 @@ class InitFragment : BaseFragment() {
         value.let { enable ->
             binding.btCheckIn.apply{
                 background =
-                    if (enable) {
-                        ResourcesCompat.getDrawable(resources, R.drawable.bg_button_check_in, null)
-                    } else{
-                        ResourcesCompat.getDrawable(resources, R.drawable.bg_button_check_out, null)
-                    }
+                    if(enable) ResourcesCompat.getDrawable(resources, R.drawable.bg_button_check_in, null)
+                    else ResourcesCompat.getDrawable(resources, R.drawable.bg_button_check_out, null)
                 text =
                     if (enable) translateObject.findTranslate("btCheckInInitFragment")
                     else translateObject.findTranslate("btCheckOutInitFragment")
@@ -473,6 +443,11 @@ class InitFragment : BaseFragment() {
         dialog.show(childFragmentManager, "dialog")
     }
 
+    override fun onStart() {
+        super.onStart()
+        //
+    }
+
     private fun setLogoCompany(image:String){
         binding.imageView16.isVisible = true
         binding.imageView16.setImageBitmap(decodeBase64(image))
@@ -548,32 +523,38 @@ class InitFragment : BaseFragment() {
     override fun changeViewsFragment() {
         val navView = activity?.findViewById<BottomNavigationView>(R.id.nav_view)
         translateObject.apply {
-            binding.tvWelcomeInitFragment.text = findTranslate("tvWelcomeInitFragment")
-            binding.tvPvInitFragment.text = findTranslate("tvPvInitFragment")
-            binding.tvReportInitFragment.text = findTranslate("tvReportInitFragment")
-            binding.tvMessageInitFragment.text = findTranslate("tvMessageInitFragment")
-            binding.tvInformsInitFragment.text = findTranslate("tvInformsInitFragment")
-            binding.tvSyncInitFragment.text = findTranslate("tvSyncInitFragment")
-            binding.tvDocumentsInitFragment.text = findTranslate("tvDocumentsInitFragment")
-            binding.tvRoutesInitFragment.text = findTranslate("tvRoutesInitFragment")
-            binding.tvCalendarInitFragment.text = findTranslate("tvCalendarInitFragment")
-            binding.tvTaskInitFragment.text = findTranslate("tvTaskInitFragment")
+            if(getInstance().isNotEmpty()){
+                initViewModel.checkpref()
+                Log.d("vistas",findTranslate("tvWelcomeInitFragment").toString())
+                binding.tvWelcomeInitFragment.text = findTranslate("tvWelcomeInitFragment")
+                binding.tvPvInitFragment.text = findTranslate("tvPvInitFragment")
+                binding.tvReportInitFragment.text = findTranslate("tvReportInitFragment")
+                binding.tvMessageInitFragment.text = findTranslate("tvMessageInitFragment")
+                binding.tvInformsInitFragment.text = findTranslate("tvInformsInitFragment")
+                binding.tvSyncInitFragment.text = findTranslate("tvSyncInitFragment")
+                binding.tvDocumentsInitFragment.text = findTranslate("tvDocumentsInitFragment")
+                binding.tvRoutesInitFragment.text = findTranslate("tvRoutesInitFragment")
+                binding.tvCalendarInitFragment.text = findTranslate("tvCalendarInitFragment")
+                binding.tvTaskInitFragment.text = findTranslate("tvTaskInitFragment")
+                Log.d("navigationInforms",findTranslate("navigation_informs").toString())
+                navView?.menu?.findItem(R.id.navigation_informs)?.title =findTranslate("navigation_informs") ?: "Informes"
+                navView?.menu?.findItem(R.id.navigation_routes)?.title = findTranslate("navigation_routes") ?: "Rutas"
+                navView?.menu?.findItem(R.id.navigation_reports)?.title = findTranslate("navigation_reports") ?: "Reportes"
+                navView?.menu?.findItem(R.id.navigation_pdv)?.title = findTranslate("navigation_pdv") ?: "Pdv"
+                navView?.menu?.findItem(R.id.navigation_init)?.title = findTranslate("navigation_init") ?: "Inicio"
 
-            navView?.menu?.findItem(R.id.navigation_informs)?.title = translateObject.findTranslate("navigation_informs") ?: "Informes"
-            navView?.menu?.findItem(R.id.navigation_routes)?.title = translateObject.findTranslate("navigation_routes") ?: "Rutas"
-            navView?.menu?.findItem(R.id.navigation_reports)?.title = translateObject.findTranslate("navigation_reports") ?: "Reportes"
-            navView?.menu?.findItem(R.id.navigation_pdv)?.title = translateObject.findTranslate("navigation_pdv") ?: "Pdv"
-            navView?.menu?.findItem(R.id.navigation_init)?.title = translateObject.findTranslate("navigation_init") ?: "Inicio"
+                setCheckModeBtn(checkIn)
+            }else authViewModel.getTranslate()
         }
 
     }
 
-    private fun setUpBinding() {
-        binding.viewModel = initViewModel
-        binding.lifecycleOwner = this
-        binding.executePendingBindings()
+        private fun setUpBinding() {
+            binding.viewModel = initViewModel
+            binding.lifecycleOwner = this
+            binding.executePendingBindings()
+        }
     }
-}
 
 
 

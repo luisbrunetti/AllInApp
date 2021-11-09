@@ -21,7 +21,7 @@ import java.io.IOException
 
 class LoginFragment : BaseFragment() {
 
-    private lateinit var authViewModel: AuthViewModel
+    //private lateinit var authViewModel: AuthViewModel
     private lateinit var binding:FragmentLoginBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,9 +61,6 @@ class LoginFragment : BaseFragment() {
             observe(getLanguageSuccess, {
                 it?.let {
                     if (translateObject.getInstance().isNotEmpty()) {
-                        //Log.d("logintest", translateObject.getInstance().arrayTranslate.toString())
-                        //translateObject.setInstance(it)
-                        //translate = it.arrayTranslate
                         if(translateObject.LANGUAGE==0){
                             binding.swLoginFragment.text = "Español"
                             binding.swLoginFragment.isChecked = false
@@ -103,12 +100,10 @@ class LoginFragment : BaseFragment() {
 
         binding.swLoginFragment.setOnCheckedChangeListener { compoundButton, b ->
             if (b) {
-                translateObject.LANGUAGE = 1
                 //val listType = object : TypeToken<List<TranslateItem>>() {}.type
                 //translate = Gson().fromJson(getJsonDataFromAsset(requireContext(),"mapText.json"),listType)
                 authViewModel.setLanguage(1)
             }else{
-                translateObject.LANGUAGE = 0
                 authViewModel.setLanguage(0)
             }
         }
@@ -117,9 +112,8 @@ class LoginFragment : BaseFragment() {
     }
 
      override fun changeViewsFragment() {
-         Log.d("TRANS",translateObject.toString())
-         translateObject.let {
-             it.apply {
+         translateObject.apply {
+             if(getInstance().isNotEmpty()){
                  binding.tvHellowLoginFragment.text = findTranslate("tvHellowLoginFragment")
                  binding.tvInfoLoginFragment.text = findTranslate("tvInfoLoginFragment")
                  binding.txtInputUserLoginFragment.hint = findTranslate("txtInputUserLoginFragment")
@@ -127,7 +121,7 @@ class LoginFragment : BaseFragment() {
                  binding.cbRememberLoginFragment.text = findTranslate("cbRememberLoginFragment")
                  binding.btnLoginFragment.text = findTranslate("btnLoginFragment")
                  binding.edForgotPassword.text = findTranslate("edForgotPassword")
-             }
+             }else authViewModel.getTranslate()
          }
     }
 

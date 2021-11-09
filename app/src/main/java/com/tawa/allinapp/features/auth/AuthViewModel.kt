@@ -5,10 +5,12 @@ import androidx.lifecycle.MutableLiveData
 import com.tawa.allinapp.core.interactor.UseCase
 import com.tawa.allinapp.core.platform.BaseViewModel
 import com.tawa.allinapp.data.local.Prefs
-import com.tawa.allinapp.features.auth.usecase.*
+import com.tawa.allinapp.features.auth.usecase.DoLogin
+import com.tawa.allinapp.features.auth.usecase.GetCompaniesRemote
+import com.tawa.allinapp.features.auth.usecase.GetTranslate
+import com.tawa.allinapp.features.auth.usecase.SetLanguage
 import com.tawa.allinapp.features.init.usecase.GetLanguage
 import com.tawa.allinapp.features.init.usecase.SetSession
-import com.tawa.allinapp.models.Translate
 import com.tawa.allinapp.models.TranslateItem
 import javax.inject.Inject
 

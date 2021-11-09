@@ -82,12 +82,15 @@ class InformsFragment : BaseFragment() {
         return binding.root
     }
     override fun changeViewsFragment() {
-        translateObject.apply{
-            binding.tvTitleInformsFragment.text = findTranslate("tvTitleInformsFragment")
-            binding.tvSelectTypeInform.text = findTranslate("tvSelectTypeInform")
-            binding.tvStatusUserInformFragment.text = findTranslate("tvStatusUserInformFragment")
-            binding.tvDashBoardInformFragment.text = findTranslate("tvDashBoardInformFragment")
-            binding.tvReportGeolocation.text = findTranslate("tvGeolocationInformFragment")
+        translateObject.apply {
+            if (getInstance().isNotEmpty()) {
+                binding.tvTitleInformsFragment.text = findTranslate("tvTitleInformsFragment")
+                binding.tvSelectTypeInform.text = findTranslate("tvSelectTypeInform")
+                binding.tvStatusUserInformFragment.text =
+                    findTranslate("tvStatusUserInformFragment")
+                binding.tvDashBoardInformFragment.text = findTranslate("tvDashBoardInformFragment")
+                binding.tvReportGeolocation.text = findTranslate("tvGeolocationInformFragment")
+            }else authViewModel.getTranslate()
         }
     }
 

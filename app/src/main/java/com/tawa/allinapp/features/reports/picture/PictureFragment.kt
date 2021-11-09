@@ -248,17 +248,19 @@ class PictureFragment : BaseFragment() {
 
     override fun changeViewsFragment() {
         translateObject.apply {
-            binding.tvPVPicture.text = findTranslate("tvPVPicture")
-            binding.btnPhotoBeforePicture.text = findTranslate("btnPhotoBeforePicture")
-            binding.btnPhotoAfterPicture.text = findTranslate("btnPhotoAfterPicture")
-            binding.tvTtitleComments.text = findTranslate("tvTtitleComments")
-            binding.contentLayout.hint = findTranslate("tvComments")
-            binding.btnSavePictures.text = findTranslate("btnSavePictures")
-            binding.btnSendPictures.text = findTranslate("btnSendPictures")
-            binding.iHeader.title = findTranslate("tvTitlePictureFragment")
-            binding.iHeader.sub = findTranslate("tvSubPictureFragment")
-
-
+            if(getInstance().isNotEmpty()){
+                binding.tvPVPicture.text = findTranslate("tvPVPicture")
+                binding.btnPhotoBeforePicture.text = findTranslate("btnPhotoBeforePicture")
+                binding.btnPhotoAfterPicture.text = findTranslate("btnPhotoAfterPicture")
+                binding.tvTtitleComments.text = findTranslate("tvTtitleComments")
+                binding.contentLayout.hint = findTranslate("tvComments")
+                binding.btnSavePictures.text = findTranslate("btnSavePictures")
+                binding.btnSendPictures.text = findTranslate("btnSendPictures")
+                binding.iHeader.title = findTranslate("tvTitlePictureFragment")
+                binding.iHeader.sub = findTranslate("tvSubPictureFragment")
+            }else{
+                authViewModel.getTranslate()
+            }
         }
     }
 

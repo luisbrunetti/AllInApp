@@ -90,10 +90,12 @@ class SendPasswordFragment : BaseFragment() {
     }
     override fun changeViewsFragment() {
         translateObject.apply {
-            binding.tvTitleSendPassword.text = findTranslate("tvTitleSendPassword")
-            binding.tvInputUserSendPassword.text = findTranslate("tvInputUserSendPassword")
-            binding.txtIptUserSendPassword.hint = findTranslate("txtIptUserSendPassword")
-            binding.btnSendPassword.text = findTranslate("btnSendPassword")
+            if(getInstance().isNotEmpty()){
+                binding.tvTitleSendPassword.text = findTranslate("tvTitleSendPassword")
+                binding.tvInputUserSendPassword.text = findTranslate("tvInputUserSendPassword")
+                binding.txtIptUserSendPassword.hint = findTranslate("txtIptUserSendPassword")
+                binding.btnSendPassword.text = findTranslate("btnSendPassword")
+            }
         }
     }
 

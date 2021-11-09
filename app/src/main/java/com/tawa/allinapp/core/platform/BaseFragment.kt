@@ -34,13 +34,12 @@ import com.tawa.allinapp.R
 import com.tawa.allinapp.core.di.ApplicationComponent
 import com.tawa.allinapp.core.dialog.MessageDialogFragment
 import com.tawa.allinapp.core.dialog.ProgressDialogFragment
+import com.tawa.allinapp.core.extensions.observe
 import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.functional.Failure
 import com.tawa.allinapp.features.HomeActivity
 import com.tawa.allinapp.features.auth.AuthViewModel
 import com.tawa.allinapp.features.auth.ui.LoginActivity
-import com.tawa.allinapp.models.Translate
-import com.tawa.allinapp.models.TranslateItem
 import kotlinx.android.synthetic.main.toolbar.*
 import java.util.*
 import javax.inject.Inject
@@ -50,6 +49,8 @@ abstract class BaseFragment : Fragment() {
     private var errorDialog: MessageDialogFragment? = null
     private var progressDialog: ProgressDialogFragment? = null
 
+
+    lateinit var authViewModel: AuthViewModel
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 
     var latitude :String= ""
@@ -61,7 +62,6 @@ abstract class BaseFragment : Fragment() {
         const val ENGLISH : String = "ENGLISH"
         var CURRENT_LANGUAGE: String = SPANISH
     }
-    var languagePosition: Int = 0
 
     protected var mDay: Int? = null
     protected var mMonth: Int? = null
@@ -78,6 +78,17 @@ abstract class BaseFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var translateObject: TranslateObject
 
+    override fun onStart() {
+        super.onStart()
+        authViewModel = viewModel(viewModelFactory){
+            observe(successfulTranslate,{
+                it?.let {
+                    translateObject.setInstance(it)
+                    changeViewsFragment()
+                }
+            })
+        }
+    }
 
     open fun onBackPressed() {
 
@@ -271,11 +282,6 @@ abstract class BaseFragment : Fragment() {
         10 -> "11"
         11 -> "12"
         else  ->""
-    }
-
-    open fun showMessage(message:String?){
-        val dialog = MessageDialogFragment.newInstance(this,message ?:"")
-        dialog.show(childFragmentManager, "dialog")
     }
 
     fun checkPermissions(){

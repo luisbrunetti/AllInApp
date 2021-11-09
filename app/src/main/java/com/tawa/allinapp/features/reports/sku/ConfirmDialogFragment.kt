@@ -47,10 +47,11 @@ class ConfirmDialogFragment : DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.btnConfirmSaveSku.setOnClickListener {
 
-            listener?.onClick()
+            listener?.onClickConfirm()
             dismiss()
         }
         binding.btnSkuBack.setOnClickListener {
+            listener?.onClickOnBack()
             dismiss()
         }
     }
@@ -63,6 +64,7 @@ class ConfirmDialogFragment : DialogFragment() {
     }
 
     interface Callback {
-        fun onClick()
+        fun onClickConfirm()
+        fun onClickOnBack()
     }
 }

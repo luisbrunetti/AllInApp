@@ -11,10 +11,8 @@ import android.util.Base64OutputStream
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import com.facebook.drawee.drawable.ScalingUtils
-import com.tawa.allinapp.R
 import com.tawa.allinapp.core.extensions.observe
 import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.platform.BaseFragment
@@ -37,7 +35,6 @@ class PdvFragment : BaseFragment() {
     var longitudePdv = ""
     var namePdv = ""
     var img64 = ""
-    var stateLocation = 0
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -138,7 +135,6 @@ class PdvFragment : BaseFragment() {
                 "1"
             )
         }
-
         changeViewsFragment()
         return binding.root
     }
@@ -223,17 +219,19 @@ class PdvFragment : BaseFragment() {
     }
     override fun changeViewsFragment() {
         translateObject.apply {
-            binding.tvTitlePdvFragment.text = findTranslate("tvTitlePdvFragment")
-            binding.tvTitlteInformPdvFragment.text = findTranslate("tvTitlteInformPdvFragment")
-            binding.tvGeolocationPdvFragment.text = findTranslate("tvGeolocationPdvFragment")
-            binding.showLocationPdv.text = findTranslate("showLocationPdv")
-            binding.btnUpdateLocation.text = findTranslate("btnUpdateLocation")
-            binding.tvNamePdvFragment.text = findTranslate("tvNamePdvFragment")
-            binding.edNameContact.hint = findTranslate("edNameContact")
-            binding.tvPhonePdvFragment.text = findTranslate("tvPhonePdvFragment")
-            binding.edPhoneContact.hint = findTranslate("edPhoneContact")
-            binding.edRuc.hint = findTranslate("edRucPdvFragment")
-            binding.btnUpdatePdvRemote.text = findTranslate("btnUpdatePdvRemote")
+            if(getInstance().isNotEmpty()) {
+                binding.tvTitlePdvFragment.text = findTranslate("tvTitlePdvFragment")
+                binding.tvTitlteInformPdvFragment.text = findTranslate("tvTitlteInformPdvFragment")
+                binding.tvGeolocationPdvFragment.text = findTranslate("tvGeolocationPdvFragment")
+                binding.showLocationPdv.text = findTranslate("showLocationPdv")
+                binding.btnUpdateLocation.text = findTranslate("btnUpdateLocation")
+                binding.tvNamePdvFragment.text = findTranslate("tvNamePdvFragment")
+                binding.edNameContact.hint = findTranslate("edNameContact")
+                binding.tvPhonePdvFragment.text = findTranslate("tvPhonePdvFragment")
+                binding.edPhoneContact.hint = findTranslate("edPhoneContact")
+                binding.edRuc.hint = findTranslate("edRucPdvFragment")
+                binding.btnUpdatePdvRemote.text = findTranslate("btnUpdatePdvRemote")
+            } else authViewModel.getTranslate()
         }
     }
 }

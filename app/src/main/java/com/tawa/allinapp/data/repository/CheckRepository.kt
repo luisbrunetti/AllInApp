@@ -42,6 +42,7 @@ interface CheckRepository {
         override fun setCheck(id: Int,pv:String,idUser:String,registerDate:String,latitude:String,longitude:String,comment:String,state:String): Either<Failure, Boolean> {
             return try {
                 val check = Check(id,prefs.schedule?:"",prefs.companyId?:"",pv,idUser,registerDate,latitude,longitude,comment,state)
+                Log.d("IdpvRepository",prefs.checkIn.toString())
                 checkDataSource.insertCheck(check.toModel())
                 prefs.checkIn = !prefs.checkIn
                 Log.d("IdpvRepository",pv.toString())

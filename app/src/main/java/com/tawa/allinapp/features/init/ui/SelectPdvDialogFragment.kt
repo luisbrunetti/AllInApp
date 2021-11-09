@@ -73,8 +73,10 @@ class SelectPdvDialogFragment
     }
     private fun changeViewsFragment(){
         baseFragment.translateObject.apply {
-            binding.tvTtitleSelectPdv.text = findTranslate("tvTtitleSelectPdv")
-            binding.btnSelectPdv.text = findTranslate("btnSelectPdv")
+            if (getInstance().isNotEmpty()){
+                binding.tvTtitleSelectPdv.text = findTranslate("tvTtitleSelectPdv")
+                binding.btnSelectPdv.text = findTranslate("btnSelectPdv")
+            }else baseFragment.authViewModel.getTranslate()
         }
     }
 
