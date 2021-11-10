@@ -389,7 +389,7 @@ class InitViewModel
 
     private fun handleGetPdvRemote(success: Boolean) { this._successGetPdvRemote.value = success }
 
-    fun getLogoCompany() =getLogoCompany(UseCase.None()) { it.either(::handleFailure, ::handleGetLogoCompany) }
+    fun getLogoCompany() = getLogoCompany(UseCase.None()) { it.either(::handleFailure, ::handleGetLogoCompany) }
 
     private fun handleGetLogoCompany(image  : String) { this._logoCompany.value = image }
 

@@ -89,14 +89,6 @@ class SelectorDialogFragment
                 if (it)
                     initViewModel.getReportsRemote(selectedCompany)
             }})
-            /*observe(getTranslateSaved, {
-                it?.let {
-                    if (baseFragment.translateObject.getInstance().arrayTranslate.isNotEmpty()) {
-                        //Log.d("logintest", translateObject.getInstance().arrayTranslate.toString())
-                        changeViewsFragment()
-                    }
-                }
-            })*/
         }
         changeViewsFragment()
         return binding.root

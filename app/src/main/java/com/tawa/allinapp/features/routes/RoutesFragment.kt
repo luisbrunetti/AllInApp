@@ -50,6 +50,7 @@ class RoutesFragment : BaseFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentRoutesBinding.inflate(inflater)
+        showProgressDialog()
         routesViewModel = viewModel(viewModelFactory) {
             observe(successGetRole,{it?.let {
                 if(it.isNotEmpty()){
@@ -61,6 +62,7 @@ class RoutesFragment : BaseFragment() {
                         binding.edUserRoutes.isEnabled = false
                     }
                 }
+                hideProgressDialog()
             }})
             observe(listUser, {
                 it?.let {
@@ -78,7 +80,7 @@ class RoutesFragment : BaseFragment() {
                     createListRoutes(binding.listRoutes,it)
                 }
                 else {
-                    Toast.makeText(context, "No se encontraron datos", Toast.LENGTH_SHORT).show()
+                    notify(requireActivity(),"No se encontraron datos")
                 }
             } })
             observe(successGetTracking,{it?.let {
@@ -91,7 +93,8 @@ class RoutesFragment : BaseFragment() {
                     createListTracking(binding.listRoutes,it)
                 }
                 else {
-                    Toast.makeText(context, "No se encontraron datos", Toast.LENGTH_SHORT).show()
+                    notify(requireActivity(),"No se encontraron datos")
+                    //oast.makeText(requireContext(), "No se encontraron datos", Toast.LENGTH_SHORT).show()
                 }
             } })
         }
@@ -171,9 +174,7 @@ class RoutesFragment : BaseFragment() {
         }
         binding.edDateRoute.setText(formatter.format(timestamp))
         dateFormat = formatter1.format(timestamp)
-
         changeViewsFragment()
-
         return binding.root
     }
 

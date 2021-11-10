@@ -59,9 +59,20 @@ class SelectPdvDialogFragment
 
         initViewModel = viewModel(baseFragment.viewModelFactory){
             observe(schedule, { it?.let {
-                arrayListPv.addAll(toArrayPv(it))
-                binding.selectPdvSpinner.adapter = aaPv
-                list= it
+                if(it.isNotEmpty()){
+                    binding.btnSelectPdv.apply{
+                        alpha = 1.0F
+                        isEnabled = true
+                    }
+                    arrayListPv.addAll(toArrayPv(it))
+                    binding.selectPdvSpinner.adapter = aaPv
+                    list= it
+                }else{
+                    binding.btnSelectPdv.apply{
+                        alpha = 0.5F
+                        isEnabled = false
+                    }
+                }
             } })
             observe(successGetCompanyId, { it?.let {
                 initViewModel.getPv(it)
