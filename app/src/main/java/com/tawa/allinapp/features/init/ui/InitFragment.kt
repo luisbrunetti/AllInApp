@@ -20,8 +20,10 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
+import com.google.maps.android.SphericalUtil
 import com.tawa.allinapp.R
 import com.tawa.allinapp.core.dialog.MessageDialogFragment
 import com.tawa.allinapp.core.extensions.failure
@@ -36,6 +38,7 @@ import com.tawa.allinapp.features.auth.AuthViewModel
 import com.tawa.allinapp.features.init.InitViewModel
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
+import java.util.*
 
 
 class InitFragment : BaseFragment() {
@@ -126,6 +129,7 @@ class InitFragment : BaseFragment() {
                 if(it){
                     initViewModel.changeSuccessUpdate(false)
                     //initViewModel.sendCheck(_lat, _long, type.value!!)
+                    Log.d("latlng",latitude.toString() + " "+ longitude.toString())
                     initViewModel.sendCheck(latitude,longitude, type.value!!)
                     //initViewModel.changeSuccessUpdate(false)
                    // Toast.makeText(context,"Se envío actualizacion",Toast.LENGTH_SHORT).show()
@@ -139,10 +143,11 @@ class InitFragment : BaseFragment() {
             }})
             observe(successCheckOut,{ it?.let {
                 if(it) {
-                    getLastLocation()
+                    //getLastLocation()
                     //getActualLocation()
                     initViewModel.changeStateSuccessCheckout(false)
                     initViewModel.getCheckMode()
+                    getNewLatitudeNLongitude()
                     initViewModel.updateStatus(latitude,longitude,_battery,1)
                     notify(activity, "Registro exitoso")
                 }
@@ -479,6 +484,7 @@ class InitFragment : BaseFragment() {
                 showProgressDialog()
                 //getActualLocation()
                 getLastLocation()
+                getNewLatitudeNLongitude()
                 //initViewModel.setPv("","","")
                 Log.d("pv_id_checkout", _pvId.toString())
                 Log.d("data ", latitude.toString() + longitude.toString())
@@ -491,6 +497,13 @@ class InitFragment : BaseFragment() {
         checkOutDialog?.show(childFragmentManager, "checkOutDialog")
     }
 
+    private fun getNewLatitudeNLongitude(){
+        val lng = LatLng(latitude.toDouble(),longitude.toDouble())
+        val newLat = convertLatLngInMeter(lng)
+        latitude = newLat.latitude.toString()
+        longitude = newLat.longitude.toString()
+        Log.d("newLat", newLat.toString())
+    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setUpBinding()
