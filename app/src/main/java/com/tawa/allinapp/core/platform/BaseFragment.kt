@@ -23,7 +23,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.location.*
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.snackbar.Snackbar
+import com.google.maps.android.SphericalUtil
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
@@ -159,6 +161,12 @@ abstract class BaseFragment : Fragment() {
                 Toast.makeText(context,"Please Turn on Your device Location",Toast.LENGTH_SHORT).show()
         }else
             requestPermission()
+    }
+
+    internal fun convertLatLngInMeter(oldLatLng: LatLng) : LatLng {
+        val r = Random()
+        val randomHeading: Double = r.nextInt(360).toDouble()
+        return SphericalUtil.computeOffset(oldLatLng, 10.0, randomHeading)
     }
 
     private fun checkPermission():Boolean{
