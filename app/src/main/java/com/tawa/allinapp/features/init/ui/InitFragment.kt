@@ -316,7 +316,6 @@ class InitFragment : BaseFragment() {
            // initViewModel.syncStandardReportsMassive("12","10")
         }
         binding.viewBtnRoutes.setOnClickListener { findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationRoutes(role)) }
-
         binding.viewBtnPV.setOnClickListener {
             showSelectPdvDialog()
             //findNavController().navigate(InitFragmentDirections.actionNavigationInitToPdvFragment())

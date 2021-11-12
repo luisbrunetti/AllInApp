@@ -131,8 +131,11 @@ class PictureFragment : BaseFragment() {
                 }
             })
             observe(successType,{it?.let{
-                if(it.isNotEmpty())
+                Log.d("successType",it.toString())
+                if(it.isNotEmpty()) {
+                    //disableButtons()
                     type = it
+                }
             }})
             observe(successDeletePhotoReports, {
                 it?.let {
@@ -171,7 +174,6 @@ class PictureFragment : BaseFragment() {
         }
 
         pictureViewModel.getTypePicture()
-        //initViewModel.getLanguage()
 
         binding.iHeader.ivHeader.setOnClickListener { activity?.onBackPressed() }
         binding.btnPhotoBeforePicture.setOnClickListener {
@@ -246,6 +248,31 @@ class PictureFragment : BaseFragment() {
         return binding.root
     }
 
+    private fun disableButtons(){
+        Log.d("Terminado", type.toString())
+        val disabled = type == "terminado"
+        binding.btnSavePictures.apply{
+            isEnabled = disabled
+            alpha=0.5f
+        }
+        binding.btnPhotoAfterPicture.apply{
+            isEnabled = disabled
+            alpha = 0.5f
+        }
+        binding.btnPhotoBeforePicture.apply{
+            isEnabled = disabled
+            alpha=0.5f
+        }
+        binding.btnSendPictures.apply {
+            isEnabled = disabled
+            alpha=0.5f
+        }
+        binding.tvComments.apply{
+            isEnabled = disabled
+            alpha=0.5f
+        }
+    }
+
     override fun changeViewsFragment() {
         translateObject.apply {
             if(getInstance().isNotEmpty()){
@@ -286,7 +313,6 @@ class PictureFragment : BaseFragment() {
         }
     }
 
-
     private fun launchCamera2(origin: Int) {
         val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         try {
@@ -318,7 +344,6 @@ class PictureFragment : BaseFragment() {
         mCurrentPhotoPath = image.absolutePath
         return image
     }
-
 
     private fun openImage(image: String) {
         val uri = getUriImage(requireContext(), decodeBase64(image))

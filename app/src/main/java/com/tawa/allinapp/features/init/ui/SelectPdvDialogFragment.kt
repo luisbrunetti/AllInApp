@@ -67,16 +67,16 @@ class SelectPdvDialogFragment
                     arrayListPv.addAll(toArrayPv(it))
                     binding.selectPdvSpinner.adapter = aaPv
                     list= it
-                }else{
-                    binding.btnSelectPdv.apply{
-                        alpha = 0.5F
-                        isEnabled = false
-                    }
                 }
             } })
             observe(successGetCompanyId, { it?.let {
                 initViewModel.getPv(it)
             } })
+        }
+
+        binding.btnSelectPdv.apply {
+            alpha = 0.5f
+            isEnabled = false
         }
         initViewModel.getIdCompany()
         changeViewsFragment()

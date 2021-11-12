@@ -47,9 +47,10 @@ interface ParametersRepository {
                         when (response.isSuccessful) {
                             true -> {
                                 response.body()?.let { body ->
+                                    Log.d("responseCompany",response.body()!!.data.toString())
                                     if(body.success) {
                                         body.data.map {
-                                            Log.d("setCompanies",it.id+ "\n token -> "+ prefs.token.toString())
+                                            Log.d("setCompanies",it.toModel(prefs.idUser?:"").toString())
                                             parametersDataSource.insertCompanies(it.toModel(prefs.idUser?:""))
                                             setPV(it.id)
                                         }
@@ -115,7 +116,7 @@ interface ParametersRepository {
                 if (parametersDataSource.getPV(company,prefs.idUser?:"").isNotEmpty())
                     Either.Right(parametersDataSource.getPV(company,prefs.idUser?:"").map { it.toView() })
                 else
-                    Either.Right(emptyList())
+                     Either.Right(emptyList())
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))
             }

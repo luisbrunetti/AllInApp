@@ -3,7 +3,6 @@ package com.tawa.allinapp.features.reports.sku
 import android.graphics.Typeface
 import android.os.Bundle
 import android.text.InputType
-import android.util.Log
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -18,7 +17,6 @@ import com.tawa.allinapp.core.extensions.observe
 import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.FragmentSkuBinding
-import com.tawa.allinapp.models.Lines
 import com.tawa.allinapp.models.SkuDetail
 import java.text.SimpleDateFormat
 import java.time.Instant
@@ -161,7 +159,7 @@ class SkuFragment : BaseFragment() {
             }})
         }
         skuViewModel.getSku(1)
-        binding.btnFilterCat.setOnClickListener {
+        binding.btnFilterCatSkuReport.setOnClickListener {
             showFilterDialog(categoryFilter)
         }
         binding.btnSaveSku.setOnClickListener {
@@ -208,7 +206,21 @@ class SkuFragment : BaseFragment() {
 
 
     override fun changeViewsFragment() {
-
+        translateObject.apply {
+            binding.btnSaveSku.text = findTranslate("btnSaveSku") ?: "Guardar"
+            binding.btnBrSku.text = findTranslate("btnBrSku") ?: "Borrador"
+            binding.tvPriceSkuReport.text = findTranslate("tvPriceSkuReport") ?: "Precio"
+            binding.tvSubCategorySkuReport.text = findTranslate("tvSubCategorySkuReport") ?: "Subcategoría"
+            binding.tvPrice2SkuReport.text = findTranslate("tvPrice2SkuReport") ?: "Precio"
+            binding.btnFilterCatSkuReport.text = findTranslate("btnFilterCatSkuReport") ?: "Filtrar por categoría:"
+            binding.tvProductSkuReport.text= findTranslate("tvProductSkuReport") ?: "Producto"
+            binding.tvCategorySkuReport.text = findTranslate("tvCategorySkuReport") ?: "Categoría"
+            binding.tvDateSkuReport.text = findTranslate("tvDateSkuReport") ?: "Fecha data"
+            binding.tvDisplaySkuReport.text = findTranslate("tvDisplaySkuReport") ?: "Exhibición"
+            binding.tvInventorySkuReport.text = findTranslate("tvInventorySkuReport") ?: "Inventario"
+            binding.tvTitleSkuReport.text = findTranslate("tvTitleSkuReport") ?: "Quiebres y SKUS"
+            binding.tvSubTitleSkuReport.text = findTranslate("tvSubTitleSkuReport") ?: "Report"
+        }
     }
     private fun showTable(){
         removeArray()

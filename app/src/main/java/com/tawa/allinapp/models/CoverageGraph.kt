@@ -42,7 +42,7 @@ data class CoverageGraph(
 data class UserDashboard (
     val title: String,
     val active: Double,
-    val activeReported: Double,
+    val noActive: Double,
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString()!!,
@@ -54,7 +54,7 @@ data class UserDashboard (
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(title)
         parcel.writeDouble(active)
-        parcel.writeDouble(activeReported)
+        parcel.writeDouble(noActive)
     }
 
     override fun describeContents(): Int {

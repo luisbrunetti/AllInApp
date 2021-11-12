@@ -116,13 +116,24 @@ interface QuestionsRepository {
         override fun getQuestions(idReport :String): Either<Failure, List<Answer>> {
             return try {
                 val questions = questionsDataSource.getQuestionsByIdReport(idReport).map { it.toView() }
+                Log.d("questions",questions.toString())
                 val listAnswers = mutableListOf<Answer>()
                questions.forEach {
                    val count  = questionsDataSource.getCountPvAnswers(prefs.pvId?:"",it.id)
+                   Log.d("count",count.toString())
                    if(count==0)
                       listAnswers.addAll(questionsDataSource.getAnswers(it.id).map { it.toView() })
-                   else
-                      listAnswers.addAll(questionsDataSource.getAnswersPv(it.id,prefs.pvId?:"",prefs.idUser?:"").map { it.toView() })
+                   else {
+                       //Ocurre un bug al obtener el IDuser guardado en los sharedPreferences y a veces no aparece data
+                       Log.d("idQuestions", it.id.toString() )
+                       listAnswers.addAll(
+                           questionsDataSource.getAnswersPv(
+                               it.id,
+                               prefs.pvId ?: "",
+                               prefs.idUser ?: ""
+                           ).map { it.toView() })
+                       Log.d("listAnswers",listAnswers.toString())
+                   }
                     }
                 Either.Right(listAnswers)
             }catch (e:Exception){

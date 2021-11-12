@@ -7,18 +7,9 @@ import com.tawa.allinapp.core.functional.Failure
 import com.tawa.allinapp.core.functional.NetworkHandler
 import com.tawa.allinapp.data.local.Prefs
 import com.tawa.allinapp.data.local.datasource.PdvDataSource
-import com.tawa.allinapp.data.local.datasource.QuestionsDataSource
-import com.tawa.allinapp.data.local.datasource.ReportsDataSource
-import com.tawa.allinapp.data.local.models.AnswersPvModel
-import com.tawa.allinapp.data.local.models.PdvModel
-import com.tawa.allinapp.data.local.models.ReadyAnswerModel
 import com.tawa.allinapp.data.remote.entities.PdvRemote
-import com.tawa.allinapp.data.remote.entities.RoutesRemote
 import com.tawa.allinapp.data.remote.service.PdvService
-import com.tawa.allinapp.data.remote.service.QuestionsService
-import com.tawa.allinapp.data.remote.service.RoutesService
-import com.tawa.allinapp.features.init.usecase.GetIdCompany
-import com.tawa.allinapp.models.*
+import com.tawa.allinapp.models.Pdv
 import javax.inject.Inject
 
 interface PdvRepository {
@@ -65,7 +56,8 @@ interface PdvRepository {
 
         override fun getPdv(): Either<Failure, Pdv> {
             return try {
-                Either.Right(pdvDataSource.getPdv(prefs.pvId?:"").toView())
+                Log.d("getPDV", "pvsId ->" + prefs.pvId.toString()+"\n idUser -> "+ prefs.idUser.toString())
+                Either.Right(pdvDataSource.getPdv(prefs.pvId?:"",prefs.idUser ?: "").toView())
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))
             }
@@ -83,8 +75,9 @@ interface PdvRepository {
             return when (networkHandler.isConnected) {
                 true ->{
                     try {
-                        val response = service.updatePdvRemote("Bearer ${prefs.token!!}",idPdv,PdvRemote.Request(
-                            PdvRemote.Fields(nameUser,phoneUser,ruc,latitude,longitude,image))).execute()
+                        Log.d("idPV", idPdv.toString())
+                        val response = service.updatePdvRemote("Bearer ${prefs.token!!}",prefs.pvId ?: "",
+                            PdvRemote.Fields(nameUser,phoneUser,ruc,latitude,longitude,image,prefs.idUser)).execute()
                         when (response.isSuccessful) {
                             true -> {
                                 response.body()?.let { body ->
@@ -122,7 +115,7 @@ interface PdvRepository {
             state: String
         ): Either<Failure, Boolean> {
             return try {
-                pdvDataSource.updatePdv(idPdv,nameUser,phoneUser,ruc,latitude,longitude,image,state)
+                pdvDataSource.updatePdv(prefs.pvId ?: "",prefs.idUser ?: "",nameUser,phoneUser,ruc,latitude,longitude,image,state)
                 Either.Right(true)
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))

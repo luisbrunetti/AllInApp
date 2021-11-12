@@ -188,6 +188,7 @@ class CheckListFragment: BaseFragment() {
         binding = FragmentChecklistBinding.inflate(inflater)
         checkListViewModel = viewModel(viewModelFactory) {
             observe(questions, { it?.let {
+                Log.d("questions",it.toString())
                 listInit = it
                 listFilter = it.distinctBy { it.nameQuestion }
                 for(list in listFilter){
@@ -234,7 +235,6 @@ class CheckListFragment: BaseFragment() {
              //   if(orderRadio.value!! >0)
                //     addAnswersRadio(it,binding.contentCheckList,nameQuestion.value!!,orderRadio.value!!)
             } })
-
             observe(answersCheck, { it?.let {
                // if(orderCheckBox.value!! >0)
                   //  addAnswersCheck(it,binding.contentCheckList,nameQuestion.value!!,orderCheckBox.value!!)
@@ -244,7 +244,6 @@ class CheckListFragment: BaseFragment() {
                  //   addAnswersInput(it,binding.contentCheckList,nameQuestion.value!!,orderInput.value!!)
 
             } })
-
             observe(answersPhoto, { it?.let {
                 binding.tvPhoto.text = nameQuestion.value
                 idPhoto = it[0].id

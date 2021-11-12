@@ -11,12 +11,12 @@ class PdvDataSource @Inject constructor(private val pdvDao: PdvDao){
         pdvDao.insertPdv(pdvModel)
     }
 
-    fun getPdv (idPdv:String):PdvModel{
-        return  pdvDao.getPdv(idPdv)
+    fun getPdv (idPdv:String,idUser: String):PdvModel{
+        return pdvDao.getPdv(idPdv,idUser)
     }
 
-    fun updatePdv( idPdv: String, nameUser: String, phoneUser: String, ruc: String, latitude: String, longitude: String, image: String, state: String){
-        pdvDao.updatePdv(idPdv,nameUser,phoneUser,ruc,latitude,longitude,image,state)
+    fun updatePdv( idPdv: String, idUser:String, nameUser: String, phoneUser: String, ruc: String, latitude: String, longitude: String, image: String, state: String){
+        pdvDao.updatePdv(idPdv,idUser, nameUser,phoneUser,ruc,latitude,longitude,image,state)
     }
 
     fun updatePdv( idPdv: String,state: String){

@@ -2,6 +2,7 @@ package com.tawa.allinapp.models
 
 data class Pdv(
     val id:String,
+    val idUser:String?,
     val image: String?,
     val ruc: String?,
     val pdvDescription: String?,

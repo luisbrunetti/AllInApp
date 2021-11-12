@@ -34,20 +34,11 @@ class AndroidApplication : Application() {
         super.onCreate()
         this.injectMembers()
         prefs = Prefs(applicationContext)
-        initCredentials()
     }
 
 
 
     private fun injectMembers() = appComponent.inject(this)
-
-    private fun initCredentials(){
-        QBSettings.getInstance().init(applicationContext,APPLICATION_ID,AUTH_KEY,AUTH_SECRET)
-        QBSettings.getInstance().accountKey = ACCOUNT_KEY
-        QBSettings.getInstance().logLevel = LogLevel.DEBUG
-
-        QBChatService.getInstance().isReconnectionAllowed = true
-    }
 
 
 }

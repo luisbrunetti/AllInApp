@@ -13,7 +13,7 @@ import com.tawa.allinapp.models.TranslateItem
 @Dao
 interface ParametersDao {
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertCompanies(company: CompanyModel)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)

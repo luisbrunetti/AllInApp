@@ -14,11 +14,12 @@ interface PdvDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertPdv(pdvModel: PdvModel)
 
-    @Query("SELECT * FROM pdv WHERE id=:idPdv")
-    fun getPdv(idPdv:String):PdvModel
+    @Query("SELECT * FROM pdv WHERE id=:idPdv and idUser =:idUser ")
+    fun getPdv(idPdv:String, idUser: String):PdvModel
 
-    @Query("update pdv set nameUser=:nameUser,phoneUser=:phoneUser,ruc=:ruc,latitude=:latitude,longitude=:longitude,image=:image,state=:state where id=:idPdv")
+    @Query("update pdv set idUser =:idUser, nameUser=:nameUser,phoneUser=:phoneUser,ruc=:ruc,latitude=:latitude,longitude=:longitude,image=:image,state=:state where id=:idPdv")
     fun updatePdv( idPdv: String,
+                   idUser:String,
                    nameUser: String,
                    phoneUser: String,
                    ruc: String,

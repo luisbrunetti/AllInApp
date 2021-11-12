@@ -16,9 +16,9 @@ class GraphRemote {
     data class UserResponse (
         @SerializedName("titulo") val title: String,
         @SerializedName("activos") val active: Double,
-        @SerializedName("activosReportados") val activeReported: Double,
+        @SerializedName("noActivos") val noActive: Double,
     ){
-        fun toModel() = UserDashboard(title,active,activeReported)
+        fun toModel() = UserDashboard(title,active,noActive)
     }
 
     data class CoverageResponse (

@@ -224,7 +224,7 @@ class CoverageBoardGraphFragment: BaseFragment() {
             }
             Surface(modifier = Modifier.weight(1f)) {
                 UserCount(translateObject,title = translateObject.findTranslate("tvNoActiveUserGraphFrag") ?: "Usuarios no reportados",color = colorResource(id = R.color.red),
-                    qty = (graph?.user?.active?.toInt() ?: 0) - (graph?.user?.activeReported?.toInt() ?:0),icon = R.drawable.ic_contract1)
+                    qty = graph?.user?.noActive?.toInt() ?:0,icon = R.drawable.ic_contract1)
             }
         }
     }

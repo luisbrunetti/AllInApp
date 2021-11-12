@@ -2,26 +2,16 @@ package com.tawa.allinapp.features.messages.ui
 
 import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
-import android.content.ContentUris
-import android.content.Context
-import android.content.Intent
-import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
-import android.provider.DocumentsContract
-import android.provider.MediaStore
 import android.text.TextUtils
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import com.bumptech.glide.Glide
 import com.quickblox.chat.QBChatService
 import com.quickblox.chat.QBRestChatService
 import com.quickblox.chat.QBSystemMessagesManager
@@ -30,17 +20,12 @@ import com.quickblox.chat.model.QBChatMessage
 import com.quickblox.chat.model.QBDialogType
 import com.quickblox.core.QBEntityCallback
 import com.quickblox.core.exception.QBResponseException
-import com.quickblox.users.model.QBUser
-import com.tawa.allinapp.AndroidApplication
-import com.tawa.allinapp.R
 import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.FragmentConfirmNewGroupBinding
 import com.tawa.allinapp.models.QuickBloxUser
-import com.tawa.allinapp.tools.QbDialogHolder
 import org.jivesoftware.smack.SmackException
 import org.jivesoftware.smack.XMPPException
 import org.jivesoftware.smackx.muc.DiscussionHistory
-import java.io.File
 import javax.inject.Inject
 
 
@@ -130,7 +115,6 @@ class ConfirmNewGroupFragment
                     override fun onSuccess(p0: QBChatDialog?, p1: Bundle?) {
                         val dialogs = ArrayList<QBChatDialog>()
                         dialogs.add(p0!!)
-                        QbDialogHolder.addDialogs(dialogs)
                         sendSystemMessageAboutCreatingDialog(QBChatService.getInstance().systemMessagesManager, p0)
                         Log.d("IsLoggin", QBChatService.getInstance().isLoggedIn.toString())
                         Log.d("Reconenction", QBChatService.getInstance().isReconnectionAllowed.toString())

@@ -4,9 +4,10 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.tawa.allinapp.models.Pdv
 
-@Entity(tableName = "pdv")
+@Entity(tableName = "pdv",primaryKeys = ["id"])
 data class PdvModel(
-    @PrimaryKey val id:String,
+    val id:String,
+    val idUser:String,
     val image: String?,
     val ruc: String?,
     val pdvDescription: String?,
@@ -16,5 +17,6 @@ data class PdvModel(
     val longitude: Double?,
     val state : String,
 ){
-    fun toView() = Pdv(id,image,ruc,pdvDescription,nameUser,phoneUser,latitude,longitude,state)
+    fun toView() = Pdv(id,
+        idUser,image,ruc,pdvDescription,nameUser,phoneUser,latitude,longitude,state)
 }

@@ -16,10 +16,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.quickblox.chat.QBChatService
 import com.quickblox.chat.QBIncomingMessagesManager
 import com.quickblox.chat.QBSystemMessagesManager
-import com.quickblox.chat.model.QBChatDialog
 import com.quickblox.core.QBEntityCallback
 import com.quickblox.core.exception.QBResponseException
-import com.quickblox.core.request.QBRequestGetBuilder
 import com.quickblox.users.model.QBUser
 import com.tawa.allinapp.R
 import com.tawa.allinapp.core.extensions.invisible
@@ -29,7 +27,6 @@ import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.FragmentMessagesBinding
 import com.tawa.allinapp.features.messages.MessagesViewModel
 import com.tawa.allinapp.models.QuickBloxUser
-import com.tawa.allinapp.tools.*
 import org.jivesoftware.smack.ConnectionListener
 import org.jivesoftware.smack.XMPPConnection
 import java.util.*
@@ -86,13 +83,6 @@ class MessagesFragment @Inject constructor() : BaseFragment() {
     private fun loginQB() {
         val user = QBUser().apply { login = "lbruno";password = "12345678";}
 
-        ChatTool.login(user, object: QBEntityCallback<QBUser>{
-            override fun onSuccess(p0: QBUser?, p1: Bundle?) {
-                Log.d(TAG, "Login Successful")
-                loginChat(p0)
-            }
-            override fun onError(p0: QBResponseException?) { p0?.message?.let { Log.d(TAG, p0.toString())}}
-        })
     }
     private fun loginChat(qbUser: QBUser?) {
         Log.d("qbUser",qbUser.toString())
@@ -151,7 +141,6 @@ class MessagesFragment @Inject constructor() : BaseFragment() {
     }
 
     private fun registerQbChatListeners() {
-        ChatHelper.addConnectionListener(chatConnectionListener)
         try {
             systemMessagesManager = QBChatService.getInstance().systemMessagesManager
             incomingMessagesManager = QBChatService.getInstance().incomingMessagesManager
@@ -163,23 +152,7 @@ class MessagesFragment @Inject constructor() : BaseFragment() {
     }
 
     private fun loadDialogFromQb(udpate: Boolean, clearDialogHolder: Boolean){
-        val requestBuilder = QBRequestGetBuilder().apply{
-            limit = DIALOGS_PER_PAGE
-            skip  = if(clearDialogHolder) 0 else QbDialogHolder.dialogsMap.size
-        }
-        ChatHelper.getDialogs(requestBuilder, object : QBEntityCallback<ArrayList<QBChatDialog>>{
-            override fun onSuccess(dialogs: ArrayList<QBChatDialog>?, p1: Bundle?) {
-                QbDialogHolder.addDialogs(dialogs!!.toList())
-                Log.d("dialogs", dialogs.toString())
-                ChatHelper.join(dialogs)
 
-            }
-
-            override fun onError(p0: QBResponseException?) {
-                TODO("Not yet implemented")
-            }
-
-        })
 
     }
     private fun enableSearchMode(){

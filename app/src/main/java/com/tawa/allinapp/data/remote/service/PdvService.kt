@@ -17,6 +17,6 @@ class PdvService
 
     override fun getPdvCompany(token: String,idCompany: String) = pdvApi.getPdvCompany(token,idCompany)
 
-    override fun updatePdvRemote(token: String, idPdv: String, request: PdvRemote.Request) = pdvApi.updatePdvRemote(token,idPdv,request)
+    override fun updatePdvRemote(token: String, idPdv: String, request: PdvRemote.Fields) = pdvApi.updatePdvRemote(token,idPdv,request)
 
 }

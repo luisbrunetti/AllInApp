@@ -22,11 +22,13 @@ import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
+import com.tawa.allinapp.core.dialog.MessageDialogFragment
 import com.tawa.allinapp.core.extensions.observe
 import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.DialogTakePhotoBinding
 import com.tawa.allinapp.features.init.InitViewModel
+import okhttp3.internal.notify
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -71,14 +73,17 @@ class TakePhotoDialogFragment
             validatePermissions()
         }
         binding.btnSavePdv.setOnClickListener {
-            listener?.onSave(urlImage)
-            dismiss()
+            photoFile?.let {
+                listener?.onSave(urlImage)
+                dismiss()
+            } ?: run {
+                MessageDialogFragment.newInstance(baseFragment, "Se tiene que agregar una foto").show(childFragmentManager, "")
+            }
         }
         binding.btnCloseModalTakePhoto.setOnClickListener {
             dismiss()
         }
 
-        //initViewModel.getLanguage()
         changeViewsFragment()
     }
 

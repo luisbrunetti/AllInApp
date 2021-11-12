@@ -112,7 +112,9 @@ class ReportGeolocationFragment : BaseFragment(), RecyclerUser.onClickButton{
 
         //Llamadas a los servicios
         reportGeoViewModel.getListUser()
-
+        binding.iHeader.ivHeader.setOnClickListener {
+            activity?.onBackPressed()
+        }
         changeViewsFragment()
         return binding.root
     }
