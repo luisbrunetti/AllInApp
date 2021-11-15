@@ -1,5 +1,7 @@
 package com.tawa.allinapp.models
 
+import com.tawa.allinapp.data.remote.entities.PdvRemote
+
 data class Pdv(
     val id:String,
     val idUser:String?,

@@ -97,8 +97,8 @@ class SelectorDialogFragment
 
     private fun changeViewsFragment() {
         baseFragment.translateObject.apply {
-            binding.tvTitleSelectCompany.text = findTranslate("tvTitleSelectCompany")
-            binding.btnEnterCompany.text = findTranslate("btnEnterCompany")
+            binding.tvTitleSelectCompany.text = findTranslate("tvTitleSelectCompany") ?: "Selecciona la empresa"
+            binding.btnEnterCompany.text = findTranslate("btnEnterCompany") ?: "Ingresar"
         }
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

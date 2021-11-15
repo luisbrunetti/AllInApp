@@ -7,6 +7,7 @@ import com.tawa.allinapp.core.functional.Failure
 import com.tawa.allinapp.core.functional.NetworkHandler
 import com.tawa.allinapp.data.local.Prefs
 import com.tawa.allinapp.data.local.datasource.PdvDataSource
+import com.tawa.allinapp.data.local.models.PdvModel
 import com.tawa.allinapp.data.remote.entities.PdvRemote
 import com.tawa.allinapp.data.remote.service.PdvService
 import com.tawa.allinapp.models.Pdv
@@ -36,7 +37,6 @@ interface PdvRepository {
                                 response.body()?.let { body ->
                                     if(body.success) {
                                         body.data.map {
-                                            //Log.d("PdvRepository", "Se ha obtenido correctamente los puntso de venta remotas " )
                                             pdvDataSource.insertPdv(it.toModel())
                                         }
                                         Either.Right(true)
@@ -57,7 +57,14 @@ interface PdvRepository {
         override fun getPdv(): Either<Failure, Pdv> {
             return try {
                 Log.d("getPDV", "pvsId ->" + prefs.pvId.toString()+"\n idUser -> "+ prefs.idUser.toString())
-                Either.Right(pdvDataSource.getPdv(prefs.pvId?:"",prefs.idUser ?: "").toView())
+                val count = pdvDataSource.getCountPdvIdUserNIdPv(prefs.pvId?:"",prefs.idUser ?: "")
+                var response : Pdv
+                if (count > 0){
+                    response = pdvDataSource.getPdv(prefs.pvId?:"",prefs.idUser ?: "").toView()
+                }else{
+                    response = pdvDataSource.getPdvWithOutIdUser(prefs.pvId ?: "").toView()
+                }
+                Either.Right(response)
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))
             }

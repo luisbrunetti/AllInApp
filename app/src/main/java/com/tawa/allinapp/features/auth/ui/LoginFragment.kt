@@ -86,6 +86,7 @@ class LoginFragment : BaseFragment() {
                     is Failure.DefaultError         -> authViewModel.setErrorLogin(it.message ?: getString(R.string.error_unknown))
                     is Failure.NetworkConnection    -> MessageDialogFragment.newInstance(this@LoginFragment,getString(R.string.error_network)).show(childFragmentManager, "dialog")
                     is Failure.ServerError          -> MessageDialogFragment.newInstance(this@LoginFragment,getString(R.string.error_network)).show(childFragmentManager, "dialog")
+                    is Failure.MessageEmptyError    -> { binding.swLoginFragment.alpha = 0.5f; binding.swLoginFragment.isEnabled = false; MessageDialogFragment.newInstance(this@LoginFragment,it.message.toString()).show(childFragmentManager, "dialog") }
                     else                            -> MessageDialogFragment.newInstance(this@LoginFragment,getString(R.string.error_unknown)).show(childFragmentManager, "dialog")
                 }}})
         }

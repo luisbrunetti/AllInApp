@@ -126,11 +126,9 @@ interface ParametersRepository {
             try {
                 when (networkHandler.isConnected) {
                     true -> {
-                        val retrofit = provideRetrofit()
                         val response = service.getLanguage().execute()
                         if (response.isSuccessful) {
                             response.body()?.let {
-                                //Log.d("response", it.toString())
                                 for (element in it.data) {
                                     val json = Gson().toJson(
                                         element.translate,
@@ -140,11 +138,11 @@ interface ParametersRepository {
                                 }
                                 translateObject.setInstance(it.data)
                                 translateObject.LANGUAGE = prefs.language!!.toInt()
-                                Log.d("prefs",prefs.language!!.toInt().toString())
+                                Log.d("prefs",translateObject.LANGUAGE .toString())
                                 return Either.Right(it.data)
                             }
                         }
-                        return Either.Right(getTranslateObjectSaved())
+                        return Either.Left(Failure.MessageEmptyError("Ha ocurrido un error en el servidor"))
 
                     }
                     false -> {

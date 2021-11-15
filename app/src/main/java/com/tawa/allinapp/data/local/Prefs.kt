@@ -93,6 +93,6 @@ class Prefs
         set(value) = prefs.edit().putInt(COUNT_NOTIFY,value).apply()
 
     var language: Int?
-        get() = prefs.getInt(LANGUAGE,-1)
+        get() = prefs.getInt(LANGUAGE,0)
         set(value) = prefs.edit().putInt(LANGUAGE,value!!).apply()
 }

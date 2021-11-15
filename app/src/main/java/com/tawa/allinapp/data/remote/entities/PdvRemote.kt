@@ -31,17 +31,24 @@ class PdvRemote {
         @SerializedName("tlf_jefe") val phoneUser: String?,
         @SerializedName("id_ptv_corp") val corp: IdPtvCorp,
     ){
-        fun toView() = Pdv(id,idUser ?:"",image?:"",ruc?:"",corp.nameCorpPv,nameUser?:"",phoneUser?:"",corp.latitude?:0.0,corp.longitude?:0.0,"")
-        fun toModel() = PdvModel(id,idUser ?: "",image?:"",ruc?:"",corp.nameCorpPv,nameUser?:"",phoneUser?:"",corp.latitude?:0.0,corp.longitude?:0.0,"")
+        //fun toView() = Pdv(id,idUser ?:"",image?:"",ruc?:"",corp.nameCorpPv,nameUser?:"",phoneUser?:"",corp.latitude?:0.0,corp.longitude?:0.0,"")
+        //fun toModel() = PdvModel(id,idUser ?: "",image?:"",ruc?:"",corp.nameCorpPv,nameUser?:"",phoneUser?:"",corp.latitude?:0.0,corp.longitude?:0.0,"")
+        fun toView() = Pdv(id,idUser ?:"", corp.images[0]?.imagen ?: "",ruc?:"",corp.nameCorpPv,nameUser?:"",phoneUser?:"",corp.latitude?:0.0,corp.longitude?:0.0,"")
+        fun toModel() = PdvModel(id,idUser ?: "",corp.images[0]?.imagen ?: "",ruc?:"",corp.nameCorpPv,nameUser?:"",phoneUser?:"",corp.latitude?:0.0,corp.longitude?:0.0,"")
     }
-
     data class IdPtvCorp(
         @SerializedName("_id") val id: String,
         @SerializedName("direccion_pvt_corp") val dirCorpPv: String,
         @SerializedName("nombre_ptv_corp") val nameCorpPv: String,
         @SerializedName("latitud") val latitude: Double?,
         @SerializedName("longitud") val longitude: Double?,
+        @SerializedName("imagenes") val images: List<Image?>,
+    )
 
+    data class Image(
+        @SerializedName("descripcion") val descripcion: String,
+        //@SerializedName("_id") val id: String,
+        @SerializedName("imagen") val imagen: String?
     )
 
 }

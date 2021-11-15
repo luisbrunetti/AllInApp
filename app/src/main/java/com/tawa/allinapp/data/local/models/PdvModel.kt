@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.tawa.allinapp.models.Pdv
 
-@Entity(tableName = "pdv",primaryKeys = ["id"])
+@Entity(tableName = "pdv",primaryKeys = ["idUser","id"])
 data class PdvModel(
     val id:String,
     val idUser:String,

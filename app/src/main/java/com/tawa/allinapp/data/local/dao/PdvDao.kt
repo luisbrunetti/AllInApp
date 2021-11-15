@@ -11,11 +11,17 @@ import com.tawa.allinapp.data.local.models.ScheduleModel
 @Dao
 interface PdvDao {
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertPdv(pdvModel: PdvModel)
 
     @Query("SELECT * FROM pdv WHERE id=:idPdv and idUser =:idUser ")
     fun getPdv(idPdv:String, idUser: String):PdvModel
+
+    @Query("SELECT count(*) FROM pdv WHERE id=:idPdv and idUser =:idUser")
+    fun getCountPdvIdUserNIdPv(idPdv:String, idUser: String): Int
+
+    @Query("SELECT * FROM pdv WHERE id=:idPdv")
+    fun getPdvWithOutIdUser(idPdv:String): PdvModel
 
     @Query("update pdv set idUser =:idUser, nameUser=:nameUser,phoneUser=:phoneUser,ruc=:ruc,latitude=:latitude,longitude=:longitude,image=:image,state=:state where id=:idPdv")
     fun updatePdv( idPdv: String,

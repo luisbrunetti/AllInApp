@@ -15,6 +15,13 @@ class PdvDataSource @Inject constructor(private val pdvDao: PdvDao){
         return pdvDao.getPdv(idPdv,idUser)
     }
 
+    fun getCountPdvIdUserNIdPv(idPdv:String, idUser: String): Int{
+        return pdvDao.getCountPdvIdUserNIdPv(idPdv,idUser)
+    }
+
+    fun getPdvWithOutIdUser(idPdv:String): PdvModel{
+        return pdvDao.getPdvWithOutIdUser(idPdv)
+    }
     fun updatePdv( idPdv: String, idUser:String, nameUser: String, phoneUser: String, ruc: String, latitude: String, longitude: String, image: String, state: String){
         pdvDao.updatePdv(idPdv,idUser, nameUser,phoneUser,ruc,latitude,longitude,image,state)
     }

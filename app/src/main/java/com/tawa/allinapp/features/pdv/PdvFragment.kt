@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Base64
 import android.util.Base64OutputStream
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -52,22 +53,27 @@ class PdvFragment : BaseFragment() {
                 }
             })
             observe(successGetPdv,{it?.let{
-                idPdv = it.id
-                binding.tvNamePdv.text = it.pdvDescription.toString()
-                binding.edNameContact.setText(it.nameUser?:"")
-                binding.edPhoneContact.setText(it.phoneUser?:"")
-                binding.edRuc.setText(it.ruc?:"")
-                namePdv = it.pdvDescription?:""
-                latitudePdv = it.latitude.toString()
-                longitudePdv = it.longitude.toString()
-                if(it.image!!.isNotEmpty()) {
-                    img64 = it.image.toString()
-                    binding.headerPhotoPdv.setImageURI(
-                        getImageUri(
-                            requireContext(),
-                            decodeBase64(it.image.toString())
-                        ), ""
-                    )
+                try{
+                    Log.d("success get Pdv" , it.toString())
+                    idPdv = it.id
+                    binding.tvNamePdv.text = it.pdvDescription.toString()
+                    binding.edNameContact.setText(it.nameUser?:"")
+                    binding.edPhoneContact.setText(it.phoneUser?:"")
+                    binding.edRuc.setText(it.ruc?:"")
+                    namePdv = it.pdvDescription?:""
+                    latitudePdv = it.latitude.toString()
+                    longitudePdv = it.longitude.toString()
+                    if(it.image!!.isNotEmpty()) {
+                        img64 = it.image.toString()
+                        binding.headerPhotoPdv.setImageURI(
+                            getImageUri(
+                                requireContext(),
+                                decodeBase64(it.image.toString().toString())
+                            ), ""
+                        )
+                    }
+                }catch (e : Exception){
+                    Log.d("exception",e.toString())
                 }
             }})
             observe(successUpdatePdvLocal,{it?.let {
@@ -174,9 +180,8 @@ class PdvFragment : BaseFragment() {
     }
 
     private fun decodeBase64(base64:String):Bitmap{
-        val encodedString = "data:image/jpg;base64, $base64"
-        val pureBase64Encoded: String = encodedString.substring(encodedString.indexOf(",") + 1)
-        val decodedString: ByteArray = Base64.decode(pureBase64Encoded, Base64.DEFAULT)
+        val pureBase64Encoded: String = base64.substring(base64.indexOf(",") + 1)
+        val decodedString: ByteArray = Base64.decode(pureBase64Encoded,  Base64.DEFAULT)
         return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
     }
 
@@ -217,6 +222,7 @@ class PdvFragment : BaseFragment() {
             return@use outputStream.toString()
         }
     }
+
     override fun changeViewsFragment() {
         translateObject.apply {
             if(getInstance().isNotEmpty()) {
