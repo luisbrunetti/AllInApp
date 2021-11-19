@@ -9,11 +9,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import androidx.compose.ui.text.toLowerCase
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.DialogFragment
 import com.google.gson.Gson
 import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.FragmentInfoGeolocationDialogBinding
+import com.tawa.allinapp.features.reports.geolocation.Constants
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -59,10 +61,10 @@ class InfoGeolocationDialogFragment
         infoGeolocation?.let {
             val (date, time ) = parseTime(it.time)
             binding.tvUserInfoGeolocation.text = it.user
-            binding.tvTypeInfoGeolocation.text = when(it.type){
-                "INGRESO" -> baseFragment.translateObject.findTranslate("tvCheckInInfoGelocation")
-                "SALIDA" -> baseFragment.translateObject.findTranslate("tvCheckOutInfoGelocation")
-                "REPORTE" -> baseFragment.translateObject.findTranslate("tvReportInfoGelocation")
+            binding.tvTypeInfoGeolocation.text = when(it.type.uppercase()){
+                Constants.CHECK_IN.uppercase() -> baseFragment.translateObject.findTranslate("tvCheckInInfoGelocation") ?: "Ingreso"
+                Constants.CHECK_OUT.uppercase() -> baseFragment.translateObject.findTranslate("tvCheckOutInfoGelocation") ?: "Salida"
+                Constants.REPORT_COMPLETED.uppercase() -> baseFragment.translateObject.findTranslate("tvReportInfoGelocation") ?: "Reporte"
                 else -> ""
             }
             binding.tvPointInfoGeolocation.text = "${it.pv_desc} - ${it.pv_cod}"
@@ -84,11 +86,11 @@ class InfoGeolocationDialogFragment
     private fun changeViewFragment(){
         baseFragment.translateObject.apply {
             if(getInstance().isNotEmpty()){
-                binding.tvTitleInfoGeolocation.text = findTranslate("tvTitleInfoGeolocation")
-                binding.tvTypeTitleInfoGeolocation.text = findTranslate("tvTypeTitleInfoGeolocation")
-                binding.tvTitleUserInfoGeolocation.text = findTranslate("tvTitleUserInfoGeolocation")
-                binding.tvTitleDateInfoGeolocation.text = findTranslate("tvTitleDateInfoGeolocation")
-                binding.tvTitlePointInfoGeolocation.text = findTranslate("tvTitlePointInfoGeolocation")
+                binding.tvTitleInfoGeolocation.text = findTranslate("tvTitleInfoGeolocation")  ?: "Información"
+                binding.tvTypeTitleInfoGeolocation.text = findTranslate("tvTypeTitleInfoGeolocation") ?: "Tipo de geolocalización"
+                binding.tvTitleUserInfoGeolocation.text = findTranslate("tvTitleUserInfoGeolocation") ?: "Usuario"
+                binding.tvTitleDateInfoGeolocation.text = findTranslate("tvTitleDateInfoGeolocation") ?: "Fecha y hora"
+                binding.tvTitlePointInfoGeolocation.text = findTranslate("tvTitlePointInfoGeolocation") ?: "Puntos de venta"
             }else baseFragment.authViewModel.getTranslate()
         }
     }

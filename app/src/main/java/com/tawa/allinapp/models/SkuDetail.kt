@@ -2,6 +2,7 @@ package com.tawa.allinapp.models
 
 data class SkuDetail(
     val id:String ,
+    val idPv:String,
     val dateCreation :String,
     val idProduct:String,
     val nameProduct:String,

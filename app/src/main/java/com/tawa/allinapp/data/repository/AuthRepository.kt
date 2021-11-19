@@ -74,9 +74,9 @@ interface AuthRepository {
                                     }
                                     else
                                         Either.Left(Failure.DefaultError(body.message))
-                                }?: Either.Left(Failure.DefaultError(""))
+                                }?: Either.Left(Failure.DefaultError(response.message()))
                             }
-                            false -> Either.Left(Failure.ServerError)
+                            false -> Either.Left(Failure.DefaultError(response.message()))
                         }
                     } catch (e: Exception) {
                         Either.Left(Failure.DefaultError(e.message!!))

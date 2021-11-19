@@ -2,7 +2,6 @@ package com.tawa.allinapp.features.auth.ui
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +14,6 @@ import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.functional.Failure
 import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.FragmentLoginBinding
-import com.tawa.allinapp.features.auth.AuthViewModel
 import java.io.IOException
 
 

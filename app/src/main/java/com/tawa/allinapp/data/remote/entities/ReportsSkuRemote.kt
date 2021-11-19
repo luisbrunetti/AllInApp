@@ -89,6 +89,7 @@ class ReportsSkuRemote {
 
         @SerializedName("precio")
         val precio: Float,
+
         @SerializedName("observaciones")
         val observaciones: ArrayList<String>
     ){
@@ -117,7 +118,6 @@ class ReportsSkuRemote {
         @SerializedName( "id_user_asig")
         val idUserAsg: idUserAsig,
 
-
         @SerializedName("id_reporte_pdv")
         val idReportPdv: IdReportPdv,
 
@@ -132,7 +132,7 @@ class ReportsSkuRemote {
         val numeroSemana: Long,
 
         @SerializedName("id_punto_venta")
-        val idPuntoVenta: IDPuntoVenta,
+        val idPuntoVenta: List<IDPuntoVenta>,
 
         @SerializedName("id_empresa")
         val idEmpresa: IDEmpresa,

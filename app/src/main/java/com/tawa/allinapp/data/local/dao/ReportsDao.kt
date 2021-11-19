@@ -40,10 +40,10 @@ interface ReportsDao {
     @Query("UPDATE reports set state=:state, type=:type,idPv=:idPv WHERE id=:idReport")
     fun updateStateReports(idReport:String,state:String,type:String,idPv: String)
 
-    @Query("UPDATE sku set state=:state, type=:type,dateCreation=:dateCreation, latitude=:latitude,longitude=:longitude WHERE id=:idSku")
-    fun updateStateSku(idSku:String,state:String,type: String,dateCreation:String,latitude: String,longitude: String)
+    @Query("UPDATE sku set state=:state, type=:type,dateCreation=:dateCreation, latitude=:latitude,longitude=:longitude WHERE _id=:id")
+    fun updateStateSku(id:Int, state:String,type: String,dateCreation:String,latitude: String,longitude: String)
 
-    @Query("UPDATE sku set state=:state, type=:type WHERE id=:idSku")
+    @Query("UPDATE sku set state=:state, type=:type WHERE _id=:idSku")
     fun updateStateSku(idSku:String,state:String,type: String)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -67,11 +67,14 @@ interface ReportsDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertSku(skuModel: SkuModel)
 
+    @Query("SELECT count(*) FROM sku WHERE id =:id and idPv =:idPv")
+    fun getCountSkus(id:String, idPv: String):Int
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertSkuDetail(skuDetailModel: SkuDetailModel)
 
-    @Query("SELECT * FROM sku_detail WHERE idSku=:idSku")
-    fun getSkuDetail(idSku:String): List<SkuDetailModel>
+    @Query("SELECT * FROM sku_detail WHERE idSku=:idSku and idPv = :idPv")
+    fun getSkuDetail(idSku:String,idPv:String): List<SkuDetailModel>
 
     @Query("SELECT * FROM sku WHERE idPv=:idPv and idCompany=:idCompany and idUser=:idUser and id =:idSku")
     fun getSku(idSku: String,idPv:String,idCompany: String,idUser: String): List<SkuModel>
@@ -97,11 +100,11 @@ interface ReportsDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertSkuObservation(skuObservationModel: SkuObservationModel)
 
-    @Query("SELECT * FROM sku_observation where idSkuDetail = :idSkuDetail")
-    fun getSkuObservation(idSkuDetail:String):List<SkuObservationModel>
+    @Query("SELECT * FROM sku_observation where idSkuDetail = :idSkuDetail and idPv =:idPv")
+    fun getSkuObservation(idSkuDetail:String,idPv: String):List<SkuObservationModel>
 
-    @Query("UPDATE sku_detail set stock=:stock , exhibition=:exhi,newPrice=:price WHERE id=:idSkuDetail")
-    fun updateSkuDetail(idSkuDetail:String,stock:Boolean,exhi:Boolean,price:Float)
+    @Query("UPDATE sku_detail set stock=:stock , exhibition=:exhi,newPrice=:price WHERE id=:idSkuDetail and idPv =:idPv")
+    fun updateSkuDetail(idSkuDetail:String,idPv: String,stock:Boolean,exhi:Boolean,price:Float)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertReportPv(reportPvModel: ReportPvModel)

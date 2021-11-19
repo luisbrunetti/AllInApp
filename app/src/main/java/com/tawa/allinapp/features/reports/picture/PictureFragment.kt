@@ -36,7 +36,6 @@ import com.tawa.allinapp.features.reports.standard.ConfirmSyncDialogFragment
 import com.tawa.allinapp.models.PhotoReport
 import java.io.*
 import java.text.SimpleDateFormat
-import java.time.Instant
 import java.time.ZoneId
 import java.time.ZoneOffset
 import java.time.ZonedDateTime

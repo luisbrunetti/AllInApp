@@ -1,6 +1,5 @@
 package com.tawa.allinapp.data.repository
 
-import android.annotation.SuppressLint
 import android.util.Log
 import com.tawa.allinapp.core.functional.Either
 import com.tawa.allinapp.core.functional.Failure
@@ -13,15 +12,10 @@ import com.tawa.allinapp.data.remote.entities.ReportsSkuRemote
 import com.tawa.allinapp.data.remote.entities.SynReportStandardRemote
 import com.tawa.allinapp.data.remote.entities.UpdateStatusRemote
 import com.tawa.allinapp.data.remote.service.ReportsService
-import com.tawa.allinapp.models.AudioReport
-import com.tawa.allinapp.models.PhotoReport
-import com.tawa.allinapp.models.Report
-import com.tawa.allinapp.models.ReportStatus
 import com.tawa.allinapp.models.*
 import java.time.ZoneId
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
-import java.util.*
 import javax.inject.Inject
 
 interface ReportsRepository {
@@ -29,7 +23,7 @@ interface ReportsRepository {
     fun listReports(idCompany: String): Either<Failure, List<Report>>
     fun saveLocalPhotoReport(report:PhotoReport?,state:String,type: String): Either<Failure, Boolean>
     fun getReports(): Either<Failure,List<Report>>
-    fun getSkuDetail(idSku:String): Either<Failure,List<SkuDetail>>
+    fun getSkuDetail(idSku:String,idPv:String): Either<Failure,List<SkuDetail>>
     fun getSku(): Either<Failure,List<Sku>>
     fun getStateSku(idPv:String): Either<Failure,String>
     fun syncPhotoReports(latitude: String,longitude: String): Either<Failure,Boolean>
@@ -40,12 +34,12 @@ interface ReportsRepository {
     fun saveLocalAudioReport(report: AudioReport): Either<Failure, Boolean>
     fun getReportsSku(company: String):Either<Failure, Boolean>
     fun insertSkuObservation(skuObservation: SkuObservation):Either<Failure, Boolean>
-    fun getSkuObservation(idSkuDetail: String):Either<Failure, List<SkuObservation>>
+    fun getSkuObservation(idSkuDetail: String,idPv: String):Either<Failure, List<SkuObservation>>
     fun syncSku(idSku: String):Either<Failure, Boolean>
     fun syncSkuMassive(latitude: String,longitude: String):Either<Failure, Boolean>
-    fun updateSkuDetail(idSkuDetail: String,stock:Boolean,exhibition:Boolean,price:Float):Either<Failure, Boolean>
+    fun updateSkuDetail(idSkuDetail: String,idPv: String,stock:Boolean,exhibition:Boolean,price:Float):Either<Failure, Boolean>
     fun updateStateReport(idReport:String,state:String,type:String):Either<Failure, Boolean>
-    fun updateStateSku(idSku:String,state:String,type:String,latitude: String,longitude: String):Either<Failure, Boolean>
+    fun updateStateSku(_id:Int,idSku:String,state:String,type:String,latitude: String,longitude: String):Either<Failure, Boolean>
     fun getUserType():Either<Failure, String>
     fun syncReportStandard(idReport: String,latitude: String,longitude: String):Either<Failure, Boolean>
     fun syncReportStandardMassive(latitude: String,longitude: String):Either<Failure, Boolean>
@@ -74,7 +68,7 @@ interface ReportsRepository {
             return when (networkHandler.isConnected) {
                 true ->{
                     try {
-                        Log.d("setReports", "token -> ${prefs.token!!} company -> ${company}")
+                        //Log.d("setReports", "token -> ${prefs.token!!} company -> ${company}")
                         val response = service.getReports("Bearer ${prefs.token!!}",company).execute()
                         when (response.isSuccessful) {
                             true -> {
@@ -84,7 +78,7 @@ interface ReportsRepository {
 
                                             for(type in it.reports)
                                             {
-                                                Log.d("type",type.reportName.toString())
+                                                //Log.d("type",type.reportName.toString())
                                                 reportsDataSource.insertReports(ReportModel(type.id?:"",type.reportName?:"",it.idCompany.id?:"",it.idCompany.nameCompany?:"",it.userAsig.id?:"",it.idUserMod?:"",it.feMod?:"","","No iniciado","0",""))
                                             }
                                            // reportsDataSource.insertReports(it.toModel())
@@ -93,7 +87,7 @@ interface ReportsRepository {
                                         Either.Right(true)
                                     }
                                     else Either.Left(Failure.DefaultError(body.message))
-                                }?: Either.Left(Failure.DefaultError(""))
+                                }?: Either.Left(Failure.ServerError)
                             }
                             false -> Either.Left(Failure.ServerError)
                         }
@@ -359,9 +353,28 @@ interface ReportsRepository {
                             true -> {
                                 response.body()?.let { body ->
                                     body.data.map {
+                                        Log.d("test",body.toString())
+                                        for(ptv in it.idReportPdv.idPuntoVenta){
+                                            val count = reportsDataSource.getCountSkus(it.id,ptv.id)
+                                            if(count == 0){
+                                                reportsDataSource.insertSku(SkuModel(0,it.id, ptv.id ,it.idCompany.id,it.idUserAsg.id,"No iniciado","0","","",""))
+                                                for(products in it.idReportPdv.lineas) {
+                                                    products.idProducto.nombreProducto?.let { it1 ->
+                                                        products.idProducto.idSubsegmentoProd?.idSegmentoProd?.idSubcategoriaProd?.nombreSubcategoria?.let { it2 ->
+                                                            products.idProducto.idSubsegmentoProd.idSegmentoProd.idSubcategoriaProd.idCategoriaProd?.nombreCategoria?.let { it3 ->
+                                                                SkuDetailModel(0,products.id,products.idProducto.feCreacion,products.idProducto.id,
+                                                                    it1,
+                                                                    it3,
+                                                                    it2,products.inventario,products.precio,false,false,0.0f,it.id,ptv.id)
+                                                            }
+                                                        }
+                                                    }?.let { it2 -> reportsDataSource.insertSkuDetail(it2) }
+                                                }
+                                            }
+                                        }
+                                        /*0Log.d("test",it.id.toString()+ " "+ it.idReportPdv.id.toString())
                                         reportsDataSource.insertSku(SkuModel(it.id,it.idReportPdv.idPuntoVenta.id,it.idCompany.id,it.idUserAsg.id,"No iniciado","0","","",""))
-                                        for(products in it.idReportPdv.lineas)
-                                        {
+                                        for(products in it.idReportPdv.lineas) {
                                             products.idProducto.nombreProducto?.let { it1 ->
                                                 products.idProducto.idSubsegmentoProd?.idSegmentoProd?.idSubcategoriaProd?.nombreSubcategoria?.let { it2 ->
                                                     products.idProducto.idSubsegmentoProd.idSegmentoProd.idSubcategoriaProd.idCategoriaProd?.nombreCategoria?.let { it3 ->
@@ -372,15 +385,17 @@ interface ReportsRepository {
                                                     }
                                                 }
                                             }?.let { it2 -> reportsDataSource.insertSkuDetail(it2) }
-                                        }
+                                        }*/
                                     }
                                     Either.Right(true)
-                                }?: Either.Left(Failure.DefaultError(""))
+                                }?: Either.Left(Failure.ServerError)
                             }
                             false -> Either.Left(Failure.ServerError)
                         }
                     } catch (e: Exception) {
+                        Log.d("exception",e.message.toString())
                         Either.Left(Failure.DefaultError(e.message!!))
+                        //Either.Left(Failure.ServerError)
                     }
                 }
                 false -> Either.Left(Failure.NetworkConnection)
@@ -418,9 +433,9 @@ interface ReportsRepository {
             }
         }
 
-        override fun getSkuDetail(idSku: String): Either<Failure, List<SkuDetail>> {
+        override fun getSkuDetail(idSku: String,idPv:String): Either<Failure, List<SkuDetail>> {
             return try {
-                Either.Right(reportsDataSource.getSkuDetail(idSku).map { it.toView() })
+                Either.Right(reportsDataSource.getSkuDetail(idSku,idPv).map { it.toView() })
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))
             }
@@ -435,9 +450,11 @@ interface ReportsRepository {
             }
         }
 
-        override fun getSkuObservation(idSkuDetail: String): Either<Failure, List<SkuObservation>> {
+        override fun getSkuObservation(idSkuDetail: String,idPv: String): Either<Failure, List<SkuObservation>> {
             return try {
-                Either.Right(reportsDataSource.getSkuObservation(idSkuDetail).map { it.toView() })
+                val response = reportsDataSource.getSkuObservation(idSkuDetail,idPv).map { it.toView() }
+                Log.d("response",response.toString())
+                Either.Right(response)
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))
             }
@@ -470,10 +487,10 @@ interface ReportsRepository {
                             idCompany = sku.idCompany
                             latitude = sku.latitude
                             longitude = sku.longitude
-                            val skuDetails = reportsDataSource.getSkuDetail(sku.id).map { it.toView() }
+                            val skuDetails = reportsDataSource.getSkuDetail(sku.id,sku.idPv).map { it.toView() }
                             for(skuDetail in skuDetails)
                             {
-                                val observationSku = reportsDataSource.getSkuObservation(skuDetail.id).map { it.toView() }
+                                val observationSku = reportsDataSource.getSkuObservation(skuDetail.id,skuDetail.idPv).map { it.toView() }
                                 val observation = arrayListOf<String>()
                                 for(obs in observationSku)
                                 {
@@ -483,6 +500,8 @@ interface ReportsRepository {
                             }
                         }
                         Log.d("lineas",linesAnswer.toString())
+                        val request = ReportsSkuRemote.Request(id,idPv,idCompany,"COMPLETADO",linesAnswer.map { it.toRequest() },longitude,latitude)
+                        Log.d("object",request.toString())
                         val response = service.syncSku("Bearer ${prefs.token!!}",ReportsSkuRemote.Request(id,idPv,idCompany,"COMPLETADO",linesAnswer.map { it.toRequest() },longitude,latitude)).execute()
                         when (response.isSuccessful) {
                             true -> {
@@ -502,6 +521,7 @@ interface ReportsRepository {
                             false -> Either.Left(Failure.ServerError)
                         }
                     } catch (e: Exception) {
+                        Log.d("exceptionSync",e.toString())
                         Either.Left(Failure.DefaultError(e.message!!))
                     }
                 }
@@ -519,10 +539,10 @@ interface ReportsRepository {
                         val skus = reportsDataSource.getSkuReady(prefs.idUser?:"").map { it.toView() }
                         for (sku in skus)
                         {
-                            val skuDetails = reportsDataSource.getSkuDetail(sku.id).map { it.toView() }
+                            val skuDetails = reportsDataSource.getSkuDetail(sku.id,sku.idPv).map { it.toView() }
                             for(skuDetail in skuDetails)
                             {
-                                val observationSku = reportsDataSource.getSkuObservation(skuDetail.id).map { it.toView() }
+                                val observationSku = reportsDataSource.getSkuObservation(skuDetail.id,skuDetail.idPv).map { it.toView() }
                                 val observation = arrayListOf<String>()
                                 for(obs in observationSku)
                                 {
@@ -563,12 +583,13 @@ interface ReportsRepository {
 
         override fun updateSkuDetail(
             idSkuDetail: String,
+            idPv: String,
             stock: Boolean,
             exhibition: Boolean,
             price: Float
         ): Either<Failure, Boolean> {
             return try {
-                reportsDataSource.updateSkuDetail(idSkuDetail,stock,exhibition,price)
+                reportsDataSource.updateSkuDetail(idSkuDetail,idPv,stock,exhibition,price)
                 Either.Right(true)
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))
@@ -708,9 +729,9 @@ interface ReportsRepository {
         }
 
 
-        override fun updateStateSku(idSku: String, state: String,type:String,latitude: String,longitude: String): Either<Failure, Boolean> {
+        override fun updateStateSku(_id:Int,idSku: String, state: String,type:String,latitude: String,longitude: String): Either<Failure, Boolean> {
             return try {
-                reportsDataSource.updateStateSku(idSku,state,type,ZonedDateTime.now(ZoneId.of("America/Lima")).toLocalDateTime().toInstant(ZoneOffset.UTC).toString(),latitude,longitude)
+                reportsDataSource.updateStateSku(_id,idSku,state,type,ZonedDateTime.now(ZoneId.of("America/Lima")).toLocalDateTime().toInstant(ZoneOffset.UTC).toString(),latitude,longitude)
                 Either.Right(true)
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))
@@ -825,7 +846,6 @@ interface ReportsRepository {
             }catch (e: Exception){
                 Either.Left(Failure.DefaultError(e.message!!))
             }
-
             return Either.Right(true)
         }
         override fun getAudioReport(idPv: String, idUser:String): Either<Failure,AudioReport> {

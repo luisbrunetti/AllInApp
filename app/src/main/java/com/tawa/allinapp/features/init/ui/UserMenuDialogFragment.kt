@@ -61,8 +61,8 @@ class UserMenuDialogFragment
     }
     private fun changeViewFragment(){
         baseFragment.translateObject.apply {
-            binding.tvLogoutUserMenu.text = findTranslate("tvLogoutUserMenu")
-            binding.tvNotifyUserMenu.text = findTranslate("tvNotifyUserMenu")
+            binding.tvLogoutUserMenu.text = findTranslate("tvLogoutUserMenu") ?: "Cerrar sesión"
+            binding.tvNotifyUserMenu.text = findTranslate("tvNotifyUserMenu") ?: "Notificaciones"
         }
     }
 

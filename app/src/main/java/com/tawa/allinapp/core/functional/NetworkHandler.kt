@@ -12,4 +12,8 @@ class NetworkHandler
         null -> false
         else -> true
     }
+
+    companion object {
+        const val NO_CONNECTION = "No hay conexión a internet"
+    }
 }

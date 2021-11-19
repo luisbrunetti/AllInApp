@@ -4,6 +4,7 @@ package com.tawa.allinapp.models
 import com.tawa.allinapp.data.local.models.SkuModel
 
 data class Sku(
+    val _id:Int,
     val id:String ,
     val idPv :String,
     val idCompany:String,
@@ -14,5 +15,5 @@ data class Sku(
     val latitude:String,
     val longitude:String
 ){
-    fun toModel() = SkuModel(id,idPv,idCompany,idUser,state,type,dateCreation,latitude,longitude)
+    fun toModel() = SkuModel(_id,id,idPv,idCompany,idUser,state,type,dateCreation,latitude,longitude)
 }

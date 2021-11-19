@@ -28,6 +28,7 @@ import java.lang.Exception
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.SphericalUtil
 import com.tawa.allinapp.core.platform.BaseFragment
+import com.tawa.allinapp.features.reports.geolocation.Constants
 import com.tawa.allinapp.models.Tracking
 import java.util.*
 import javax.inject.Inject
@@ -46,10 +47,6 @@ class InformRoutesMapDialogFragment
     private var lastLatLng: LatLng? = null
     companion object {
         const val LIST_ROUTES_INFORM = "list_routes_inform"
-        const val CHECK_IN = "Check in"
-        const val CHECK_OUT = "Check out"
-        const val REPORTED = "Reporte"
-        const val POINT_SALE= "Punto de venta"
         fun newInstance(baseFragment: BaseFragment, listRoutes : List<TrackingInform>): InformRoutesMapDialogFragment {
             val frag = InformRoutesMapDialogFragment(baseFragment)
             val bundle = Bundle()
@@ -127,14 +124,12 @@ class InformRoutesMapDialogFragment
             for (userTracking in listInformTracking) {
                 Log.d("UserTracking", "UserTracking -> ${userTracking.nameUser} List -> ${userTracking.listTracking}")
                 for (tracking in userTracking.listTracking) {
-                    var checkin= false
-                    var checkout= false
                     for (visit in tracking.visits) {
                         //for(visit in visits?.visit!!){
                         var markerId: String = ""
                         var markerType: String = ""
-                        when (visit?.comment) {
-                            "INGRESO" -> {
+                        when (visit?.comment?.uppercase()) {
+                            Constants.CHECK_IN -> {
                                 val userPosition =
                                     LatLng(visit.latitude.toDouble(), visit.longitude.toDouble())
                                 val iconD = resources.getDrawable(R.drawable.ic_marker_checkin)
@@ -144,11 +139,10 @@ class InformRoutesMapDialogFragment
                                         .infoWindowAnchor(0f, -0.1f)
                                         .icon(getMarkerIconFromDrawable(iconD))
                                 )
-                                checkin = true
                                 markerId = marker.id
-                                markerType = CHECK_IN
+                                markerType = Constants.CHECK_IN_VIEW
                                 hashMapMarkerRoute!![marker.id] = InfoGeolocation(
-                                    visit.comment,
+                                    Constants.CHECK_IN,
                                     visit.creation,
                                     userTracking.nameUser,
                                     tracking.codPvCop,
@@ -156,7 +150,7 @@ class InformRoutesMapDialogFragment
                                     tracking.Pv
                                 )
                             }
-                            "SALIDA" -> {
+                            Constants.CHECK_OUT -> {
                                 val userPosition =
                                     LatLng(visit.latitude.toDouble(), visit.longitude.toDouble())
                                 Log.d("pos", userPosition.toString())
@@ -166,11 +160,10 @@ class InformRoutesMapDialogFragment
                                         .position(userPosition)
                                         .icon(getMarkerIconFromDrawable(iconD))
                                 )
-                                checkout = true
                                 markerId = marker.id
-                                markerType = CHECK_OUT
+                                markerType = Constants.CHECK_OUT_VIEW
                                 hashMapMarkerRoute!![marker.id] = InfoGeolocation(
-                                    visit.comment,
+                                    Constants.CHECK_OUT,
                                     visit.creation,
                                     userTracking.nameUser,
                                     tracking.codPvCop,
@@ -178,7 +171,7 @@ class InformRoutesMapDialogFragment
                                     tracking.Pv
                                 )
                             }
-                            "none" -> {
+                            Constants.NONE_REPORT -> {
                                 val userPosition =
                                     LatLng(visit.latitude.toDouble(), visit.longitude.toDouble())
                                 Log.d("pos", userPosition.toString())
@@ -188,9 +181,9 @@ class InformRoutesMapDialogFragment
                                         .position(userPosition)
                                         .icon(getMarkerIconFromDrawable(iconD))
                                 )
-                                markerType = POINT_SALE
+                                markerType = Constants.POINT_SALE
                                 hashMapMarkerRoute!![marker.id] = InfoGeolocation(
-                                    visit.comment,
+                                    Constants.NONE_REPORT,
                                     visit.creation,
                                     userTracking.nameUser,
                                     tracking.codPvCop,
@@ -202,18 +195,16 @@ class InformRoutesMapDialogFragment
                         arrayMarkerInfoWindow.add(InfoWindowChecks(markerId, tracking.Pv, tracking.codPvCop, tracking.dirCorpPv, markerType))
                     }
                     for (task in tracking.tasks){
-                        when(task?.reportState){
-                            "COMPLETADO" -> {
+                        when(task?.reportState?.uppercase()){
+                            Constants.REPORT_COMPLETED -> {
                                 val userPosition = LatLng(task.latitude.toDouble(), task.longitude.toDouble())
                                 val iconD = resources.getDrawable(R.drawable.ic_marker_reports)
                                 val marker = googleMap.addMarker(MarkerOptions()
                                     .position(userPosition)
-                                    //.title(REPORTED)
-                                    //.snippet("${tracking.Pv} - ${tracking.codPvCop}")
                                     .icon(getMarkerIconFromDrawable(iconD))
                                 )
-                                arrayMarkerInfoWindow.add(InfoWindowChecks(marker.id, tracking.Pv, tracking.codPvCop, tracking.dirCorpPv, REPORTED))
-                                hashMapMarkerRoute!![marker.id] = InfoGeolocation("Reporte",task.creation, userTracking.nameUser,tracking.codPvCop,tracking.dirCorpPv,tracking.Pv)
+                                arrayMarkerInfoWindow.add(InfoWindowChecks(marker.id, tracking.Pv, tracking.codPvCop, tracking.dirCorpPv, Constants.REPORTED_VIEW))
+                                hashMapMarkerRoute!![marker.id] = InfoGeolocation(Constants.REPORT_COMPLETED,task.creation, userTracking.nameUser,tracking.codPvCop,tracking.dirCorpPv,tracking.Pv)
                             }
                         }
                     }
@@ -253,7 +244,7 @@ class InformRoutesMapDialogFragment
         hmPvsInfoWindow[marker.id] = InfoWindowPv(
             markerId = marker.id,
             tracking.Pv, tracking.codPvCop,
-            tracking.dirCorpPv, POINT_SALE,
+            tracking.dirCorpPv, Constants.POINT_SALE,
             1,
             tracking.checks.checkIn.pendientes,
             tracking.checks.checkIn.concluidas,
@@ -306,9 +297,7 @@ class InformRoutesMapDialogFragment
                     } ?: emptyList<RoutesInform>()
                 }
             }
-            binding.btnCloseMapRoutes.setOnClickListener {
-                dismiss()
-            }
+            binding.btnCloseMapRoutes.setOnClickListener { dismiss() }
         } catch (e: Exception) {
             Log.d("InformRoutes", "Ha ocurrido un error")
             dismiss()

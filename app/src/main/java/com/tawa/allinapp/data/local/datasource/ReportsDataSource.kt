@@ -1,12 +1,8 @@
 package com.tawa.allinapp.data.local.datasource
 
-import com.tawa.allinapp.data.local.dao.ParametersDao
 import com.tawa.allinapp.data.local.dao.ReportsDao
 import com.tawa.allinapp.data.local.models.*
-import com.tawa.allinapp.features.init.usecase.GetIdPV
-import com.tawa.allinapp.features.init.usecase.GetIdUser
 import com.tawa.allinapp.models.ReportPv
-import com.tawa.allinapp.models.Sku
 import javax.inject.Inject
 
 
@@ -49,9 +45,9 @@ class ReportsDataSource @Inject constructor(private val reportsDao: ReportsDao){
         reportsDao.updateStateReports(idReport,state,type,idPV)
     }
 
-    fun updateStateSku(idSku:String,state:String,type: String,dateCreation:String,latitude: String,longitude: String)
+    fun updateStateSku(_id:Int,idSku:String,state:String,type: String,dateCreation:String,latitude: String,longitude: String)
     {
-        reportsDao.updateStateSku(idSku,state,type,dateCreation,latitude,longitude)
+        reportsDao.updateStateSku(_id,state,type,dateCreation,latitude,longitude)
     }
 
     fun updateStateSku(idSku:String,state:String,type: String)
@@ -79,17 +75,20 @@ class ReportsDataSource @Inject constructor(private val reportsDao: ReportsDao){
         reportsDao.insertAudioReport(reportModel)
     }
 
-
     fun insertSku(skuModel: SkuModel){
         reportsDao.insertSku(skuModel)
+    }
+
+    fun getCountSkus(id:String, idPv: String):Int{
+        return reportsDao.getCountSkus(id,idPv)
     }
 
     fun insertSkuDetail(skuDetailModel: SkuDetailModel){
         reportsDao.insertSkuDetail((skuDetailModel))
     }
 
-    fun getSkuDetail(idSku: String):List<SkuDetailModel>{
-        return reportsDao.getSkuDetail(idSku)
+    fun getSkuDetail(idSku: String,idPv:String):List<SkuDetailModel>{
+        return reportsDao.getSkuDetail(idSku,idPv)
     }
 
     fun getSku(idSku: String,idPV: String,idCompany: String,idUser: String):List<SkuModel>{
@@ -128,12 +127,12 @@ class ReportsDataSource @Inject constructor(private val reportsDao: ReportsDao){
         reportsDao.insertSkuObservation(skuObservationModel)
     }
 
-    fun getSkuObservation(idSkuDetail:String):List<SkuObservationModel>{
-        return reportsDao.getSkuObservation(idSkuDetail)
+    fun getSkuObservation(idSkuDetail:String,idPv: String):List<SkuObservationModel>{
+        return reportsDao.getSkuObservation(idSkuDetail,idPv)
     }
 
-    fun updateSkuDetail(idSkuDetail: String,stock:Boolean,exhi:Boolean,price:Float){
-        reportsDao.updateSkuDetail(idSkuDetail,stock,exhi,price)
+    fun updateSkuDetail(idSkuDetail: String,idPv: String,stock:Boolean,exhi:Boolean,price:Float){
+        reportsDao.updateSkuDetail(idSkuDetail,idPv,stock,exhi,price)
     }
 
     fun insertReportPv(reportPvModel: ReportPvModel){

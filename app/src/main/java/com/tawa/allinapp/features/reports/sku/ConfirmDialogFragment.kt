@@ -23,7 +23,7 @@ import com.tawa.allinapp.databinding.DialogObservationsSkuBinding
 import javax.inject.Inject
 
 
-class ConfirmDialogFragment : DialogFragment() {
+class ConfirmDialogFragment(val baseFragment: BaseFragment): DialogFragment() {
 
     private lateinit var binding: DialogConfirmSkuBinding
 
@@ -53,6 +53,16 @@ class ConfirmDialogFragment : DialogFragment() {
         binding.btnSkuBack.setOnClickListener {
             listener?.onClickOnBack()
             dismiss()
+        }
+        changeViewFragment()
+    }
+
+    private fun changeViewFragment(){
+        baseFragment.translateObject.apply {
+            binding.textView14.text = findTranslate("tvTitleConfimSkuDialog") ?: "¿Estás seguro de guardar la información?"
+            binding.textView20.text = findTranslate("tvSubTitleConfimSkuDialog") ?: "Estás a punto de guardar la información"
+            binding.btnConfirmSaveSku.text = findTranslate("tvButtonSaveConfirmSkuDialog") ?: "Guardar"
+            binding.btnSkuBack.text = findTranslate("tvButtonBackConfirmSkuDialog") ?: "Volver"
         }
     }
 

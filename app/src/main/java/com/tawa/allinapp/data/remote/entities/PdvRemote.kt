@@ -23,7 +23,7 @@ class PdvRemote {
 
     data class Response(
         @SerializedName("_id") val id:String,
-        @SerializedName("id_user") val idUser:String?,
+        @SerializedName("id_user") var idUser:String?,
         @SerializedName("imagen") val image: String?,
         @SerializedName("ruc") val ruc: String?,
         @SerializedName("descripcion_ptv") val pdvDescription: String?,

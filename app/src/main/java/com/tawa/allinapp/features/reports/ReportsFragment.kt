@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.EditText
-import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -86,7 +85,7 @@ class ReportsFragment : BaseFragment() {
             } })
             observe(userType, { it?.let {
                 if(it.isNotEmpty()) {
-                    Log.d("ReportFragment","Correcto User Type"+ userType.value.toString())
+                    //Log.d("ReportFragment","Correcto User Type"+ userType.value.toString())
                     typeUser = it
                     reportsViewModel.getReports()
                 }

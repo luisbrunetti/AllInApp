@@ -319,7 +319,9 @@ abstract class BaseFragment : Fragment() {
                 }
             }
             errorDialog?.listener = object : MessageDialogFragment.Callback {
-                override fun onAccept() {}
+                override fun onAccept() {
+                    activity?.onBackPressed()
+                }
             }
             errorDialog?.show(childFragmentManager, "dialog")
         }

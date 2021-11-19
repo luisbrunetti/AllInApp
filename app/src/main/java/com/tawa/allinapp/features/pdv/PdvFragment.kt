@@ -56,10 +56,14 @@ class PdvFragment : BaseFragment() {
                 try{
                     Log.d("success get Pdv" , it.toString())
                     idPdv = it.id
-                    binding.tvNamePdv.text = it.pdvDescription.toString()
-                    binding.edNameContact.setText(it.nameUser?:"")
-                    binding.edPhoneContact.setText(it.phoneUser?:"")
-                    binding.edRuc.setText(it.ruc?:"")
+                    binding.tvNamePdv.text =  if(it.pdvDescription.toString() != "-") it.pdvDescription.toString() else ""
+                    binding.edNameContact.setText(if(it.nameUser != "-") it.nameUser ?: ""  else "")
+                    binding.edPhoneContact.setText(if(it.phoneUser != "-") it.phoneUser ?: ""  else "")
+                    binding.edRuc.setText(if(it.ruc != "-") it.ruc ?: "" else "")
+                    //binding.tvNamePdv.text = it.pdvDescription.toString()
+                    //binding.edNameContact.setText(it.nameUser?:"")
+                    //binding.edPhoneContact.setText(it.phoneUser?:"")
+                    //binding.edRuc.setText(it.ruc?:"")
                     namePdv = it.pdvDescription?:""
                     latitudePdv = it.latitude.toString()
                     longitudePdv = it.longitude.toString()
@@ -88,6 +92,7 @@ class PdvFragment : BaseFragment() {
                         img64
                     )
                 }
+                hideProgressDialog()
             }})
             observe(successUpdatePdv,{it?.let {
                 if(it){
@@ -130,6 +135,7 @@ class PdvFragment : BaseFragment() {
             showPdvSelectDialog()
         }
         binding.btnUpdatePdvRemote.setOnClickListener {
+            showProgressDialog()
             pdvViewModel.updatePdv(
                 idPdv,
                 binding.edNameContact.text.toString(),

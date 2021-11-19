@@ -7,7 +7,8 @@ import com.tawa.allinapp.models.Sku
 
 @Entity(tableName = "sku")
 data class SkuModel(
-    @PrimaryKey val id: String,
+    @PrimaryKey(autoGenerate = true) val _id: Int = 0,
+    val id: String,
     val idPv: String,
     val idCompany: String,
     val idUser:String,
@@ -17,5 +18,5 @@ data class SkuModel(
     val latitude:String,
     val longitude:String
 ){
-    fun toView() = Sku(id,idPv,idCompany,idUser,state,type,dateCreation,latitude,longitude)
+    fun toView() = Sku(_id,id,idPv,idCompany,idUser,state,type,dateCreation,latitude,longitude)
 }

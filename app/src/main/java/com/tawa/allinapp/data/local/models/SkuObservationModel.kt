@@ -9,8 +9,9 @@ import com.tawa.allinapp.models.SkuObservation
 @Entity(tableName = "sku_observation")
 data class SkuObservationModel(
     @PrimaryKey(autoGenerate = true) val id:Int ,
+    val idPv:String,
     val idSkuDetail :String,
     val observation:String
 ){
-    fun toView() = SkuObservation(id,idSkuDetail,observation)
+    fun toView() = SkuObservation(id,idPv,idSkuDetail,observation)
 }

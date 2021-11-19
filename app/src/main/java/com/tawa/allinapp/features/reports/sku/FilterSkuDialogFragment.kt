@@ -13,10 +13,13 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import com.tawa.allinapp.R
+import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.DialogFilterSkuBinding
 
 
-class FilterSkuDialogFragment: DialogFragment() {
+class FilterSkuDialogFragment(
+    val baseFragment: BaseFragment
+): DialogFragment() {
 
     private lateinit var binding: DialogFilterSkuBinding
     var params = LinearLayout.LayoutParams(
@@ -31,8 +34,8 @@ class FilterSkuDialogFragment: DialogFragment() {
     var nameGen= ""
     companion object {
 
-        fun newInstance(dataExt : ArrayList<String>): FilterSkuDialogFragment {
-            val frag = FilterSkuDialogFragment()
+        fun newInstance(baseFragment: BaseFragment, dataExt : ArrayList<String>): FilterSkuDialogFragment {
+            val frag = FilterSkuDialogFragment(baseFragment = baseFragment)
             val bundle = Bundle()
             bundle.putStringArrayList("data", ArrayList(HashSet(dataExt).sorted()))
             frag.arguments = bundle
@@ -75,6 +78,15 @@ class FilterSkuDialogFragment: DialogFragment() {
             }
             dismiss()
              listener?.onFilter(listSelected)
+        }
+        changeViewFragment()
+    }
+
+    private fun changeViewFragment(){
+        baseFragment.translateObject.apply{
+            binding.textView24.text = findTranslate("tvFilterCategoryFilterDialog") ?: "Filtrar por categoría:"
+            binding.btnFilterSku.text = findTranslate("btnFilterFilterDialog") ?: "Filtrar"
+            binding.btnCleanFilters.text = findTranslate("btnClearFilterDialog") ?: "Limpiar"
         }
     }
 

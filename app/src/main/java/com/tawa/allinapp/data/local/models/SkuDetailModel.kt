@@ -8,7 +8,8 @@ import com.tawa.allinapp.models.SkuDetail
 
 @Entity(tableName = "sku_detail")
 data class SkuDetailModel(
-    @PrimaryKey val id:String ,
+    @PrimaryKey(autoGenerate = true) val _id:Int = 0,
+    val id:String,
     val dateCreation :String,
     val idProduct:String,
     val nameProduct:String,
@@ -19,7 +20,8 @@ data class SkuDetailModel(
     val stock:Boolean,
     val exhibition:Boolean,
     val newPrice:Float,
-    val idSku:String
+    val idSku:String,
+    val idPv:String,
 ){
-    fun toView() = SkuDetail(id,dateCreation,idProduct,nameProduct,category,subCategory,inventory,price,stock,exhibition,newPrice,idSku)
+    fun toView() = SkuDetail(id,idPv,dateCreation,idProduct,nameProduct,category,subCategory,inventory,price,stock,exhibition,newPrice,idSku)
 }

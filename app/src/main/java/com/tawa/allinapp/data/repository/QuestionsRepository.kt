@@ -62,7 +62,7 @@ interface QuestionsRepository {
                                     else {
                                         Either.Left(Failure.DefaultError(body.message))
                                     }
-                                }?: Either.Left(Failure.DefaultError(""))
+                                }?: Either.Left(Failure.ServerError)
                             }
                             false -> Either.Left(Failure.ServerError)
                         }

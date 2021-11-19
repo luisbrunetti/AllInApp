@@ -3,6 +3,7 @@ package com.tawa.allinapp.features.init.ui
 
 import android.Manifest
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -15,15 +16,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.ui.text.toUpperCase
 import androidx.core.app.ActivityCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.navigation.NavigationView
-import com.google.maps.android.SphericalUtil
 import com.tawa.allinapp.R
 import com.tawa.allinapp.core.dialog.MessageDialogFragment
 import com.tawa.allinapp.core.extensions.failure
@@ -31,10 +29,9 @@ import com.tawa.allinapp.core.extensions.observe
 import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.data.local.Prefs
-import com.tawa.allinapp.databinding.ActivityHomeBinding
 import com.tawa.allinapp.databinding.FragmentInitBinding
 import com.tawa.allinapp.features.HomeActivity
-import com.tawa.allinapp.features.auth.AuthViewModel
+import com.tawa.allinapp.features.auth.ui.LoginActivity
 import com.tawa.allinapp.features.init.InitViewModel
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
@@ -288,9 +285,7 @@ class InitFragment : BaseFragment() {
             val frag = UserMenuDialogFragment.newInstance(this)
             frag.listener = object : UserMenuDialogFragment.Callback {
                 override fun onAccept() {
-                    initViewModel.setSession(false)
-                    initViewModel.setIdCompany("","")
-                    initViewModel.deletePvId()
+                    logout()
                     //initViewModel.setPv("","","")
                     showLogin(context)
                 }
@@ -361,8 +356,8 @@ class InitFragment : BaseFragment() {
                     if(enable) ResourcesCompat.getDrawable(resources, R.drawable.bg_button_check_in, null)
                     else ResourcesCompat.getDrawable(resources, R.drawable.bg_button_check_out, null)
                 text =
-                    if (enable) translateObject.findTranslate("btCheckInInitFragment")
-                    else translateObject.findTranslate("btCheckOutInitFragment")
+                    if (enable) translateObject.findTranslate("btCheckInInitFragment") ?: "Ingreso"
+                    else translateObject.findTranslate("btCheckOutInitFragment") ?: "Salida"
             }
         }
     }
@@ -372,7 +367,7 @@ class InitFragment : BaseFragment() {
         socketHandler.setSock()
         val socket  = socketHandler.getSock()
         socket.connect()
-        socket.on("notify"){args->
+        socket.on("notify"){ args ->
             activity?.runOnUiThread {
                 val message = JSONObject(args[0].toString()).getString("message")
                 showNotification(message, "ch1")
@@ -393,6 +388,17 @@ class InitFragment : BaseFragment() {
                 initViewModel.getLogoCompany()
                 //initViewModel.getPVSaved()
             }
+            override fun onReject() {
+                val msg = MessageDialogFragment.newInstance(this@InitFragment,"Ocurrio un error con el servidor.\n Por favor intentelo de nuevo")
+                msg.listener = object : MessageDialogFragment.Callback{
+                    override fun onAccept() {
+                        logout()
+                        val intent = Intent(requireActivity(), LoginActivity::class.java)
+                        startActivity(intent)
+                    }
+                }
+                msg.show(childFragmentManager, "dialog")
+            }
         }
         dialog.show(childFragmentManager, "dialog")
     }
@@ -404,6 +410,8 @@ class InitFragment : BaseFragment() {
                 initViewModel.setPv(id,pv,description)
                 findNavController().navigate(InitFragmentDirections.actionNavigationInitToPdvFragment())
             }
+
+
         }
         dialog.show(childFragmentManager,"")
     }
@@ -454,14 +462,22 @@ class InitFragment : BaseFragment() {
 
     private fun setLogoCompany(image:String){
         binding.imageView16.isVisible = true
-        binding.imageView16.setImageBitmap(decodeBase64(image))
+        Log.d("image",image.toString())
+        decodeBase64(image)?.let {
+            binding.imageView16.setImageBitmap(it)
+        }
     }
 
-    private fun decodeBase64(base64:String): Bitmap {
-        val encodedString = "data:image/jpg;base64, $base64"
-        val pureBase64Encoded: String = encodedString.substring(encodedString.indexOf(",") + 1)
-        val decodedString: ByteArray = Base64.decode(pureBase64Encoded, Base64.DEFAULT)
-        return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
+    private fun decodeBase64(base64:String): Bitmap? {
+        return try{
+            //val encodedString = "data:image/jpg;base64, $base64"
+            val pureBase64Encoded: String = base64.substring(base64.indexOf(",") + 1)
+            val decodedString: ByteArray = Base64.decode(pureBase64Encoded, Base64.DEFAULT)
+            BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
+        }catch (e : Exception){
+            Log.d("error",e.toString())
+            null
+        }
     }
 
     private fun getImageUri(context: Context, inImage: Bitmap): Uri? {
@@ -530,6 +546,12 @@ class InitFragment : BaseFragment() {
         super.onResume()
         (activity as HomeActivity).hideNavBar()
         initViewModel.getRoleUser()
+    }
+
+    private fun logout(){
+        initViewModel.setSession(false)
+        initViewModel.setIdCompany("","")
+        initViewModel.deletePvId()
     }
 
     override fun changeViewsFragment() {

@@ -142,7 +142,7 @@ interface ParametersRepository {
                                 return Either.Right(it.data)
                             }
                         }
-                        return Either.Left(Failure.MessageEmptyError("Ha ocurrido un error en el servidor"))
+                        return Either.Left(Failure.MessageEmptyError("Ha ocurrido para descargar los idiomas"))
 
                     }
                     false -> {
@@ -197,23 +197,6 @@ interface ParametersRepository {
                 return Either.Left(Failure.DefaultError(e.message!!))
             }
         }
-        fun provideRetrofit(): ParametersApi {
-            return Retrofit.Builder()
-                .baseUrl("http://run.mocky.io/v3/")
-                .client(createClient())
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
-                .create(ParametersApi::class.java)
-        }
-        private fun createClient(): OkHttpClient {
-            val okHttpClientBuilder: OkHttpClient.Builder = OkHttpClient.Builder()
-            if (BuildConfig.DEBUG) {
-                val loggingInterceptor = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC)
-                okHttpClientBuilder.addInterceptor(loggingInterceptor)
-            }
-            return okHttpClientBuilder.build()
-        }
-
 
 
     }

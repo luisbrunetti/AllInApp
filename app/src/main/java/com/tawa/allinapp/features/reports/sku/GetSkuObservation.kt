@@ -10,6 +10,6 @@ import javax.inject.Inject
 class GetSkuObservation
 @Inject constructor(private val reportsRepository: ReportsRepository) : UseCase<List<SkuObservation>, GetSkuObservation.Params>() {
 
-    override suspend fun run(params: Params) = reportsRepository.getSkuObservation(params.idSkuDetail)
-     data class Params(val idSkuDetail: String)
+    override suspend fun run(params: Params) = reportsRepository.getSkuObservation(params.idSkuDetail,params.idPv)
+     data class Params(val idSkuDetail: String,val idPv: String)
 }

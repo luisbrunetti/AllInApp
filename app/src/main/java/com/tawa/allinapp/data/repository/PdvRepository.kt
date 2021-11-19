@@ -37,14 +37,15 @@ interface PdvRepository {
                                 response.body()?.let { body ->
                                     if(body.success) {
                                         body.data.map {
+                                            it.idUser = prefs.idUser ?: ""
                                             pdvDataSource.insertPdv(it.toModel())
                                         }
                                         Either.Right(true)
                                     }
                                     else Either.Left(Failure.DefaultError(body.message))
-                                }?: Either.Left(Failure.DefaultError(""))
+                                }?: Either.Left(Failure.ServerError)
                             }
-                            false -> Either.Left(Failure.ServerError)
+                            false -> Either.Left(Failure.DefaultError(""))
                         }
                     } catch (e: Exception) {
                         Either.Left(Failure.DefaultError(e.message!!))
@@ -56,14 +57,7 @@ interface PdvRepository {
 
         override fun getPdv(): Either<Failure, Pdv> {
             return try {
-                Log.d("getPDV", "pvsId ->" + prefs.pvId.toString()+"\n idUser -> "+ prefs.idUser.toString())
-                val count = pdvDataSource.getCountPdvIdUserNIdPv(prefs.pvId?:"",prefs.idUser ?: "")
-                var response : Pdv
-                if (count > 0){
-                    response = pdvDataSource.getPdv(prefs.pvId?:"",prefs.idUser ?: "").toView()
-                }else{
-                    response = pdvDataSource.getPdvWithOutIdUser(prefs.pvId ?: "").toView()
-                }
+                val response = pdvDataSource.getPdv(prefs.pvId?:"",prefs.idUser ?: "").toView()
                 Either.Right(response)
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))

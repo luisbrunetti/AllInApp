@@ -31,6 +31,7 @@ class ObservationsDialogFragment
     private lateinit var skuViewModel: SkuViewModel
     private var listObservations = ArrayList<String>()
     private lateinit var idSku:String
+    private lateinit var idPv:String
     var params = LinearLayout.LayoutParams(
         ViewGroup.LayoutParams.FILL_PARENT,
         ViewGroup.LayoutParams.WRAP_CONTENT
@@ -43,10 +44,11 @@ class ObservationsDialogFragment
     var nameGen= ""
     companion object {
 
-        fun newInstance(idSku:String,baseFragment: BaseFragment): ObservationsDialogFragment {
+        fun newInstance(idSku:String,idPv:String,baseFragment: BaseFragment): ObservationsDialogFragment {
             val frag = ObservationsDialogFragment(baseFragment)
             val bundle = Bundle()
             bundle.putString("data", idSku)
+            bundle.putString("idPv", idPv)
             frag.arguments = bundle
             return frag
         }
@@ -81,24 +83,36 @@ class ObservationsDialogFragment
             observe(successSetSkuObservation,{
                 it?.let {
                     if (it)
-                        skuViewModel.getSkuObservation(idSku,2)
+                        skuViewModel.getSkuObservation(idSku,2,idPv)
                 }
 
             })
 
 
         }
+        changeViewFragment()
 
         return binding.root
+    }
+
+    private fun changeViewFragment(){
+        baseFragment.translateObject.apply {
+            binding.btnSaveObservations.text =  findTranslate("btnSaveObservationDialog")
+            binding.textView27.text = findTranslate("btnTitleObservationDialog")
+            binding.edObservation.hint = findTranslate("edWriteObservationDialog")
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         arguments?.let { bundle ->
-            bundle.getString("data")?.let {
-                idSku= it
-                skuViewModel.getSkuObservation(idSku,1)
+            bundle.getString("data")?.let { idSku->
+                this.idSku = idSku
+                bundle.getString("idPv")?.let { idPv->
+                    this.idPv = idPv
+                    skuViewModel.getSkuObservation(idSku,1,idPv)
+                }
             }
         }
         binding.btnCloseModalObservations.setOnClickListener {
@@ -106,7 +120,7 @@ class ObservationsDialogFragment
         }
         binding.btnSaveObservations.setOnClickListener {
             if(binding.edObservation.text.toString().isNotEmpty())
-                skuViewModel.setSkuObservation(idSku,binding.edObservation.text.toString())
+                skuViewModel.setSkuObservation(idSku,idPv,binding.edObservation.text.toString())
             else
                 Toast.makeText(context,"Debe ingresar un valor",Toast.LENGTH_SHORT).show()
         }

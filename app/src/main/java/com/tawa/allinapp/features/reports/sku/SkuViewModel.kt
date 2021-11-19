@@ -70,7 +70,7 @@ class SkuViewModel
         //getSkuDetail(1)
     }
 
-    fun getSkuDetail(idSku:String,typeSku:Int) = getSkuDetail(GetSkuDetail.Params(idSku)) {
+    fun getSkuDetail(idSku:String,typeSku:Int,idPv:String) = getSkuDetail(GetSkuDetail.Params(idSku,idPv)) {
         _typeSku.value = typeSku
         it.either(::handleFailure, ::handleSkuDetail) }
 
@@ -78,7 +78,7 @@ class SkuViewModel
         _successSku.value = skuDetail
     }
 
-    fun updateSkuDetail(idSku:String,stock:Boolean,exhibition:Boolean,price:Float) = updateSkuDetail(UpdateSkuDetail.Params(idSku,stock,exhibition,price)) {
+    fun updateSkuDetail(idSku:String,idPv: String,stock:Boolean,exhibition:Boolean,price:Float) = updateSkuDetail(UpdateSkuDetail.Params(idSku,idPv,stock,exhibition,price)) {
         it.either(::handleFailure, ::handleUpdateSkuDetail) }
 
     private fun handleUpdateSkuDetail(success: Boolean) {
@@ -100,8 +100,8 @@ class SkuViewModel
         _successSyncSku.value = success
     }
 
-    fun setSkuObservation(idSkuDetail: String,observation: String) = setSkuObservation(SetSkuObservation.Params(
-        SkuObservation(0,idSkuDetail,observation)
+    fun setSkuObservation(idSkuDetail: String,idPv: String,observation: String) = setSkuObservation(SetSkuObservation.Params(
+        SkuObservation(0,idPv,idSkuDetail,observation)
     )) {
         it.either(::handleFailure, ::handleSetSkuObservation) }
 
@@ -109,7 +109,7 @@ class SkuViewModel
         _successSetSkuObservation.value = success
     }
 
-    fun getSkuObservation(idSkuDetail: String,type:Int) = getSkuObservation(GetSkuObservation.Params(idSkuDetail)) {
+    fun getSkuObservation(idSkuDetail: String,type:Int,idPv: String) = getSkuObservation(GetSkuObservation.Params(idSkuDetail,idPv)) {
         _type.value= type
         it.either(::handleFailure, ::handleGetSkuObservation) }
 
@@ -117,7 +117,7 @@ class SkuViewModel
         _successGetSkuObservation.value = skuObservation
     }
 
-    fun updateStateSku(idSku: String,state:String,type: String,latitude:String,longitude:String) = updateStateSku(UpdateStateSku.Params(idSku,state,type,latitude,longitude)) {
+    fun updateStateSku(_id:Int,idSku: String, state:String,type: String,latitude:String,longitude:String) = updateStateSku(UpdateStateSku.Params(_id,idSku,state,type,latitude,longitude)) {
         it.either(::handleFailure, ::handleSuccessUpdateStateSku) }
 
     private fun handleSuccessUpdateStateSku(success: Boolean) {

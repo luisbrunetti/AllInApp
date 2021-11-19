@@ -11,7 +11,7 @@ import com.tawa.allinapp.data.local.models.ScheduleModel
 @Dao
 interface PdvDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertPdv(pdvModel: PdvModel)
 
     @Query("SELECT * FROM pdv WHERE id=:idPdv and idUser =:idUser ")
@@ -23,7 +23,7 @@ interface PdvDao {
     @Query("SELECT * FROM pdv WHERE id=:idPdv")
     fun getPdvWithOutIdUser(idPdv:String): PdvModel
 
-    @Query("update pdv set idUser =:idUser, nameUser=:nameUser,phoneUser=:phoneUser,ruc=:ruc,latitude=:latitude,longitude=:longitude,image=:image,state=:state where id=:idPdv")
+    @Query("update pdv set idUser =:idUser, nameUser=:nameUser,phoneUser=:phoneUser,ruc=:ruc,latitude=:latitude,longitude=:longitude,image=:image,state=:state where id=:idPdv and idUser =:idUser" )
     fun updatePdv( idPdv: String,
                    idUser:String,
                    nameUser: String,

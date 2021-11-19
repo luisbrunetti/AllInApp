@@ -12,8 +12,10 @@ import android.widget.ArrayAdapter
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.DialogFragment
+import com.tawa.allinapp.core.dialog.MessageDialogFragment
 import com.tawa.allinapp.core.extensions.observe
 import com.tawa.allinapp.core.extensions.viewModel
+import com.tawa.allinapp.core.functional.Failure
 import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.DialogHomeBinding
 import com.tawa.allinapp.features.auth.AuthViewModel
@@ -54,9 +56,7 @@ class SelectorDialogFragment
                 getCompanies()
             } })
             observe(setIdCompanySuccess, { it?.let { if (it) {
-                //authViewModel.getPVRemote()
                 initViewModel.getReportsRemote(selectedCompany)
-                //dismiss()
             }
             } })
             observe(successGetReports, { it?.let { if (it)
@@ -73,16 +73,23 @@ class SelectorDialogFragment
                 baseFragment.hideProgressDialog()
                 dismiss()
 
-            } })
-            observe(failure, {
-                it?.let {
-                    Log.d("failure", it.toString())
-                    //val message = MessageDialogFragment.newInstance("Ha ocurrido al contectarse con el servidor \n ERROR : ${it.toString()}")
-                    //message.show(parentFragmentManager, "")
-                    //activity?.onBackPressed()
-                    //dismiss()
-                }
+            }})
+            observe(successGetPdvRemote,{
+                /*if(it == true){
+                    baseFragment.hideProgressDialog()
+                    dismiss()
+                }*/
+
             })
+            observe(failure,{
+                Log.d("it",it.toString())
+                when(it){
+                    is Failure.ServerError -> listener?.onReject()
+                    is Failure.NetworkConnection -> MessageDialogFragment.newInstance(baseFragment,"No se ha podido actualizar la información. No hay conexión a internet").show(childFragmentManager, "dialog")
+                    //is Failure.DefaultError -> listener?.onReject()
+                    else -> {}//listener?.onReject()
+                }})
+
         }
         authViewModel = viewModel(baseFragment.viewModelFactory){
             observe(successGetPV, { it?.let {
@@ -114,7 +121,6 @@ class SelectorDialogFragment
             val positionCompany = binding.spSelectCompany.selectedItemPosition
             selectedCompany = listCompany[positionCompany].id
             initViewModel.setIdCompany(selectedCompany,listCompany[positionCompany].image)
-            // initViewModel.getAudioRemote()
             initViewModel.getReportsSku(selectedCompany)
             initViewModel.getPdvRemote(selectedCompany)
             listener?.onAccept()
@@ -143,5 +149,6 @@ class SelectorDialogFragment
 
     interface Callback {
         fun onAccept()
+        fun onReject()
     }
 }

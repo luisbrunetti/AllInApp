@@ -3,6 +3,7 @@ package com.tawa.allinapp.features.reports.sku
 import android.graphics.Typeface
 import android.os.Bundle
 import android.text.InputType
+import android.util.Log
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -54,6 +55,7 @@ class SkuFragment : BaseFragment() {
     private val mapCheckEx = mutableMapOf<String,Boolean?>()
     private val mapEdPrice = mutableMapOf<String,Float?>()
     private val mapObs = mutableMapOf<String,ArrayList<String>>()
+    var _id: Int = -1
     var idReportPv:String = ""
     var idPv:String= ""
     var idCompany: String = ""
@@ -75,9 +77,9 @@ class SkuFragment : BaseFragment() {
                     listSku = it
                     for(sku in it)
                     {
-                        mapCheckStock[sku.id]=null
-                        mapCheckEx[sku.id]=null
-                        mapEdPrice[sku.id]=null
+                        mapCheckStock[sku.id] = null
+                        mapCheckEx[sku.id]    = null
+                        mapEdPrice[sku.id] = null
                     }
                     showTable()
                }
@@ -85,7 +87,7 @@ class SkuFragment : BaseFragment() {
                 {
                     for(det in it)
                     {
-                        skuViewModel.getSkuObservation(det.id,2)
+                        skuViewModel.getSkuObservation(det.id,2,idPv)
                     }
                 }
             } })
@@ -118,21 +120,23 @@ class SkuFragment : BaseFragment() {
             } })
             observe(successGetSku, { it?.let {
                 getLastLocation()
+                Log.d("SuccessGetSku", it.toString())
                 if(typeIni.value==1)
                 {
                     for(sku in it)
                     {
+                        _id = sku._id
                         idSkuUpdate = sku.id
                         idReportPv = sku.id
                         idPv = sku.idPv
                         idCompany = sku.idCompany
-                        skuViewModel.getSkuDetail(sku.id,1)
+                        skuViewModel.getSkuDetail(sku.id,1,sku.idPv)
                     }
                 }
                 if(typeIni.value==2)
                 {
                     for(sku in it)
-                        skuViewModel.getSkuDetail(sku.id,2)
+                        skuViewModel.getSkuDetail(sku.id,2,sku.idPv)
                 }
 
             } })
@@ -142,9 +146,10 @@ class SkuFragment : BaseFragment() {
                         skuType = it
                     else{
                         if(it=="Terminado") {
-                            showConfirmSyncDialog()
+                            skuViewModel.syncSku(idSkuUpdate)
+                        //showConfirmSyncDialog()
                         }
-                       // activity?.onBackPressed()
+                        activity?.onBackPressed()
                     }
                 }
 
@@ -218,8 +223,10 @@ class SkuFragment : BaseFragment() {
             binding.tvDateSkuReport.text = findTranslate("tvDateSkuReport") ?: "Fecha data"
             binding.tvDisplaySkuReport.text = findTranslate("tvDisplaySkuReport") ?: "Exhibición"
             binding.tvInventorySkuReport.text = findTranslate("tvInventorySkuReport") ?: "Inventario"
+            binding.tvObservationSkuReport.text = findTranslate("tvObservationSkuReport") ?: "Observación"
             binding.tvTitleSkuReport.text = findTranslate("tvTitleSkuReport") ?: "Quiebres y SKUS"
             binding.tvSubTitleSkuReport.text = findTranslate("tvSubTitleSkuReport") ?: "Report"
+
         }
     }
     private fun showTable(){
@@ -356,7 +363,7 @@ class SkuFragment : BaseFragment() {
 
             val buttonObservations = Button(context)
             btnObs.add(buttonObservations)
-            btnObs[flag].text = "+ Agregar"
+            btnObs[flag].text = "+"+ (translateObject.findTranslate("btnAddSkuFragment") ?: "Agregar")
             btnObs[flag].isAllCaps = false
             btnObs[flag].textSize = 18f
             val params = TableRow.LayoutParams(
@@ -369,7 +376,7 @@ class SkuFragment : BaseFragment() {
             btnObs[flag].setBackgroundResource(R.drawable.bg_blue_button_sku)
             btnObs[flag].setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
             btnObs[flag].tag = idSku[flag]
-            skuViewModel.getSkuObservation(idSku[flag],1)
+            skuViewModel.getSkuObservation(idSku[flag],1,idPv)
             btnObs[flag].setOnClickListener {
                 showObservationDialog(idSku[flag])
             }
@@ -411,7 +418,8 @@ class SkuFragment : BaseFragment() {
             }
             numPages.add(list.size%5)
         }
-        "${pageNum*5+1} - ${pageNum*5+numPages[pageNum]} de ${list.size} entradas".also { binding.tvPager.text = it }
+        ("${pageNum*5+1} - ${pageNum*5+numPages[pageNum]} ${translateObject.findTranslate("labelOfStatusFragment")?: "de" } " +
+                "${list.size} ${translateObject.findTranslate("labelInputStatusFragment") ?: "entradas"}").also { binding.tvPager.text = it }
         binding.btnPrevPage.setOnClickListener{
             for(check in checksStock)
                 mapCheckStock[check.tag.toString()] = check.isChecked
@@ -427,7 +435,7 @@ class SkuFragment : BaseFragment() {
             if(pageNum>0)
             {
                 pageNum--
-                "${pageNum*5+1} - ${pageNum*5+numPages[pageNum]} de ${list.size} entradas".also { binding.tvPager.text = it }
+                "${pageNum*5+1} - ${pageNum*5+numPages[pageNum]} ${translateObject.findTranslate("labelOfStatusFragment")?: "de" } ${list.size} ${translateObject.findTranslate("labelInputStatusFragment") ?: "entradas"}".also { binding.tvPager.text = it }
                 limitedTable(tl1,tl2,pageNum)
             }
         }
@@ -446,7 +454,7 @@ class SkuFragment : BaseFragment() {
             if(pageNum<(numPager-1))
             {
                 pageNum++
-                "${pageNum*5+1} - ${pageNum*5+numPages[pageNum]} de ${list.size} entradas".also { binding.tvPager.text = it }
+                "${pageNum*5+1} - ${pageNum*5+numPages[pageNum]} ${translateObject.findTranslate("labelOfStatusFragment")?: "de" } ${list.size} ${translateObject.findTranslate("labelInputStatusFragment") ?: "entradas"}".also { binding.tvPager.text = it }
                 limitedTable(tl1,tl2,pageNum)
             }
 
@@ -493,7 +501,7 @@ class SkuFragment : BaseFragment() {
     }
 
     private fun showConfirmDialog(type:String){
-        val dialog = ConfirmDialogFragment()
+        val dialog = ConfirmDialogFragment(this)
         dialog.show(childFragmentManager, "dialog")
         dialog.listener = object  : ConfirmDialogFragment.Callback{
             override fun onClickConfirm() {
@@ -506,12 +514,11 @@ class SkuFragment : BaseFragment() {
                         price=0.0f
                     if (exhibition != null) {
                         if (stock != null) {
-                            skuViewModel.updateSkuDetail(data.key,stock,exhibition,price)
-                        }
+                            skuViewModel.updateSkuDetail(data.key,idPv,stock,exhibition,price) }
                     }
                 }
-                skuViewModel.updateStateSku(idSkuUpdate,"En proceso",type,latitude,longitude)
-                activity?.onBackPressed()
+                skuViewModel.updateStateSku(_id,idSkuUpdate,"En proceso",type,latitude,longitude)
+                //activity?.onBackPressed()
             }
 
             override fun onClickOnBack() {
@@ -538,7 +545,7 @@ class SkuFragment : BaseFragment() {
     }
 
     private fun showFilterDialog(data:ArrayList<String>){
-        val dialog = FilterSkuDialogFragment.newInstance(data)
+        val dialog = FilterSkuDialogFragment.newInstance(this,data)
         dialog.show(childFragmentManager, "dialog")
         dialog.listener = object : FilterSkuDialogFragment.Callback{
             override fun onFilter(list:ArrayList<String>) {
@@ -553,7 +560,7 @@ class SkuFragment : BaseFragment() {
     }
 
     private fun showObservationDialog(id:String){
-        val dialog = ObservationsDialogFragment.newInstance(id,this)
+        val dialog = ObservationsDialogFragment.newInstance(id,idPv,this)
         dialog.show(childFragmentManager, "dialog")
         dialog.listener = object : ObservationsDialogFragment.Callback{
             override fun onClick(id:String,count:Int) {
