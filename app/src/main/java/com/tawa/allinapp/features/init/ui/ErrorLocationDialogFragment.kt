@@ -8,12 +8,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.DialogFragment
+import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.DialogErrorLocationBinding
 import javax.inject.Inject
 
 
 class ErrorLocationDialogFragment
-@Inject constructor(): DialogFragment(){
+@Inject constructor(val baseFragment: BaseFragment): DialogFragment(){
 
     private lateinit var binding: DialogErrorLocationBinding
     var listener: Callback? = null
@@ -31,8 +32,16 @@ class ErrorLocationDialogFragment
             listener?.onAccept()
             dismiss()
         }
+        changeViewFragment()
     }
 
+    private fun changeViewFragment(){
+        baseFragment.translateObject.apply {
+            binding.tvTitleRangeDialog.text = findTranslate("tvTitleRangeDialog") ?: "No estás en el rango del PDV"
+            binding.tvSubTtitleRangeDialog.text = findTranslate("tvSubTtitleRangeDialog") ?: "El máximo de distancia permitido es de 250 metros del PDV para ingresar el Check-In."
+            binding.btnCloseLocationError.text = findTranslate("btnCloseLocationError") ?: "Entendido"
+        }
+    }
     override fun onResume() {
         super.onResume()
         val params = dialog!!.window!!.attributes

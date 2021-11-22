@@ -458,8 +458,4 @@ class InitViewModel
 
     fun changeStateSyncChecks(value:Boolean){this._successSyncChecks.value = value}
 
-    fun checkpref(){
-        Log.d("pref",pref.language.toString())
-    }
-
 }

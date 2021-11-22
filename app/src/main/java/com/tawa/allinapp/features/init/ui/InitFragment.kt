@@ -558,19 +558,18 @@ class InitFragment : BaseFragment() {
         val navView = activity?.findViewById<BottomNavigationView>(R.id.nav_view)
         translateObject.apply {
             if(getInstance().isNotEmpty()){
-                initViewModel.checkpref()
                 Log.d("vistas",findTranslate("tvWelcomeInitFragment").toString())
-                binding.tvWelcomeInitFragment.text = findTranslate("tvWelcomeInitFragment")
-                binding.tvPvInitFragment.text = findTranslate("tvPvInitFragment")
-                binding.tvReportInitFragment.text = findTranslate("tvReportInitFragment")
-                binding.tvMessageInitFragment.text = findTranslate("tvMessageInitFragment")
-                binding.tvInformsInitFragment.text = findTranslate("tvInformsInitFragment")
-                binding.tvSyncInitFragment.text = findTranslate("tvSyncInitFragment")
-                binding.tvDocumentsInitFragment.text = findTranslate("tvDocumentsInitFragment")
-                binding.tvRoutesInitFragment.text = findTranslate("tvRoutesInitFragment")
-                binding.tvCalendarInitFragment.text = findTranslate("tvCalendarInitFragment")
-                binding.tvTaskInitFragment.text = findTranslate("tvTaskInitFragment")
-                Log.d("navigationInforms",findTranslate("navigation_informs").toString())
+                binding.tvWelcomeInitFragment.text = findTranslate("tvWelcomeInitFragment")?:"Buenos Dias"
+                binding.tvPvInitFragment.text = findTranslate("tvPvInitFragment") ?: "Puntos de venta"
+                binding.tvReportInitFragment.text = findTranslate("tvReportInitFragment") ?: "Reporte"
+                binding.tvMessageInitFragment.text = findTranslate("tvMessageInitFragment") ?: "Mensajes"
+                binding.tvInformsInitFragment.text = findTranslate("tvInformsInitFragment") ?: "Informes"
+                binding.tvSyncInitFragment.text = findTranslate("tvSyncInitFragment") ?: "Sincronizar"
+                binding.tvDocumentsInitFragment.text = findTranslate("tvDocumentsInitFragment") ?: "Documentos"
+                binding.tvRoutesInitFragment.text = findTranslate("tvRoutesInitFragment") ?: "Rutas"
+                binding.tvCalendarInitFragment.text = findTranslate("tvCalendarInitFragment") ?: "Calendario"
+                binding.tvTaskInitFragment.text = findTranslate("tvTaskInitFragment") ?: "Tareas"
+//                Log.d("navigationInforms",findTranslate("navigation_informs").toString())
                 navView?.menu?.findItem(R.id.navigation_informs)?.title =findTranslate("navigation_informs") ?: "Informes"
                 navView?.menu?.findItem(R.id.navigation_routes)?.title = findTranslate("navigation_routes") ?: "Rutas"
                 navView?.menu?.findItem(R.id.navigation_reports)?.title = findTranslate("navigation_reports") ?: "Reportes"

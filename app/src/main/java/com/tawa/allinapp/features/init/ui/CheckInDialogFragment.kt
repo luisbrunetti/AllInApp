@@ -180,7 +180,7 @@ class CheckInDialogFragment
     }
 
     private fun showErrorSelector(){
-        val dialog = ErrorLocationDialogFragment()
+        val dialog = ErrorLocationDialogFragment(baseFragment)
         dialog.listener = object : ErrorLocationDialogFragment.Callback{
             override fun onAccept() {
                 dismiss()
