@@ -119,11 +119,11 @@ class CheckInDialogFragment
                 //Toast.makeText(context,getBatteryPercentage(requireContext()).toString()+" - "+getHour() + " - "+latitude+","+longitude,Toast.LENGTH_LONG).show()
                 if(checkState)
                 {
-                    if((list?.get(_positionPv)?.lat!! == 0.0 && list?.get(_positionPv)?.long!! == 0.0) || (getDistance("${list?.get(_positionPv)?.lat}","${list?.get(_positionPv)?.long}",latitude,longitude)<=250)){
+//                    if((list?.get(_positionPv)?.lat!! == 0.0 && list?.get(_positionPv)?.long!! == 0.0) || (getDistance("${list?.get(_positionPv)?.lat}","${list?.get(_positionPv)?.long}",latitude,longitude)<=250)){
                         //Log.d("test","entre")
                         list?.let { list->
                             _pv = list[_positionPv].nameCorp
-                            _pvId = list[_positionPv].pv // problema
+                            _pvId = list[_positionPv].pv
                             _description = list[_positionPv].nameCorp
                             initViewModel.setPv(list[_positionPv].id,list[_positionPv].pv,list[_positionPv].nameCorp)
                             // initViewModel.setCheckIn(idUsers,list[_positionPv].pv,latitude,longitude)
@@ -133,7 +133,7 @@ class CheckInDialogFragment
                             listener?.onAccept(idUsers,_pvId,_pv, latitude,longitude,_description,getBatteryPercentage(requireContext()).toString())
                             dismiss()
                         }
-                    }else showErrorSelector()
+//                    }else showErrorSelector()
                 }
                 else{
                     listener?.onSnack(true)
