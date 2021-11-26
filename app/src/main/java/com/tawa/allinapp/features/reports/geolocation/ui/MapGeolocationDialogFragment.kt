@@ -27,6 +27,7 @@ import com.tawa.allinapp.models.TrackingInform
 import java.lang.Exception
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.SphericalUtil
+import com.tawa.allinapp.core.dialog.MessageDialogFragment
 import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.features.reports.geolocation.Constants
 import com.tawa.allinapp.models.Tracking
@@ -120,6 +121,8 @@ class InformRoutesMapDialogFragment
         var lat : Double? = null
         var long: Double? = null
         val pvs = ArrayList<String>()
+        try{
+
         listRoutes?.let { listInformTracking ->
             for (userTracking in listInformTracking) {
                 Log.d("UserTracking", "UserTracking -> ${userTracking.nameUser} List -> ${userTracking.listTracking}")
@@ -226,6 +229,9 @@ class InformRoutesMapDialogFragment
                 googleMap.moveCamera(CameraUpdateFactory.newLatLng(LatLng(lat!!, long!!)))
                 googleMap.setMinZoomPreference(10f)
             }
+        }}
+        catch (e : Exception){
+            MessageDialogFragment.newInstance(baseFragment,baseFragment.translateObject.findTranslate("tvErrorMessageFrag") ?: "Hubo un error")
         }
     }
 
@@ -233,25 +239,30 @@ class InformRoutesMapDialogFragment
         googleMap: GoogleMap,
         tracking: Tracking,
     ) {
-        val pvPosition = LatLng(tracking.latitude!!,tracking.longitude!!)
-        val iconD = resources.getDrawable(R.drawable.ic_marker_routes)
-        lastLatLng = convertLatLngInMeter(pvPosition)
-        val marker = googleMap.addMarker(MarkerOptions()
-            .position(lastLatLng)
-            .infoWindowAnchor(0f,-0.1f)
-            .icon(getMarkerIconFromDrawable(iconD))
-        )
-        hmPvsInfoWindow[marker.id] = InfoWindowPv(
-            markerId = marker.id,
-            tracking.Pv, tracking.codPvCop,
-            tracking.dirCorpPv, Constants.POINT_SALE,
-            1,
-            tracking.checks.checkIn.pendientes,
-            tracking.checks.checkIn.concluidas,
-            tracking.checks.checkOut.pendientes,
-            tracking.checks.checkOut.concluidas,
-            tracking.reports.tareasPendientes,
-            tracking.reports.tareasCompletadas)
+        tracking.let { track ->
+            LatLng(track.latitude!!,track.longitude!!).let {
+                val pvPosition = it
+                val iconD = resources.getDrawable(R.drawable.ic_marker_routes)
+                lastLatLng = convertLatLngInMeter(pvPosition)
+                val marker = googleMap.addMarker(MarkerOptions()
+                    .position(lastLatLng)
+                    .infoWindowAnchor(0f,-0.1f)
+                    .icon(getMarkerIconFromDrawable(iconD))
+                )
+                hmPvsInfoWindow[marker.id] = InfoWindowPv(
+                    markerId = marker.id,
+                    track.Pv, track.codPvCop,
+                    track.dirCorpPv, Constants.POINT_SALE,
+                    1,
+                    track.checks.checkIn.pendientes,
+                    track.checks.checkIn.concluidas,
+                    track.checks.checkOut.pendientes,
+                    track.checks.checkOut.concluidas,
+                    track.reports.tareasPendientes,
+                    track.reports.tareasCompletadas)
+            }
+        }
+
     }
 
     private fun sumValues(tracking: Tracking) {

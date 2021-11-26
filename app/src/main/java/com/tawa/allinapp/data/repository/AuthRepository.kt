@@ -31,13 +31,16 @@ interface AuthRepository {
                             true -> {
                                 response.body()?.let { body ->
                                     if(body.success) {
-                                        prefs.name = body.data.fullName
-                                        prefs.user = body.data.user
-                                        prefs.token = body.data.token
-                                        prefs.idUser = body.data.idUser
-                                        prefs.role = body.data.role[0]
-                                        prefs.checkIn = true
-                                        Either.Right(true)
+                                        if(body.data.role[0].toString().lowercase() != "ADMINISTRADOR GENERAL".lowercase()
+                                            && body.data.role[0].lowercase() != "CLIENTE".lowercase()){
+                                            prefs.name = body.data.fullName
+                                            prefs.user = body.data.user
+                                            prefs.token = body.data.token
+                                            prefs.idUser = body.data.idUser
+                                            prefs.role = body.data.role[0]
+                                            prefs.checkIn = true
+                                            Either.Right(true)
+                                        }else Either.Left(Failure.UnauthorizedError)
                                     }
                                     else
                                         Either.Left(Failure.DefaultError(body.message))

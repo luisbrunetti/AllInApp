@@ -85,6 +85,7 @@ class LoginFragment : BaseFragment() {
                     is Failure.NetworkConnection    -> MessageDialogFragment.newInstance(this@LoginFragment,getString(R.string.error_network)).show(childFragmentManager, "dialog")
                     is Failure.ServerError          -> MessageDialogFragment.newInstance(this@LoginFragment,getString(R.string.error_network)).show(childFragmentManager, "dialog")
                     is Failure.MessageEmptyError    -> { binding.swLoginFragment.alpha = 0.5f; binding.swLoginFragment.isEnabled = false; MessageDialogFragment.newInstance(this@LoginFragment,it.message.toString()).show(childFragmentManager, "dialog") }
+                    is Failure.UnauthorizedError    -> MessageDialogFragment.newInstance(this@LoginFragment,"No se puede ingresar con este tipo de usuario").show(childFragmentManager, "dialog")
                     else                            -> MessageDialogFragment.newInstance(this@LoginFragment,getString(R.string.error_unknown)).show(childFragmentManager, "dialog")
                 }}})
         }
@@ -136,10 +137,6 @@ class LoginFragment : BaseFragment() {
         binding.executePendingBindings()
     }
 
-
-    private fun checkLanguageNumber(){
-
-    }
 
     fun getJsonDataFromAsset(context: Context, fileName: String): String? {
         val jsonString: String
