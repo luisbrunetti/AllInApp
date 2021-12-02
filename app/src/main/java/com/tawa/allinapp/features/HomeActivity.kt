@@ -35,6 +35,7 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         appComponent.inject(this)
         val dev = devMod()
+
         if(dev == BuildConfig.DEV) {
             Toast.makeText(applicationContext, "Error", Toast.LENGTH_LONG).show()
             return

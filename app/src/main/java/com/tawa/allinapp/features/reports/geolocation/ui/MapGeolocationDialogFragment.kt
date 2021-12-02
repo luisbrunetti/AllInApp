@@ -224,14 +224,24 @@ class InformRoutesMapDialogFragment
                     else sumValues(tracking)
                 }
             }
+            checkPdvFinished()
             if (lat != null && long != null) {
-                Log.d("camara","entre")
+                //Log.d("camara","entre")
                 googleMap.moveCamera(CameraUpdateFactory.newLatLng(LatLng(lat!!, long!!)))
                 googleMap.setMinZoomPreference(10f)
-            }
-        }}
+            }}}
         catch (e : Exception){
             MessageDialogFragment.newInstance(baseFragment,baseFragment.translateObject.findTranslate("tvErrorMessageFrag") ?: "Hubo un error")
+        }
+    }
+    private fun checkPdvFinished(){
+        for(key in hmPvsInfoWindow.keys){
+            val item = hmPvsInfoWindow[key]
+            if( (item?.checkInToDo == item?.checkOutToDo) &&
+                (item?.checkOutToDo == item?.checkOutFinished) &&
+                (item?.tasksTodo == item?.taskFinished)){
+                    item?.marker?.setIcon(getMarkerIconFromDrawable(resources.getDrawable(R.drawable.ic_marker_routes_finished)))
+            }
         }
     }
 
@@ -250,7 +260,7 @@ class InformRoutesMapDialogFragment
                     .icon(getMarkerIconFromDrawable(iconD))
                 )
                 hmPvsInfoWindow[marker.id] = InfoWindowPv(
-                    markerId = marker.id,
+                    marker = marker,
                     track.Pv, track.codPvCop,
                     track.dirCorpPv, Constants.POINT_SALE,
                     1,
@@ -356,7 +366,7 @@ data class InfoGeolocation(
 )
 
 data class InfoWindowPv(
-    val markerId: String,
+    val marker: Marker,
     val pv:String,
     val codPv:String,
     val dirPv:String,

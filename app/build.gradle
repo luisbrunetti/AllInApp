@@ -6,9 +6,29 @@ plugins {
     id 'androidx.navigation.safeargs.kotlin'
 }
 
-def dev = 100
+def dev = 1
 
 android {
+    signingConfigs {
+        debug {
+            storeFile file('C:\\Users\\luisb\\OneDrive\\Documents\\Tistmart\\apks\\keyStore.jks')
+            storePassword 'tismart'
+            keyAlias 'key0'
+            keyPassword 'tismart'
+        }
+        prod {
+            storeFile file('C:\\Users\\luisb\\OneDrive\\Documents\\Tistmart\\apks\\keyStore.jks')
+            storePassword 'tismart'
+            keyAlias 'key0'
+            keyPassword 'tismart'
+        }
+        release {
+            storeFile file('C:\\Users\\luisb\\OneDrive\\Documents\\Tistmart\\apks\\keyStore.jks')
+            storePassword 'tismart'
+            keyAlias 'key0'
+            keyPassword 'tismart'
+        }
+    }
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
 
@@ -19,6 +39,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        signingConfig signingConfigs.release
     }
 
     buildFeatures {
@@ -40,22 +61,30 @@ android {
 
     buildTypes {
         debug {
-            minifyEnabled false
+            minifyEnabled true // Quitar cuando se hara pruebas
+            shrinkResources true // Quitar cuando se hara pruebas
+           // proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.debug
             //buildConfigField("String", "BASE_URL", "\"http://192.168.0.8:3000\"")
             buildConfigField("String", "BASE_URL", "\"http://alb-all-in-web-1372832709.us-east-1.elb.amazonaws.com/\"")
+            //buildConfigField("String", "BASE_URL", "\"http://alb-all-in-web-prd-386914023.us-east-1.elb.amazonaws.com/\"")// API DE PRODUCCION
             buildConfigField('int', 'DEV', "$dev")
+
         }
         prod {
-            minifyEnabled false
-            signingConfig signingConfigs.debug
-            buildConfigField("String", "BASE_URL", "\"http://alb-all-in-web-1372832709.us-east-1.elb.amazonaws.com/\"")
+            //minifyEnabled true // Quitar cuando se hara pruebas
+            //shrinkResources true // Quitar cuando se hara pruebas
+            //signingConfig signingConfigs.debug
+            buildConfigField("String", "BASE_URL", "\"http://alb-all-in-web-prd-386914023.us-east-1.elb.amazonaws.com/\"")
+            //buildConfigField('int', 'PRD', "$dev")
             buildConfigField('int', 'DEV', "$dev")
         }
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            buildConfigField("String", "BASE_URL", "\"http://alb-all-in-web-1372832709.us-east-1.elb.amazonaws.com/\"")
+            //minifyEnabled true // Quitar cuando se hara pruebas
+            //shrinkResources true // Quitar cuando se hara pruebas
+            signingConfig signingConfigs.debug
+            //proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            buildConfigField("String", "BASE_URL", "\"http://alb-all-in-web-prd-386914023.us-east-1.elb.amazonaws.com/\"")
             buildConfigField('int', 'DEV', "$dev")
         }
     }
