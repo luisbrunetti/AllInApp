@@ -234,13 +234,14 @@ class InformRoutesMapDialogFragment
             MessageDialogFragment.newInstance(baseFragment,baseFragment.translateObject.findTranslate("tvErrorMessageFrag") ?: "Hubo un error")
         }
     }
+    @SuppressLint("UseCompatLoadingForDrawables")
     private fun checkPdvFinished(){
         for(key in hmPvsInfoWindow.keys){
             val item = hmPvsInfoWindow[key]
-            if( (item?.checkInToDo == item?.checkOutToDo) &&
-                (item?.checkOutToDo == item?.checkOutFinished) &&
-                (item?.tasksTodo == item?.taskFinished)){
-                    item?.marker?.setIcon(getMarkerIconFromDrawable(resources.getDrawable(R.drawable.ic_marker_routes_finished)))
+            if( (item?.checkInToDo == 0) &&
+                (item.checkOutToDo == 0) &&
+                (item.tasksTodo == 0)){
+                item.marker.setIcon(getMarkerIconFromDrawable(resources.getDrawable(R.drawable.ic_marker_routes_finished)))
             }
         }
     }

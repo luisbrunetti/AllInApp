@@ -6,7 +6,7 @@ plugins {
     id 'androidx.navigation.safeargs.kotlin'
 }
 
-def dev = 1
+def dev = 1000
 
 android {
     signingConfigs {
@@ -34,9 +34,9 @@ android {
 
     defaultConfig {
         applicationId "com.tawa.allinapp"
-        minSdkVersion 21
+        minSdkVersion 24
         targetSdkVersion 30
-        versionCode 1
+        versionCode 5
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         signingConfig signingConfigs.release
@@ -61,30 +61,29 @@ android {
 
     buildTypes {
         debug {
-            minifyEnabled true // Quitar cuando se hara pruebas
-            shrinkResources true // Quitar cuando se hara pruebas
-           // proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            //minifyEnabled true
+            //shrinkResources true
+            //proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.debug
             //buildConfigField("String", "BASE_URL", "\"http://192.168.0.8:3000\"")
             buildConfigField("String", "BASE_URL", "\"http://alb-all-in-web-1372832709.us-east-1.elb.amazonaws.com/\"")
             //buildConfigField("String", "BASE_URL", "\"http://alb-all-in-web-prd-386914023.us-east-1.elb.amazonaws.com/\"")// API DE PRODUCCION
             buildConfigField('int', 'DEV', "$dev")
-
         }
         prod {
-            //minifyEnabled true // Quitar cuando se hara pruebas
-            //shrinkResources true // Quitar cuando se hara pruebas
-            //signingConfig signingConfigs.debug
-            buildConfigField("String", "BASE_URL", "\"http://alb-all-in-web-prd-386914023.us-east-1.elb.amazonaws.com/\"")
+            //minifyEnabled false
+            shrinkResources true
+            signingConfig signingConfigs.debug
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            //buildConfigField("String", "BASE_URL", "\"http://alb-all-in-web-prd-386914023.us-east-1.elb.amazonaws.com/\"")
+            buildConfigField("String", "BASE_URL", "\"http://alb-all-in-web-1372832709.us-east-1.elb.amazonaws.com/\"")
             //buildConfigField('int', 'PRD', "$dev")
             buildConfigField('int', 'DEV', "$dev")
         }
         release {
-            //minifyEnabled true // Quitar cuando se hara pruebas
-            //shrinkResources true // Quitar cuando se hara pruebas
             signingConfig signingConfigs.debug
             //proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            buildConfigField("String", "BASE_URL", "\"http://alb-all-in-web-prd-386914023.us-east-1.elb.amazonaws.com/\"")
+            buildConfigField("String", "BASE_URL","\"http://alb-all-in-web-prd-386914023.us-east-1.elb.amazonaws.com/\"")
             buildConfigField('int', 'DEV', "$dev")
         }
     }

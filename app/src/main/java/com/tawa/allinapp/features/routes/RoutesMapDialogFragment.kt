@@ -1,10 +1,8 @@
 package com.tawa.allinapp.features.routes
 
-import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
-import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
@@ -13,20 +11,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.tawa.allinapp.databinding.DialogMapRoutesBinding
 import com.tawa.allinapp.models.Routes
-import android.widget.TextView
 
-import android.view.Gravity
-
-import android.widget.LinearLayout
-import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter
 import com.google.android.gms.maps.model.*
+import com.tawa.allinapp.R
 import com.tawa.allinapp.models.InfoWindowRoutesData
 
 
@@ -37,6 +31,8 @@ class RoutesMapDialogFragment: DialogFragment() {
     var lat = ""
     var long = ""
     var nameGen= ""
+    private var hashPvds : MutableMap<Marker,Pdvs> = mutableMapOf()
+
     companion object {
 
         fun newInstance(listRoutes : List<Routes>): RoutesMapDialogFragment {
@@ -91,6 +87,7 @@ class RoutesMapDialogFragment: DialogFragment() {
     }
 
     private val mapCallback = OnMapReadyCallback { googleMap ->
+        hashPvds = mutableMapOf()
         arguments?.let { bundle ->
             bundle.getStringArrayList("latitude")?.let { lat->
                 bundle.getStringArrayList("longitude")?.let { lon->
@@ -117,11 +114,35 @@ class RoutesMapDialogFragment: DialogFragment() {
                                 .icon(getMarkerIconFromDrawable(iconD))
                             )
                             marker!!.tag = info
+                            hashPvds[marker] = Pdvs(checkInPending[index].toInt(),
+                                checkOutToDo = checkOutPending[index].toInt(),
+                                taskPending[index].toInt())
                            // marker.showInfoWindow()
                         }
                         googleMap.moveCamera(CameraUpdateFactory.newLatLng(LatLng(lat[0].toDouble(), lon[0].toDouble())))
                         googleMap.setMinZoomPreference(10f)
                     }
+                }
+            }
+        }
+        checkPdvIsFinished()
+    }
+
+    private fun checkPdvIsFinished(){
+        for(mark in hashPvds.keys){
+            val pdv = hashPvds[mark]
+            pdv?.let {
+                if((pdv.checkInTodo == 0) &&
+                    (pdv.checkOutToDo == 0) &&
+                    (pdv.TasksToDo == 0)) {
+                    mark.setIcon(ContextCompat.getDrawable(
+                        requireContext(),
+                        R.drawable.ic_marker_routes_finished
+                    )?.let { it1 ->
+                        getMarkerIconFromDrawable(
+                            it1
+                        )
+                    })
                 }
             }
         }
@@ -157,4 +178,10 @@ class RoutesMapDialogFragment: DialogFragment() {
     interface Callback {
         fun onAccept()
     }
+
+    data class Pdvs(
+        val checkInTodo: Int,
+        val checkOutToDo :Int,
+        val TasksToDo:Int
+    )
 }

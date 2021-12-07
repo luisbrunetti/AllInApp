@@ -56,10 +56,12 @@ class PdvMapDialogFragment: DialogFragment() {
             bundle.getString("latitude")?.let { lat->
                 bundle.getString("longitude")?.let { lon->
                     bundle.getString("name")?.let {
-                        val userPosition = LatLng(lat.toDouble(), lon.toDouble())
-                        googleMap.addMarker(MarkerOptions().position(userPosition).title(it))
-                        googleMap.moveCamera(CameraUpdateFactory.newLatLng(userPosition))
-                        googleMap.setMinZoomPreference(10f)
+                        if(lat != "" && lon != ""){
+                            val userPosition = LatLng(lat.toDouble(), lon.toDouble())
+                            googleMap.addMarker(MarkerOptions().position(userPosition).title(it))
+                            googleMap.moveCamera(CameraUpdateFactory.newLatLng(userPosition))
+                            googleMap.setMinZoomPreference(10f)
+                        }
                     }
                 }
 

@@ -146,8 +146,8 @@ class SkuFragment : BaseFragment() {
                         skuType = it
                     else{
                         if(it=="Terminado") {
-                            skuViewModel.syncSku(idSkuUpdate)
-                        //showConfirmSyncDialog()
+                            //skuViewModel.syncSku(idSkuUpdate)
+                            showConfirmSyncDialog()
                         }
                         activity?.onBackPressed()
                     }
@@ -533,7 +533,6 @@ class SkuFragment : BaseFragment() {
         dialog.listener = object  : ConfirmSyncSkuDialogFragment.Callback{
             override fun onClick() {
                skuViewModel.syncSku(idSkuUpdate)
-
             }
 
             override fun onBack() {

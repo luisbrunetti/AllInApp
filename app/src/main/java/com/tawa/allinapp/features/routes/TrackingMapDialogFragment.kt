@@ -11,14 +11,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.BitmapDescriptor
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
+import com.tawa.allinapp.R
 import com.tawa.allinapp.databinding.DialogMapRoutesBinding
 import com.tawa.allinapp.models.InfoWindowRoutesData
 import com.tawa.allinapp.models.InfoWindowTrackingData
@@ -32,6 +31,7 @@ class TrackingMapDialogFragment: DialogFragment() {
     var lat = ""
     var long = ""
     var nameGen= ""
+    private var hashPvds : MutableMap<Marker, Pdvs> = mutableMapOf()
     companion object {
 
         fun newInstance(listTracking : List<Tracking>): TrackingMapDialogFragment {
@@ -203,12 +203,35 @@ class TrackingMapDialogFragment: DialogFragment() {
                                         .icon(getMarkerIconFromDrawable(iconD))
                                     )
                                     marker!!.tag = info
+                                    hashPvds[marker] = Pdvs(checkInPending[index].toInt(), checkOutPending[index].toInt(),taskPending[index].toInt())
                                 }
                             }
                             googleMap.moveCamera(CameraUpdateFactory.newLatLng(LatLng(lat[0].toDouble(), lon[0].toDouble())))
                             googleMap.setMinZoomPreference(10f)
                         }
                     }
+                }
+            }
+        }
+        checkPdvIsFinished()
+    }
+
+    private fun checkPdvIsFinished(){
+        for(mark in hashPvds.keys){
+            val pdv = hashPvds[mark]
+            pdv?.let {
+                if((pdv.checkInTodo == 0) &&
+                    (pdv.checkOutToDo == 0) &&
+                    (pdv.TasksToDo == 0)) {
+                    mark.setIcon(
+                        ContextCompat.getDrawable(
+                        requireContext(),
+                        R.drawable.ic_marker_routes_finished
+                    )?.let { it1 ->
+                        getMarkerIconFromDrawable(
+                            it1
+                        )
+                    })
                 }
             }
         }
@@ -246,4 +269,9 @@ class TrackingMapDialogFragment: DialogFragment() {
     interface Callback {
         fun onAccept()
     }
+    data class Pdvs(
+        val checkInTodo: Int,
+        val checkOutToDo :Int,
+        val TasksToDo:Int
+    )
 }

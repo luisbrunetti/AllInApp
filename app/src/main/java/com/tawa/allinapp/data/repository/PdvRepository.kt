@@ -2,6 +2,7 @@ package com.tawa.allinapp.data.repository
 
 
 import android.util.Log
+import com.google.gson.Gson
 import com.tawa.allinapp.core.functional.Either
 import com.tawa.allinapp.core.functional.Failure
 import com.tawa.allinapp.core.functional.NetworkHandler
@@ -34,10 +35,14 @@ interface PdvRepository {
                         val response = service.getPdvCompany("Bearer ${prefs.token!!}",idCompany).execute()
                         when (response.isSuccessful) {
                             true -> {
+                                Log.d("prefs ->", prefs.token.toString())
                                 response.body()?.let { body ->
+                                    //pdvDataSource.deletePdvs()
                                     if(body.success) {
+                                        Log.d("response", Gson().toJson(body.data))
                                         body.data.map {
                                             it.idUser = prefs.idUser ?: ""
+                                            Log.d("pdv",it.pdvDescription.toString())
                                             pdvDataSource.insertPdv(it.toModel())
                                         }
                                         Either.Right(true)

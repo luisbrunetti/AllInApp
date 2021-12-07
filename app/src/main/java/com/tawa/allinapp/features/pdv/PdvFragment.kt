@@ -14,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.facebook.drawee.drawable.ScalingUtils
+import com.tawa.allinapp.core.dialog.MessageDialogFragment
 import com.tawa.allinapp.core.extensions.observe
 import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.platform.BaseFragment
@@ -120,7 +121,8 @@ class PdvFragment : BaseFragment() {
             activity?.onBackPressed()
         }
         binding.showLocationPdv.setOnClickListener {
-                showMapDialogPdv(latitudePdv,longitudePdv,namePdv)
+            if(latitudePdv != "" && longitudePdv != "" ) showMapDialogPdv(latitudePdv,longitudePdv,namePdv)
+            else MessageDialogFragment.newInstance(this, "El punto de venta no tiene longitud y latitud")
         }
         binding.btnUpdateLocation.setOnClickListener {
             getLastLocation()

@@ -10,6 +10,9 @@ class PdvDataSource @Inject constructor(private val pdvDao: PdvDao){
     fun insertPdv(pdvModel: PdvModel){
         pdvDao.insertPdv(pdvModel)
     }
+    fun deletePdvs(){
+        pdvDao.deletePdvs()
+    }
 
     fun getPdv (idPdv:String,idUser: String):PdvModel{
         return pdvDao.getPdv(idPdv,idUser)
