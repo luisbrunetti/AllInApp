@@ -36,7 +36,7 @@ android {
         applicationId "com.tawa.allinapp"
         minSdkVersion 24
         targetSdkVersion 30
-        versionCode 5
+        versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         signingConfig signingConfigs.release
@@ -65,17 +65,15 @@ android {
             //shrinkResources true
             //proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.debug
-            //buildConfigField("String", "BASE_URL", "\"http://192.168.0.8:3000\"")
             buildConfigField("String", "BASE_URL", "\"http://alb-all-in-web-1372832709.us-east-1.elb.amazonaws.com/\"")
-            //buildConfigField("String", "BASE_URL", "\"http://alb-all-in-web-prd-386914023.us-east-1.elb.amazonaws.com/\"")// API DE PRODUCCION
             buildConfigField('int', 'DEV', "$dev")
         }
         prod {
-            //minifyEnabled false
-            shrinkResources true
-            signingConfig signingConfigs.debug
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            //buildConfigField("String", "BASE_URL", "\"http://alb-all-in-web-prd-386914023.us-east-1.elb.amazonaws.com/\"")
+            //minifyEnabled true
+            //shrinkResources true
+            //signingConfig signingConfigs.debug
+            //proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            //buildConfigField("String", "BASE_URL", "\"http://alb-all-in-web-prd-386914023.us-east-1.elb.amazonaws.com/\"")// API DE PRODUCCION
             buildConfigField("String", "BASE_URL", "\"http://alb-all-in-web-1372832709.us-east-1.elb.amazonaws.com/\"")
             //buildConfigField('int', 'PRD', "$dev")
             buildConfigField('int', 'DEV', "$dev")
@@ -92,6 +90,11 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
         coreLibraryDesugaringEnabled true
     }
+
+    lintOptions{
+        checkReleaseBuilds false
+    }
+
     kotlinOptions {
         jvmTarget = '1.8'
         useIR = true

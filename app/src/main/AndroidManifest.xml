@@ -13,15 +13,9 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-        tools:ignore="ScopedStorage" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" tools:ignore="ScopedStorage" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-feature android:name="android.hardware.camera"
-        android:required="true" />
-    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"/>
-
-    <meta-data android:name="com.quickblox.messages.TYPE" android:value="FCM" />
-    <meta-data android:name="com.quickblox.messages.QB_ENVIRONMENT" android:value="DEVELOPMENT" />
+    <uses-feature android:name="android.hardware.camera" android:required="true" />
 
     <application
         android:name=".AndroidApplication"
@@ -71,6 +65,4 @@
         </provider>
 
     </application>
-
-
 </manifest>

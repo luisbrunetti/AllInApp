@@ -304,6 +304,8 @@ class PictureFragment : BaseFragment() {
                         pictureAfterAdapter.collection.add(it)
                         pictureAfterAdapter.notifyDataSetChanged()
                     }
+                }else{
+                    Log.d("Error", "error")
                 }
             }
         } catch (e : Exception){
@@ -313,8 +315,8 @@ class PictureFragment : BaseFragment() {
     }
 
     private fun launchCamera2(origin: Int) {
-        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         try {
+        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
             photoFile = createImageFile()
             if (photoFile != null) {
                 val photoURI = FileProvider.getUriForFile(

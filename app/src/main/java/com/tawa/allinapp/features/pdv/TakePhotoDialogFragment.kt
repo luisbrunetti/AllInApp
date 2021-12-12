@@ -9,6 +9,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -156,14 +157,17 @@ class TakePhotoDialogFragment
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        try{
+            if (requestCode == CAPTURE_IMAGE_REQUEST && resultCode == Activity.RESULT_OK) {
+                urlImage = photoFile!!.absolutePath
+                val imageUri = Uri.fromFile(File(urlImage))
+                binding.photoPdv.setImageURI(imageUri,"")
 
-        if (requestCode == CAPTURE_IMAGE_REQUEST && resultCode == Activity.RESULT_OK) {
-            urlImage = photoFile!!.absolutePath
-            val imageUri = Uri.fromFile(File(urlImage))
-            binding.photoPdv.setImageURI(imageUri,"")
-
-        } else {
-            displayMessage(requireContext(), "Request cancelled or something went wrong.")
+            } else {
+                displayMessage(requireContext(), "Request cancelled or something went wrong.")
+            }
+        }catch (e: Exception){
+            Log.d("exception",e.toString())
         }
     }
 

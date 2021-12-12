@@ -182,14 +182,23 @@ class RoutesFragment : BaseFragment() {
         translateObject.apply{
             if(getInstance().isNotEmpty()) {
                 binding.textView31.text = findTranslate("tvTypeRoute")
+
                 binding.tvLabelUserRoute.text = findTranslate("tvLabelUserRoute")
+
                 binding.edUserRoutes.hint = findTranslate("edUserRoutes")
+
                 binding.tvLabelSelectDateRoute.text = findTranslate("tvLabelSelectDateRoute")
+
                 binding.edDateRoute.hint = findTranslate("edDateRoute")
+
                 binding.btnRoutes.text = findTranslate("btnRoutes")
+
                 binding.btnTracking.text = findTranslate("btnTracking")
+
                 binding.btnShowMapRoutes.text = findTranslate("btnShowMapRoutes")
+
                 binding.tvPdvRoute.text = findTranslate("tvPdvRoute")
+
             }else authViewModel.getTranslate()
         }
     }

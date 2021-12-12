@@ -2997,10 +2997,9 @@ class CheckListFragment: BaseFragment() {
     }
 
     private fun launchCamera() {
-
+        try{
         val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         // Create the File where the photo should go
-        try {
             photoFile = createImageFile()
             // Continue only if the File was successfully created
             if (photoFile != null) {
