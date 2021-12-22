@@ -49,7 +49,12 @@ class SelectorDialogFragment
                 if(positionCompany.value==-1) {
                     arrayList.addAll(toArray(it))
                     binding.spSelectCompany.adapter = aa
-                    listCompany = it
+                    if(it.isNotEmpty()){
+                        listCompany = it
+                        binding.btnEnterCompany.isEnabled = true
+                        binding.btnEnterCompany.alpha = 1.0f
+                    }
+
                 }
             } })
             observe(positionCompany, { it?.let {

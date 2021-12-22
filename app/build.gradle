@@ -6,7 +6,7 @@ plugins {
     id 'androidx.navigation.safeargs.kotlin'
 }
 
-def dev = 1000
+def dev = 10000
 
 android {
     signingConfigs {
@@ -36,8 +36,8 @@ android {
         applicationId 'com.tismart.allinapp'
         minSdkVersion 24
         targetSdkVersion 30
-        versionCode 1
-        versionName "1.0"
+        versionCode 4
+        versionName "1.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         signingConfig signingConfigs.release
     }
@@ -61,21 +61,18 @@ android {
 
     buildTypes {
         debug {
-            //minifyEnabled true
-            //shrinkResources true
-            //proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.debug
             buildConfigField("String", "BASE_URL", "\"http://alb-all-in-web-1372832709.us-east-1.elb.amazonaws.com/\"")
+            //buildConfigField("String", "BASE_URL", "\"http://alb-all-in-web-prd-386914023.us-east-1.elb.amazonaws.com/\"")// API DE PRODUCCION
             buildConfigField('int', 'DEV', "$dev")
         }
         prod {
             //minifyEnabled true
             //shrinkResources true
-            //signingConfig signingConfigs.debug
             //proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
             //buildConfigField("String", "BASE_URL", "\"http://alb-all-in-web-prd-386914023.us-east-1.elb.amazonaws.com/\"")// API DE PRODUCCION
-            buildConfigField("String", "BASE_URL", "\"http://alb-all-in-web-1372832709.us-east-1.elb.amazonaws.com/\"")
-            //buildConfigField('int', 'PRD', "$dev")
+            //buildConfigField("String", "BASE_URL", "\"http://alb-all-in-web-1372832709.us-east-1.elb.amazonaws.com/\"")
             buildConfigField('int', 'DEV', "$dev")
         }
         release {
@@ -85,6 +82,9 @@ android {
             buildConfigField('int', 'DEV', "$dev")
         }
     }
+    //Subir simbolos de depuración nativos
+    android.defaultConfig.ndk.debugSymbolLevel = 'FULL'
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -133,9 +133,9 @@ dependencies {
     implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
 
     // Retrofit components
-    implementation 'com.squareup.retrofit2:retrofit:2.8.1'
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.google.code.gson:gson:2.8.6'
-    implementation 'com.squareup.retrofit2:converter-gson:2.7.2'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     implementation 'com.squareup.retrofit2:converter-scalars:2.5.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.4.0'
 
@@ -147,7 +147,7 @@ dependencies {
 
     // Lifecycle components
     implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
-    kapt "androidx.lifecycle:lifecycle-compiler:2.4.0-alpha02"
+    kapt "androidx.lifecycle:lifecycle-compiler:2.4.0"
     androidTestImplementation "androidx.arch.core:core-testing:2.1.0"
 
     // ViewModel Kotlin support
@@ -195,9 +195,9 @@ dependencies {
     }
 
     //QuickBlox
-    implementation "com.quickblox:quickblox-android-sdk-messages:$quick_blox_version"
-    implementation "com.quickblox:quickblox-android-sdk-chat:$quick_blox_version"
-    implementation "com.quickblox:quickblox-android-sdk-content:$quick_blox_version"
-    implementation "com.quickblox:quickblox-android-sdk-customobjects:$quick_blox_version"
+    //implementation "com.quickblox:quickblox-android-sdk-messages:$quick_blox_version"
+    //implementation "com.quickblox:quickblox-android-sdk-chat:$quick_blox_version"
+    //implementation "com.quickblox:quickblox-android-sdk-content:$quick_blox_version"
+    //implementation "com.quickblox:quickblox-android-sdk-customobjects:$quick_blox_version"
 
 }

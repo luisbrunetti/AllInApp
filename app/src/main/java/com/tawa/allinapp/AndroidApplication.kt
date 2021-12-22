@@ -5,9 +5,6 @@ import com.tawa.allinapp.core.di.ApplicationComponent
 import com.tawa.allinapp.core.di.ApplicationModule
 import com.tawa.allinapp.core.di.DaggerApplicationComponent
 import com.tawa.allinapp.data.local.Prefs
-import com.quickblox.auth.session.QBSettings
-import com.quickblox.chat.QBChatService
-import com.quickblox.core.LogLevel
 
 
 class AndroidApplication : Application() {

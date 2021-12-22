@@ -72,7 +72,7 @@ class InitFragment : BaseFragment() {
             observe(checkInMode, { it?.let {
                 Log.d("checkMode",it.toString())
                 checkIn = it
-//                changeStateStartCheckIn(it)
+                //changeStateStartCheckIn(it)
                 setCheckModeBtn(it)
                 //if(!checkIn) binding.tvCheckIn.text = _pv
                 hideProgressDialog()

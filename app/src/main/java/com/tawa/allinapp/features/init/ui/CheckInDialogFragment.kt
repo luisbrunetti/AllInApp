@@ -21,6 +21,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.DialogFragment
 import com.google.android.gms.location.*
+import com.tawa.allinapp.core.dialog.MessageDialogFragment
 import com.tawa.allinapp.core.extensions.failure
 import com.tawa.allinapp.core.extensions.observe
 import com.tawa.allinapp.core.extensions.viewModel
@@ -112,15 +113,15 @@ class CheckInDialogFragment
         }
 
         binding.btnDoCheckin.setOnClickListener {
-            //if(baseFragment.isLocationEnabled()){
+            if(baseFragment.isLocationEnabled()){
                 newLocationData()
                 getLastLocation()
                 _positionPv  = binding.pdvSpinner.selectedItemPosition
                 //Toast.makeText(context,getBatteryPercentage(requireContext()).toString()+" - "+getHour() + " - "+latitude+","+longitude,Toast.LENGTH_LONG).show()
                 if(checkState)
                 {
-                //    if((list?.get(_positionPv)?.lat!! == 0.0 && list?.get(_positionPv)?.long!! == 0.0) || (getDistance("${list?.get(_positionPv)?.lat}","${list?.get(_positionPv)?.long}",latitude,longitude)<=250)){
-                        //Log.d("test","entre")
+                //   if((list?.get(_positionPv)?.lat!! == 0.0 && list?.get(_positionPv)?.long!! == 0.0) || (getDistance("${list?.get(_positionPv)?.lat}","${list?.get(_positionPv)?.long}",latitude,longitude)<=250)){
+                        Log.d("test","entre")
                         list?.let { list->
                             _pv = list[_positionPv].nameCorp
                             _pvId = list[_positionPv].pv
@@ -133,16 +134,16 @@ class CheckInDialogFragment
                             listener?.onAccept(idUsers,_pvId,_pv, latitude,longitude,_description,getBatteryPercentage(requireContext()).toString())
                             dismiss()
                         }
-                //    }else showErrorSelector()
+                  //  }else showErrorSelector()
                 }
                 else{
                     listener?.onSnack(true)
                     dismiss()
                 }
-            //}else{
-            //    val dialog = MessageDialogFragment.newInstance("Se tiene que activar el GPS para usar esta funcionalidad")
-            //    dialog.show(childFragmentManager,"")
-            //}
+            }else{
+                val dialog = MessageDialogFragment.newInstance(baseFragment,"Se tiene que activar el GPS para usar esta funcionalidad")
+                dialog.show(childFragmentManager,"")
+            }
         }
         binding.closeCheckInModal.setOnClickListener{
             listener?.onClose()

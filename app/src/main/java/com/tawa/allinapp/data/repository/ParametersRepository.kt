@@ -63,7 +63,7 @@ interface ParametersRepository {
                             false -> Either.Left(Failure.ServerError)
                         }
                     } catch (e: Exception) {
-                        Either.Left(Failure.DefaultError(e.message!!))
+                        Either.Left(Failure.DefaultError(e.message))
                     }
                 }
                 false -> Either.Left(Failure.NetworkConnection)
