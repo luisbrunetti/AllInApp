@@ -25,6 +25,7 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         appComponent.inject(this)
 
+        Toast.makeText(applicationContext,"LoginActivity", Toast.LENGTH_SHORT).show()
         // antifake
         val dev = devMod()
 

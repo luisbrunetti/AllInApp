@@ -71,13 +71,12 @@ android {
             //shrinkResources true
             //proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.debug
-            //buildConfigField("String", "BASE_URL", "\"http://alb-all-in-web-prd-386914023.us-east-1.elb.amazonaws.com/\"")// API DE PRODUCCION
-            //buildConfigField("String", "BASE_URL", "\"http://alb-all-in-web-1372832709.us-east-1.elb.amazonaws.com/\"")
+            buildConfigField("String", "BASE_URL", "\"http://alb-all-in-web-prd-386914023.us-east-1.elb.amazonaws.com/\"")// API DE PRODUCCION
             buildConfigField('int', 'DEV', "$dev")
         }
         release {
             signingConfig signingConfigs.debug
-            //proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             buildConfigField("String", "BASE_URL","\"http://alb-all-in-web-prd-386914023.us-east-1.elb.amazonaws.com/\"")
             buildConfigField('int', 'DEV', "$dev")
         }

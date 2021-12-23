@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.tawa.allinapp.core.extensions.observe
 import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.platform.BaseFragment
@@ -25,6 +26,7 @@ class SplashFragment : BaseFragment() {
         splashViewModel = viewModel(viewModelFactory) {
             observe(session, {
                 Log.d("SplashFragment",session.toString())
+                Toast.makeText(requireContext(),"SplashFragment",Toast.LENGTH_SHORT).show()
                 when(it){
                     true -> showHome(context,false)
                     else -> showLogin(context)

@@ -2,9 +2,11 @@ package com.tawa.allinapp.features.auth.ui
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import com.tawa.allinapp.R
 import com.tawa.allinapp.core.dialog.MessageDialogFragment
@@ -14,6 +16,7 @@ import com.tawa.allinapp.core.extensions.viewModel
 import com.tawa.allinapp.core.functional.Failure
 import com.tawa.allinapp.core.platform.BaseFragment
 import com.tawa.allinapp.databinding.FragmentLoginBinding
+import com.tawa.allinapp.features.splash.SplashViewModel
 import java.io.IOException
 
 
@@ -21,6 +24,7 @@ class LoginFragment : BaseFragment() {
 
     //private lateinit var authViewModel: AuthViewModel
     private lateinit var binding:FragmentLoginBinding
+    private lateinit var splashViewModel: SplashViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,10 +40,10 @@ class LoginFragment : BaseFragment() {
                 if(it) authViewModel.getCompaniesRemote()
             }})
             observe(startLogin, { it?.let {
-                    if(it){
-                        changeStateStartLogin()
-                        showProgressDialog()
-                    }
+                if(it){
+                    changeStateStartLogin()
+                    showProgressDialog()
+                }
             }})
             observe(successGetCompanies, { it?.let {
                 if(it) authViewModel.endLogin()
@@ -89,6 +93,7 @@ class LoginFragment : BaseFragment() {
                     else                            -> MessageDialogFragment.newInstance(this@LoginFragment,getString(R.string.error_unknown)).show(childFragmentManager, "dialog")
                 }}})
         }
+
         binding.btnLoginFragment.setOnClickListener {
             authViewModel.doLogin()
             //showHome(context,true)
@@ -107,7 +112,13 @@ class LoginFragment : BaseFragment() {
                 authViewModel.setLanguage(0)
             }
         }
+
         authViewModel.getLanguage()
+        val session = splashViewModel.getSessionPrefs()
+        if(session){
+            //Toast.makeText(requireContext(),"Valor con prefernces -.> ${splashViewModel.getSessionPrefs().toString()}", Toast.LENGTH_SHORT).show()
+            showHome(context,false)
+        }
         return binding.root
     }
 
