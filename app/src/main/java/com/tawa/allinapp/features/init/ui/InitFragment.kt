@@ -16,6 +16,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
@@ -172,13 +173,6 @@ class InitFragment : BaseFragment() {
                     //Log.d(TAG, "SuccessSyncSku se realizado correctamente")
                     if (it) {
                         initViewModel.changeStateSyncSku(false)
-                        hideProgressDialog()
-                        MessageDialogFragment.newInstance(
-                            this@InitFragment,
-                            message = "",
-                            title = translateObject.findTranslate("tvSuccessSyncFragment") ?: "Sincronización exitosa",
-                            icon = R.drawable.ic_checkin
-                        ).show(childFragmentManager, "dialog")
                     }
                     //if (it) initViewModel.syncAudio()
                 }
@@ -230,8 +224,14 @@ class InitFragment : BaseFragment() {
                 }
             })
             observe(successGetCompanyId, {
-                it?.let { if(it.isEmpty()) { showSelector() } }
+                it?.let {
+                    if(it.isNotEmpty())
+                        initViewModel.getLogoCompany()
+                }
             })
+            observe(setIdCompanySuccess,{it?.let {
+                     initViewModel.getIdCompany()
+            }})
             observe(getPvIdf,{
                 it?.let {
                     Log.d("pvId",_pvId.toString())
@@ -261,7 +261,43 @@ class InitFragment : BaseFragment() {
                     binding.vNotifyCount.isVisible = false
                 }
             }})
+            observe(companies,{it?.let{
+                    if(it.isNotEmpty()){
+                        val count = it.count()
+                        if(typeCompany.value==0){
+                            if(count>1){
+                                if(binding.btCheckIn.text != "Marcar Salida")
+                                    showSelectorSync()
+                            }
+                        }
+                        else{
+                            if(count==1){
+                                showProgressDialog()
+                                authViewModel.getCompaniesRemoteSync(0,it[0])
+                            }
+                            else
+                                showSelector()
+                        }
+                    }
+            }})
             failure(failure, ::handleFailure)
+        }
+        authViewModel = viewModel(viewModelFactory){
+            observe(successGetCompanies,{it?.let{
+                if(it){
+                    if(typeSync.value==1){
+                        hideProgressDialog()
+                        showSuccessSyncDialog()
+                    }
+                    else{
+                        initViewModel.setIdCompany(listCompany.value!!.id,listCompany.value!!.image)
+                        initViewModel.getReportsSku(listCompany.value!!.id)
+                        initViewModel.getPdvRemote(listCompany.value!!.id)
+                        hideProgressDialog()
+                    }
+
+                }
+            }})
         }
 
         //Seleccionando empresa
@@ -271,7 +307,10 @@ class InitFragment : BaseFragment() {
         initViewModel.getUserName()
         initViewModel.getPvIdFirstTime()
         initViewModel.getCheckMode()
-        initViewModel.getIdCompanyPreferences().let { if(it.isEmpty()) { showSelector() } }
+        initViewModel.getIdCompanyPreferences().let { if(it.isEmpty()) {
+            initViewModel.getCompanies(1)
+            //showSelector()
+        } }
 
         binding.btCheckIn.setOnClickListener{
             if(isLocationEnabled()){
@@ -300,6 +339,7 @@ class InitFragment : BaseFragment() {
         }
         binding.btSync.setOnClickListener {
             showProgressDialog()
+            authViewModel.getCompaniesRemoteSync(1,null)
             if(isLocationEnabled()){
                 getActualLocation()
                 initViewModel.syncCheck(latitude,longitude)
@@ -405,6 +445,28 @@ class InitFragment : BaseFragment() {
         dialog.show(childFragmentManager, "dialog")
     }
 
+    private fun showSelectorSync(){
+        val dialog = SelectorSyncDialogFragment(this)
+        dialog.listener = object : SelectorSyncDialogFragment.Callback{
+            override fun onAccept() {
+                initViewModel.getLogoCompany()
+                //initViewModel.getPVSaved()
+            }
+            override fun onReject() {
+                val msg = MessageDialogFragment.newInstance(this@InitFragment,"Ocurrio un error con el servidor.\n Por favor intentelo de nuevo")
+                msg.listener = object : MessageDialogFragment.Callback{
+                    override fun onAccept() {
+                        logout()
+                        val intent = Intent(requireActivity(), LoginActivity::class.java)
+                        startActivity(intent)
+                    }
+                }
+                msg.show(childFragmentManager, "dialog")
+            }
+        }
+        dialog.show(childFragmentManager, "dialog")
+    }
+
     private fun showSelectPdvDialog(){
         val dialog = SelectPdvDialogFragment(this)
         dialog.listener = object : SelectPdvDialogFragment.Callback{
@@ -416,6 +478,21 @@ class InitFragment : BaseFragment() {
 
         }
         dialog.show(childFragmentManager,"")
+    }
+
+    private fun showSuccessSyncDialog(){
+        val dialog  = MessageDialogFragment.newInstance(
+            this@InitFragment,
+            message = "",
+            title = translateObject.findTranslate("tvSuccessSyncFragment") ?: "Sincronización exitosa",
+            icon = R.drawable.ic_checkin
+        )
+        dialog.listener = object : MessageDialogFragment.Callback{
+            override fun onAccept() {
+               initViewModel.getCompanies(0)
+            }
+        }
+        dialog.show(childFragmentManager, "dialog")
     }
 
     private fun showSelectorCheckIn(){

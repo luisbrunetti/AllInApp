@@ -13,6 +13,7 @@ import com.tawa.allinapp.data.remote.entities.SynReportStandardRemote
 import com.tawa.allinapp.data.remote.entities.UpdateStatusRemote
 import com.tawa.allinapp.data.remote.service.ReportsService
 import com.tawa.allinapp.models.*
+import java.io.IOException
 import java.time.ZoneId
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
@@ -348,13 +349,12 @@ interface ReportsRepository {
                 true ->{
                     try {
                         val response = service.getReportsSku("Bearer ${prefs.token!!}",company).execute()
-
                         when (response.isSuccessful) {
                             true -> {
                                 response.body()?.let { body ->
                                     body.data.map {
                                         Log.d("test",body.toString())
-                                        for(ptv in it.idReportPdv.idPuntoVenta){
+                                        for(ptv in it?.idReportPdv!!.idPuntoVenta){
                                             val count = reportsDataSource.getCountSkus(it.id,ptv.id)
                                             if(count == 0){
                                                 reportsDataSource.insertSku(SkuModel(0,it.id, ptv.id ,it.idCompany.id,it.idUserAsg.id,"No iniciado","0","","",""))
@@ -393,8 +393,8 @@ interface ReportsRepository {
                             false -> Either.Left(Failure.ServerError)
                         }
                     } catch (e: Exception) {
-                        Log.d("exception",e.message.toString())
-                        Either.Left(Failure.DefaultError(e.message!!))
+                        Log.d("exceptionSKU",e.message.toString())
+                        Either.Right(true)
                         //Either.Left(Failure.ServerError)
                     }
                 }

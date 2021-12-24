@@ -24,7 +24,7 @@ import com.tawa.allinapp.models.Company
 import javax.inject.Inject
 
 
-class SelectorDialogFragment
+class SelectorSyncDialogFragment
 @Inject constructor(
     private val baseFragment: BaseFragment
 ): DialogFragment() {
@@ -44,63 +44,26 @@ class SelectorDialogFragment
         val arrayList:ArrayList<String> = ArrayList()
         val aa = ArrayAdapter(requireActivity(), android.R.layout.simple_spinner_dropdown_item, arrayList)
 
-        initViewModel = viewModel(baseFragment.viewModelFactory){
-            observe(companies, { it?.let {
-                if(positionCompany.value==-1) {
-                    arrayList.addAll(toArray(it))
-                    binding.spSelectCompany.adapter = aa
-                    if(it.isNotEmpty()){
-                        listCompany = it
-                        binding.btnEnterCompany.isEnabled = true
-                        binding.btnEnterCompany.alpha = 1.0f
+        initViewModel = viewModel(baseFragment.viewModelFactory) {
+            observe(companies, {
+                it?.let {
+                    if (positionCompany.value == -1) {
+                        arrayList.addAll(toArray(it))
+                        binding.spSelectCompany.adapter = aa
+                        if (it.isNotEmpty()) {
+                            listCompany = it
+                            binding.btnEnterCompany.isEnabled = true
+                            binding.btnEnterCompany.alpha = 1.0f
+                        }
+
                     }
-
                 }
-            } })
-            observe(positionCompany, { it?.let {
-                getCompanies(0)
-            } })
-            observe(setIdCompanySuccess, { it?.let { if (it) {
-                initViewModel.getReportsRemote(selectedCompany)
-            }
-            } })
-            observe(successGetReports, { it?.let { if (it)
-            {
-                initViewModel.listReports(selectedCompany)
-            }
-
-            } })
-            observe(successListReport,{it?.let {
-                for(report in it)
-                {
-                    initViewModel.getQuestionsRemote(report.id)
-                }
-                baseFragment.hideProgressDialog()
-                dismiss()
-
-            }})
-            observe(successGetPdvRemote,{
-                /*if(it == true){
-                    baseFragment.hideProgressDialog()
-                    dismiss()
-                }*/
-
             })
-            observe(failure,{
-                Log.d("it",it.toString())
-                when(it){
-                    is Failure.ServerError -> listener?.onReject()
-                    is Failure.NetworkConnection -> MessageDialogFragment.newInstance(baseFragment,"No se ha podido actualizar la información. No hay conexión a internet").show(childFragmentManager, "dialog")
-                    //is Failure.DefaultError -> listener?.onReject()
-                    else -> {}//listener?.onReject()
-                }})
-
-        }
-        authViewModel = viewModel(baseFragment.viewModelFactory){
-            observe(successGetPV, { it?.let {
-                if (it)
-                    initViewModel.getReportsRemote(selectedCompany)
-            }})
+            observe(positionCompany, {
+                it?.let {
+                    getCompanies(0)
+                }
+            })
         }
         changeViewsFragment()
         return binding.root
@@ -122,12 +85,13 @@ class SelectorDialogFragment
             }
         }
         binding.btnEnterCompany.setOnClickListener {
-            baseFragment.showProgressDialog()
             val positionCompany = binding.spSelectCompany.selectedItemPosition
             selectedCompany = listCompany[positionCompany].id
             initViewModel.setIdCompany(selectedCompany,listCompany[positionCompany].image)
             initViewModel.getReportsSku(selectedCompany)
             initViewModel.getPdvRemote(selectedCompany)
+            baseFragment.hideProgressDialog()
+            dismiss()
             listener?.onAccept()
         }
     }

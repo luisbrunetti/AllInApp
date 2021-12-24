@@ -53,7 +53,8 @@ interface PdvRepository {
                             false -> Either.Left(Failure.DefaultError(""))
                         }
                     } catch (e: Exception) {
-                        Either.Left(Failure.DefaultError(e.message!!))
+
+                        Either.Right(true)
                     }
                 }
                 false -> Either.Left(Failure.NetworkConnection)

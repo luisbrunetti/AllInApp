@@ -75,9 +75,6 @@ class MessagesDialogFragment
             }})
         }
         initViewModel.getNotify()
-        notifyAdapter.clickListener = {
-            Toast.makeText(context,it.id,Toast.LENGTH_SHORT).show()
-        }
         binding.btnBackMessages.setOnClickListener {
             dismiss()
         }

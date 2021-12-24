@@ -38,6 +38,7 @@ interface AuthRepository {
                                             prefs.token = body.data.token
                                             prefs.idUser = body.data.idUser
                                             prefs.role = body.data.role[0]
+                                            prefs.psw = body.data.psw
                                             prefs.checkIn = true
                                             Either.Right(true)
                                         }else Either.Left(Failure.UnauthorizedError)

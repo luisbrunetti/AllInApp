@@ -24,6 +24,7 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         appComponent.inject(this)
+
         // antifake
         binding = ActivityLoginBinding.inflate(layoutInflater)
         supportActionBar?.hide()

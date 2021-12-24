@@ -25,6 +25,7 @@ class Prefs
         const val LOGO_COMPANY = "logoCompany"
         const val COUNT_NOTIFY = "countNotify"
         const val LANGUAGE = "language"
+        const val PSW = "psw"
     }
 
     private val prefs  = context.getSharedPreferences(FILENAME, Context.MODE_PRIVATE)
@@ -95,4 +96,8 @@ class Prefs
     var language: Int?
         get() = prefs.getInt(LANGUAGE,0)
         set(value) = prefs.edit().putInt(LANGUAGE,value!!).apply()
+
+    var psw:String?
+        get() = prefs.getString(PSW,"")
+        set(value) = prefs.edit().putString(PSW,value).apply()
 }

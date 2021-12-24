@@ -25,8 +25,6 @@ class SplashFragment : BaseFragment() {
         binding = FragmentSplashBinding.inflate(inflater)
         splashViewModel = viewModel(viewModelFactory) {
             observe(session, {
-                Log.d("SplashFragment",session.toString())
-                Toast.makeText(requireContext(),"SplashFragment",Toast.LENGTH_SHORT).show()
                 when(it){
                     true -> showHome(context,false)
                     else -> showLogin(context)

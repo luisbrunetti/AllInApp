@@ -240,6 +240,10 @@ class InitViewModel
     private val _getTranslateSaved = MutableLiveData<List<TranslateItem>>()
     val getTranslateSaved : LiveData<List<TranslateItem>> get() = _getTranslateSaved
 
+    private val _typeCompany= MutableLiveData<Int>(-1)
+    val typeCompany: LiveData<Int>
+        get()= _typeCompany
+
     init {
         startHome()
         startCheckIn()
@@ -290,7 +294,10 @@ class InitViewModel
 
     fun getIdPV() = getIdPV(UseCase.None()) { it.either(::handleFailure, ::handlePVId) }
 
-    fun getCompanies() = getCompanies(UseCase.None()) { it.either(::handleFailure, ::handleCompanyList) }
+    fun getCompanies(type: Int) = getCompanies(UseCase.None()) {
+        _typeCompany.value = type
+        it.either(::handleFailure, ::handleCompanyList)
+    }
 
     fun getReportsRemote(company: String) = getReportsRemote(GetReportsRemote.Params(company)) { it.either(::handleFailure, ::handleReportsRemote) }
 
