@@ -5,6 +5,7 @@ sealed class Failure {
     object ServerError : Failure()
     object UnauthorizedError: Failure()
     data class DefaultError(val message: String?): Failure()
+    data class WithOutError(val message: String?): Failure()
     data class MessageEmptyError(val message: String?): Failure()
 
     /** * Extend this class for feature specific failures.*/

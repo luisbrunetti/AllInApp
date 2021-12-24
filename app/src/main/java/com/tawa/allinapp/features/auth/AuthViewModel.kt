@@ -5,12 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import com.tawa.allinapp.core.interactor.UseCase
 import com.tawa.allinapp.core.platform.BaseViewModel
 import com.tawa.allinapp.data.local.Prefs
-import com.tawa.allinapp.features.auth.usecase.DoLogin
-import com.tawa.allinapp.features.auth.usecase.GetCompaniesRemote
-import com.tawa.allinapp.features.auth.usecase.GetTranslate
-import com.tawa.allinapp.features.auth.usecase.SetLanguage
+import com.tawa.allinapp.features.auth.usecase.*
 import com.tawa.allinapp.features.init.usecase.GetLanguage
 import com.tawa.allinapp.features.init.usecase.SetSession
+import com.tawa.allinapp.models.Company
 import com.tawa.allinapp.models.TranslateItem
 import javax.inject.Inject
 
@@ -18,6 +16,7 @@ class AuthViewModel
 @Inject constructor(
     private val doLogin: DoLogin,
     private val getCompaniesRemote: GetCompaniesRemote,
+    private val getCompaniesRemoteSync: GetCompaniesRemoteSync,
     private val getTranslate: GetTranslate,
     private val setLanguage: SetLanguage,
     private val setSession: SetSession,
@@ -74,6 +73,13 @@ class AuthViewModel
     private val _successSetSession = MutableLiveData<Boolean>()
     val successSetSession: LiveData<Boolean> get() = _successSetSession
 
+    private val _typeSync = MutableLiveData(-1)
+    val typeSync: LiveData<Int>
+        get() = _typeSync
+
+    private val _listCompany = MutableLiveData<Company?>()
+    val listCompany: LiveData<Company?>
+        get() = _listCompany
 
     fun setErrorLogin(error:String){
         _errorEdits.value = true
@@ -91,6 +97,14 @@ class AuthViewModel
     fun getCompaniesRemote() = getCompaniesRemote(UseCase.None()) { it.either(::handleFailure, ::handleCompaniesRemote) }
 
     private fun handleCompaniesRemote(success: Boolean) { this._successGetCompanies.value = success }
+
+    fun getCompaniesRemoteSync(type:Int,company:Company?) = getCompaniesRemoteSync(UseCase.None()) {
+        _typeSync.value = type
+        _listCompany.value = company
+        it.either(::handleFailure, ::handleCompaniesRemote)
+    }
+
+    private fun handleCompaniesRemoteSync(success: Boolean) { this._successGetCompanies.value = success }
 
     private fun handlePVRemote(success: Boolean) { this._successGetPV.value = success }
 

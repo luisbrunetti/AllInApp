@@ -11,10 +11,10 @@ def dev = 10000
 android {
     signingConfigs {
         debug {
-            storeFile file('C:\\Users\\luisb\\OneDrive\\Documents\\Tistmart\\apks\\keyStore.jks')
-            storePassword 'tismart'
+            storeFile file('D:\\DESARROLLO\\claves_apk\\tawa-android.jks')
+            storePassword 'giraldo123'
             keyAlias 'key0'
-            keyPassword 'tismart'
+            keyPassword 'giraldo123'
         }
         prod {
             storeFile file('C:\\Users\\luisb\\OneDrive\\Documents\\Tistmart\\apks\\keyStore.jks')
