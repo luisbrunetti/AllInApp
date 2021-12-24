@@ -6,9 +6,11 @@ import com.tawa.allinapp.core.functional.Failure
 import com.tawa.allinapp.core.functional.NetworkHandler
 import com.tawa.allinapp.data.local.Prefs
 import com.tawa.allinapp.data.local.datasource.CheckDataSource
+import com.tawa.allinapp.data.local.models.CheckInHistory
 import com.tawa.allinapp.data.remote.entities.CheckRemote
 import com.tawa.allinapp.data.remote.service.CheckService
 import com.tawa.allinapp.models.Check
+import com.tawa.allinapp.models.CheckInHistoryView
 import java.time.ZoneId
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
@@ -17,7 +19,7 @@ import javax.inject.Inject
 
 interface CheckRepository {
 
-    fun setCheck(id: Int,pv:String,idUser:String,registerDate:String,latitude:String,longitude:String,comment:String,state: String): Either<Failure, Boolean>
+    fun setCheck(id: Int,IdPdv:String,idUser:String,pvName:String, registerDate:String,latitude:String,longitude:String,comment:String,state:String): Either<Failure, Boolean>
     fun setIdCompany(idCompany:String,image:String): Either<Failure, Boolean>
     fun setIdPv(schedule:String,pv:String,namePv:String): Either<Failure, Boolean>
     fun getDescPv(): Either<Failure, String>
@@ -28,7 +30,7 @@ interface CheckRepository {
     fun getIdUser(): Either<Failure, String>
     fun getRoleUser(): Either<Failure, String>
     fun getUserName(): Either<Failure, String>
-    fun getCheckMode(): Either<Failure, Boolean>
+    fun getCheckMode(): Either<Failure, CheckInHistoryView>
     fun getStateCheck(idPv: String): Either<Failure, Boolean>
     fun syncChecks(latitude: String,longitude: String): Either<Failure, Boolean>
     fun sendCheck(latitude: String,longitude: String,type:Int): Either<Failure, String>
@@ -39,14 +41,20 @@ interface CheckRepository {
                         private val service: CheckService
     ): CheckRepository{
 
-        override fun setCheck(id: Int,pv:String,idUser:String,registerDate:String,latitude:String,longitude:String,comment:String,state:String): Either<Failure, Boolean> {
+        override fun setCheck(id: Int,IdPdv:String,idUser:String,pvName:String, registerDate:String,latitude:String,longitude:String,comment:String,state:String): Either<Failure, Boolean> {
             return try {
-                val check = Check(id,prefs.schedule?:"",prefs.companyId?:"",pv,idUser,registerDate,latitude,longitude,comment,state)
+                val check = Check(id,prefs.schedule?:"",prefs.companyId?:"",IdPdv,idUser,registerDate,latitude,longitude,comment,state)
                 Log.d("IdpvRepository",prefs.checkIn.toString())
-                checkDataSource.insertCheck(check.toModel())
+                Log.d("IdpvRepository",IdPdv.toString())
                 prefs.checkIn = !prefs.checkIn
-                Log.d("IdpvRepository",pv.toString())
-                prefs.pvId = pv
+                prefs.pvId = IdPdv
+                checkDataSource.insertCheck(check.toModel())
+                //Set Check in history
+
+                if (checkDataSource.countCheckInHistory(idUser, IdPdv, prefs.companyId ?: "") > 0) {
+                    checkDataSource.updateCheckInHistory(idUser, IdPdv, prefs.companyId ?: "", "COMPLETED")
+                } else checkDataSource.insertCheckInHistory(CheckInHistory(idUser, IdPdv, prefs.companyId ?: "",pvName, "PENDING",))
+
                 Either.Right(true)
             }catch (e:Exception){
                 Either.Left(Failure.DefaultError(e.message!!))
@@ -142,11 +150,18 @@ interface CheckRepository {
             }
         }
 
-        override fun getCheckMode(): Either<Failure, Boolean> {
-            return try {
-                Either.Right(prefs.checkIn)
+        override fun getCheckMode(): Either<Failure, CheckInHistoryView> {
+             try {
+                 checkDataSource.getOnPendingCheckIns(prefs.idUser.toString(), prefs.companyId.toString())?.let { checkInHistory ->
+                     prefs.pvName = checkInHistory.pvName
+                     prefs.pvId = checkInHistory.idPv
+                     prefs.companyId = checkInHistory.idCompany
+                     return Either.Right(checkInHistory.toView())
+                 } ?: run {
+                    return  Either.Right(CheckInHistoryView("","","","",""))
+                 }
             }catch (e:Exception){
-                Either.Left(Failure.DefaultError(e.message!!))
+                return Either.Left(Failure.DefaultError(e.message!!))
             }
         }
 

@@ -166,7 +166,7 @@ class InitViewModel
     val dayState: LiveData<Boolean>
         get()= _dayState
 
-    private val _checkInMode = MutableLiveData(true)
+    private val _checkInMode = MutableLiveData<CheckInHistoryView>()
     val checkInMode = _checkInMode
 
     private val _successGetReports = MutableLiveData(false)
@@ -246,14 +246,14 @@ class InitViewModel
         getDay()
     }
 
-    fun setCheckIn(idUser:String,pv:String,lat:String,lon:String) {
+    fun setCheckIn(idUser:String,pv:String,pvName:String,lat:String,lon:String) {
         _startSetCheckIn.value = true
-        setCheckIn(SetCheckIn.Params(0,pv,idUser,ZonedDateTime.now(ZoneId.of("America/Lima")).toLocalDateTime().toInstant(ZoneOffset.UTC).toString(),lat,lon,"CHECKIN","no enviado")) {
+        setCheckIn(SetCheckIn.Params(0,pv,pvName,idUser,ZonedDateTime.now(ZoneId.of("America/Lima")).toLocalDateTime().toInstant(ZoneOffset.UTC).toString(),lat,lon,"CHECKIN","no enviado")) {
             it.either(::handleFailure, ::handleCheckIn)
         }
     }
-    fun setCheckOut(idUser:String,pv:String,lat:String,long:String) {
-        setCheckIn(SetCheckIn.Params(0,pv,idUser,ZonedDateTime.now(ZoneId.of("America/Lima")).toLocalDateTime().toInstant(ZoneOffset.UTC).toString(),lat,long,"CHECKOUT","no enviado")) {
+    fun setCheckOut(idUser:String,pv:String,pvName:String,lat:String,long:String) {
+        setCheckIn(SetCheckIn.Params(0,pv,pvName,idUser,ZonedDateTime.now(ZoneId.of("America/Lima")).toLocalDateTime().toInstant(ZoneOffset.UTC).toString(),lat,long,"CHECKOUT","no enviado")) {
             it.either(::handleFailure, ::handleCheckOut)
         }
     }
@@ -335,7 +335,7 @@ class InitViewModel
 
     private fun handleCheckOut(success: Boolean) { this._successCheckOut.value = success }
 
-    private fun handleCheckMode(checkIn:Boolean) { this._checkInMode.value = checkIn }
+    private fun handleCheckMode(checkIn:CheckInHistoryView) { this._checkInMode.value = checkIn }
 
     private fun handleGetStateCheck(stateCheck:Boolean) { this._stateCheck.value = stateCheck }
 

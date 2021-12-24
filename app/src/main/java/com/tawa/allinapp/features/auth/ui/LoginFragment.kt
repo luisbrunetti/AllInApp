@@ -93,16 +93,13 @@ class LoginFragment : BaseFragment() {
                     else                            -> MessageDialogFragment.newInstance(this@LoginFragment,getString(R.string.error_unknown)).show(childFragmentManager, "dialog")
                 }}})
         }
-
+        splashViewModel = viewModel(viewModelFactory){}
         binding.btnLoginFragment.setOnClickListener {
             authViewModel.doLogin()
             //showHome(context,true)
         }
-
         binding.cbRememberLoginFragment.setOnClickListener { authViewModel.setSession(binding.cbRememberLoginFragment.isChecked) }
-
         binding.edForgotPassword.setOnClickListener { findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToSendPasswordFragment2()) }
-
         binding.swLoginFragment.setOnCheckedChangeListener { compoundButton, b ->
             if (b) {
                 //val listType = object : TypeToken<List<TranslateItem>>() {}.type
@@ -112,13 +109,11 @@ class LoginFragment : BaseFragment() {
                 authViewModel.setLanguage(0)
             }
         }
-
-        authViewModel.getLanguage()
-        val session = splashViewModel.getSessionPrefs()
-        if(session){
+        if(splashViewModel.getSessionPrefs()){
             //Toast.makeText(requireContext(),"Valor con prefernces -.> ${splashViewModel.getSessionPrefs().toString()}", Toast.LENGTH_SHORT).show()
             showHome(context,false)
         }
+        authViewModel.getLanguage()
         return binding.root
     }
 

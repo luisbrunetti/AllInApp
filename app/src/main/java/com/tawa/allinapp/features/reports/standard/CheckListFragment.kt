@@ -175,6 +175,11 @@ class CheckListFragment: BaseFragment() {
         super.onCreate(savedInstanceState)
         appComponent.inject(this)
     }
+    override fun onStart() {
+        super.onStart()
+        changeViewsFragment()
+    }
+
     override fun changeViewsFragment() {
         translateObject.apply {
             if(getInstance().isNotEmpty()) {
@@ -932,7 +937,6 @@ class CheckListFragment: BaseFragment() {
             else
                 notify(activity, "Ya se registró")
         }
-        changeViewsFragment()
         return binding.root
     }
 

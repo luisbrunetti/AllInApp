@@ -58,7 +58,6 @@ abstract class BaseFragment : Fragment() {
     var latitude :String= ""
     var longitude :String= ""
 
-
     companion object {
         const val SPANISH : String = "SPANISH"
         const val ENGLISH : String = "ENGLISH"
@@ -80,21 +79,7 @@ abstract class BaseFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var translateObject: TranslateObject
 
-    override fun onStart() {
-        super.onStart()
-        authViewModel = viewModel(viewModelFactory){
-            observe(successfulTranslate,{
-                it?.let {
-                    translateObject.setInstance(it)
-                    changeViewsFragment()
-                }
-            })
-        }
-    }
-
-    open fun onBackPressed() {
-
-    }
+    open fun onBackPressed() {}
 
     internal fun firstTimeCreated(savedInstanceState: Bundle?) = savedInstanceState == null
 
@@ -109,6 +94,13 @@ abstract class BaseFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
+        authViewModel = viewModel(viewModelFactory){
+            observe(successfulTranslate,{
+                it?.let {
+                    translateObject.setInstance(it)
+                    changeViewsFragment()
+                }})
+        }
     }
 
     internal fun showNotification(message:String,channelS: String){

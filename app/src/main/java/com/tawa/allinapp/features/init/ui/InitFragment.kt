@@ -66,15 +66,19 @@ class InitFragment : BaseFragment() {
             observe(dayState, { it?.let { if(it) {
                 getLastLocation()
                 val currentDay = getString(R.string.current_day, getDayWeek(),getDayMonth(),getMonth(),getYear())
-                //val currentDay = "${getDayWeek()}, ${getDayMonth()} ${getMonth()} ${getYear()}"
                 binding.currentDay.text  = currentDay
             }}})
             observe(checkInMode, { it?.let {
                 Log.d("checkMode",it.toString())
-                checkIn = it
-                //changeStateStartCheckIn(it)
-                setCheckModeBtn(it)
-                //if(!checkIn) binding.tvCheckIn.text = _pv
+                if(it.idUser.isNotEmpty()){
+                    checkIn = it.pending != "PENDING"
+                    binding.tvCheckIn.text = it.pvName
+                    //changeStateStartCheckIn(it)
+                    //if(!checkIn) binding.tvCheckIn.text = _pv
+                }else{
+                    checkIn = true
+                }
+                setCheckModeBtn(checkIn)
                 hideProgressDialog()
             }})
             observe(idUser, { it?.let {
@@ -104,7 +108,6 @@ class InitFragment : BaseFragment() {
                         getLastLocation()
 
                         changeStateSuccessCheckIn(false)
-
                         initViewModel.getCheckMode()
                         Log.d("successCheckin", "last -> $latitude  long -> $longitude")
                         //initViewModel.updateStatus(_lat,_long,_battery,0)
@@ -126,7 +129,7 @@ class InitFragment : BaseFragment() {
                 if(it){
                     initViewModel.changeSuccessUpdate(false)
                     //initViewModel.sendCheck(_lat, _long, type.value!!)
-                    Log.d("latlng",latitude.toString() + " "+ longitude.toString())
+                    Log.d("latlng", "$latitude $longitude")
                     initViewModel.sendCheck(latitude,longitude, type.value!!)
                     //initViewModel.changeSuccessUpdate(false)
                    // Toast.makeText(context,"Se envío actualizacion",Toast.LENGTH_SHORT).show()
@@ -260,15 +263,14 @@ class InitFragment : BaseFragment() {
             }})
             failure(failure, ::handleFailure)
         }
-        authViewModel = viewModel(viewModelFactory){}
 
         //Seleccionando empresa
         initViewModel.getPVDesc()
         initViewModel.getLogoCompany()
         initViewModel.getIdUser()
         initViewModel.getUserName()
-        initViewModel.getCheckMode()
         initViewModel.getPvIdFirstTime()
+        initViewModel.getCheckMode()
         initViewModel.getIdCompanyPreferences().let { if(it.isEmpty()) { showSelector() } }
 
         binding.btCheckIn.setOnClickListener{
@@ -316,7 +318,6 @@ class InitFragment : BaseFragment() {
             //findNavController().navigate(InitFragmentDirections.actionNavigationInitToPdvFragment())
         }
         binding.viewBtnCalendar.setOnClickListener { findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationCalendar()) }
-
         binding.viewBtnReports.setOnClickListener {
             //initViewModel.getPVId()
             //findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationReports())
@@ -328,16 +329,16 @@ class InitFragment : BaseFragment() {
                 translateObject.findTranslate("tvErrorDoCheckInMessageFrag")
                     ?: "Debes seleccionar o hacer chekIn en un punto de venta").show(childFragmentManager, "errorDialog")
         }
-
         binding.viewBtnInforms.setOnClickListener{ findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationInforms()) }
         binding.viewBtnMessages.setOnClickListener { findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationMessages()) }
         binding.viewBtnTasks.setOnClickListener { findNavController().navigate(InitFragmentDirections.actionNavigationInitToNavigationTasks()) }
 
         initNotify()
         initViewModel.getCountNotify()
-        changeViewsFragment()
+
         return binding.root
     }
+
 
     private fun getFirstLetters(text: String): String {
         var text = text
@@ -386,6 +387,7 @@ class InitFragment : BaseFragment() {
         dialog.listener = object : SelectorDialogFragment.Callback{
             override fun onAccept() {
                 initViewModel.getLogoCompany()
+                initViewModel.getCheckMode()
                 //initViewModel.getPVSaved()
             }
             override fun onReject() {
@@ -433,7 +435,7 @@ class InitFragment : BaseFragment() {
                 _pv = pv;_pvId = pvId;_battery = battery
                 Log.d("PV",_pv.toString() + _pvId.toString())
                 if (latitude != "" && longitude != "") {
-                    initViewModel.setCheckIn(idUser, pvId, lat, long)
+                    initViewModel.setCheckIn(idUser, pvId, _pv, lat, long)
                     binding.tvCheckIn.text = description
                 } else {
                     val dialog =
@@ -457,7 +459,7 @@ class InitFragment : BaseFragment() {
 
     override fun onStart() {
         super.onStart()
-        //
+        changeViewsFragment()
     }
 
     private fun setLogoCompany(image:String){
@@ -503,7 +505,7 @@ class InitFragment : BaseFragment() {
                 //initViewModel.setPv("","","")
                 Log.d("pv_id_checkout", _pvId.toString())
                 Log.d("data ", latitude.toString() + longitude.toString())
-                initViewModel.setCheckOut(_user,_pvId,latitude,longitude)
+                initViewModel.setCheckOut(_user,_pvId,_pv,latitude,longitude)
                 //_pvId = ""
                 //initViewModel.sendCheck(_lat,_long,1)
                // notify(requireActivity(), R.string.checkoout_successful)
@@ -569,13 +571,11 @@ class InitFragment : BaseFragment() {
                 binding.tvRoutesInitFragment.text = findTranslate("tvRoutesInitFragment") ?: "Rutas"
                 binding.tvCalendarInitFragment.text = findTranslate("tvCalendarInitFragment") ?: "Calendario"
                 binding.tvTaskInitFragment.text = findTranslate("tvTaskInitFragment") ?: "Tareas"
-//                Log.d("navigationInforms",findTranslate("navigation_informs").toString())
                 navView?.menu?.findItem(R.id.navigation_informs)?.title =findTranslate("navigation_informs") ?: "Informes"
                 navView?.menu?.findItem(R.id.navigation_routes)?.title = findTranslate("navigation_routes") ?: "Rutas"
                 navView?.menu?.findItem(R.id.navigation_reports)?.title = findTranslate("navigation_reports") ?: "Reportes"
                 navView?.menu?.findItem(R.id.navigation_pdv)?.title = findTranslate("navigation_pdv") ?: "Pdv"
                 navView?.menu?.findItem(R.id.navigation_init)?.title = findTranslate("navigation_init") ?: "Inicio"
-
                 setCheckModeBtn(checkIn)
             }else authViewModel.getTranslate()
         }

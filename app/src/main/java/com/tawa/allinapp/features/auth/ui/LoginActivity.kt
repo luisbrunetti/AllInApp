@@ -24,20 +24,17 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         appComponent.inject(this)
-
-        Toast.makeText(applicationContext,"LoginActivity", Toast.LENGTH_SHORT).show()
         // antifake
-        val dev = devMod()
-
-        if(dev== BuildConfig.DEV) {
-            Toast.makeText(applicationContext, "Error", Toast.LENGTH_LONG).show()
-            return
-        }
-
         binding = ActivityLoginBinding.inflate(layoutInflater)
         supportActionBar?.hide()
         setContentView(binding.root)
         findNavController(R.id.nav_host_auth_home)
+
+        val dev = devMod()
+        if(dev== BuildConfig.DEV) {
+            Toast.makeText(applicationContext, "Error", Toast.LENGTH_LONG).show()
+            return
+        }
     }
 
     private fun devMod():Int{
