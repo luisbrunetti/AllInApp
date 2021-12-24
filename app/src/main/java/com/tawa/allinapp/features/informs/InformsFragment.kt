@@ -77,9 +77,12 @@ class InformsFragment : BaseFragment() {
             findNavController().navigate(InformsFragmentDirections.actionNavigationInformsToReportGeolocationFragment())
         }
 
-        changeViewsFragment()
-
         return binding.root
+    }
+
+    override fun onStart() {
+        super.onStart()
+        changeViewsFragment()
     }
     override fun changeViewsFragment() {
         translateObject.apply {

@@ -114,9 +114,12 @@ class UserStatusFragment : BaseFragment() {
                 }
             }
         }
-        changeViewsFragment()
-
         return binding.root
+    }
+
+    override fun onStart() {
+        super.onStart()
+        changeViewsFragment()
     }
 
     override fun changeViewsFragment() {

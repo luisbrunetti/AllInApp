@@ -63,6 +63,10 @@ class ReportsFragment : BaseFragment() {
                 )
             }
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
         changeViewsFragment()
     }
     override fun changeViewsFragment() {

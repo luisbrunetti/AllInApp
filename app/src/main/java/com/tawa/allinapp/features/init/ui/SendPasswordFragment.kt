@@ -83,9 +83,13 @@ class SendPasswordFragment : BaseFragment() {
                 }
             }
         })
-        changeViewsFragment()
         //Log.d("test",translateObject.getInstance().toString())
         return binding.root
+    }
+
+    override fun onStart() {
+        super.onStart()
+        changeViewsFragment()
     }
     override fun changeViewsFragment() {
         translateObject.apply {

@@ -43,6 +43,7 @@ import com.tawa.allinapp.core.functional.Failure
 import com.tawa.allinapp.features.HomeActivity
 import com.tawa.allinapp.features.auth.AuthViewModel
 import com.tawa.allinapp.features.auth.ui.LoginActivity
+import com.tawa.allinapp.features.splash.SplashActivity
 import kotlinx.android.synthetic.main.toolbar.*
 import java.util.*
 import javax.inject.Inject
@@ -98,8 +99,10 @@ abstract class BaseFragment : Fragment() {
         authViewModel = viewModel(viewModelFactory){
             observe(successfulTranslate,{
                 it?.let {
-                    translateObject.setInstance(it)
-                    changeViewsFragment()
+                    if(it.isNotEmpty()){
+                        translateObject.setInstance(it)
+                        changeViewsFragment()
+                    }
                 }})
         }
     }

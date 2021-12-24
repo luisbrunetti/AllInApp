@@ -174,8 +174,11 @@ class RoutesFragment : BaseFragment() {
         }
         binding.edDateRoute.setText(formatter.format(timestamp))
         dateFormat = formatter1.format(timestamp)
-        changeViewsFragment()
         return binding.root
+    }
+    override fun onStart() {
+        super.onStart()
+        changeViewsFragment()
     }
 
     override fun changeViewsFragment() {

@@ -379,7 +379,6 @@ class InitFragment : BaseFragment() {
         return binding.root
     }
 
-
     private fun getFirstLetters(text: String): String {
         var text = text
         var firstLetters = ""
@@ -397,8 +396,8 @@ class InitFragment : BaseFragment() {
                     if(enable) ResourcesCompat.getDrawable(resources, R.drawable.bg_button_check_in, null)
                     else ResourcesCompat.getDrawable(resources, R.drawable.bg_button_check_out, null)
                 text =
-                    if (enable) translateObject.findTranslate("btCheckInInitFragment") ?: "Ingreso"
-                    else translateObject.findTranslate("btCheckOutInitFragment") ?: "Salida"
+                    if (enable) translateObject.findTranslate("btCheckInInitFragment") ?: "Marcar ingreso"
+                    else translateObject.findTranslate("btCheckOutInitFragment") ?: "Marcar salida"
             }
         }
     }

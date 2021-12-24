@@ -93,12 +93,16 @@ class CoverageBoardFragment : BaseFragment() {
                 }
             })}
         initViewModels()
-        changeViewsFragment()
         return ComposeView(requireContext()).apply {
             setContent {
                 main()
             }
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        changeViewsFragment()
     }
 
     @Composable

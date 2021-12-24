@@ -115,8 +115,11 @@ class ReportGeolocationFragment : BaseFragment(), RecyclerUser.onClickButton{
         binding.iHeader.ivHeader.setOnClickListener {
             activity?.onBackPressed()
         }
-        changeViewsFragment()
         return binding.root
+    }
+    override fun onStart() {
+        super.onStart()
+        changeViewsFragment()
     }
 
     override fun changeViewsFragment() {
@@ -127,10 +130,6 @@ class ReportGeolocationFragment : BaseFragment(), RecyclerUser.onClickButton{
                 binding.edUserGeoLocation.hint = findTranslate("edUserGeoLocation")
                 binding.tvDateGeoLocation.text = findTranslate("tvDateGeoLocation")
                 binding.tvUserGeoLocation.text = findTranslate("tvUserGeoLocation")
-                Log.d(
-                    "findTranslate",
-                    findTranslate("tvReportGeolocation").toString() + findTranslate("tvInformCheckListFragment").toString()
-                )
                 binding.iHeader.title = findTranslate("tvTitleGeolocation")
                 binding.iHeader.sub = findTranslate("tvSubTitleGeolocation")
             }else authViewModel.getTranslate()

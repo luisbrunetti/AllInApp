@@ -243,8 +243,12 @@ class PictureFragment : BaseFragment() {
 
 
         }
-        changeViewsFragment()
         return binding.root
+    }
+
+    override fun onStart() {
+        super.onStart()
+        changeViewsFragment()
     }
 
     private fun disableButtons(){
