@@ -225,8 +225,11 @@ class InitFragment : BaseFragment() {
             })
             observe(successGetCompanyId, {
                 it?.let {
-                    if(it.isNotEmpty())
+                    if(it.isNotEmpty()){
                         initViewModel.getLogoCompany()
+                        initViewModel.getCheckMode()
+                    }
+
                 }
             })
             observe(setIdCompanySuccess,{it?.let {
