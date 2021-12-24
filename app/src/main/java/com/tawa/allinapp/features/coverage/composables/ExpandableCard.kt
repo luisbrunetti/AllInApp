@@ -111,7 +111,7 @@ fun ExpandableCard(
                                 }
                             },
                         )
-                        Text(text = translateObject.findTranslate("tvSelectEveryone").toString(), fontSize = 16.sp)
+                        Text(text = translateObject.findTranslate("tvSelectEveryone").toString() ?: "Seleccionar a todos", fontSize = 16.sp)
                     }
                     var listFiltered = listElementsPrincipal
                     if(textState.value.text != ""){
@@ -232,7 +232,5 @@ fun SearchView(textState: MutableState<TextFieldValue>){
 @Composable
 @Preview
 fun DefaultPreview(){
-    NameCard(text = "hola") {
-
-    }
+    //ExpandableCard(arrayListOf<String>("asd","asd"))
 }
