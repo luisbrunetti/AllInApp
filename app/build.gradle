@@ -6,16 +6,22 @@ plugins {
     id 'androidx.navigation.safeargs.kotlin'
 }
 
-def dev = 10000
+def dev = 1
 
 android {
     signingConfigs {
+        debug {
+            storeFile file('C:\\Users\\luisb\\OneDrive\\Documents\\Tistmart\\apks\\keyStore.jks')
+            storePassword 'tismart'
+            keyAlias 'key0'
+            keyPassword 'tismart'
+        }/*
         debug {
             storeFile file('D:\\DESARROLLO\\claves_apk\\tawa-android.jks')
             storePassword 'giraldo123'
             keyAlias 'key0'
             keyPassword 'giraldo123'
-        }
+        }*/
         prod {
             storeFile file('C:\\Users\\luisb\\OneDrive\\Documents\\Tistmart\\apks\\keyStore.jks')
             storePassword 'tismart'
@@ -36,7 +42,7 @@ android {
         applicationId 'com.tismart.allinapp'
         minSdkVersion 24
         targetSdkVersion 30
-        versionCode 4
+        versionCode 5
         versionName "1.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         signingConfig signingConfigs.release

@@ -113,6 +113,7 @@ class SelectorDialogFragment
             binding.btnEnterCompany.text = findTranslate("btnEnterCompany") ?: "Ingresar"
         }
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.spSelectCompany.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{

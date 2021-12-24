@@ -269,7 +269,7 @@ class InitFragment : BaseFragment() {
                         val count = it.count()
                         if(typeCompany.value==0){
                             if(count>1){
-                                if(binding.btCheckIn.text != "Marcar Salida")
+                                if(binding.btCheckIn.text != translateObject.findTranslate("btCheckOutInitFragment") ?: "Marcar salida")
                                     showSelectorSync()
                             }
                         }
@@ -452,6 +452,7 @@ class InitFragment : BaseFragment() {
         dialog.listener = object : SelectorSyncDialogFragment.Callback{
             override fun onAccept() {
                 initViewModel.getLogoCompany()
+                initViewModel.getCheckMode()
                 //initViewModel.getPVSaved()
             }
             override fun onReject() {
@@ -512,7 +513,7 @@ class InitFragment : BaseFragment() {
                 //getActualLocation()
                 getLastLocation()
                 _pv = pv;_pvId = pvId;_battery = battery
-                Log.d("PV",_pv.toString() + _pvId.toString())
+                Log.d("PV", _pv + _pvId)
                 if (latitude != "" && longitude != "") {
                     initViewModel.setCheckIn(idUser, pvId, _pv, lat, long)
                     binding.tvCheckIn.text = description
