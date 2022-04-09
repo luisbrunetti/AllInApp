@@ -355,6 +355,7 @@ class PictureFragment : BaseFragment() {
         val intent = Intent()
         intent.action = Intent.ACTION_VIEW
         intent.setDataAndType(uri, "image/*")
+        intent.setdata
         activity?.startActivity(intent)
     }
 
